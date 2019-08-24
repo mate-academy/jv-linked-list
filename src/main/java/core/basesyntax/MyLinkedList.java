@@ -157,4 +157,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return output.toString();
     }
+
+    /*
+        This method is added to this class to compare
+        the result of executing methods of this class with
+        the result of executing the appropriate methods of the
+        java.util.LinkedList class in the MyLinkedListTest class
+    */
+    @Override
+    public T[] toArray() {
+        T[] array = (T[]) new Object[size()];
+        for (int i = 0; i < size(); i++) {
+            array[i] = get(i);
+        }
+        return array;
+    }
 }

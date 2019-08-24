@@ -26,7 +26,7 @@ public class MyLinkedListTest {
         linkedList.add("First");
         linkedList.add("Second");
         linkedList.add("Third");
-        Assert.assertEquals(linkedList.toString(), myLinkedList.toString());
+        Assert.assertArrayEquals(linkedList.toArray(), myLinkedList.toArray());
     }
 
     @Test
@@ -37,14 +37,14 @@ public class MyLinkedListTest {
         linkedList.add(0, "First");
         linkedList.add(1, "Second");
         linkedList.add(5, "Third");
-        Assert.assertEquals(linkedList.toString(), myLinkedList.toString());
+        Assert.assertArrayEquals(linkedList.toArray(), myLinkedList.toArray());
     }
 
     @Test
     public void test3AddAll() {
         myLinkedList.addAll(DEFAULT_LIST);
         linkedList.addAll(DEFAULT_LIST);
-        Assert.assertEquals(linkedList.toString(), myLinkedList.toString());
+        Assert.assertArrayEquals(linkedList.toArray(), myLinkedList.toArray());
     }
 
     @Test
@@ -68,7 +68,7 @@ public class MyLinkedListTest {
         linkedList.set(0, "newFirst");
         linkedList.set(1, "newSecond");
         linkedList.set(2, "newThird");
-        Assert.assertEquals(linkedList.toString(), myLinkedList.toString());
+        Assert.assertArrayEquals(linkedList.toArray(), myLinkedList.toArray());
     }
 
     @Test
@@ -82,7 +82,7 @@ public class MyLinkedListTest {
         Assert.assertEquals(expectedFirst, actualFirst);
         Assert.assertEquals(expectedSecond, actualSecond);
         Assert.assertEquals(expectedThird, actualThird);
-        Assert.assertEquals(linkedList.toString(), myLinkedList.toString());
+        Assert.assertArrayEquals(linkedList.toArray(), myLinkedList.toArray());
     }
 
     @Test
@@ -93,7 +93,7 @@ public class MyLinkedListTest {
         linkedList.remove("First");
         linkedList.remove("Fourth");
         linkedList.remove("Sixth");
-        Assert.assertEquals(linkedList.toString(), myLinkedList.toString());
+        Assert.assertArrayEquals(linkedList.toArray(), myLinkedList.toArray());
     }
 
     @Test
@@ -104,7 +104,7 @@ public class MyLinkedListTest {
     }
 
     @Test
-    public void test19IsEmpty() {
+    public void test9IsEmpty() {
         boolean actual = myLinkedList.isEmpty();
         boolean expected = linkedList.isEmpty();
         Assert.assertEquals(expected, actual);

@@ -21,4 +21,6 @@ public interface MyLinkedListInterface<T> {
     int size();
 
     boolean isEmpty();
+
+    T[] toArray();
 }
