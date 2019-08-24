@@ -1,112 +1,215 @@
 package core.basesyntax;
 
 import org.junit.Assert;
-import org.junit.FixMethodOrder;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
+import org.junit.rules.ExpectedException;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MyLinkedListTest {
 
-    private static MyLinkedListInterface<String> myLinkedList = new MyLinkedList<>();
-    private static List<String> linkedList = new LinkedList<>();
+    @Rule
+    public final ExpectedException exception = ExpectedException.none();
+
+    private final static String FIRST_ITEM = "First";
+    private final static String SECOND_ITEM = "Second";
+    private final static String THIRD_ITEM = "Third";
+    private final static String NEW_ITEM = "NewFirst";
+    private final static String ANOTHER_NEW_ITEM = "NewSecond";
+
+    private static MyLinkedListInterface<String> myLinkedList;
 
     private static final List<String> DEFAULT_LIST = new LinkedList<>(
             Arrays.asList("First", "Second", "Third", "Fourth", "Fifth", "Sixth"));
 
-    @Test
-    public void test1Add() {
-        myLinkedList.add("First");
-        myLinkedList.add("Second");
-        myLinkedList.add("Third");
-        linkedList.add("First");
-        linkedList.add("Second");
-        linkedList.add("Third");
-        Assert.assertArrayEquals(linkedList.toArray(), myLinkedList.toArray());
+    @Before
+    public void setUp() {
+        myLinkedList = new MyLinkedList<>();
     }
 
     @Test
-    public void test2Add() {
-        myLinkedList.add("First", 0);
-        myLinkedList.add("Second", 1);
-        myLinkedList.add("Third", 5);
-        linkedList.add(0, "First");
-        linkedList.add(1, "Second");
-        linkedList.add(5, "Third");
-        Assert.assertArrayEquals(linkedList.toArray(), myLinkedList.toArray());
-    }
-
-    @Test
-    public void test3AddAll() {
-        myLinkedList.addAll(DEFAULT_LIST);
-        linkedList.addAll(DEFAULT_LIST);
-        Assert.assertArrayEquals(linkedList.toArray(), myLinkedList.toArray());
-    }
-
-    @Test
-    public void test4Get() {
+    public void testAdd() {
+        myLinkedList.add(FIRST_ITEM);
+        myLinkedList.add(SECOND_ITEM);
+        myLinkedList.add(THIRD_ITEM);
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
-        String actualThird = myLinkedList.get(5);
-        String expectedFirst = linkedList.get(0);
-        String expectedSecond = linkedList.get(1);
-        String expectedThird = linkedList.get(5);
+        String actualThird = myLinkedList.get(2);
+        Assert.assertEquals(FIRST_ITEM, actualFirst);
+        Assert.assertEquals(SECOND_ITEM, actualSecond);
+        Assert.assertEquals(THIRD_ITEM, actualThird);
+    }
+
+    @Test
+    public void testAddByIndex() {
+        myLinkedList.add(FIRST_ITEM, 0);
+        myLinkedList.add(SECOND_ITEM, 1);
+        String actualFirst = myLinkedList.get(0);
+        String actualSecond = myLinkedList.get(1);
+        Assert.assertEquals(FIRST_ITEM, actualFirst);
+        Assert.assertEquals(SECOND_ITEM, actualSecond);
+        exception.expect(IndexOutOfBoundsException.class);
+        myLinkedList.add(THIRD_ITEM, 3);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testAddByNegativeIndex() {
+        myLinkedList.add(FIRST_ITEM, -1);
+    }
+
+    @Test
+    public void testAddAll() {
+        myLinkedList.addAll(DEFAULT_LIST);
+        String actualFirst = myLinkedList.get(0);
+        String actualSecond = myLinkedList.get(1);
+        String actualLast = myLinkedList.get(DEFAULT_LIST.size() - 1);
+        String expectedFirst = DEFAULT_LIST.get(0);
+        String expectedSecond = DEFAULT_LIST.get(1);
+        String expectedLast = DEFAULT_LIST.get(DEFAULT_LIST.size() - 1);
         Assert.assertEquals(expectedFirst, actualFirst);
         Assert.assertEquals(expectedSecond, actualSecond);
-        Assert.assertEquals(expectedThird, actualThird);
+        Assert.assertEquals(expectedLast, actualLast);
     }
 
     @Test
-    public void test5Set() {
-        myLinkedList.set("newFirst", 0);
-        myLinkedList.set("newSecond", 1);
-        myLinkedList.set("newThird", 2);
-        linkedList.set(0, "newFirst");
-        linkedList.set(1, "newSecond");
-        linkedList.set(2, "newThird");
-        Assert.assertArrayEquals(linkedList.toArray(), myLinkedList.toArray());
+    public void testGetByIndex() {
+        myLinkedList.add(FIRST_ITEM);
+        myLinkedList.add(SECOND_ITEM);
+        myLinkedList.add(THIRD_ITEM);
+        String actualFirst = myLinkedList.get(0);
+        String actualSecond = myLinkedList.get(1);
+        Assert.assertEquals(FIRST_ITEM, actualFirst);
+        Assert.assertEquals(SECOND_ITEM, actualSecond);
+        exception.expect(IndexOutOfBoundsException.class);
+        myLinkedList.get(3);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testGetByNegativeIndex() {
+        myLinkedList.get(-1);
     }
 
     @Test
-    public void test6Remove() {
+    public void testSetByIndex() {
+        myLinkedList.add(FIRST_ITEM);
+        myLinkedList.add(SECOND_ITEM);
+        myLinkedList.add(THIRD_ITEM);
+        myLinkedList.set(NEW_ITEM, 0);
+        myLinkedList.set(ANOTHER_NEW_ITEM, 1);
+        String actualFirst = myLinkedList.get(0);
+        String actualSecond = myLinkedList.get(1);
+        Assert.assertEquals(NEW_ITEM, actualFirst);
+        Assert.assertEquals(ANOTHER_NEW_ITEM, actualSecond);
+        exception.expect(IndexOutOfBoundsException.class);
+        myLinkedList.set(NEW_ITEM, 3);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testSetByZeroIndex() {
+        myLinkedList.set(NEW_ITEM, 0);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testSetByNegativeIndex() {
+        myLinkedList.set(NEW_ITEM, -1);
+    }
+
+    @Test
+    public void testRemoveByIndex() {
+        myLinkedList.add(FIRST_ITEM);
+        myLinkedList.add(SECOND_ITEM);
+        myLinkedList.add(THIRD_ITEM);
+        myLinkedList.add(FIRST_ITEM);
+        myLinkedList.add(SECOND_ITEM);
+        myLinkedList.add(THIRD_ITEM);
         String actualFirst = myLinkedList.remove(0);
-        String actualSecond = myLinkedList.remove(2);
+        String actualSecond = myLinkedList.remove(3);
         String actualThird = myLinkedList.remove(3);
-        String expectedFirst = linkedList.remove(0);
-        String expectedSecond = linkedList.remove(2);
-        String expectedThird = linkedList.remove(3);
-        Assert.assertEquals(expectedFirst, actualFirst);
-        Assert.assertEquals(expectedSecond, actualSecond);
-        Assert.assertEquals(expectedThird, actualThird);
-        Assert.assertArrayEquals(linkedList.toArray(), myLinkedList.toArray());
+        Assert.assertEquals(FIRST_ITEM, actualFirst);
+        Assert.assertEquals(SECOND_ITEM, actualSecond);
+        Assert.assertEquals(THIRD_ITEM, actualThird);
+        exception.expect(IndexOutOfBoundsException.class);
+        myLinkedList.remove(3);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testRemoveByNegativeIndex() {
+        myLinkedList.remove(-1);
     }
 
     @Test
-    public void test7Remove() {
-        myLinkedList.remove("First");
-        myLinkedList.remove("Fourth");
-        myLinkedList.remove("Sixth");
-        linkedList.remove("First");
-        linkedList.remove("Fourth");
-        linkedList.remove("Sixth");
-        Assert.assertArrayEquals(linkedList.toArray(), myLinkedList.toArray());
+    public void testRemoveByItem() {
+        myLinkedList.add(FIRST_ITEM);
+        myLinkedList.add(SECOND_ITEM);
+        myLinkedList.add(THIRD_ITEM);
+        myLinkedList.add(FIRST_ITEM);
+        myLinkedList.add(SECOND_ITEM);
+        myLinkedList.add(THIRD_ITEM);
+        String actualFirst = myLinkedList.remove(FIRST_ITEM);
+        String actualSecond = myLinkedList.remove(SECOND_ITEM);
+        String actualThird = myLinkedList.remove(THIRD_ITEM);
+        Assert.assertEquals(FIRST_ITEM, actualFirst);
+        Assert.assertEquals(SECOND_ITEM, actualSecond);
+        Assert.assertEquals(THIRD_ITEM, actualThird);
+        String actualFourth = myLinkedList.remove(NEW_ITEM);
+        Assert.assertNull(actualFourth);
     }
 
     @Test
-    public void test8Size() {
+    public void testSize() {
+        int actualInitialSize = myLinkedList.size();
+        myLinkedList.add(FIRST_ITEM);
+        myLinkedList.add(SECOND_ITEM);
+        myLinkedList.add(THIRD_ITEM);
         int actualSize = myLinkedList.size();
-        int expectedSize = linkedList.size();
-        Assert.assertEquals(expectedSize, actualSize);
+        Assert.assertEquals(0, actualInitialSize);
+        Assert.assertEquals(3, actualSize);
     }
 
     @Test
-    public void test9IsEmpty() {
-        boolean actual = myLinkedList.isEmpty();
-        boolean expected = linkedList.isEmpty();
-        Assert.assertEquals(expected, actual);
+    public void testSizeAfterSet() {
+        myLinkedList.add(FIRST_ITEM);
+        myLinkedList.add(SECOND_ITEM);
+        myLinkedList.add(THIRD_ITEM);
+        int actualSize = myLinkedList.size();
+        myLinkedList.set(NEW_ITEM, 1);
+        int actualSizeAfterSet = myLinkedList.size();
+        Assert.assertEquals(3, actualSize);
+        Assert.assertEquals(3, actualSizeAfterSet);
+    }
+
+    @Test
+    public void testSizeAfterRemove() {
+        myLinkedList.add(FIRST_ITEM);
+        myLinkedList.add(SECOND_ITEM);
+        myLinkedList.add(THIRD_ITEM);
+        int actualSize = myLinkedList.size();
+        myLinkedList.remove(1);
+        int actualSizeAfterRemove = myLinkedList.size();
+        Assert.assertEquals(3, actualSize);
+        Assert.assertEquals(2, actualSizeAfterRemove);
+    }
+
+    @Test
+    public void testIsEmpty() {
+        boolean actualInitialEmpty = myLinkedList.isEmpty();
+        myLinkedList.add(FIRST_ITEM);
+        boolean actualEmpty = myLinkedList.isEmpty();
+        Assert.assertTrue(actualInitialEmpty);
+        Assert.assertFalse(actualEmpty);
+    }
+
+    @Test
+    public void testIsEmptyAfterRemove() {
+        myLinkedList.add(FIRST_ITEM);
+        boolean actualEmpty = myLinkedList.isEmpty();
+        myLinkedList.remove(0);
+        boolean actualEmptyAfterRemove = myLinkedList.isEmpty();
+        Assert.assertFalse(actualEmpty);
+        Assert.assertTrue(actualEmptyAfterRemove);
     }
 }
