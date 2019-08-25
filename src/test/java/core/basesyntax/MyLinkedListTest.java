@@ -165,9 +165,8 @@ public class MyLinkedListTest {
         myLinkedList.add(FIRST_ITEM);
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);
-        int actualSize = myLinkedList.size();
         Assert.assertEquals(0, actualInitialSize);
-        Assert.assertEquals(3, actualSize);
+        Assert.assertEquals(3, myLinkedList.size());
     }
 
     @Test
@@ -175,11 +174,9 @@ public class MyLinkedListTest {
         myLinkedList.add(FIRST_ITEM);
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);
-        int actualSize = myLinkedList.size();
+        Assert.assertEquals(3, myLinkedList.size());
         myLinkedList.set(NEW_ITEM, 1);
-        int actualSizeAfterSet = myLinkedList.size();
-        Assert.assertEquals(3, actualSize);
-        Assert.assertEquals(3, actualSizeAfterSet);
+        Assert.assertEquals(3, myLinkedList.size());
     }
 
     @Test
@@ -187,11 +184,9 @@ public class MyLinkedListTest {
         myLinkedList.add(FIRST_ITEM);
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);
-        int actualSize = myLinkedList.size();
+        Assert.assertEquals(3, myLinkedList.size());
         myLinkedList.remove(1);
-        int actualSizeAfterRemove = myLinkedList.size();
-        Assert.assertEquals(3, actualSize);
-        Assert.assertEquals(2, actualSizeAfterRemove);
+        Assert.assertEquals(2, myLinkedList.size());
     }
 
     @Test
