@@ -13,7 +13,7 @@ import java.util.List;
 public class MyLinkedListTest {
 
     @Rule
-    private static final ExpectedException exception = ExpectedException.none();
+    public final ExpectedException exception = ExpectedException.none();
 
     private static final String FIRST_ITEM = "First";
     private static final String SECOND_ITEM = "Second";
