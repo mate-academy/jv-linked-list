@@ -1,2 +1,2 @@
 # jv-homework-template
-<h3>Реализовать свой LinkedList исходя из интерфейса
+<h3>Дано класс MyLinkedList который имплементирует интерфейс MyLinkedListInterface. Реализовать в нём свой LinkedList 
