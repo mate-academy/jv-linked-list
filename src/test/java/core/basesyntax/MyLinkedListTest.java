@@ -13,18 +13,18 @@ import java.util.List;
 public class MyLinkedListTest {
 
     @Rule
-    public final ExpectedException exception = ExpectedException.none();
+    private static final ExpectedException exception = ExpectedException.none();
 
-    private final static String FIRST_ITEM = "First";
-    private final static String SECOND_ITEM = "Second";
-    private final static String THIRD_ITEM = "Third";
-    private final static String NEW_ITEM = "NewFirst";
-    private final static String ANOTHER_NEW_ITEM = "NewSecond";
-
-    private static MyLinkedListInterface<String> myLinkedList;
+    private static final String FIRST_ITEM = "First";
+    private static final String SECOND_ITEM = "Second";
+    private static final String THIRD_ITEM = "Third";
+    private static final String NEW_ITEM = "NewFirst";
+    private static final String ANOTHER_NEW_ITEM = "NewSecond";
 
     private static final List<String> DEFAULT_LIST = new LinkedList<>(
             Arrays.asList("First", "Second", "Third", "Fourth", "Fifth", "Sixth"));
+
+    private static MyLinkedListInterface<String> myLinkedList;
 
     @Before
     public void setUp() {
