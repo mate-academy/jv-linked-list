@@ -148,10 +148,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return element;
     }
 
-    public static class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> previous;
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> previous;
 
         Node(T item, Node<T> previous, Node<T> next) {
             this.item = item;
