@@ -146,19 +146,4 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.prev = prev;
         }
     }
-
-
-    public static void main(String[] args) {
-        MyLinkedList<String> myLinkedList = new MyLinkedList<>();
-        myLinkedList.add("First");
-        myLinkedList.add("Second");
-        myLinkedList.add("Third");
-        myLinkedList.add("First");
-        myLinkedList.add("Second");
-        myLinkedList.add("Third");
-        String actualFirst = myLinkedList.remove(0);
-        String actualSecond = myLinkedList.remove(3);
-        String actualThird = myLinkedList.remove(3);
-        System.out.println(myLinkedList.get(0));
-    }
 }
