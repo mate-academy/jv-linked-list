@@ -56,30 +56,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        return remove(getObjectByIndex(index));
+        return removeObject(getObjectByIndex(index));
     }
 
     @Override
-    public T remove(T t) {
-        Node<T> object = getObjectByValue(t);
-        return (object == null) ? null : remove(getObjectByValue(t));
-    }
-
-    private T remove(Node<T> object) {
-        if (object.previous == null) {
-            first = object.next;
+    public T remove(T value) {
+        if (value == null) {
+            for (Node<T> object = first; object != null; object = object.next) {
+                if (object.current == null) {
+                    return removeObject(object);
+                }
+            }
         } else {
-            object.previous.next = object.next;
+            for (Node<T> object = first; object != null; object = object.next) {
+                if (object.current.equals(value)) {
+                    return removeObject(object);
+                }
+            }
         }
-        if (object.next == null) {
-            last = object.previous;
-        } else {
-            object.next.previous = object.previous;
-        }
-        T value = object.current;
-        object = null;
-        size--;
-        return value;
+        return null;
     }
 
     @Override
@@ -90,16 +85,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private Node<T> getObjectByValue(T value) {
-        Node<T> object = first;
-        for (int i = 0; i < size; i++) {
-            if (object.current.equals(value)) {
-                return object;
-            }
-        }
-        return null;
     }
 
     private Node<T> getObjectByIndex(int index) {
@@ -123,6 +108,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
+    }
+
+    private T removeObject(Node<T> object) {
+        if (object.previous == null) {
+            first = object.next;
+        } else {
+            object.previous.next = object.next;
+        }
+        if (object.next == null) {
+            last = object.previous;
+        } else {
+            object.next.previous = object.previous;
+        }
+        T value = object.current;
+        object = null;
+        size--;
+        return value;
     }
 
     private static class Node<T> {
