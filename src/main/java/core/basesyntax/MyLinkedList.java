@@ -9,13 +9,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> back = last;
-        last = new Node<>(back, value, null);
-        if (back == null) {
-            first = last;
+        Node<T> object = new Node<>(last, value, null);
+        if (last == null) {
+            first = object;
         } else {
-            back.next = last;
+            last.next = object;
         }
+        last = object;
         size++;
     }
 
@@ -24,14 +24,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            Node<T> forward = getObjectByIndex(index);
-            Node<T> back = forward.previous;
-            Node<T> object = new Node<>(back, value, forward);
-            forward.previous = back;
-            if (back == null) {
-                first = back;
+            Node<T> oldObject = getObjectByIndex(index);
+            Node<T> newObject = new Node<>(oldObject.previous, value, oldObject);
+            if (oldObject.previous == null) {
+                first = newObject;
             } else {
-                back.next = object;
+                oldObject.previous.next = newObject;
             }
             size++;
         }
@@ -61,17 +59,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(T value) {
+        Node<T> object = first;
         if (value == null) {
-            for (Node<T> object = first; object != null; object = object.next) {
+            while (object != null) {
                 if (object.current == null) {
                     return removeObject(object);
                 }
+                object = object.next;
             }
         } else {
-            for (Node<T> object = first; object != null; object = object.next) {
+            while (object != null) {
                 if (object.current.equals(value)) {
                     return removeObject(object);
                 }
+                object = object.next;
             }
         }
         return null;
