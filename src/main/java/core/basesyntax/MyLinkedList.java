@@ -65,6 +65,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return (object == null) ? null : remove(getObjectByValue(t));
     }
 
+    private T remove(Node<T> object) {
+        if (object.previous == null) {
+            first = object.next;
+        } else {
+            object.previous.next = object.next;
+        }
+        if (object.next == null) {
+            last = object.previous;
+        } else {
+            object.next.previous = object.previous;
+        }
+        T value = object.current;
+        object = null;
+        size--;
+        return value;
+    }
+
     @Override
     public int size() {
         return size;
@@ -106,23 +123,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
-    }
-
-    private T remove(Node<T> object) {
-        T value = object.current;
-        if (object.previous == null) {
-            first = object.next;
-        } else {
-            object.previous.next = object.next;
-        }
-        if (object.next == null) {
-            last = object.previous;
-        } else {
-            object.next.previous = object.previous;
-        }
-        object = null;
-        size--;
-        return value;
     }
 
     private static class Node<T> {
