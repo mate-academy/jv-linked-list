@@ -32,57 +32,41 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return nodeIndex;
     }
 
-    private void addToEmpty(T value) {
-        Node<T> newNode = new Node<>(value, null, null);
+    public void addFirst(T value) {
+        final Node<T> firstNode = first;
+        final Node<T> newNode = new Node<>(value, null, firstNode);
         first = newNode;
-        last = newNode;
-        size++;
-    }
-
-    public void addAsFirst(T value) {
-        if (size == 0) {
-            addToEmpty(value);
-            return;
+        if (firstNode == null) {
+            last = newNode;
+        } else {
+            firstNode.previous = newNode;
         }
-        Node<T> newNode = new Node<>(value, null, first);
-        first.previous = newNode;
-        first = newNode;
         size++;
     }
 
     @Override
     public void add(T value) {
-        if (size == 0) {
-            addToEmpty(value);
-            return;
-        }
-        Node<T> newNode = new Node<>(value, last, null);
-        last.next = newNode;
+        final Node<T> lastNode = last;
+        final Node<T> newNode = new Node<>(value, lastNode, null);
         last = newNode;
+        if (lastNode == null) {
+            first = newNode;
+        } else {
+            lastNode.next = newNode;
+        }
         size++;
     }
 
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("The index is out of range: " + index);
-        }
-        if (size == 0) {
-            addToEmpty(value);
-            return;
-        }
-        if (index == 0) {
-            addAsFirst(value);
-            return;
+            throw new IndexOutOfBoundsException();
         }
         if (index == size) {
             add(value);
-            return;
+        } else {
+            addFirst(value);
         }
-        Node<T> newNode = new Node<>(value, getNode(index - 1), getNode(index + 1));
-        getNode(index - 1).next = newNode;
-        getNode(index + 1).previous = newNode;
-        size++;
     }
 
     @Override
@@ -111,25 +95,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("The index is out of range: " + index);
+            throw new IndexOutOfBoundsException();
         }
 
         final Node<T> removedElement = getNode(index);
-        if (removedElement.previous == null) {
-            first = removedElement.next;
+        final T dataToRemove = removedElement.data;
+        Node<T> next = removedElement.next;
+        Node<T> previous = removedElement.previous;
+
+        if (previous == null) {
+            first = next;
         } else {
-            removedElement.previous.next = removedElement.next;
-            removedElement.previous = null;
+            previous.next = next;
+            previous = null;
         }
 
-        if (removedElement.next == null) {
-            last = removedElement.previous;
+        if (next == null) {
+            last = previous;
         } else {
-            removedElement.next.previous = removedElement.previous;
-            removedElement.next = null;
+            next.previous = previous;
+            next = null;
         }
 
-        T dataToRemove = removedElement.data;
         removedElement.data = null;
         size--;
         return dataToRemove;
@@ -138,7 +125,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (getNode(i).data == t) {
+            if (getNode(i).data.equals(t)) {
                 T dataOfRemoved = getNode(i).data;
                 remove(i);
                 return dataOfRemoved;
