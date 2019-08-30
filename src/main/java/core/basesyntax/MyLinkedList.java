@@ -18,23 +18,35 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private void addToTail(T value) {
+        Node<T> newElem = new Node<>(last, value, null);
+        if (last.item == null) {
+            first.next = newElem;
+        } else {
+            last.next = newElem;
+        }
+        last = newElem;
+        size++;
+    }
+
+    private void addToHead(T value) {
+        Node<T> newElem = new Node<>(null, value, first);
+        if (first.item == null) {
+            last.prev = newElem;
+        } else {
+            first.prev = newElem;
+        }
+        first = newElem;
+        size++;
+    }
+
     @Override
     public void add(T value) {
-        Node<T> newElem;
         if (first.item == null) {
-            newElem = new Node<>(null, value, last);
-            first = newElem;
-            last.prev = first;
-        } else if (last.item == null) {
-            newElem = new Node<>(first, value, null);
-            last = newElem;
-            first.next = last;
+            addToHead(value);
         } else {
-            newElem = new Node<>(last, value, null);
-            last.next = newElem;
-            last = newElem;
+            addToTail(value);
         }
-        size++;
     }
 
     @Override
@@ -43,7 +55,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             checkIndexException(index);
         }
         if (index == size) {
-            add(value);
+            if (first.item == null) {
+                addToHead(value);
+            } else {
+                addToTail(value);
+            }
         } else {
             Node<T> result = first;
             for (int i = 0; i < size; i++) {
@@ -57,7 +73,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 result = result.next;
             }
         }
-
     }
 
     @Override
