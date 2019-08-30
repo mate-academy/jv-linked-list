@@ -3,48 +3,193 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private int size;
+    private Node<T> first;
+    private Node<T> last;
+    private Node<T> newNode;
+
+    public MyLinkedList() {
+        first = null;
+        last = null;
+    }
+
+    public Node<T> nodeByIndex(int index) {
+        if (index < size / 2) {
+            newNode = first;
+            for (int i = 0; i < index; i++) {
+                newNode = newNode.next;
+            }
+            return newNode;
+        } else {
+            newNode = last;
+            for (int i = size - 1; i > index; i--) {
+                newNode = newNode.prev;
+            }
+            return newNode;
+        }
+    }
+
+    public void addFirst(T value) {
+        newNode = new Node(value);
+        first = last = newNode;
+    }
+
+    public void addFront(T value) {
+        newNode = new Node(value);
+        first.prev = newNode;
+        newNode.next = first;
+        newNode.prev = null;
+        first = newNode;
+    }
+
+    public void addBack(T value) {
+        newNode = new Node(value);
+        newNode.prev = last;
+        last.next = newNode;
+        newNode.next = null;
+        last = newNode;
+    }
+
     @Override
     public void add(T value) {
-
+        if (size == 0) {
+            addFirst(value);
+        } else {
+            addBack(value);
+        }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (size < index || index < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+        if (index == 0) {
+            if (size == 0) {
+                addFirst(value);
+            } else {
+                addFront(value);
+            }
+        }
+        if (index > 0) {
+            if (index == size) {
+                addBack(value);
+            }
+            newNode = new Node(value);
+            nodeByIndex(index - 1).next = newNode;
+            newNode.next = nodeByIndex(index);
+            newNode.prev = nodeByIndex(index - 1);
+            nodeByIndex(index).prev = newNode;
+        }
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+            size++;
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        if (size <= index || index < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+        return nodeByIndex(index).item;
     }
 
     @Override
     public void set(T value, int index) {
-
+        if (size <= index || index < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+        nodeByIndex(index).item = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        Node<T> nodeToBeRemoved = null;
+        if (size <= index || index < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+        if (size == 1) {
+            first = last = null;
+            size--;
+            return null;
+        }
+        if (index == 0) {
+            nodeToBeRemoved = first;
+            first.next.prev = null;
+            first = null;
+            first = nodeToBeRemoved.next;
+        }
+        if (index > 0) {
+            if (index == size - 1) {
+                nodeToBeRemoved = last;
+                last.prev.next = null;
+                last = null;
+                last = nodeToBeRemoved.prev;
+            } else {
+                nodeToBeRemoved = nodeByIndex(index);
+                nodeByIndex(index - 1).next = nodeByIndex(index + 1);
+                nodeByIndex(index + 1).prev = nodeByIndex(index - 1);
+                nodeByIndex(index).prev = null;
+                nodeByIndex(index).next = null;
+            }
+        }
+        size--;
+        if (size == 0) {
+            throw new IndexOutOfBoundsException();
+        }
+        return nodeToBeRemoved.item;
     }
 
     @Override
     public T remove(T t) {
-        return null;
+        newNode = first;
+        int count = 0;
+        for (int i = 0; i < size; i++) {
+            if (t.equals(newNode.item)) {
+                break;
+            }
+            count++;
+            newNode = newNode.next;
+        }
+        if (count == size) {
+            return null;
+        } else {
+            return remove(count);
+        }
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private class Node<T> {
+        T item;
+        Node<T> next;
+        Node<T> prev;
+
+        Node(T element) {
+            this.item = element;
+        }
+
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
+
+
