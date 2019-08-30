@@ -16,7 +16,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = new Node(value, null, null);
             last = first;
         } else {
-            Node newLast = new Node(value, last, null);
+            Node<T> newLast = new Node(value, last, null);
             last.next = newLast;
             last = newLast;
         }
@@ -51,7 +51,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        Node node = node(index);
+        Node<T> node = node(index);
         node.item = value;
     }
 
@@ -133,7 +133,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> node(int index) {
-        Node element;
+        Node<T> element;
         if (index < (size >> 1)) {
             element = first;
             for (int i = 0; i < index; i++) {
@@ -148,12 +148,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return element;
     }
 
-    private static class Node<T> {
+    public static class Node<T> {
         T item;
-        Node next;
-        Node previous;
+        Node<T> next;
+        Node<T> previous;
 
-        Node(T item, Node previous, Node next) {
+        Node(T item, Node<T> previous, Node<T> next) {
             this.item = item;
             this.next = next;
             this.previous = previous;
