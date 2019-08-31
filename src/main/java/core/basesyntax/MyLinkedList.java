@@ -49,7 +49,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexException(index);
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException();
+        }
         if (index == size) {
             add(value);
         } else {
@@ -80,11 +82,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index == size) {
-            throw new IndexOutOfBoundsException();
-        } else {
-            checkIndexException(index);
-        }
+        checkIndexException(index);
         Node<T> node = first;
         for (int i = 0; i < index; ++i) {
             node = node.next;
@@ -95,9 +93,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void set(T value, int index) {
         checkIndexException(index);
-        if (index == size) {
-            throw new IndexOutOfBoundsException();
-        }
         Node<T> node = first;
         for (int i = 0; i < size; i++) {
             if (i == index) {
@@ -110,9 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkIndexException(index);
         Node<T> node = first;
         for (int i = 0; i < size; i++) {
             if (index == 0) {
@@ -157,7 +150,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndexException(int index) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
     }
