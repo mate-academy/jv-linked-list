@@ -110,8 +110,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndexException(index);
-        if (index == size) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
         Node<T> node = first;
