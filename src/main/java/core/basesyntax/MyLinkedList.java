@@ -97,7 +97,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < size; i++) {
             if (i == index) {
                 node.element = value;
-                return;
             }
             node = node.next;
         }
