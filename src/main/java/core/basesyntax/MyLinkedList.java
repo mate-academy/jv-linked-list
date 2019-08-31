@@ -31,6 +31,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             } else {
                 oldObject.previous.next = newObject;
             }
+            oldObject.previous = newObject;
             size++;
         }
     }
