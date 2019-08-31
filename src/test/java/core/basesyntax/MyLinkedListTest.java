@@ -109,11 +109,6 @@ public class MyLinkedListTest {
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
-    public void testSetByZeroIndex() {
-        myLinkedList.set(NEW_ITEM, 0);
-    }
-
-    @Test(expected = IndexOutOfBoundsException.class)
     public void testSetByNegativeIndex() {
         myLinkedList.set(NEW_ITEM, -1);
     }
