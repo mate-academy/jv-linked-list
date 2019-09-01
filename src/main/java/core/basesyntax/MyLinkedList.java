@@ -139,15 +139,4 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.prev = prev;
         }
     }
-
-    public static void main(String[] args) {
-        MyLinkedList<String> list = new MyLinkedList();
-        list.add("1");
-        list.add("2");
-        list.add("3");
-        list.add("4");
-        list.add("5");
-        System.out.println(list.remove(2));
-        System.out.println(list.size);
-    }
 }
