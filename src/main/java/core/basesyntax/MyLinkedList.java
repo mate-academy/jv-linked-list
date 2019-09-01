@@ -22,6 +22,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newElem = new Node<>(last, value, null);
         if (last.item == null) {
             first.next = newElem;
+            newElem.prev = first;
         } else {
             last.next = newElem;
         }
@@ -52,7 +53,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            checkIndexException(index);
+            throw new IndexOutOfBoundsException();
         }
         if (index == size) {
             if (first.item == null) {
@@ -130,12 +131,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(T t) {
-        Node<T> result = first;
-        for (int i = 0; i < size; i++) {
-            if (result.item == t) {
+        Node<T> counterFirst = first;
+        Node<T> counterLast = last;
+        for (int i = 0; i < size / 2 + 1; i++) {
+            if (counterFirst.item == t) {
                 return remove(i);
+            } else if (counterLast.item == t) {
+                return remove(size - i - 1);
             }
-            result = result.next;
+            counterFirst = counterFirst.next;
+            counterLast = counterLast.prev;
         }
         return null;
     }
@@ -150,12 +155,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    public static class Node<E> {
+    private static class Node<E> {
         E item;
         Node<E> next;
         Node<E> prev;
 
-        public Node(Node<E> prev, E item, Node<E> next) {
+        private Node(Node<E> prev, E item, Node<E> next) {
             this.item = item;
             this.next = next;
             this.prev = prev;
