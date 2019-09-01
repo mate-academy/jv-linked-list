@@ -3,48 +3,151 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private int size;
+    private Node<T> first;
+    private Node<T> last;
+
     @Override
     public void add(T value) {
-
+        Node<T> l = last;
+        Node<T> newNode = new Node<>(l, value, null);
+        last = newNode;
+        if (l == null) {
+            first = newNode;
+        } else {
+            l.next = newNode;
+        }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException();
+        }
+        if (index == size) {
+            add(value);
+        } else {
+            Node<T> prev = last.prev;
+            Node<T> newNode = new Node<>(prev, value, last);
+            last.prev = newNode;
+            if (prev == null) {
+                first = newNode;
+            } else {
+                prev.next = newNode;
+            }
+            size++;
+        }
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        return getNode(index).item;
     }
 
     @Override
     public void set(T value, int index) {
-
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        if (getNode(index).item == null && getNode(index) == null) {
+            add(value, index);
+        }
+        getNode(index).item = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        Node<T> element = getNode(index);
+        Node<T> next = element.next;
+        Node<T> previous = element.prev;
+        if (previous == null) {
+            first = next;
+        } else {
+            previous.next = next;
+        }
+        if (next == null) {
+            last = previous;
+        } else {
+            next.prev = previous;
+        }
+        T temp = element.item;
+        element.item = null;
+        size--;
+        return temp;
     }
 
     @Override
     public T remove(T t) {
-        return null;
+        T temp = null;
+        for (int i = 0; i < size; i++) {
+            if (getNode(i).item == t) {
+                temp = getNode(i).item;
+                remove(i);
+            }
+        }
+        return temp;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private Node<T> getNode(int index) {
+        if (index < (size / 2)) {
+            Node<T> x = first;
+            for (int i = 0; i < index; i++) {
+                x = x.next;
+            }
+            return x;
+        } else {
+            Node<T> x = last;
+            for (int i = size - 1; i > index; i--) {
+                x = x.prev;
+            }
+            return x;
+        }
+    }
+
+    public static class Node<E> {
+        E item;
+        Node<E> next;
+        Node<E> prev;
+
+        Node(Node<E> prev, E item, Node<E> next) {
+            this.item = item;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+
+    public static void main(String[] args) {
+        MyLinkedList<String> list = new MyLinkedList();
+        list.add("1");
+        list.add("2");
+        list.add("3");
+        list.add("4");
+        list.add("5");
+        System.out.println(list.remove(2));
+        System.out.println(list.size);
     }
 }
