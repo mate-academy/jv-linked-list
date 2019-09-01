@@ -3,17 +3,16 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final int CAPACITY = 16;
     private int size = 0;
     private Node<T> header;
     private Node<T> currentNode;
-    private Node<T> first;
+    private Node<T> tail;
 
     @Override
     public void add(T value) {
         if (this.isEmpty()) {
-            first = new Node(value, null, header);
-            header = new Node(null, first, null);
+            tail = new Node(value, null, header);
+            header = new Node(null, tail, null);
             size++;
         } else {
             currentNode = new Node((T) value, header.getPrevious(), header);
@@ -29,8 +28,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException();
         }
         if (this.isEmpty()) {
-            first = new Node(value, null, header);
-            header = new Node(null, first, null);
+            tail = new Node(value, null, header);
+            header = new Node(null, tail, null);
             size++;
         } else if (index == size) {
             add(value);
@@ -116,7 +115,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(T value) {
-        Node search = first;
+        Node search = tail;
         while (search.hasNext()) {
             if (search.getItem() != null && search.getItem().equals(value)) {
                 return search;
@@ -132,7 +131,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException();
         }
         if (index <= size >> 1) {
-            Node<T> search = first;
+            Node<T> search = tail;
             for (int i = 0; i < index; i++) {
                 search = search.next;
             }
