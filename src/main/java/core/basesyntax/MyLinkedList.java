@@ -15,7 +15,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeByIndex(int index) {
         Node<T> node = head;
-        for(int i = 0; i < index; i++) {
+        for (int i = 0; i < index; i++) {
             node = node.next;
         }
         return node;
