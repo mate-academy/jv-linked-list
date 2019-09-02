@@ -80,7 +80,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Node<T> res = loopFor(index);
+        Node<T> result = loopFor(index);
         return res.element;
     }
 
