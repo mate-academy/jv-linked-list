@@ -59,26 +59,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            addFirst(value);
+            Node previous = getElem(index).previous;
+            previous.next.previous = new Node(value, previous.next, previous);
+            size++;
         }
-    }
-
-    private void addFirst(T value) {
-        Node<T> firstNode = firstOne;
-        Node<T> newNode = new Node<>(value, null, firstNode);
-        firstOne = newNode;
-        if (firstNode == null) {
-            lastOne = newNode;
-        } else {
-            firstNode.previous = newNode;
-        }
-        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         for (T t : list) {
-            this.add(t);
+            add(t);
         }
     }
 
