@@ -44,11 +44,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             Node<T> node = getNode(index);
             Node<T> newNode = new Node(node.prev, value, node);
-            getNode(index).prev = newNode;
+            node.prev = newNode;
             if (size == 0) {
                 first = newNode;
             } else {
-                getNode(index).prev.next = newNode;
+                node = newNode;
             }
             size++;
         }
