@@ -22,7 +22,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeFromIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("wrong index" + "\n" + "Mast be from 0 to " + (size() - 1));
+            throw new IndexOutOfBoundsException("wrong index"
+                    + "\n"
+                    + "Mast be from 0 to " + (size() - 1));
         }
         Node<T> searchNode = headNode;
 
@@ -75,7 +77,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("wrong index" + "\n" + "Mast be from 0 to " + (size() - 1));
+            throw new IndexOutOfBoundsException("wrong index"
+                    + "\n" + "Mast be from 0 to "
+                    + (size() - 1));
         }
         if (size() == 0) {
             addToEmpty(value);
@@ -109,7 +113,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void set(T value, int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("wrong index" + "\n" + "Mast be from 0 to " + (size() - 1));
+            throw new IndexOutOfBoundsException("wrong index"
+                    + "\n"
+                    + "Mast be from 0 to " + (size() - 1));
         }
         getNodeFromIndex(index).value = value;
     }
@@ -117,7 +123,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("wrong index" + "\n" + "Mast be from 0 to " + (size() - 1));
+            throw new IndexOutOfBoundsException("wrong index"
+                    + "\n" + "Mast be from 0 to "
+                    + (size() - 1));
         }
         Node<T> nodeToDelete = getNodeFromIndex(index);
         Node<T> prev = nodeToDelete.previous;
