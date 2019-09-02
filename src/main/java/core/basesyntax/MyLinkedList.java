@@ -61,20 +61,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(T value) {
         Node<T> object = first;
-        if (value == null) {
-            while (object != null) {
-                if (object.current == null) {
-                    return removeObject(object);
-                }
-                object = object.next;
+        while (object != null) {
+            if ((value == null && object.current == null) || object.current.equals(value)) {
+                return removeObject(object);
             }
-        } else {
-            while (object != null) {
-                if (object.current.equals(value)) {
-                    return removeObject(object);
-                }
-                object = object.next;
-            }
+            object = object.next;
         }
         return null;
     }
@@ -130,9 +121,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        Node<T> previous;
-        T current;
-        Node<T> next;
+        private Node<T> previous;
+        private T current;
+        private Node<T> next;
 
         Node(Node<T> previous, T current, Node<T> next) {
             this.previous = previous;
