@@ -1,5 +1,7 @@
 package core.basesyntax;
+
 import java.util.List;
+
 import org.w3c.dom.Node;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
