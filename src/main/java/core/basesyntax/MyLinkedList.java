@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import org.w3c.dom.Node;
+
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -8,9 +10,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
 
     private static class Node<T> {
-        T item;
-        Node next;
-        Node prev;
+        private T item;
+        private Node next;
+        private Node prev;
 
         Node(T item, Node prev, Node next) {
             this.item = item;
@@ -24,13 +26,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (first == null) {
             first = new Node(value, null, null);
             last = first;
-            size = 1;
         } else {
             Node newLast = new Node(value, last, null);
             last.next = newLast;
             last = newLast;
-            size++;
         }
+        size++;
     }
 
     @Override
@@ -41,20 +42,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            addValue(value);
+            Node<T> oldNode = getElement(index);
+            Node<T> newNode = new Node(oldNode.prev, (Node) value, oldNode);
+            if (oldNode.prev == null) {
+                first = newNode;
+            } else {
+                oldNode.prev.next = newNode;
+            }
+            oldNode.prev = newNode;
+            size++;
         }
-    }
-
-    private void addValue(T value) {
-        Node<T> firstNode = first;
-        Node<T> newNode = new Node<>(value, null, firstNode);
-        first = newNode;
-        if (firstNode == null) {
-            last = newNode;
-        } else {
-            firstNode.prev = newNode;
-        }
-        size++;
     }
 
     @Override
@@ -66,10 +63,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return getElem(index).item;
+        return getElement(index).item;
     }
 
-    public Node<T> getElem(int index) {
+    private Node<T> getElement(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
@@ -92,7 +89,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index out of range");
         }
-        getElem(index).item = value;
+        getElement(index).item = value;
     }
 
     @Override
@@ -100,9 +97,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
-        Node<T> removeElem = getElem(index);
-        Node<T> next = removeElem.next;
-        Node<T> previous = removeElem.prev;
+        Node<T> removeElement = getElement(index);
+        Node<T> next = removeElement.next;
+        Node<T> previous = removeElement.prev;
         if (previous == null) {
             first = next;
         } else {
@@ -113,8 +110,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             next.prev = previous;
         }
-        T removedData = removeElem.item;
-        removeElem.item = null;
+        T removedData = removeElement.item;
+        removeElement = null;
         size--;
         return removedData;
     }
@@ -122,8 +119,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (getElem(i).item.equals(t)) {
-                T deletedItem = getElem(i).item;
+            Node node = getElement(i);
+            if (node.item.equals(t)) {
+                T deletedItem = (T) node.item;
                 remove(i);
                 return deletedItem;
             }
