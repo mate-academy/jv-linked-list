@@ -78,9 +78,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node(value);
         Node<T> node = nodeByIndex(index - 1);
         node.next = newNode;
-        newNode.next = node.prev;
+        newNode.next = node.next;
         newNode.prev = node;
-        node = newNode;
+        node.next.prev = newNode;
         size++;
     }
 
@@ -114,9 +114,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException();
         }
         if (size == 1) {
+            nodeToBeRemoved = first;
             first = last = null;
             size--;
-            return null;
+            return nodeToBeRemoved.item;
         }
         if (index == 0) {
             nodeToBeRemoved = first;
@@ -152,7 +153,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             count++;
             newNode = newNode.next;
-
         }
         if (count == size) {
             return null;
@@ -179,7 +179,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node(T element) {
             this.item = element;
         }
-
     }
 }
 
