@@ -48,7 +48,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (size == 0) {
                 first = newNode;
             } else {
-                node.prev = newNode;
+                node.prev.next = newNode;
             }
             size++;
         }
