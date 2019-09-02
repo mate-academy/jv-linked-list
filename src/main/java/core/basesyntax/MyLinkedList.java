@@ -1,8 +1,6 @@
 package core.basesyntax;
-
-import org.w3c.dom.Node;
-
 import java.util.List;
+import org.w3c.dom.Node;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
