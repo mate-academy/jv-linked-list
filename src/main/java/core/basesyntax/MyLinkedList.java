@@ -58,7 +58,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             headNode = newNode;
             size++;
         }
-
     }
 
     @Override
@@ -81,15 +80,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     + "\n" + "Mast be from 0 to "
                     + (size() - 1));
         }
-        if (size() == 0) {
-            addToEmpty(value);
-        } else if (index == 0) {
+        if (index == 0) {
             addFirst(value);
-        } else if (index == size()) {
+        } else if (index == size() || size() == 0) {
             add(value);
         } else {
-            Node<T> prevNode = getNodeFromIndex(index);
-            Node<T> nextNode = getNodeFromIndex(index);
+            Node<T> prevNode = getNodeFromIndex(index - 1);
+            Node<T> nextNode = getNodeFromIndex(index + 1);
 
             Node<T> newNode = new Node<>(value, prevNode, nextNode);
             prevNode.next = nextNode;
@@ -112,11 +109,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("wrong index"
-                    + "\n"
-                    + "Mast be from 0 to " + (size() - 1));
-        }
         getNodeFromIndex(index).value = value;
     }
 
