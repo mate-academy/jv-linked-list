@@ -14,7 +14,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node next;
         private Node prev;
 
-        Node(T item, Node prev, Node next) {
+        public Node(T item, Node prev, Node next) {
             this.item = item;
             this.prev = prev;
             this.next = next;
@@ -43,7 +43,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
         } else {
             Node<T> oldNode = getElement(index);
-            Node<T> newNode = new Node(oldNode.prev, (Node) value, oldNode);
+            Node<T> newNode = new Node(value, oldNode.prev, oldNode);
             if (oldNode.prev == null) {
                 first = newNode;
             } else {
