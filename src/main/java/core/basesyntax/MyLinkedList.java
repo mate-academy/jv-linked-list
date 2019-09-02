@@ -93,8 +93,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (t == findElement(i) || t.equals(findElement(i).item)) {
-                T removedElement = findElement(i).item;
+            Node<T> currentElement = findElement(i);
+            if (t == currentElement || t.equals(currentElement.item)) {
+                T removedElement = currentElement.item;
                 remove(i);
                 return removedElement;
             }
@@ -111,18 +112,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private static class Node<T> {
-        private T item;
-        private Node<T> prev;
-        private Node<T> next;
-
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.prev = prev;
-            this.next = next;
-        }
     }
 
     private void checkPositionIndex(int index) {
@@ -150,6 +139,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 fromEnd = fromEnd.prev;
             }
             return fromEnd;
+        }
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> prev;
+        private Node<T> next;
+
+        private Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.prev = prev;
+            this.next = next;
         }
     }
 }
