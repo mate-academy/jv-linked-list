@@ -26,15 +26,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> left = tail;
-        Node<T> node = new Node<T>(value, null, left);
+        Node<T> last = tail;
+        Node<T> node = new Node<T>(value, null, last);
         tail = node;
-        if (left == null) {
+        if (last == null) {
             head = node;
         } else {
-            left.next = node;
+            last.next = node;
         }
-        ++size;
+        size++;
     }
 
     @Override
@@ -122,9 +122,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             return node;
         }
-        if (index + 1 == size) {
-            return tail;
-        }
         Node<T> node = tail;
         for (int i = size - 1; i > index; i--) {
             node = node.prev;
@@ -141,7 +138,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             prevNode.next = node;
         }
-        ++size;
+        size++;
     }
 
     private T removeElement(Node<T> node) {
@@ -159,9 +156,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             next.prev = prev;
         }
-        --size;
+        size--;
         T element = node.item;
-        node.item = null;
+        node = null;
         return element;
     }
 }
