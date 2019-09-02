@@ -76,7 +76,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (Node<T> node = first; node != null; node = node.next) {
             if (t == null || t.equals(node.element)) {
                 removedElement = node.element;
-                unlink(node);;
+                unlink(node);
+                ;
             }
         }
         return removedElement;
@@ -143,8 +144,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-
-        T element;
+        private T element;
         Node<T> next;
         Node<T> previous;
 
