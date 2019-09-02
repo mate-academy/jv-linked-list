@@ -52,6 +52,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException();
         }
+
         if (index == size) {
             add(value);
         } else {
