@@ -16,7 +16,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void backElement(T tail) {
         Node<T> last = this.last;
-        Node<T> node = new Node<>(last, tail, (Node) null);
+        Node<T> node = new Node<>(last, tail, null);
         if (last.element == null) {
             this.first = node;
         } else {
