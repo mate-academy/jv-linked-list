@@ -8,11 +8,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> lastNode;
 
     private static class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> prev;
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
-        Node(T element, Node<T> prev, Node<T> next) {
+        private Node(T element, Node<T> prev, Node<T> next) {
             this.item = element;
             this.next = next;
             this.prev = prev;
@@ -130,9 +130,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
             if (get(i) == t) {
-                T resultToRemove = get(i);
-                remove(i);
-                return resultToRemove;
+                return remove(i);
             }
         }
         return null;
