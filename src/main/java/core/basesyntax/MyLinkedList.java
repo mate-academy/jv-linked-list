@@ -27,12 +27,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void frontElement(T head) {
-        Node<T> first = this.first;
-        Node<T> node = new Node<>((Node) null, head, first);
-        if (first.element == null) {
+        Node<T> firstNode = this.first;
+        Node<T> node = new Node<>(null, head, firstNode);
+        if (firstNode.element == null) {
             this.last = node;
         } else {
-            first.prev = node;
+            firstNode.prev = node;
         }
         this.first = node;
         this.size++;
@@ -57,19 +57,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             Node<T> prev = first;
             for (int i = 0; i < size; i++) {
-                if (index == i) {
-                    Node<T> node = new Node<>(prev, value, prev.next);
-                    prev = node;
-                    if (prev == null) {
-                        this.first = node;
-                    } else {
-                        prev.next = node;
-                    }
-                    size++;
-                    break;
+                Node<T> node = new Node<>(prev, value, prev.next);
+                prev = node;
+                if (prev == null) {
+                    this.first = node;
+                } else {
+                    prev.next = node;
                 }
-                prev = prev.next;
+                size++;
+                break;
             }
+            prev = prev.next;
         }
     }
 
@@ -84,11 +82,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T get(int index) {
         checkIndexException(index);
         Node<T> node = first;
-        for (int i = 0; i < index; ++i) {
+        for (int i = 0; i < index; i++) {
             node = node.next;
         }
         return node.element;
     }
+
 
     @Override
     public void set(T value, int index) {
@@ -97,7 +96,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < size; i++) {
             if (i == index) {
                 node.element = value;
-                return;
             }
             node = node.next;
         }
@@ -124,6 +122,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node = node.next;
         }
         size--;
+        node.prev = null;
+        node.next = null;
         return node.element;
     }
 
@@ -141,7 +141,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
@@ -156,11 +156,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        T element;
-        Node<T> next;
-        Node<T> prev;
+        private T element;
+        private Node<T> next;
+        private Node<T> prev;
 
-        Node(Node<T> prev, T element, Node<T> next) {
+        public Node(Node<T> prev, T element, Node<T> next) {
             this.element = element;
             this.next = next;
             this.prev = prev;
