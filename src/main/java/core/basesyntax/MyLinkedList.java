@@ -21,6 +21,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        checkPositionIndex(index);
+
         if (index == 0) {
             linkFirst(value);
             return;
@@ -29,7 +31,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkElementIndex(index);
 
         Node next = getNode(index);
         Node prev = next.previous;
@@ -59,7 +60,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        final Node<T> node = getNode(index);
+        Node<T> node = getNode(index);
         final T item = node.item;
         final Node next = node.next;
         final Node prev = node.previous;
@@ -77,6 +78,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
         size--;
+        node = null;
         return item;
     }
 
@@ -107,13 +109,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void linkFirst(T value) {
         Node oldFirst = first;
-        first = new Node(value, null, oldFirst);
+        first = new Node(value, oldFirst, null);
         if (oldFirst != null) {
             oldFirst.previous = first;
         } else {
             last = first;
         }
         size++;
+    }
+
+    private void checkPositionIndex(int index) {
+        if (index > size || index < 0) {
+            throw new IndexOutOfBoundsException();
+        }
     }
 
     private void checkElementIndex(int index) {
@@ -141,9 +149,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        T item;
-        Node next;
-        Node previous;
+        private T item;
+        private Node next;
+        private Node previous;
 
         public Node(T item, Node next, Node previous) {
             this.item = item;
