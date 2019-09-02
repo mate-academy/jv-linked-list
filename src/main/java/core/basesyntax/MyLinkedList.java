@@ -7,7 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
 
-
     public MyLinkedList() {
         first = null;
         last = null;
@@ -77,10 +76,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             addBack(value);
         }
         Node<T> newNode = new Node(value);
-        nodeByIndex(index - 1).next = newNode;
-        newNode.next = nodeByIndex(index);
-        newNode.prev = nodeByIndex(index - 1);
-        nodeByIndex(index).prev = newNode;
+        Node<T> node = nodeByIndex(index - 1);
+        node.next = newNode;
+        newNode.next = node.prev;
+        newNode.prev = node;
+        node = newNode;
         size++;
     }
 
@@ -88,7 +88,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
-            size++;
         }
     }
 
@@ -123,18 +122,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             nodeToBeRemoved = first;
             first.next.prev = null;
             first = nodeToBeRemoved.next;
-        }
-        if (index > 0) {
+        } else {
             if (index == size - 1) {
                 nodeToBeRemoved = last;
                 last.prev.next = null;
                 last = nodeToBeRemoved.prev;
             } else {
                 nodeToBeRemoved = nodeByIndex(index);
-                nodeByIndex(index - 1).next = nodeByIndex(index + 1);
-                nodeByIndex(index + 1).prev = nodeByIndex(index - 1);
-                nodeByIndex(index).prev = null;
-                nodeByIndex(index).next = null;
+                nodeToBeRemoved.prev.next = nodeToBeRemoved.next;
+                nodeToBeRemoved.next.prev = nodeToBeRemoved.prev;
+                nodeToBeRemoved.prev = null;
+                nodeToBeRemoved.next = null;
             }
         }
         size--;
@@ -178,15 +176,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        Node(T element) {
+        private Node(T element) {
             this.item = element;
         }
 
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
     }
 }
 
