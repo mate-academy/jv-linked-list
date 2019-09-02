@@ -14,9 +14,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Node<T> node = head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
+        Node<T> node;
+        if (index <= size / 2) {
+            node = head;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+        } else {
+            node = tail;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
         }
         return node;
     }
@@ -33,13 +41,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> node = new Node<>(value, null, null);
             head = node;
             tail = node;
-            size++;
         } else {
             Node<T> node = new Node<>(value, tail, null);
             tail.next = node;
             tail = node;
-            size++;
         }
+        size++;
     }
 
     @Override
@@ -102,9 +109,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
             if (getNodeByIndex(i).value.equals(t)) {
-                T removedValue = getNodeByIndex(i).value;
-                remove(i);
-                return removedValue;
+                return remove(i);
             }
         }
         return null;
@@ -121,9 +126,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        T value;
-        Node<T> prev;
-        Node<T> next;
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
 
         public Node(T value, Node prev, Node next) {
             this.value = value;
