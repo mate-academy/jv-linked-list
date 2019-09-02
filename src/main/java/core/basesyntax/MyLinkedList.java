@@ -93,23 +93,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private T processNode(Node<T> n) {
-        final T value = n.data;
-        final Node<T> next = n.next;
-        final Node<T> previous = n.previous;
+    private T processNode(Node<T> node) {
+        final T value = node.data;
+        final Node<T> next = node.next;
+        final Node<T> previous = node.previous;
         if (previous == null) {
             head = next;
         } else {
             previous.next = next;
-            n.previous = null;
+            node.previous = null;
         }
         if (next == null) {
             tail = previous;
         } else {
             next.previous = previous;
-            n.next = null;
+            node.next = null;
         }
-        n.data = null;
+        node.data = null;
         size--;
         return value;
     }
