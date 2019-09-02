@@ -73,16 +73,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 addFront(value);
             }
         }
-        if (index > 0) {
-            if (index == size) {
-                addBack(value);
-            }
-            Node<T> newNode = new Node(value);
-            nodeByIndex(index - 1).next = newNode;
-            newNode.next = nodeByIndex(index);
-            newNode.prev = nodeByIndex(index - 1);
-            nodeByIndex(index).prev = newNode;
+        if (index == size) {
+            addBack(value);
         }
+        Node<T> newNode = new Node(value);
+        nodeByIndex(index - 1).next = newNode;
+        newNode.next = nodeByIndex(index);
+        newNode.prev = nodeByIndex(index - 1);
+        nodeByIndex(index).prev = newNode;
         size++;
     }
 
