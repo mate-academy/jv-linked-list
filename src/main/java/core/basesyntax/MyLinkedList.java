@@ -34,7 +34,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             linkTail(value);
         } else {
-            link(value, node(index));
+            link(value, getNodeByIndex(index));
         }
     }
 
@@ -72,14 +72,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return node(index).item;
+        return getNodeByIndex(index).item;
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        Node ptr = node(index);
-        ptr.item = value;
+        Node pointer = getNodeByIndex(index);
+        pointer.item = value;
     }
 
     private void checkIndex(int index) {
@@ -88,7 +88,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> node(int index) {
+    private Node<T> getNodeByIndex(int index) {
         Node returnNode;
         if (index < (size >> 1)) {
             returnNode = head;
@@ -108,7 +108,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        return (T) unlink(node(index));
+        return (T) unlink(getNodeByIndex(index));
     }
 
     @Override
