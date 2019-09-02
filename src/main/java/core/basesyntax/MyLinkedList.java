@@ -26,15 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException();
         }
         if (index == size) {
-            Node<T> previous = tail;
-            Node<T> newNode = new Node(value, previous, null);
-            tail = newNode;
-            if (previous == null) {
-                head = newNode;
-            } else {
-                previous.next = newNode;
-            }
-            size++;
+            this.add(value);
         } else {
             Node<T> nextNode = getNodeElementByIndex(index);
             Node<T> previous = nextNode.previous;
