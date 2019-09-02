@@ -9,13 +9,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> l = last;
-        Node<T> newNode = new Node<>(l, value, null);
+        Node<T> lastNode = last;
+        Node<T> newNode = new Node<>(lastNode, value, null);
         last = newNode;
-        if (l == null) {
+        if (lastNode == null) {
             first = newNode;
         } else {
-            l.next = newNode;
+            lastNode.next = newNode;
         }
         size++;
     }
@@ -60,9 +60,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
-        if (getNode(index).item == null && getNode(index) == null) {
-            add(value, index);
-        }
         getNode(index).item = value;
     }
 
@@ -85,7 +82,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             next.prev = previous;
         }
         T temp = element.item;
-        element.item = null;
+        element = null;
         size--;
         return temp;
     }
@@ -94,7 +91,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(T t) {
         T temp = null;
         for (int i = 0; i < size; i++) {
-            if (getNode(i).item == t) {
+            if (getNode(i).item.equals(t)) {
                 temp = getNode(i).item;
                 remove(i);
             }
@@ -114,24 +111,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         if (index < (size / 2)) {
-            Node<T> x = first;
+            Node<T> firstNode = first;
             for (int i = 0; i < index; i++) {
-                x = x.next;
+                firstNode = firstNode.next;
             }
-            return x;
+            return firstNode;
         } else {
-            Node<T> x = last;
+            Node<T> lastNode = last;
             for (int i = size - 1; i > index; i--) {
-                x = x.prev;
+                lastNode = lastNode.prev;
             }
-            return x;
+            return lastNode;
         }
     }
 
     public static class Node<E> {
-        E item;
-        Node<E> next;
-        Node<E> prev;
+        private E item;
+        private Node<E> next;
+        private Node<E> prev;
 
         Node(Node<E> prev, E item, Node<E> next) {
             this.item = item;
