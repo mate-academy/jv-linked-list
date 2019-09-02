@@ -80,25 +80,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndexException(index);
-        Node<T> node = first;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
-        }
-        return node.element;
+        Node<T> res = loopFor(index);
+        return res.element;
     }
 
 
     @Override
     public void set(T value, int index) {
+        Node<T> node = loopFor(index);
+        node.element = value;
+    }
+
+    private Node<T> loopFor(int index) {
         checkIndexException(index);
         Node<T> node = first;
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                node.element = value;
-            }
+        for (int i = 0; i < index; i++) {
             node = node.next;
         }
+        return node;
     }
 
     @Override
