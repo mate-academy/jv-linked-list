@@ -37,7 +37,7 @@ public class MyLinkedListTest {
         myLinkedList.add(FIRST_ITEM);
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);
-        myLinkedList.add(null);
+        myLinkedList.add(NULL_ITEM);
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
         String actualThird = myLinkedList.get(2);
