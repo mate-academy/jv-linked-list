@@ -21,6 +21,10 @@ public class MyLinkedListTest {
     private static final String NULL_ITEM = null;
     private static final String NEW_ITEM = "NewFirst";
     private static final String ANOTHER_NEW_ITEM = "NewSecond";
+    private static final Cat FIRST_CAT = new Cat("Fantic", "grey");
+    private static final Cat SECOND_CAT = new Cat("Barsik", "black");
+    private static final Cat THIRD_CAT = new Cat("Tom", "white");
+    private static final Cat THE_SAME_SECOND_CAT = new Cat("Barsik", "black");
 
     private static final List<String> DEFAULT_LIST = new LinkedList<>(
             Arrays.asList("First", "Second", "Third", "Fourth", "Fifth", "Sixth"));
@@ -42,10 +46,26 @@ public class MyLinkedListTest {
         String actualSecond = myLinkedList.get(1);
         String actualThird = myLinkedList.get(2);
         String actualFourth = myLinkedList.get(3);
-        Assert.assertEquals(FIRST_ITEM, actualFirst);
-        Assert.assertEquals(SECOND_ITEM, actualSecond);
-        Assert.assertEquals(THIRD_ITEM, actualThird);
-        Assert.assertNull(actualFourth);
+        Assert.assertEquals("Test failed! First element should be " + FIRST_ITEM,
+                FIRST_ITEM, actualFirst);
+        Assert.assertEquals("Test failed! Second element should be " + SECOND_ITEM,
+                SECOND_ITEM, actualSecond);
+        Assert.assertEquals("Test failed! Third element should be " + THIRD_ITEM,
+                THIRD_ITEM, actualThird);
+        Assert.assertNull("Test failed! Fourth element should be null", actualFourth);
+    }
+
+    @Test
+    public void testAddManyData() {
+        MyLinkedListInterface<String> linkedList = new MyLinkedList<>();
+        for (int i = 0; i < 1000; i++) {
+            linkedList.add("String" + i);
+        }
+        Assert.assertEquals("Expected size is incorrect", 1000, linkedList.size());
+        for (int i = 0; i < 1000; i++) {
+            Assert.assertEquals("Test failed! Linked list can't add a lot of value correctly",
+                    "String" + i, linkedList.get(i));
+        }
     }
 
     @Test
@@ -74,9 +94,12 @@ public class MyLinkedListTest {
         String expectedFirst = DEFAULT_LIST.get(0);
         String expectedSecond = DEFAULT_LIST.get(1);
         String expectedLast = DEFAULT_LIST.get(DEFAULT_LIST.size() - 1);
-        Assert.assertEquals(expectedFirst, actualFirst);
-        Assert.assertEquals(expectedSecond, actualSecond);
-        Assert.assertEquals(expectedLast, actualLast);
+        Assert.assertEquals("Test failed! First element should be " + expectedFirst,
+                expectedFirst, actualFirst);
+        Assert.assertEquals("Test failed! Second element should be " + expectedSecond,
+                expectedSecond, actualSecond);
+        Assert.assertEquals("Test failed! Last element should be " + expectedLast,
+                expectedLast, actualLast);
     }
 
     @Test
@@ -86,8 +109,10 @@ public class MyLinkedListTest {
         myLinkedList.add(THIRD_ITEM);
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
-        Assert.assertEquals(FIRST_ITEM, actualFirst);
-        Assert.assertEquals(SECOND_ITEM, actualSecond);
+        Assert.assertEquals("Test failed! First element should be " + FIRST_ITEM,
+                FIRST_ITEM, actualFirst);
+        Assert.assertEquals("Test failed! Second element should be " + SECOND_ITEM,
+                SECOND_ITEM, actualSecond);
         Assert.assertEquals("Expected size is incorrect", 3, myLinkedList.size());
         exception.expect(IndexOutOfBoundsException.class);
         myLinkedList.get(3);
@@ -107,8 +132,11 @@ public class MyLinkedListTest {
         myLinkedList.set(ANOTHER_NEW_ITEM, 1);
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
-        Assert.assertEquals(NEW_ITEM, actualFirst);
-        Assert.assertEquals(ANOTHER_NEW_ITEM, actualSecond);
+        Assert.assertEquals("Test failed! After setting expected element is " + NEW_ITEM,
+                NEW_ITEM, actualFirst);
+        Assert.assertEquals("Test failed! After setting expected element is "
+                        + ANOTHER_NEW_ITEM,
+                ANOTHER_NEW_ITEM, actualSecond);
         exception.expect(IndexOutOfBoundsException.class);
         myLinkedList.set(NEW_ITEM, 3);
     }
@@ -131,10 +159,14 @@ public class MyLinkedListTest {
         String actualSecond = myLinkedList.remove(3);
         String actualThird = myLinkedList.remove(3);
         String actualFourth = myLinkedList.remove(3);
-        Assert.assertEquals(FIRST_ITEM, actualFirst);
-        Assert.assertEquals(SECOND_ITEM, actualSecond);
-        Assert.assertEquals(THIRD_ITEM, actualThird);
-        Assert.assertEquals(NULL_ITEM, actualFourth);
+        Assert.assertEquals("Test failed! Expected value after removing should be "
+                + FIRST_ITEM, FIRST_ITEM, actualFirst);
+        Assert.assertEquals("Test failed! Expected value after removing should be "
+                + SECOND_ITEM, SECOND_ITEM, actualSecond);
+        Assert.assertEquals("Test failed! Expected value after removing should be "
+                + THIRD_ITEM, THIRD_ITEM, actualThird);
+        Assert.assertEquals("Test failed! Expected value after removing should be "
+                + NULL_ITEM, NULL_ITEM, actualFourth);
         exception.expect(IndexOutOfBoundsException.class);
         myLinkedList.remove(3);
     }
@@ -158,12 +190,30 @@ public class MyLinkedListTest {
         String actualSecond = myLinkedList.remove(SECOND_ITEM);
         String actualThird = myLinkedList.remove(THIRD_ITEM);
         String actualNull = myLinkedList.remove(NULL_ITEM);
-        Assert.assertEquals(FIRST_ITEM, actualFirst);
-        Assert.assertEquals(SECOND_ITEM, actualSecond);
-        Assert.assertEquals(THIRD_ITEM, actualThird);
-        Assert.assertEquals(NULL_ITEM, actualNull);
+        Assert.assertEquals("Test failed! Expected value after removing should be "
+                + FIRST_ITEM, FIRST_ITEM, actualFirst);
+        Assert.assertEquals("Test failed! Expected value after removing should be "
+                + SECOND_ITEM, SECOND_ITEM, actualSecond);
+        Assert.assertEquals("Test failed! Expected value after removing should be "
+                + THIRD_ITEM, THIRD_ITEM, actualThird);
+        Assert.assertEquals("Test failed! Expected value after removing should be "
+                + NULL_ITEM, NULL_ITEM, actualNull);
         String actualFourth = myLinkedList.remove(NEW_ITEM);
-        Assert.assertNull(actualFourth);
+        Assert.assertNull("Test failed! Expected value after removing should be null",
+                actualFourth);
+    }
+
+    @Test
+    public void removeObjectValueByItem() {
+        MyLinkedListInterface<Cat> cats = new MyLinkedList<>();
+        cats.add(FIRST_CAT);
+        cats.add(SECOND_CAT);
+        cats.add(THIRD_CAT);
+        Assert.assertEquals("Expected size is incorrect", 3, cats.size());
+        Cat actualResult = cats.remove(THE_SAME_SECOND_CAT);
+        Assert.assertEquals("Test failed! Expected value after removing should be "
+                + THE_SAME_SECOND_CAT.toString(), THE_SAME_SECOND_CAT, actualResult);
+        Assert.assertEquals("Expected size is incorrect", 2, cats.size());
     }
 
     @Test
@@ -172,8 +222,8 @@ public class MyLinkedListTest {
         myLinkedList.add(FIRST_ITEM);
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);
-        Assert.assertEquals(0, actualInitialSize);
-        Assert.assertEquals(3, myLinkedList.size());
+        Assert.assertEquals("Expected size is incorrect", 0, actualInitialSize);
+        Assert.assertEquals("Expected size is incorrect", 3, myLinkedList.size());
     }
 
     @Test
@@ -181,9 +231,9 @@ public class MyLinkedListTest {
         myLinkedList.add(FIRST_ITEM);
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);
-        Assert.assertEquals(3, myLinkedList.size());
+        Assert.assertEquals("Expected size is incorrect", 3, myLinkedList.size());
         myLinkedList.set(NEW_ITEM, 1);
-        Assert.assertEquals(3, myLinkedList.size());
+        Assert.assertEquals("Expected size is incorrect", 3, myLinkedList.size());
     }
 
     @Test
@@ -191,9 +241,9 @@ public class MyLinkedListTest {
         myLinkedList.add(FIRST_ITEM);
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);
-        Assert.assertEquals(3, myLinkedList.size());
+        Assert.assertEquals("Expected size is incorrect", 3, myLinkedList.size());
         myLinkedList.remove(1);
-        Assert.assertEquals(2, myLinkedList.size());
+        Assert.assertEquals("Expected size is incorrect", 2, myLinkedList.size());
     }
 
     @Test
@@ -201,8 +251,10 @@ public class MyLinkedListTest {
         boolean actualInitialEmpty = myLinkedList.isEmpty();
         myLinkedList.add(FIRST_ITEM);
         boolean actualEmpty = myLinkedList.isEmpty();
-        Assert.assertTrue(actualInitialEmpty);
-        Assert.assertFalse(actualEmpty);
+        Assert.assertTrue("Test failed! isEmpty() should return true if the list is empty",
+                actualInitialEmpty);
+        Assert.assertFalse("Test failed! isEmpty() should return false if the list isn't empty",
+                actualEmpty);
     }
 
     @Test
@@ -211,7 +263,9 @@ public class MyLinkedListTest {
         boolean actualEmpty = myLinkedList.isEmpty();
         myLinkedList.remove(0);
         boolean actualEmptyAfterRemove = myLinkedList.isEmpty();
-        Assert.assertFalse(actualEmpty);
-        Assert.assertTrue(actualEmptyAfterRemove);
+        Assert.assertFalse("Test failed! isEmpty() should return false if the list isn't empty",
+                actualEmpty);
+        Assert.assertTrue("Test failed! isEmpty() should return true if the list is empty",
+                actualEmptyAfterRemove);
     }
 }
