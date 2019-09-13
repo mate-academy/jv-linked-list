@@ -21,6 +21,10 @@ public class MyLinkedListTest {
     private static final String NULL_ITEM = null;
     private static final String NEW_ITEM = "NewFirst";
     private static final String ANOTHER_NEW_ITEM = "NewSecond";
+    private static final Cat FIRST_CAT = new Cat("Fantic", "grey");
+    private static final Cat SECOND_CAT = new Cat("Barsik", "black");
+    private static final Cat THIRD_CAT = new Cat("Tom", "white");
+    private static final Cat THE_SAME_SECOND_CAT = new Cat("Barsik", "black");
 
     private static final List<String> DEFAULT_LIST = new LinkedList<>(
             Arrays.asList("First", "Second", "Third", "Fourth", "Fifth", "Sixth"));
@@ -164,6 +168,18 @@ public class MyLinkedListTest {
         Assert.assertEquals(NULL_ITEM, actualNull);
         String actualFourth = myLinkedList.remove(NEW_ITEM);
         Assert.assertNull(actualFourth);
+    }
+
+    @Test
+    public void removeObjectValueByItem() {
+        MyLinkedListInterface<Cat> cats = new MyLinkedList<>();
+        cats.add(FIRST_CAT);
+        cats.add(SECOND_CAT);
+        cats.add(THIRD_CAT);
+        Assert.assertEquals(3, cats.size());
+        Cat actualResult = cats.remove(THE_SAME_SECOND_CAT);
+        Assert.assertEquals(THE_SAME_SECOND_CAT, actualResult);
+        Assert.assertEquals(2, cats.size());
     }
 
     @Test
