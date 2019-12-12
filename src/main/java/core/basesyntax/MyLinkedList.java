@@ -21,6 +21,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             value = d;
             next = null;
         }
+
+        Node(T value, Node prev, Node next) {
+            this.value = value;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 
     public void checkIndex(int index) {
@@ -29,7 +35,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public Node iteratorByIndex(int index) {
+    public Node findByIndex(int index) {
         checkIndex(index);
         Node result = head;
         for (int i = 0; i < size; i++) {
@@ -41,7 +47,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
-    public int iteratorByValue(T value) {
+    public int findByValue(T value) {
         Node result = head;
         for (int i = 0; i < size; i++) {
             if (Objects.equals(value, result.value)) {
@@ -74,10 +80,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            Node shiftedElement = iteratorByIndex(index);
-            Node newNode = new Node(value);
-            newNode.prev = shiftedElement.prev;
-            newNode.next = shiftedElement;
+            Node shiftedElement = findByIndex(index);
+            Node newNode = new Node(value, shiftedElement.prev, shiftedElement);
             shiftedElement.prev = newNode;
             if (index == 0) {
                 head = newNode;
@@ -95,64 +99,57 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return (T) iteratorByIndex(index).value;
+        return (T) findByIndex(index).value;
     }
 
     @Override
     public void set(T value, int index) {
-        iteratorByIndex(index).value = value;
+        findByIndex(index).value = value;
+    }
+
+    public T removeTail(Node last, int index) {
+        findByIndex(index - 1).next = null;
+        tail = findByIndex(index - 1);
+        size--;
+        return (T) last.value;
+    }
+
+    public T removeHead(Node firs) {
+        findByIndex(1).prev = null;
+        head = findByIndex(1);
+        size--;
+        return (T) firs.value;
+    }
+
+    public T removeFromInside(Node element, int index) {
+        Node prevNode = findByIndex(index - 1);
+        Node nextNode = findByIndex(index + 1);
+        prevNode.next = nextNode;
+        nextNode.prev = prevNode;
+        size--;
+        return (T) element.value;
     }
 
     @Override
     public T remove(int index) {
-        Node removedNode = iteratorByIndex(index);
-        final Object value = removedNode.value;
+        Node removedNode = findByIndex(index);
         if (size == 1) {
             head = tail = null;
             size--;
-            return (T) value;
+            return (T) removedNode.value;
         }
-        if (removedNode == tail) {
-            iteratorByIndex(index - 1).next = null;
-            tail = iteratorByIndex(index - 1);
-            size--;
-            return (T) value;
-        }
-        if (removedNode == head) {
-            iteratorByIndex(index + 1).prev = null;
-            head = iteratorByIndex(index + 1);
-            size--;
-            return (T) value;
-        }
-        iteratorByIndex(index - 1).next = iteratorByIndex(index + 1);
-        iteratorByIndex(index - 1).next.prev = iteratorByIndex(index - 1);
-        size--;
-        return (T) value;
+        return removedNode == tail
+                ? removeTail(removedNode, index) : removedNode == head
+                ? removeHead(removedNode) : removeFromInside(removedNode, index);
     }
 
     @Override
     public T remove(T t) {
-        int index = iteratorByValue(t);
+        int index = findByValue(t);
         if (index == size) {
             return null;
         }
-        Node removedNode = iteratorByIndex(index);
-        if (removedNode == tail) {
-            iteratorByIndex(index - 1).next = null;
-            tail = iteratorByIndex(index - 1);
-            size--;
-            return (T) removedNode.value;
-        }
-        if (removedNode == head) {
-            iteratorByIndex(index + 1).prev = null;
-            head = iteratorByIndex(index + 1);
-            size--;
-            return (T) removedNode.value;
-        }
-        iteratorByIndex(index - 1).next = iteratorByIndex(index + 1);
-        iteratorByIndex(index - 1).next.prev = iteratorByIndex(index - 1);
-        size--;
-        return (T) removedNode.value;
+        return remove(index);
     }
 
     @Override
