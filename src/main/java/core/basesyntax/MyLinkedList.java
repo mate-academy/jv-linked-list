@@ -29,35 +29,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public void checkIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("" + index + "out of bounds");
-        }
-    }
-
-    public Node findByIndex(int index) {
-        checkIndex(index);
-        Node result = head;
-        for (int i = 0; i < size; i++) {
-            if (index == i) {
-                return result;
-            }
-            result = result.next;
-        }
-        return null;
-    }
-
-    public int findByValue(T value) {
-        Node result = head;
-        for (int i = 0; i < size; i++) {
-            if (Objects.equals(value, result.value)) {
-                return i;
-            }
-            result = result.next;
-        }
-        return size;
-    }
-
     @Override
     public void add(T value) {
         Node newNode = new Node(value);
@@ -107,29 +78,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         findByIndex(index).value = value;
     }
 
-    public T removeTail(Node last, int index) {
-        findByIndex(index - 1).next = null;
-        tail = findByIndex(index - 1);
-        size--;
-        return (T) last.value;
-    }
-
-    public T removeHead(Node firs) {
-        findByIndex(1).prev = null;
-        head = findByIndex(1);
-        size--;
-        return (T) firs.value;
-    }
-
-    public T removeFromInside(Node element, int index) {
-        Node prevNode = findByIndex(index - 1);
-        Node nextNode = findByIndex(index + 1);
-        prevNode.next = nextNode;
-        nextNode.prev = prevNode;
-        size--;
-        return (T) element.value;
-    }
-
     @Override
     public T remove(int index) {
         Node removedNode = findByIndex(index);
@@ -139,7 +87,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return (T) removedNode.value;
         }
         return removedNode == tail
-                ? removeTail(removedNode, index) : removedNode == head
+                ? removeTail(removedNode) : removedNode == head
                 ? removeHead(removedNode) : removeFromInside(removedNode, index);
     }
 
@@ -160,6 +108,58 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private T removeTail(Node last) {
+        tail.prev.next = null;
+        tail = tail.prev;
+        size--;
+        return (T) last.value;
+    }
+
+    private T removeHead(Node first) {
+        head.next.prev = null;
+        head = head.next;
+        size--;
+        return (T) first.value;
+    }
+
+    private T removeFromInside(Node element, int index) {
+        Node prevNode = findByIndex(index - 1);
+        Node nextNode = findByIndex(index + 1);
+        prevNode.next = nextNode;
+        nextNode.prev = prevNode;
+        size--;
+        return (T) element.value;
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("" + index + "out of bounds");
+        }
+    }
+
+    private Node findByIndex(int index) {
+        checkIndex(index);
+        Node result = head;
+        for (int i = 0; i < size; i++) {
+            if (index == i) {
+                return result;
+            }
+            result = result.next;
+        }
+        return null;
+    }
+
+    private int findByValue(T value) {
+        Node result = head;
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(value, result.value)) {
+                return i;
+            }
+            result = result.next;
+        }
+        return size;
     }
 }
 
