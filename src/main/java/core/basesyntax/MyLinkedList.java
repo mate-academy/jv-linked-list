@@ -3,48 +3,206 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    @Override
-    public void add(T value) {
 
+    private Node<T> first;
+    private Node<T> last;
+    private int size;
+
+    public MyLinkedList() {
+        size = 0;
+    }
+
+    public Node<T> getFirst() {
+        return first;
+    }
+
+    public void setFirst(Node<T> first) {
+        this.first = first;
+    }
+
+    public Node<T> getLast() {
+        return last;
+    }
+
+    public void setLast(Node<T> last) {
+        this.last = last;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    private void testOfIndex(int index) {
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException();
+        }
     }
 
     @Override
     public void add(T value, int index) {
+        testOfIndex(index);
+
+        if (index == 0 || index == size) {
+            add(value);
+        } else {
+            Node<T> tempNode = getFirst();
+
+            Node<T> newNode = new Node<T>(tempNode, tempNode.getPrevious(), value);
+            tempNode.getPrevious().setNext(newNode);
+            tempNode.setPrevious(newNode);
+            size++;
+        }
+    }
+
+    @Override
+    public void add(T value) {
+        Node newNode = new Node(value);
+        if (first == null) {
+            setFirst(newNode);
+            setLast(newNode);
+            size++;
+        } else {
+            newNode.setPrevious(getLast());
+            getLast().setNext(newNode);
+            setLast(newNode);
+            size++;
+        }
 
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (T element : list) {
+            add(element);
+        }
     }
 
     @Override
     public T get(int index) {
+        testOfIndex(index);
+
+        Node<T> tempNode = getFirst();
+        int i = 0;
+
+        for (int j = 0; j < size(); j++) {
+            if (index == j) {
+                return tempNode.getElement();
+            }
+            tempNode = tempNode.getNext();
+        }
         return null;
     }
 
     @Override
     public void set(T value, int index) {
+        testOfIndex(index);
 
+        Node<T> temp = getFirst();
+        for (int i = 0; i < size(); i++) {
+            if (i == index) {
+                temp.setElement(value);
+                break;
+            }
+            temp = temp.getNext();
+        }
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        testOfIndex(index);
+
+        Node<T> temp;
+        if (index == 0) {
+            temp = getFirst();
+            setFirst(temp.getNext());
+            size--;
+            return temp.getElement();
+        }
+        if(index == size -1){
+            temp = getLast();
+            setLast(null);
+            size--;
+            return temp.getElement();
+        }
+        temp = getFirst();
+        for (int i = 0; i < size(); i++) {
+            if (i == index && i < size()) {
+                Node<T> next = temp.getNext();
+                Node<T> prev = temp.getPrevious();
+                next.setPrevious(prev);
+                prev.setNext(next);
+                break;
+            }
+            temp = temp.next;
+        }
+        size--;
+        return temp.getElement();
+    }
+
+    @Override
+    public String toString() {
+        Node<T> temp = getFirst();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < size(); i++) {
+            stringBuilder.append(i).append(" ").append(temp.getElement()).append(" ");
+            temp = temp.next;
+        }
+        stringBuilder.append("{").append(size()).append("}");
+        return stringBuilder.toString();
     }
 
     @Override
     public T remove(T t) {
-        return null;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return getFirst() == null;
+    }
+
+    private static class Node<T> {
+        private T element;
+        private Node<T> next;
+        private Node<T> previous;
+
+        public Node(T element) {
+            this.element = element;
+        }
+
+        public Node(Node<T> next, Node<T> previous, T element) {
+            this.element = element;
+            this.next = next;
+            this.previous = previous;
+        }
+
+        public T getElement() {
+            return element;
+        }
+
+        public void setElement(T element) {
+            this.element = element;
+        }
+
+        public Node<T> getNext() {
+            return next;
+        }
+
+        public void setNext(Node<T> next) {
+            this.next = next;
+        }
+
+        public Node<T> getPrevious() {
+            return previous;
+        }
+
+        public void setPrevious(Node<T> previous) {
+            this.previous = previous;
+        }
+
     }
 }
