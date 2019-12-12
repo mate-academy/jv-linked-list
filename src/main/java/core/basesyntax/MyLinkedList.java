@@ -33,9 +33,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void testOfIndex(int index) {
-        if (index < 0 || index >= size()) {
+        if (index < 0 || index > size()) {
             throw new IndexOutOfBoundsException();
         }
+    }
+
+    @Override
+    public String toString() {
+        Node<T> temp = getFirst();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < size(); i++) {
+            stringBuilder.append(i).append(" ").append(temp.getElement()).append(" ");
+            temp = temp.next;
+        }
+        stringBuilder.append("{size: ").append(size()).append("}");
+        return stringBuilder.toString();
     }
 
     @Override
@@ -79,7 +91,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        testOfIndex(index);
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException();
+        }
 
         Node<T> tempNode = getFirst();
         int i = 0;
@@ -95,7 +109,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void set(T value, int index) {
-        testOfIndex(index);
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException();
+        }
 
         Node<T> temp = getFirst();
         for (int i = 0; i < size(); i++) {
@@ -109,7 +125,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        testOfIndex(index);
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException();
+        }
 
         Node<T> temp;
         if (index == 0) {
@@ -118,7 +136,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size--;
             return temp.getElement();
         }
-        if(index == size -1){
+        if (index == size - 1) {
             temp = getLast();
             setLast(null);
             size--;
@@ -140,19 +158,38 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public String toString() {
-        Node<T> temp = getFirst();
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < size(); i++) {
-            stringBuilder.append(i).append(" ").append(temp.getElement()).append(" ");
-            temp = temp.next;
-        }
-        stringBuilder.append("{").append(size()).append("}");
-        return stringBuilder.toString();
-    }
-
-    @Override
     public T remove(T t) {
+        Node<T> temp;
+        if ((t == null && getFirst().getElement() == null)
+                || (t != null && getFirst().getElement() != null
+                && getFirst().getElement().equals(t))) {
+            temp = getFirst();
+            setFirst(getFirst().getNext());
+            size--;
+            return temp.getElement();
+        }
+        if ((t == null && getLast().getElement() == null)
+                || (t != null && getLast().getElement() != null
+                && getLast().getElement().equals(t))) {
+            temp = getLast();
+            setLast(null);
+            size--;
+            return temp.getElement();
+        }
+        temp = getFirst();
+        for (int i = 0; i < size(); i++) {
+            if ((temp.getElement() == null && t == null)
+                    || (temp.getElement() != null && temp.getElement().equals(t))) {
+                Node<T> next = temp.getNext();
+                Node<T> prev = temp.getPrevious();
+                next.setPrevious(prev);
+                prev.setNext(next);
+                size--;
+                return temp.getElement();
+            }
+            temp = temp.getNext();
+        }
+        return null;
     }
 
     @Override
