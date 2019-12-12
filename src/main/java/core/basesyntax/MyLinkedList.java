@@ -3,48 +3,148 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final int DEF_SIZE = 0;
+    private int size;
+    private Node head;
+    private Node tail;
+
+    public MyLinkedList() {
+        this.size = DEF_SIZE;
+    }
+
+    private static class Node<T> {
+        T item;
+        Node<T> next;
+        Node<T> prev;
+
+        Node(T element, Node<T> next, Node<T> prev) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+
     @Override
     public void add(T value) {
-
+        if (size == 0) {
+            Node node = new Node(value, null, null);
+            head = node;
+            tail = node;
+        } else if (size > 0) {
+            Node node = new Node(value, null, tail);
+            tail.next = node;
+            tail = node;
+        }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (index > size || index < 0) {
+            throw new IndexOutOfBoundsException("Wrong index");
+        }
+        if (index == size) {
+            add(value);
+        } else {
+            Node tempNode = iterator(index);
+            Node newNode = new Node(value, tempNode, tempNode.prev);
+            tempNode.prev = newNode;
+            if (index == 0) {
+                head = newNode;
+            }
+            size++;
+        }
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (T t : list) {
+            add(t);
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        return (T) iterator(index).item;
     }
 
     @Override
     public void set(T value, int index) {
-
+        Node tempNode = iterator(index);
+        tempNode.item = value;
+        if (index == size - 1) {
+            tempNode.prev.next = tempNode;
+        } else if (index == 0) {
+            tempNode.next.prev = tempNode;
+        } else {
+            tempNode.prev.next = tempNode;
+            tempNode.next.prev = tempNode;
+        }
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        Node tempNode = iterator(index);
+        final Object oldObject = tempNode.item;
+        if (size == 1) {
+            head = tail = null;
+            size--;
+            return (T) oldObject;
+        }
+        if (tempNode == head) {
+            tempNode.next.prev = null;
+            head = tempNode.next;
+        } else if (tempNode == tail) {
+            tempNode.prev.next = null;
+            tail = tempNode.prev;
+        } else {
+            tempNode.prev.next = tempNode.next;
+            tempNode.next.prev = tempNode.prev;
+        }
+        size--;
+        return (T) oldObject;
     }
 
     @Override
     public T remove(T t) {
-        return null;
+        Node tempNode = head;
+        int counter = 0;
+        if (t == null) {
+            while (tempNode.item != null) {
+                tempNode = tempNode.next;
+                counter++;
+            }
+            return remove(counter);
+        } else {
+            while (tempNode.next != null && !t.equals(tempNode.item)) {
+                tempNode = tempNode.next;
+                counter++;
+            }
+            return remove(counter);
+        }
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
+
+    private Node iterator(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Wrong index");
+        }
+        Node iteratorNode = head;
+        int counter = 0;
+        while (index > counter) {
+            iteratorNode = iteratorNode.next;
+            counter++;
+        }
+        return iteratorNode;
+    }
+
 }
