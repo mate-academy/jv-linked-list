@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node head;
@@ -12,11 +11,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     static class Node<T> {
-        T value;
-        Node next;
-        Node prev;
+        private T value;
+        private Node next;
+        private Node prev;
 
-        Node(T d) {
+        private Node(T d) {
             prev = null;
             value = d;
             next = null;
@@ -148,19 +147,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 value = value.next;
             }
             return value;
-        } else {
-            value = tail;
-            for (int i = size - 1; i > index; i--) {
-                value = value.prev;
-            }
-            return value;
         }
+        value = tail;
+        for (int i = size - 1; i > index; i--) {
+            value = value.prev;
+        }
+        return value;
     }
 
     private int findByValue(T value) {
         Node result = head;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(value, result.value)) {
+            if (result.value == value || (value != null && value.equals(result.value))) {
                 return i;
             }
             result = result.next;
