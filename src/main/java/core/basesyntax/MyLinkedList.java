@@ -3,19 +3,18 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final int DEF_SIZE = 0;
     private int size;
     private Node head;
     private Node tail;
 
     public MyLinkedList() {
-        this.size = DEF_SIZE;
+        this.size = 0;
     }
 
     private static class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> prev;
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
         Node(T element, Node<T> next, Node<T> prev) {
             this.item = element;
