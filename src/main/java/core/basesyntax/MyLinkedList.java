@@ -10,7 +10,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public MyLinkedList() {
     }
 
-    static class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node next;
         private Node prev;
@@ -21,7 +21,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             next = null;
         }
 
-        Node(T value, Node prev, Node next) {
+        private Node(T value, Node prev, Node next) {
             this.value = value;
             this.next = next;
             this.prev = prev;
