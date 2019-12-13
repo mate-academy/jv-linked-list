@@ -24,11 +24,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
         if (index == size) {
             add(value);
         } else {
-            addBefore(findValue(index));
+            checkPosition(index);
+            addBefore(value, findValue(index));
+            size++;
         }
     }
 
@@ -61,7 +62,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(T value) {
         Node<T> temp;
-
         for (temp = head; temp != null; temp = temp.next) {
             if (value == temp.element
                     || value.equals(temp.element)) {
@@ -81,24 +81,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkIndex(int index) {
-        if (isElementIndex(index)) {
-            throw new IndexOutOfBoundsException("Check your index");
-        }
-    }
-
     private void checkPosition(int index) {
-        if (isPositionIndex(index)) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Check your index");
         }
-    }
-
-    private boolean isElementIndex(int index) {
-        return index < 0 || index > size;
-    }
-
-    private boolean isPositionIndex(int index) {
-        return index < 0 || index >= size;
     }
 
     private T delete(Node<T> deleteNode) {
@@ -109,23 +95,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = nextNode;
         } else {
             prevNode.next = nextNode;
-            deleteNode.previous = null;
         }
-
         if (nextNode == null) {
             tail = prevNode;
         } else {
             nextNode.previous = prevNode;
-            deleteNode.next = null;
         }
         size--;
         return element;
     }
 
-    private void addBefore(Node<T> beforeNode) {
-        beforeNode.previous.next = beforeNode.next;
-        beforeNode.next.previous = beforeNode.previous;
-        size++;
+    private void addBefore(T value, Node<T> beforeNode) {
+        Node<T> before = beforeNode.previous;
+        Node<T> newNode = new Node<>(value, beforeNode, before);
+        beforeNode.previous = newNode;
+        if (before == null) {
+            head = newNode;
+        } else {
+            before.next = newNode;
+        }
     }
 
     private Node<T> findValue(int index) {
@@ -135,14 +123,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             for (int i = 0; i < index; i++) {
                 value = value.next;
             }
-            return value;
         } else {
             value = tail;
             for (int i = size - 1; i > index; i--) {
                 value = value.previous;
             }
-            return value;
         }
+        return value;
     }
 
     private static class Node<T> {
