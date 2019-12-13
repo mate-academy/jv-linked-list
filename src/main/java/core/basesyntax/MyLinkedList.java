@@ -119,13 +119,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Wrong index");
         }
-        Node iteratorNode = head;
-        int counter = 0;
-        while (index > counter) {
-            iteratorNode = iteratorNode.next;
-            counter++;
+        if (index < size / 2) {
+
+            Node iteratorNode = head;
+            int counter = 0;
+            while (index > counter) {
+                iteratorNode = iteratorNode.next;
+                counter++;
+            }
+            return iteratorNode;
+        } else {
+            Node iteratorNode = tail;
+            int counter = size - 1;
+            while (index < counter) {
+                iteratorNode = iteratorNode.prev;
+                counter--;
+            }
+            return iteratorNode;
         }
-        return iteratorNode;
     }
 
     private int iteratorValue(T t) {
