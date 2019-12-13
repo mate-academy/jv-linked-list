@@ -82,23 +82,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndex(int index) {
-        if (!isElementIndex(index)) {
+        if (isElementIndex(index)) {
             throw new IndexOutOfBoundsException("Check your index");
         }
     }
 
     private void checkPosition(int index) {
-        if (!isPositionIndex(index)) {
+        if (isPositionIndex(index)) {
             throw new IndexOutOfBoundsException("Check your index");
         }
     }
 
     private boolean isElementIndex(int index) {
-        return index >= 0 && index <= size;
+        return index < 0 || index > size;
     }
 
     private boolean isPositionIndex(int index) {
-        return index >= 0 && index < size;
+        return index < 0 || index >= size;
     }
 
     private T delete(Node<T> deleteNode) {
