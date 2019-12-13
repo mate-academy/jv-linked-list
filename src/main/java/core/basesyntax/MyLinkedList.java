@@ -125,10 +125,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T removeFromInside(Node element, int index) {
-        Node prevNode = findByIndex(index - 1);
-        Node nextNode = findByIndex(index + 1);
-        prevNode.next = nextNode;
-        nextNode.prev = prevNode;
+        Node prevElement = findByIndex(index - 1);
+        Node nextElement = findByIndex(index + 1);
+        prevElement.next = nextElement;
+        nextElement.prev = prevElement;
         size--;
         return (T) element.value;
     }
@@ -141,14 +141,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node findByIndex(int index) {
         checkIndex(index);
-        Node result = head;
-        for (int i = 0; i < size; i++) {
-            if (index == i) {
-                return result;
+        Node value;
+        if (index < (size >> 1)) {
+            value = head;
+            for (int i = 0; i < index; i++) {
+                value = value.next;
             }
-            result = result.next;
+            return value;
+        } else {
+            value = tail;
+            for (int i = size - 1; i > index; i--) {
+                value = value.prev;
+            }
+            return value;
         }
-        return null;
     }
 
     private int findByValue(T value) {
