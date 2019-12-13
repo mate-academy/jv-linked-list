@@ -123,13 +123,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addBefore(T value, Node<T> beforeNode) {
-        Node<T> pred = beforeNode.previous;
-        Node<T> newMode = new Node<>(value, beforeNode, beforeNode.previous);
-        if (pred == null) {
-            head = newMode;
-        } else {
-            pred.next = newMode;
-        }
+        beforeNode.previous.next = beforeNode.next;
+        beforeNode.next.previous = beforeNode.previous;
         size++;
     }
 
