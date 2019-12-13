@@ -53,16 +53,36 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         testOfIndex(index);
-
         if (index == 0 || index == size) {
             add(value);
         } else {
-            Node<T> tempNode = getFirst();
-
-            Node<T> newNode = new Node<T>(tempNode, tempNode.getPrevious(), value);
-            tempNode.getPrevious().setNext(newNode);
-            tempNode.setPrevious(newNode);
-            size++;
+            Node<T> newNode = new Node<T>(value);
+            Node<T> tempNode;
+            if (index < size / 2) {
+                tempNode = getFirst();
+                for (int i = 0; i <= index; i++) {
+                    if (i == index) {
+                        newNode.setNext(tempNode);
+                        newNode.setPrevious(tempNode.getPrevious());
+                        tempNode.getPrevious().setNext(newNode);
+                        break;
+                    }
+                    tempNode = tempNode.getNext();
+                }
+                size++;
+            } else {
+                tempNode = getLast();
+                for (int i = size() - 1; i >= index; i--) {
+                    if (i == index) {
+                        newNode.setNext(tempNode);
+                        newNode.setPrevious(tempNode.getPrevious());
+                        tempNode.getPrevious().setNext(newNode);
+                        break;
+                    }
+                    tempNode = tempNode.getPrevious();
+                }
+                size++;
+            }
         }
     }
 
@@ -94,15 +114,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size()) {
             throw new IndexOutOfBoundsException();
         }
-
-        Node<T> tempNode = getFirst();
-        int i = 0;
-
-        for (int j = 0; j < size(); j++) {
-            if (index == j) {
-                return tempNode.getElement();
+        Node<T> tempNode;
+        if (index < size() / 2) {
+            tempNode = getFirst();
+            for (int j = 0; j < size(); j++) {
+                if (index == j) {
+                    return tempNode.getElement();
+                }
+                tempNode = tempNode.getNext();
             }
-            tempNode = tempNode.getNext();
+        } else {
+            tempNode = getLast();
+            for (int i = size() - 1; i >= index; i--) {
+                if (i == index) {
+                    return tempNode.getElement();
+                }
+                tempNode = tempNode.getPrevious();
+            }
         }
         return null;
     }
@@ -113,13 +141,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException();
         }
 
-        Node<T> temp = getFirst();
-        for (int i = 0; i < size(); i++) {
-            if (i == index) {
-                temp.setElement(value);
-                break;
+        Node<T> temp;
+        if (index < size / 2) {
+            temp = getFirst();
+            for (int i = 0; i < size(); i++) {
+                if (i == index) {
+                    temp.setElement(value);
+                    break;
+                }
+                temp = temp.getNext();
             }
-            temp = temp.getNext();
+        } else {
+            temp = getLast();
+            for (int i = size() - 1; i >= index; i--) {
+                if (i == index) {
+                    temp.setElement(value);
+                    break;
+                }
+                temp = temp.getPrevious();
+            }
         }
     }
 
@@ -142,19 +182,35 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size--;
             return temp.getElement();
         }
-        temp = getFirst();
-        for (int i = 0; i < size(); i++) {
-            if (i == index && i < size()) {
-                Node<T> next = temp.getNext();
-                Node<T> prev = temp.getPrevious();
-                next.setPrevious(prev);
-                prev.setNext(next);
-                break;
+        if (index < size() / 2) {
+            temp = getFirst();
+            for (int i = 0; i < size(); i++) {
+                if (i == index && i < size()) {
+                    Node<T> next = temp.getNext();
+                    Node<T> prev = temp.getPrevious();
+                    next.setPrevious(prev);
+                    prev.setNext(next);
+                    break;
+                }
+                temp = temp.getNext();
             }
-            temp = temp.next;
+            size--;
+            return temp.getElement();
+        } else {
+            temp = getLast();
+            for (int i = size() - 1; i >= index; i--) {
+                if (i == index && i < size()) {
+                    Node<T> next = temp.getNext();
+                    Node<T> prev = temp.getPrevious();
+                    next.setPrevious(prev);
+                    prev.setNext(next);
+                    break;
+                }
+                temp = temp.getPrevious();
+            }
+            size--;
+            return temp.getElement();
         }
-        size--;
-        return temp.getElement();
     }
 
     @Override
