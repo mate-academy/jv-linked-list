@@ -28,7 +28,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            addBefore(value, findValue(index));
+            addBefore(findValue(index));
         }
     }
 
@@ -122,7 +122,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return element;
     }
 
-    private void addBefore(T value, Node<T> beforeNode) {
+    private void addBefore(Node<T> beforeNode) {
         beforeNode.previous.next = beforeNode.next;
         beforeNode.next.previous = beforeNode.previous;
         size++;
