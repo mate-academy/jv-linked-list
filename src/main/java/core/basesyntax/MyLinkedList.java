@@ -72,14 +72,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void set(T value, int index) {
         Node tempNode = iteratorIndex(index);
         tempNode.item = value;
-        if (index == size - 1) {
-            tempNode.prev.next = tempNode;
-        } else if (index == 0) {
-            tempNode.next.prev = tempNode;
-        } else {
-            tempNode.prev.next = tempNode;
-            tempNode.next.prev = tempNode;
-        }
     }
 
     @Override
