@@ -32,20 +32,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException(index);
         }
-        Node<T> clone;
-        Node<T> newNode;
-        if (index < size() >> 1){
-            clone = head;
-            for (int i = 0; i < index; ++i){
-                clone = clone.next;
-            }
-        }else {
-            clone = tail;
-            for (int i = size() - 1; i > index; --i){
-                clone = clone.prev;
-            }
-        }
-        newNode = new Node<>(clone.prev, value, clone);
+        Node<T> clone = returnNodeByIndex(index);
+        Node<T> newNode = new Node<>(clone.prev, value, clone);
         clone.prev.next = newNode;
         clone.prev = newNode;
         size++;
@@ -54,6 +42,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
+        for (T i : list){
+            add(i);
+        }
 
     }
 
@@ -62,19 +53,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size - 1) {
             throw new IndexOutOfBoundsException(index);
         }
-        Node<T> wantedElement;
-        if (index < size() >> 1) {
-            wantedElement = head;
-            for (int i = 0; i < index; ++i) {
-                wantedElement = wantedElement.next;
-            }
-        } else {
-            wantedElement = tail;
-            for (int i = size - 1; i > index; --i) {
-                wantedElement = wantedElement.prev;
-            }
-        }
-        return wantedElement.value;
+        return returnNodeByIndex(index).value;
     }
 
     @Override
@@ -100,6 +79,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private Node<T> returnNodeByIndex(int index){
+        Node<T> wantedElement;
+        if (index < size() >> 1) {
+            wantedElement = head;
+            for (int i = 0; i < index; ++i) {
+                wantedElement = wantedElement.next;
+            }
+        } else {
+            wantedElement = tail;
+            for (int i = size - 1; i > index; --i) {
+                wantedElement = wantedElement.prev;
+            }
+        }
+        return wantedElement;
     }
 
     private static class Node<E> {
