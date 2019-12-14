@@ -29,9 +29,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(index);
-        }
         Node<T> clone = returnNodeByIndex(index);
         Node<T> newNode = new Node<>(clone.prev, value, clone);
         clone.prev.next = newNode;
@@ -45,20 +42,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (T i : list){
             add(i);
         }
-
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new IndexOutOfBoundsException(index);
-        }
         return returnNodeByIndex(index).value;
     }
 
     @Override
     public void set(T value, int index) {
-
+        returnNodeByIndex(index).value = value;
     }
 
     @Override
@@ -82,6 +75,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> returnNodeByIndex(int index){
+        if (index < 0 || index > size - 1) {
+            throw new IndexOutOfBoundsException(index);
+        }
         Node<T> wantedElement;
         if (index < size() >> 1) {
             wantedElement = head;
