@@ -37,14 +37,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) throws ArrayIndexOutOfBoundsException {
-        //checkIndex(index);
-        if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException("Index is less than 0");
-        }
         if (size == index) {
             add(value);
             return;
         }
+        checkIndex(index);
         Node<T> nodeByIndex = searchNodeByIndex(index);
         Node<T> newNode = new Node<>(value);
         newNode.prev = nodeByIndex.prev;
