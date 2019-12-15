@@ -75,13 +75,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == 0) {
             data = header.data;
             header = header.next;
-
         } else if (index == size) {
             data = tail.data;
             tail = node.prev;
         } else {
             data = node.data;
             node.prev.next = node.next;
+            node.prev = node.next;
         }
         size--;
         return data;
