@@ -19,7 +19,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-
     public void error(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
