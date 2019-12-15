@@ -64,8 +64,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        Noda<T> current = findNoda(index);
-        current.setValue(value);
+       findNoda(index).setValue(value);
     }
 
     @Override
@@ -103,7 +102,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Noda<T> current = head;
         for (int i = 0; i < size; i++) {
             if (t == current.value || t != null && t.equals(current.value)) {
-                return remove(i);
+                if (current == head) {
+                    if (size == 1) {
+                        T some = head.value;
+                        head = null;
+                        size--;
+                        return some;
+                    }
+                    head = head.next;
+                    Noda<T> deleted = head.prev;
+                    head.setPrev(null);
+                    size--;
+                    return deleted.value;
+                }
+                if (current == tail) {
+                    tail = tail.prev;
+                    Noda<T> deleted = tail.next;
+                    tail.setNext(null);
+                    size--;
+                    return deleted.value;
+                }
+                current.prev.setNext(current.next);
+                current.next.setPrev(current.prev);
+                size--;
+                return current.value;
             }
             current = current.next;
         }
