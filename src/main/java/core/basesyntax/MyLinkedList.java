@@ -22,7 +22,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T get(int index) {
         return null;
     }
-
     @Override
     public void set(T value, int index) {
 
