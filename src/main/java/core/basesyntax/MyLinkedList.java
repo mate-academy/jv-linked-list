@@ -54,8 +54,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T listObj : list) {
+            add(listObj);
         }
     }
 
@@ -100,21 +100,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private T unlinkNode(Node<T> unlinkedNode) {
         final T data = unlinkedNode.data;
-        final Node<T> next = unlinkedNode.next;
-        final Node<T> previous = unlinkedNode.previous;
+        Node<T> next = unlinkedNode.next;
+        Node<T> previous = unlinkedNode.previous;
 
         if (previous == null) {
             head = next;
         } else {
             previous.next = next;
-            unlinkedNode.next = null;
+            next = null;
         }
 
         if (next == null) {
             tail = previous;
         } else {
             next.previous = previous;
-            unlinkedNode.previous = null;
+            previous = null;
         }
 
         unlinkedNode.data = null;
