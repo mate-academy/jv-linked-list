@@ -4,9 +4,9 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static class Node<T> {
-        T element;
-        Node<T> next;
-        Node<T> prev;
+        private T element;
+        private Node<T> next;
+        private Node<T> prev;
 
         Node(T element) {
             this.element = element;
@@ -37,23 +37,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) throws ArrayIndexOutOfBoundsException {
+        if (index < 0 || index > size) {
+            throw new ArrayIndexOutOfBoundsException("Index is less than 0");
+        }
         if (size == index) {
             add(value);
             return;
         }
-        checkIndex(index);
         Node<T> nodeByIndex = searchNodeByIndex(index);
         Node<T> newNode = new Node<>(value);
         newNode.prev = nodeByIndex.prev;
         newNode.next = nodeByIndex;
+        newNode.prev.next = newNode;
         nodeByIndex.prev = newNode;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T itemFromListToAdd : list) {
+            add(itemFromListToAdd);
         }
     }
 
@@ -138,10 +141,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.prev.next = node.next;
             node.next.prev = node.prev;
         }
+        node.prev = null;
+        node.next = null;
         size--;
         return node.element;
     }
 }
-
-
-
