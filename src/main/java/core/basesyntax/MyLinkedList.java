@@ -100,28 +100,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         validIndex(index);
+        Node<T> node = getIndexedNode(index);
         if (index == 0 && size == 1) {
             first = null;
-            Node<T> node = getIndexedNode(index);
             last = null;
             size--;
             return node.value;
         }
         if (index == 0) {
-            Node<T> node = getIndexedNode(index);
             node.nextNode.prevNode = null;
             first = node.nextNode;
             size--;
             return node.value;
         }
         if (index == size - 1) {
-            Node<T> node = getIndexedNode(index);
             node.prevNode.nextNode = null;
             last = node.prevNode;
             size--;
             return node.value;
         }
-        Node<T> node = getIndexedNode(index);
         node.prevNode.nextNode = node.nextNode;
         node.nextNode.prevNode = node.prevNode;
         size--;
