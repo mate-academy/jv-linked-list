@@ -28,11 +28,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value) {
         Node newNode = new Node(null, value, tail);
         if (tail == null) {
-            this.head = newNode;
+            head = newNode;
         } else {
             tail.next = newNode;
         }
-        this.tail = newNode;
+        tail = newNode;
         size++;
     }
 
@@ -48,7 +48,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            this.add(list.get(i));
+            add(list.get(i));
         }
 
     }
@@ -66,7 +66,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
-        this.node(index).value = value;
+        node(index).value = value;
     }
 
     @Override
@@ -91,7 +91,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
