@@ -12,19 +12,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size = 0;
     }
 
-    public Node<T> getFirst() {
+    private Node<T> getFirst() {
         return first;
     }
 
-    public void setFirst(Node<T> first) {
+    private void setFirst(Node<T> first) {
         this.first = first;
     }
 
-    public Node<T> getLast() {
+    private Node<T> getLast() {
         return last;
     }
 
-    public void setLast(Node<T> last) {
+    private void setLast(Node<T> last) {
         this.last = last;
     }
 
