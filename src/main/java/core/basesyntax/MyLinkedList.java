@@ -7,7 +7,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> head;
     private Node<T> tail;
-    private Node<T> target;
+
     private int size;
 
     public MyLinkedList() {
@@ -30,7 +30,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public Node<T> getNodeByIndex(int index) {
-
+        Node<T> target;
         if (size >> 1 > index) {
             target = head.next;
             for (int i = 0; i < index; i++) {
@@ -66,8 +66,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index Out Of Bounds!!!");
         }
-        getNodeByIndex(index);
-
+        Node<T> target;
+        target = getNodeByIndex(index);
         Node newNode = new Node<T>(target, value, target.next);
         target.next.prev = newNode;
         target.next = newNode;
@@ -83,23 +83,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-
+        Node<T> target;
         indexValidation(index);
-        getNodeByIndex(index);
+        target = getNodeByIndex(index);
         return target.value;
     }
 
     @Override
     public void set(T value, int index) {
+        Node<T> target;
         indexValidation(index);
-        getNodeByIndex(index);
+        target = getNodeByIndex(index);
         target.value = value;
     }
 
     @Override
     public T remove(int index) {
+        Node<T> target;
         indexValidation(index);
-        getNodeByIndex(index);
+        target = getNodeByIndex(index);
         target.prev.next = target.next;
         target.next.prev = target.prev;
         target.prev = target.next = null;
@@ -109,6 +111,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(T t) {
+        Node<T> target;
         int index;
         target = head.next;
         for (index = 0; index < size; index++) {
