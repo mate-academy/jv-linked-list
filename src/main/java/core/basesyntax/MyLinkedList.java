@@ -3,14 +3,14 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    transient int size = 0;
-    transient Node first;
-    transient Node last;
+    private int size = 0;
+    private Node first;
+    private Node last;
 
     private static class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> prev;
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
         Node(Node<T> prev, T element, Node<T> next) {
             this.item = element;
@@ -19,7 +19,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public void error(int index) {
+    public void isCorrectIndex(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
@@ -47,10 +47,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            Node node = first;
-            for (int i = 0; i < index; i++) {
-                node = node.next;
-            }
+            Node node = getNode(index);
             Node newNode = new Node(node.prev, value, node);
             node.prev = newNode;
             newNode.prev.next = newNode;
@@ -60,38 +57,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T listItem : list) {
+            add(listItem);
         }
     }
 
     @Override
     public T get(int index) {
-        error(index);
-        Node node = first;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
-        }
-        return (T) node.item;
+        isCorrectIndex(index);
+        return (T) getNode(index).item;
     }
 
     @Override
     public void set(T value, int index) {
-        error(index);
-        Node node = first;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
-        }
-        node.item = value;
+        isCorrectIndex(index);
+        getNode(index).item = value;
     }
 
     @Override
     public T remove(int index) {
-        error(index);
-        Node node = first;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
-        }
+        isCorrectIndex(index);
+        Node node = getNode(index);
         if (size == 1) {
             first = last = null;
             size--;
@@ -132,5 +118,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private Node<T> getNode(int index) {
+        Node<T> node = first;
+        for (int i = 0; i < index; i++) {
+            node = node.next;
+        }
+        return node;
     }
 }
