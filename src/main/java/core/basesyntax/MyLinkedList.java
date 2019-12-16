@@ -83,6 +83,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> willBeRemove = head;
         for (int i = 0; i < size; i++) {
             if (t == willBeRemove.value || t != null && t.equals(willBeRemove.value)) {
+                if (willBeRemove == head) {
+                    head = head.next;
+                    if (head != null) {
+                        head.prev = null;
+                    }
+                    size--;
+                    return willBeRemove.value;
+                }
+                if (willBeRemove == tail) {
+                    tail = tail.prev;
+                    tail.next = null;
+                    willBeRemove.prev = null;
+                    size--;
+                    return willBeRemove.value;
+                }
+                willBeRemove.prev.next = willBeRemove.next;
+                willBeRemove.next.prev = willBeRemove.prev;
+                willBeRemove.next = null;
+                willBeRemove.prev = null;
                 size--;
                 return willBeRemove.value;
             } else {
