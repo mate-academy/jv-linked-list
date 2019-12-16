@@ -7,7 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> head;
     private Node<T> tail;
-
     private int size = 0;
 
     private class Node<T> {
@@ -61,8 +60,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T element : list) {
+            add(element);
         }
     }
 
@@ -87,12 +86,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
-        Node node = head;
+        searchIndex(index).value = value;
+    }
+
+    private Node<T> searchIndex(int index) {
+        Node<T> node = head;
         for (int i = 0; i < index; i++) {
             node = node.next;
         }
-        node.value = value;
-
+        return node;
     }
 
     @Override
@@ -100,10 +102,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
-        Node node = head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
-        }
+        Node node = searchIndex(index);
         if (size == 1) {
             head = tail = null;
             size--;
