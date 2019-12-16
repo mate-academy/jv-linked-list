@@ -28,31 +28,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         this.last = last;
     }
 
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-    private void testOfIndex(int index) {
+    private void testOfIndexOutBorders(int index) {
         if (index < 0 || index > size()) {
             throw new IndexOutOfBoundsException();
         }
     }
 
-    @Override
-    public String toString() {
-        Node<T> temp = getFirst();
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < size(); i++) {
-            stringBuilder.append(i).append(" ").append(temp.getElement()).append(" ");
-            temp = temp.next;
+    private void testIndexInBorders(int index) {
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException();
         }
-        stringBuilder.append("{size: ").append(size()).append("}");
-        return stringBuilder.toString();
+    }
+
+    private void changeLinks(Node<T> newNode, Node<T> tempNode) {
+        newNode.setNext(tempNode);
+        newNode.setPrevious(tempNode.getPrevious());
+        tempNode.getPrevious().setNext(newNode);
     }
 
     @Override
     public void add(T value, int index) {
-        testOfIndex(index);
+        testOfIndexOutBorders(index);
         if (index == 0 || index == size) {
             add(value);
         } else {
@@ -62,27 +58,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 tempNode = getFirst();
                 for (int i = 0; i <= index; i++) {
                     if (i == index) {
-                        newNode.setNext(tempNode);
-                        newNode.setPrevious(tempNode.getPrevious());
-                        tempNode.getPrevious().setNext(newNode);
+                        changeLinks(newNode, tempNode);
                         break;
                     }
                     tempNode = tempNode.getNext();
                 }
-                size++;
             } else {
                 tempNode = getLast();
                 for (int i = size() - 1; i >= index; i--) {
                     if (i == index) {
-                        newNode.setNext(tempNode);
-                        newNode.setPrevious(tempNode.getPrevious());
-                        tempNode.getPrevious().setNext(newNode);
+                        changeLinks(newNode, tempNode);
                         break;
                     }
                     tempNode = tempNode.getPrevious();
                 }
-                size++;
             }
+            size++;
         }
     }
 
@@ -92,13 +83,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (first == null) {
             setFirst(newNode);
             setLast(newNode);
-            size++;
         } else {
             newNode.setPrevious(getLast());
             getLast().setNext(newNode);
             setLast(newNode);
-            size++;
         }
+        size++;
 
     }
 
@@ -111,9 +101,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size()) {
-            throw new IndexOutOfBoundsException();
-        }
+        testIndexInBorders(index);
         Node<T> tempNode;
         if (index < size() / 2) {
             tempNode = getFirst();
@@ -137,10 +125,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size()) {
-            throw new IndexOutOfBoundsException();
-        }
-
+        testIndexInBorders(index);
         Node<T> temp;
         if (index < size / 2) {
             temp = getFirst();
@@ -165,10 +150,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size()) {
-            throw new IndexOutOfBoundsException();
-        }
-
+        testIndexInBorders(index);
         Node<T> temp;
         if (index == 0) {
             temp = getFirst();
