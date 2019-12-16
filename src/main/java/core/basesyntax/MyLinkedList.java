@@ -71,6 +71,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Noda<T> current = findNoda(index);
         if (current == head) {
             head = head.next;
+            if (head != null) {
+                head.prev = null;
+            }
             size--;
             return current.value;
         }
@@ -96,6 +99,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (t == current.value || t != null && t.equals(current.value)) {
                 if (current == head) {
                     head = head.next;
+                    if (head != null) {
+                        head.prev = null;
+                    }
                     size--;
                     return current.value;
                 }
