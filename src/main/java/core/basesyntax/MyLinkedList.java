@@ -20,7 +20,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         tail = new Noda<>(value, null, tail);
-        tail.prev.setNext(tail);
+        tail.prev.next = tail;
         size++;
     }
 
@@ -35,36 +35,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         if (index == 0) {
             head = new Noda<>(value, head, null);
-            head.next.setPrev(head);
+            head.next.prev = head;
             size++;
             return;
         }
         Noda<T> current = findNoda(index);
         Noda<T> added = new Noda<>(value, current, current.prev);
-        current.setPrev(added);
-        added.prev.setNext(added);
+        current.prev = added;
+        added.prev.next = added;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T element : list) {
+            add(element);
         }
-        size += list.size();
     }
 
     @Override
     public T get(int index) {
         checkIndex(index);
-        Noda<T> current = findNoda(index);
-        return current.value;
+        return findNoda(index).value;
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        findNoda(index).setValue(value);
+        findNoda(index).value = value;
     }
 
     @Override
@@ -73,26 +71,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Noda<T> current = findNoda(index);
         if (current == head) {
             if (size == 1) {
-                T some = head.value;
                 head = null;
                 size--;
-                return some;
+                return current.value;
             }
             head = head.next;
-            Noda<T> deleted = head.prev;
-            head.setPrev(null);
+            head.prev = null;
             size--;
-            return deleted.value;
+            return current.value;
         }
         if (current == tail) {
             tail = tail.prev;
-            Noda<T> deleted = tail.next;
-            tail.setNext(null);
+            tail.next = null;
             size--;
-            return deleted.value;
+            return current.value;
         }
-        current.prev.setNext(current.next);
-        current.next.setPrev(current.prev);
+        current.prev.next = current.next;
+        current.next.next = current.prev;
         size--;
         return current.value;
     }
@@ -103,27 +98,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < size; i++) {
             if (t == current.value || t != null && t.equals(current.value)) {
                 if (current == head) {
-                    if (size == 1) {
-                        T some = head.value;
-                        head = null;
-                        size--;
-                        return some;
-                    }
                     head = head.next;
                     Noda<T> deleted = head.prev;
-                    head.setPrev(null);
+                    head.prev = null;
                     size--;
                     return deleted.value;
                 }
                 if (current == tail) {
                     tail = tail.prev;
-                    Noda<T> deleted = tail.next;
-                    tail.setNext(null);
+                    tail.next = null;
                     size--;
-                    return deleted.value;
+                    return current.value;
                 }
-                current.prev.setNext(current.next);
-                current.next.setPrev(current.prev);
+                current.prev.next = current.next;
+                current.next.prev = current.prev;
                 size--;
                 return current.value;
             }
@@ -165,26 +153,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private class Noda<T> {
-        T value;
-        Noda<T> next;
-        Noda<T> prev;
+        private T value;
+        private Noda<T> next;
+        private Noda<T> prev;
 
         private Noda(T value, Noda<T> next, Noda<T> prev) {
             this.value = value;
             this.next = next;
             this.prev = prev;
-        }
-
-        private void setNext(Noda<T> next) {
-            this.next = next;
-        }
-
-        private void setPrev(Noda<T> prev) {
-            this.prev = prev;
-        }
-
-        private void setValue(T value) {
-            this.value = value;
         }
     }
 }
