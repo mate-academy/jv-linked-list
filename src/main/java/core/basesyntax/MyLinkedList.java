@@ -72,6 +72,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> willBeRemove = returnNodeByIndex(index);
         willBeRemove.prev.next = willBeRemove.next;
         willBeRemove.next.prev = willBeRemove.prev;
+        willBeRemove.next = null;
+        willBeRemove.prev = null;
         size--;
         return willBeRemove.value;
     }
