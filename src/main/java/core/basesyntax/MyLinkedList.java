@@ -63,11 +63,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         if (index == 0) {
             size--;
-            return removeHead(index);
+            return removeHead();
         }
         if (index == size - 1) {
             size--;
-            return removeTail(index);
+            return removeTail();
         }
         Node<T> toRemove = indexOf(index);
         toRemove.previous.next = toRemove.next;
@@ -107,7 +107,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> indexOf(int index) {
         checkIndex(index);
         Node<T> toFind = head;
-        int counter = 0;
         if (index < (size >> 1)) {
             for (int i = 0; i < index; i++) {
                 toFind = toFind.next;
@@ -121,13 +120,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return toFind;
     }
 
-    private T removeHead(int index) {
+    private T removeHead() {
         T value = head.value;
         head = head.next;
         return value;
     }
 
-    private T removeTail(int index) {
+    private T removeTail() {
         T value = tail.value;
         tail = tail.previous;
         return value;
