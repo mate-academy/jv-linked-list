@@ -3,11 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private int size = 0;
-    Node<T> head;
-    Node<T> tail;
-
+    private Node<T> head;
+    private Node<T> tail;
 
     @Override
     public void add(T value) {
@@ -24,7 +22,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (size == index){
+        if (size == index) {
             add(value);
             return;
         }
@@ -38,7 +36,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T i : list){
+        for (T i : list) {
             add(i);
         }
     }
@@ -58,18 +56,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(index);
         }
-        if (index == 0){
+        if (index == 0) {
             T value = head.value;
             head = head.next;
-            head.prev = null;
             size--;
             return value;
         }
-        if (index == size - 1){
-            T value = tail.value;
+        if (index == size - 1) {
+            final T value = tail.value;
             tail = tail.prev;
             tail.next = null;
-            size --;
+            size--;
             return value;
         }
         Node<T> willBeRemove = returnNodeByIndex(index);
@@ -81,6 +78,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(T t) {
+        Node<T> willBeRemove = head;
+        for (int i = 0; i < size; i++) {
+            if (t != null && t.equals(willBeRemove.value)) {
+                size--;
+                return willBeRemove.value;
+            } else {
+                willBeRemove = willBeRemove.next;
+            }
+        }
         return null;
     }
 
@@ -94,7 +100,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node<T> returnNodeByIndex(int index){
+    private Node<T> returnNodeByIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(index);
         }
