@@ -70,24 +70,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Noda<T> current = findNoda(index);
         if (current == head) {
-            if (size == 1) {
-                head = null;
-                size--;
-                return current.value;
-            }
             head = head.next;
-            head.prev = null;
             size--;
             return current.value;
         }
         if (current == tail) {
             tail = tail.prev;
             tail.next = null;
+            current.prev = null;
             size--;
             return current.value;
         }
         current.prev.next = current.next;
         current.next.next = current.prev;
+        current.prev = null;
+        current.next = null;
         size--;
         return current.value;
     }
@@ -99,19 +96,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (t == current.value || t != null && t.equals(current.value)) {
                 if (current == head) {
                     head = head.next;
-                    Noda<T> deleted = head.prev;
-                    head.prev = null;
                     size--;
-                    return deleted.value;
+                    return current.value;
                 }
                 if (current == tail) {
                     tail = tail.prev;
                     tail.next = null;
+                    current.prev = null;
                     size--;
                     return current.value;
                 }
                 current.prev.next = current.next;
                 current.next.prev = current.prev;
+                current.prev = null;
+                current.next = null;
                 size--;
                 return current.value;
             }
