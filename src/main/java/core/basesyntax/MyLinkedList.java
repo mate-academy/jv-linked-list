@@ -69,7 +69,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> localNode = getNode(index);
         T result = localNode.element;
         localNode.element = null;
-        if (first.equals(last)) {
+        if (first == last) {
             size--;
             return result;
         }
