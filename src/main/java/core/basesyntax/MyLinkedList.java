@@ -35,8 +35,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T value : list) {
+            add(value);
         }
     }
 
@@ -63,8 +63,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(T value) {
         Node<T> temp;
         for (temp = head; temp != null; temp = temp.next) {
-            if (value == temp.element
-                    || value.equals(temp.element)) {
+            if (temp.element == value
+                    || temp.element != null && temp.element.equals(value)) {
                 return delete(temp);
             }
         }
@@ -101,18 +101,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             nextNode.previous = prevNode;
         }
+        deleteNode.previous = null;
+        deleteNode.next = null;
         size--;
         return element;
     }
 
-    private void addBefore(T value, Node<T> beforeNode) {
-        Node<T> before = beforeNode.previous;
-        Node<T> newNode = new Node<>(value, beforeNode, before);
-        beforeNode.previous = newNode;
-        if (before == null) {
+    private void addBefore(T value, Node<T> afterNewNode) {
+        Node<T> beforeNewNode = afterNewNode.previous;
+        Node<T> newNode = new Node<>(value, afterNewNode, beforeNewNode);
+        afterNewNode.previous = newNode;
+        if (beforeNewNode == null) {
             head = newNode;
         } else {
-            before.next = newNode;
+            beforeNewNode.next = newNode;
         }
     }
 
@@ -133,9 +135,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        T element;
-        Node<T> next;
-        Node<T> previous;
+        private T element;
+        private Node<T> next;
+        private Node<T> previous;
 
         Node(T element, Node<T> next, Node<T> previous) {
             this.element = element;
