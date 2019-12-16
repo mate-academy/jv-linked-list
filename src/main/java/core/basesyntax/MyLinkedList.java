@@ -127,7 +127,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             nextNode.previous = prevNode;
         }
-        T element = nodeToDelete.value;
         size--;
         return nodeToDelete.value;
     }
@@ -141,7 +140,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             currentNode = currentNode.next;
         }
-        return (T) currentNode;
+        return null;
     }
 
     @Override
