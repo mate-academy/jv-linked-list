@@ -15,9 +15,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node next;
         private Node prev;
 
-        private Node(T d) {
+        private Node(T value) {
             prev = null;
-            value = d;
+            this.value = value;
             next = null;
         }
 
@@ -52,7 +52,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             Node shiftedElement = findByIndex(index);
             Node newNode = new Node(value, shiftedElement.prev, shiftedElement);
-            shiftedElement.prev = newNode;
             if (index == 0) {
                 head = newNode;
             }
@@ -62,14 +61,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T listElement : list) {
+            add(listElement);
         }
     }
 
     @Override
     public T get(int index) {
-        return (T) findByIndex(index).value;
+        return  findByIndex(index).value;
     }
 
     @Override
@@ -87,7 +86,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return removedNode == tail
                 ? removeTail(removedNode) : removedNode == head
-                ? removeHead(removedNode) : removeFromInside(removedNode, index);
+                ? removeHead(removedNode) : removeFromInside(removedNode);
     }
 
     @Override
@@ -123,11 +122,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return (T) first.value;
     }
 
-    private T removeFromInside(Node element, int index) {
-        Node prevElement = findByIndex(index - 1);
-        Node nextElement = findByIndex(index + 1);
-        prevElement.next = nextElement;
-        nextElement.prev = prevElement;
+    private T removeFromInside(Node element) {
+        element.prev.next = element.next;
+        element.next.prev = element.next;
         size--;
         return (T) element.value;
     }
@@ -138,7 +135,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node findByIndex(int index) {
+    private Node<T> findByIndex(int index) {
         checkIndex(index);
         Node value;
         if (index < (size >> 1)) {
