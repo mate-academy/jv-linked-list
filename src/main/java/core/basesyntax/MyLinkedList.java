@@ -36,26 +36,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        Node<T> previous = findNode(index).prev;
         Node<T> next = findNode(index);
+        Node<T> previous = next.prev;
         Node<T> current = new Node<>(previous, value, next);
         if (previous == null) {
             head = current;
         } else {
             previous.next = current;
         }
-        if (next == null) {
-            tail = current;
-        } else {
-            next.prev = current;
-        }
+        next.prev = current;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T element : list) {
+            add(element);
         }
     }
 
@@ -129,10 +125,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             for (int i = 0; i < index; i++) {
                 toFind = toFind.next;
             }
-        }
-        toFind = tail;
-        for (int i = size - 1; i > index; i--) {
-            toFind = toFind.prev;
+        } else {
+            toFind = tail;
+            for (int i = size - 1; i > index; i--) {
+                toFind = toFind.prev;
+            }
         }
         return toFind;
     }
@@ -142,7 +139,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        Node(Node<T> prev, T value, Node<T> next) {
+        private Node(Node<T> prev, T value, Node<T> next) {
             this.value = value;
             this.next = next;
             this.prev = prev;
