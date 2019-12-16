@@ -62,9 +62,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         if (index == 0) {
+            size--;
             return removeHead(index);
         }
         if (index == size - 1) {
+            size--;
             return removeTail(index);
         }
         Node<T> toRemove = indexOf(index);
@@ -77,13 +79,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(T t) {
         Node<T> lookFor = head;
-        while (!Objects.equals(lookFor.value, t)) {
-            lookFor = head.next;
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(t, lookFor.value)) {
+                return remove(i);
+            }
+            lookFor = lookFor.next;
         }
-        lookFor.previous.next = lookFor.next;
-        lookFor.next.previous = lookFor.previous;
-        size--;
-        return lookFor.value;
+        return null;
     }
 
     @Override
@@ -122,14 +124,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private T removeHead(int index) {
         T value = head.value;
         head = head.next;
-        head.previous = null;
         return value;
     }
 
     private T removeTail(int index) {
         T value = tail.value;
         tail = tail.previous;
-        tail.next = null;
         return value;
     }
 
