@@ -31,11 +31,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-                currentNode = getNodeByIndex(index);
-                    newNode.next = currentNode.next;
-                    currentNode.next = newNode;
-                    newNode.previous = currentNode;
-                    size++;
+            currentNode = getNodeByIndex(index);
+            newNode.next = currentNode.next;
+            currentNode.next = newNode;
+            newNode.previous = currentNode;
+            size++;
         }
     }
 
