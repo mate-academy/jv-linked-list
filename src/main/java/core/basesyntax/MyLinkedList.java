@@ -4,9 +4,9 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
-    int size = 0;
-    Node<T> head;
-    Node<T> tail;
+    private int size = 0;
+    private Node<T> head;
+    private Node<T> tail;
 
     @Override
     public void add(T value) {
@@ -25,23 +25,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException();
-        } else if (index == 0) {
-            Node<T> node = new Node<>(null, value, null);
-            head = node;
-            tail = node;
-            size++;
-        } else if (index == size) {
-            add(value);
-        } else {
-            Node<T> previous = findByIndex(index - 1);
-            Node<T> next = previous.next;
-
-            Node<T> node = new Node<>(previous, value, next);
-            previous.next = next;
-            node.prev = node;
-            size++;
+            throw new IndexOutOfBoundsException();
         }
+        if (index == size) {
+            add(value);
+            return;
+        }
+        Node<T> next = findByIndex(index);
+        Node<T> previous = next.prev;
+        Node<T> node = new Node<>(previous, value, next);
+        if (previous == null) {
+            head = node;
+        } else {
+            previous.next = node;
+        }
+        next.prev = node;
+        size++;
     }
 
     @Override
@@ -88,8 +87,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> nodeForRemove = head;
         for (int i = 0; i < size; i++) {
             if (t == nodeForRemove.value || t != null && t.equals(nodeForRemove.value)) {
-                size--;
-                return nodeForRemove.value;
+                return remove(i);
             } else {
                 nodeForRemove = nodeForRemove.next;
             }
@@ -130,9 +128,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<E> {
-        E value;
-        Node<E> next;
-        Node<E> prev;
+        private E value;
+        private Node<E> next;
+        private Node<E> prev;
 
         private Node(E value) {
             prev = null;
