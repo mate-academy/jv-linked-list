@@ -65,7 +65,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size++;
             return;
         }
-        this.validIndex(index - 1);
+        validIndex(index - 1);
         if (index != size) {
             Node<T> node = getIndexedNode(index);
             Node<T> newNode = new Node<>(node.prevNode, node.nextNode, value);
