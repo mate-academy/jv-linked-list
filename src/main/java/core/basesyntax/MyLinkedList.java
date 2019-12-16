@@ -12,19 +12,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value) {
         if (firstNode == null) {
             firstNode = lastNode = new Node(value);
-            size++;
         } else {
             lastNode.next = new Node(value);
             lastNode.next.previous = lastNode;
             lastNode = lastNode.next;
-            size++;
         }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
         Node currentNode = firstNode;
-        Node tmp = new Node(value);
+        Node newNode = new Node(value);
 
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Wrong index");
@@ -32,21 +31,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            for (int i = 0; i < size; i++) {
-                currentNode = currentNode.next;
-                if (i == index) {
-                    currentNode.next = tmp;
-                    tmp.previous = currentNode;
+                currentNode = getNodeByIndex(index);
+                    newNode.next = currentNode.next;
+                    currentNode.next = newNode;
+                    newNode.previous = currentNode;
                     size++;
-                }
-            }
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T element : list) {
+            add(element);
         }
     }
 
@@ -55,18 +51,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size - 1) {
             throw new IndexOutOfBoundsException("Wrong index");
         }
-        if (index == 0) {
-            return firstNode.data;
-        }
-        int i = 0;
-        Node currentNode = null;
-        if (firstNode != null) {
-            currentNode = firstNode;
-        }
-        while (i != index && currentNode != null) {
-            i++;
-            currentNode = currentNode.next;
-        }
+        Node currentNode = getNodeByIndex(index);
         return currentNode == null ? null : currentNode.data;
     }
 
@@ -76,13 +61,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Wrong index");
         }
         if (firstNode != null) {
-            //int i = 0;
-            Node currentNode = firstNode;
-            for (int i = 0; i < index; i++) {
-                currentNode = currentNode.next;
-                i++;
-            }
-            currentNode.data = value;
+
+            getNodeByIndex(index).data = value;
         }
     }
 
@@ -126,16 +106,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 }
             }
         } else {
-            Node currentNode = firstNode;
-            for (int i = 0; i < size; i++) {
-                if (i == index) {
-                    currentNode.previous.next = currentNode.next;
-                    currentNode.next.previous = currentNode.previous;
-                    size--;
-                    return currentNode.data;
-                }
-                currentNode = currentNode.next;
-            }
+            Node currentNode = getNodeByIndex(index);
+            currentNode.previous.next = currentNode.next;
+            currentNode.next.previous = currentNode.previous;
+            size--;
+            return currentNode.data;
         }
 
         return null;
@@ -162,12 +137,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    public class Node {
+    private Node getNodeByIndex(int index) {
+        int i = 0;
+        Node currentNode = firstNode;
+        while (i != index && currentNode != null) {
+            i++;
+            currentNode = currentNode.next;
+        }
+        return currentNode;
+    }
+
+    private class Node {
         T data;
         Node previous;
         Node next;
 
-        public Node(T data) {
+        private Node(T data) {
             this.data = data;
         }
     }
