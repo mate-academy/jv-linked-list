@@ -15,12 +15,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (size == 0) {
-            head = new Node<T>(null, value, null);
+            head = new Node<>(null, value, null);
             tail = head;
             size++;
             return;
         }
-        Node<T> toAdd = new Node<T>(null, value, null);
+        Node<T> toAdd = new Node<>(null, value, null);
         tail.next = toAdd;
         toAdd.prev = tail;
         tail = toAdd;
