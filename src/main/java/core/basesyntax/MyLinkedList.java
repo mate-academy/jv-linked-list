@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node head;
@@ -12,11 +13,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private class Node {
-        T value;
-        Node next;
-        Node prev;
+        private T value;
+        private Node next;
+        private Node prev;
 
-        public Node(Node next, T value, Node prev) {
+        private Node(Node next, T value, Node prev) {
             this.value = value;
             this.next = next;
             this.prev = prev;
@@ -39,7 +40,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException();
-        } else if (index == 0 || index == size) {
+        } else {
             add(value);
         }
     }
@@ -54,7 +55,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 ^ index >= size) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
         return node(index).value;
@@ -62,7 +63,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 ^ index >= size) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
         this.node(index).value = value;
@@ -70,7 +71,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 ^ index >= size) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
         return delete(node(index));
@@ -79,19 +80,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(T t) {
         Node temp;
-        if (t == null) {
-            for (temp = head; temp != null; temp = temp.next) {
-                if (temp.value == null) {
-                    delete(temp);
-                    return temp.value;
-                }
-            }
-        } else {
-            for (temp = head; temp != null; temp = temp.next) {
-                if (t.equals(temp.value)) {
-                    delete(temp);
-                    return temp.value;
-                }
+        for (temp = head; temp != null; temp = temp.next) {
+            if (Objects.equals(t, temp.value)) {
+                delete(temp);
+                return temp.value;
             }
         }
         return null;
@@ -107,7 +99,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    Node node(int index) {
+    private Node node(int index) {
         Node temp;
         if (index <= size / 2) {
             temp = head;
@@ -124,7 +116,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    T delete(Node target) {
+    private T delete(Node target) {
         Node next = target.next;
         Node prev = target.prev;
         if (prev == null) {
