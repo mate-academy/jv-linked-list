@@ -3,41 +3,40 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int amountOfElements = 0;
-    private Box<T> firstBox;
-    private Box<T> lastBox;
+    private int size = 0;
+    private Box<T> head;
+    private Box<T> last;
 
     @Override
     public void add(T value) {
-        if (amountOfElements == 0) {
+        if (size == 0) {
             Box newBox = new Box(value, null, null);
-            firstBox = lastBox = newBox;
-            amountOfElements++;
+            head = last = newBox;
+            size++;
         } else {
-            Box newBox = new Box(value, null, lastBox);
-            lastBox.linkToNextBox = newBox;
-            lastBox = newBox;
-            amountOfElements++;
+            Box newBox = new Box(value, null, last);
+            last.next = newBox;
+            last = newBox;
+            size++;
         }
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > amountOfElements) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException();
         }
-        if (index == amountOfElements) {
+        if (index == size) {
             add(value);
         } else {
             Box<T> boxToMoveAhead = searchByIndex(index);
-            Box newBox = new Box(value, boxToMoveAhead, boxToMoveAhead.linkToPrevBox);
-            boxToMoveAhead.linkToPrevBox = newBox;
-            newBox.linkToNextBox.linkToNextBox = newBox;
-            amountOfElements++;
+            Box newBox = new Box(value, boxToMoveAhead, boxToMoveAhead.previous);
+            boxToMoveAhead.previous = newBox;
+            newBox.next.previous = newBox;
             if (index == 0) {
-                firstBox = newBox;
-                amountOfElements++;
+                head = newBox;
             }
+            size++;
         }
     }
 
@@ -56,7 +55,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index > amountOfElements) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException();
         }
         Box<T> boxToChangeValue = searchByIndex(index);
@@ -67,28 +66,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Box<T> boxToRemove = searchByIndex(index);
         final Object elementToRemove = boxToRemove.value;
-        if (index < 0 || amountOfElements < index) {
+        if (index < 0 || size < index) {
             throw new IndexOutOfBoundsException();
         }
-        if (amountOfElements == 1) {
-            firstBox = lastBox = null;
-            amountOfElements--;
+        if (size == 1) {
+            head = last = null;
+            size--;
             return (T) elementToRemove;
         }
-        if (boxToRemove == firstBox) {
-            boxToRemove.linkToNextBox.linkToPrevBox = null;
-            firstBox = boxToRemove.linkToNextBox;
-            amountOfElements--;
+        if (boxToRemove == head) {
+            boxToRemove.next.previous = null;
+            head = boxToRemove.next;
+            size--;
             return (T) elementToRemove;
-        } else if (boxToRemove == lastBox) {
-            lastBox = boxToRemove.linkToPrevBox;
-            lastBox.linkToNextBox = null;
-            amountOfElements--;
+        } else if (boxToRemove == last) {
+            last = boxToRemove.previous;
+            last.next = null;
+            size--;
             return (T) elementToRemove;
         } else {
-            boxToRemove.linkToPrevBox.linkToNextBox = boxToRemove.linkToNextBox;
-            boxToRemove.linkToNextBox.linkToPrevBox = boxToRemove.linkToPrevBox;
-            amountOfElements--;
+            boxToRemove.previous.next = boxToRemove.next;
+            boxToRemove.next.previous = boxToRemove.previous;
+            size--;
             return (T) elementToRemove;
         }
     }
@@ -96,7 +95,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(T t) {
         int indexToRemove = searchByValue(t);
-        if (indexToRemove == amountOfElements) {
+        if (indexToRemove == size) {
             return null;
         }
         T elementToRemove = remove(indexToRemove);
@@ -105,44 +104,44 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        return amountOfElements;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return amountOfElements == 0;
+        return size == 0;
     }
 
     public int searchByValue(T value) {
-        Box interatorBox = firstBox;
+        Box interatorBox = head;
         int count = 0;
-        while (interatorBox.linkToNextBox != null) {
+        while (interatorBox.next != null) {
             if (interatorBox.value == value || value != null & value.equals(interatorBox.value)) {
                 return count;
             }
-            interatorBox = interatorBox.linkToNextBox;
+            interatorBox = interatorBox.next;
             count++;
         }
-        return amountOfElements;
+        return size;
     }
 
     public Box searchByIndex(int index) {
-        if (index < 0 || amountOfElements <= index) {
+        if (index < 0 || size <= index) {
             throw new IndexOutOfBoundsException();
         }
-        if (amountOfElements / 2 > index) {
+        if (size / 2 > index) {
             int count = 0;
-            Box iteratorBox = firstBox;
+            Box iteratorBox = head;
             while (count < index) {
-                iteratorBox = iteratorBox.linkToNextBox;
+                iteratorBox = iteratorBox.next;
                 count++;
             }
             return iteratorBox;
         } else {
-            Box iteratorBox = lastBox;
-            int count = amountOfElements - 1;
+            Box iteratorBox = last;
+            int count = size - 1;
             while (count > index) {
-                iteratorBox = iteratorBox.linkToPrevBox;
+                iteratorBox = iteratorBox.previous;
                 count--;
             }
             return iteratorBox;
@@ -150,14 +149,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Box<T> {
-        T value;
-        Box<T> linkToNextBox;
-        Box<T> linkToPrevBox;
+        private T value;
+        private Box<T> next;
+        private Box<T> previous;
 
-        Box(T value, Box<T> linkToNextBox, Box<T> linkToPrevBox) {
+        Box(T value, Box<T> next, Box<T> previous) {
             this.value = value;
-            this.linkToNextBox = linkToNextBox;
-            this.linkToPrevBox = linkToPrevBox;
+            this.next = next;
+            this.previous = previous;
         }
     }
 }
