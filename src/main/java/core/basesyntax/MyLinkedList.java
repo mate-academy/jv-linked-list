@@ -5,6 +5,9 @@ import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
+    private Node<T> head;
+    private Node<T> tail;
+    private Node<T> target;
     private int size;
 
     public MyLinkedList() {
@@ -26,11 +29,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> head;
-    private Node<T> tail;
-    private Node<T> target;
-
-    public Node targetSearch(int index) {
+    public Node<T> getNodeByIndex(int index) {
 
         if (size >> 1 > index) {
             target = head.next;
@@ -67,7 +66,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index Out Of Bounds!!!");
         }
-        targetSearch(index);
+        getNodeByIndex(index);
 
         Node newNode = new Node<T>(target, value, target.next);
         target.next.prev = newNode;
@@ -77,8 +76,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T listElement : list) {
-            add(listElement);
+        for (T element : list) {
+            add(element);
         }
     }
 
@@ -86,21 +85,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T get(int index) {
 
         indexValidation(index);
-        targetSearch(index);
+        getNodeByIndex(index);
         return target.value;
     }
 
     @Override
     public void set(T value, int index) {
         indexValidation(index);
-        targetSearch(index);
+        getNodeByIndex(index);
         target.value = value;
     }
 
     @Override
     public T remove(int index) {
         indexValidation(index);
-        targetSearch(index);
+        getNodeByIndex(index);
         target.prev.next = target.next;
         target.next.prev = target.prev;
         target.prev = target.next = null;
