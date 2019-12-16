@@ -5,21 +5,19 @@ import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
-    private Node<T> head;
-    private Node<T> tail;
-    private Node<T> target;
     private int size;
 
     public MyLinkedList() {
+
         tail = new Node<T>(head, null, null);
         head = new Node<T>(null, null, tail);
         tail.prev = head;
     }
 
     public class Node<T> {
-        T value;
-        Node<T> next;
-        Node<T> prev;
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
 
         public Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
@@ -27,6 +25,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
         }
     }
+
+    private Node<T> head;
+    private Node<T> tail;
+    private Node<T> target;
 
     public Node targetSearch(int index) {
 
@@ -75,8 +77,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T x : list) {
-            add(x);
+        for (T listElement : list) {
+            add(listElement);
         }
     }
 
@@ -101,6 +103,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         targetSearch(index);
         target.prev.next = target.next;
         target.next.prev = target.prev;
+        target.prev = target.next = null;
         size--;
         return target.value;
     }
