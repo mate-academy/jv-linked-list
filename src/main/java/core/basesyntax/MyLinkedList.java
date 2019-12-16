@@ -12,14 +12,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (size == 0) {
-            Node<T> newNode = new Node<>(null, value, null);
-            head = tail = newNode;
-        } else {
-            Node<T> buffer = tail;
-            Node<T> newNode = new Node<>(buffer, value, null);
-            tail = newNode;
-            buffer.next = newNode;
+            head = new Node<>(null, value, null);
+            tail = head;
+            size++;
+            return;
         }
+        tail = new Node<>(tail, value, null);
+        tail.prev.next = tail;
         size++;
     }
 
@@ -56,11 +55,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if(index == 0){
-            size--;
-            return head.value;
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(index);
         }
-
+        if (index == 0){
+            T value = head.value;
+            head = head.next;
+            head.prev = null;
+            size--;
+            return value;
+        }
+        if (index == size - 1){
+            T value = tail.value;
+            tail = tail.prev;
+            tail.next = null;
+            size --;
+            return value;
+        }
         Node<T> willBeRemove = returnNodeByIndex(index);
         willBeRemove.prev.next = willBeRemove.next;
         willBeRemove.next.prev = willBeRemove.prev;
@@ -84,7 +95,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> returnNodeByIndex(int index){
-        if (index < 0 || index > size - 1) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(index);
         }
         Node<T> wantedElement;

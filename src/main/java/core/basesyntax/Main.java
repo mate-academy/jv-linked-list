@@ -1,21 +1,19 @@
 package core.basesyntax;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        int n1 = 15;
-        int n2 = 13;
-        Math.floor(n1);
+       MyLinkedList<Integer> s = new MyLinkedList<>();
+       s.add(666);
+       s.add(777);
+       s.add(888);
+        System.out.println(s.size());
+        s.remove(0);
+        System.out.println(s.size());
 
-        System.out.println(Integer.toBinaryString(n1));
-        System.out.println(Integer.toBinaryString(n2));
-        System.out.println(Integer.toBinaryString(n1 & n2));
-        System.out.println(Integer.toBinaryString(n1 | n2));
-        System.out.println(Integer.toBinaryString(n1 ^ 1));
-        System.out.println(Integer.toBinaryString(n1 >> 1));
-        System.out.println(Integer.toBinaryString(n1 << 1));
+
     }
 
 }
