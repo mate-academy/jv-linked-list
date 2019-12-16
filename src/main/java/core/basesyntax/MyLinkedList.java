@@ -26,18 +26,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        Node<T> clone = returnNodeByIndex(index);
-        Node<T> newNode = new Node<>(clone.prev, value, clone);
-        clone.prev.next = newNode;
-        clone.prev = newNode;
+        Node<T> nodeByIndex = returnNodeByIndex(index);
+        Node<T> newNode = new Node<>(nodeByIndex.prev, value, nodeByIndex);
+        nodeByIndex.prev.next = newNode;
+        nodeByIndex.prev = newNode;
         size++;
 
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (T i : list) {
-            add(i);
+        for (T value : list) {
+            add(value);
         }
     }
 
@@ -80,7 +80,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(T t) {
         Node<T> willBeRemove = head;
         for (int i = 0; i < size; i++) {
-            if (t != null && t.equals(willBeRemove.value)) {
+            if (t == willBeRemove.value || t != null && t.equals(willBeRemove.value)) {
                 size--;
                 return willBeRemove.value;
             } else {
