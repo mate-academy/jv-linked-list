@@ -123,9 +123,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Wrong index " + index);
         }
-        Node<T> toFind = head;
-        for (int i = 0; i < index; i++) {
-            toFind = toFind.next;
+        Node<T> toFind;
+        if (index < size / 2) {
+            toFind = head;
+            for (int i = 0; i < index; i++) {
+                toFind = toFind.next;
+            }
+        }
+        toFind = tail;
+        for (int i = size - 1; i > index; i--) {
+            toFind = toFind.prev;
         }
         return toFind;
     }
