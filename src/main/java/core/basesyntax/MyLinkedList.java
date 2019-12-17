@@ -30,22 +30,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         tempNode.getPrevious().setNext(newNode);
     }
 
-    private Node nodeByIndex(int index) {
+    private Node<T> nodeByIndex(int index) {
         Node<T> tempNode;
         if (index < size / 2) {
             tempNode = first;
-            for (int i = 0; i <= index; i++) {
-                if (i == index) {
-                    break;
-                }
+            for (int i = 0; i < index; i++) {
                 tempNode = tempNode.getNext();
             }
         } else {
             tempNode = last;
-            for (int i = size() - 1; i >= index; i--) {
-                if (i == index) {
-                    break;
-                }
+            for (int i = size() - 1; i > index; i--) {
                 tempNode = tempNode.getPrevious();
             }
         }
