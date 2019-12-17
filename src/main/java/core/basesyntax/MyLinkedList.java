@@ -65,7 +65,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Box<T> boxToRemove = searchByIndex(index);
-        final Object elementToRemove = boxToRemove.value;
+        final T elementToRemove = boxToRemove.value;
         if (index < 0 || size < index) {
             throw new IndexOutOfBoundsException();
         }
@@ -78,17 +78,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             boxToRemove.next.previous = null;
             head = boxToRemove.next;
             size--;
-            return (T) elementToRemove;
+            return elementToRemove;
         } else if (boxToRemove == last) {
             last = boxToRemove.previous;
             last.next = null;
             size--;
-            return (T) elementToRemove;
+            return elementToRemove;
         } else {
             boxToRemove.previous.next = boxToRemove.next;
             boxToRemove.next.previous = boxToRemove.previous;
             size--;
-            return (T) elementToRemove;
+            return elementToRemove;
         }
     }
 
@@ -125,7 +125,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size;
     }
 
-    public Box <T> searchByIndex(int index) {
+    public Box searchByIndex(int index) {
         if (index < 0 || size <= index) {
             throw new IndexOutOfBoundsException();
         }
