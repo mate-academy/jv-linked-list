@@ -125,7 +125,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size;
     }
 
-    public Box searchByIndex(int index) {
+    public Box <T> searchByIndex(int index) {
         if (index < 0 || size <= index) {
             throw new IndexOutOfBoundsException();
         }
