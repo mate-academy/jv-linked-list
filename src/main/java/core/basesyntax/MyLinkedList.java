@@ -72,7 +72,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 1) {
             head = last = null;
             size--;
-            return (T) elementToRemove;
+            return elementToRemove;
         }
         if (boxToRemove == head) {
             boxToRemove.next.previous = null;
