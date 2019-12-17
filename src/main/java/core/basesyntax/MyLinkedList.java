@@ -108,25 +108,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             size--;
             return removed;
-        } else if (Objects.equals(t, tail.value)) {
+        }
+        if (Objects.equals(t, tail.value)) {
             removed = tail.value;
             tail = tail.prev;
             tail.next = null;
             size--;
             return removed;
-        } else {
-            Node<T> node = head;
-            for (int i = 0; i < size(); i++) {
-                if (Objects.equals(t, node.value)) {
-                    removed = node.value;
-                    node.prev.next = node.next;
-                    node.next.prev = node.prev;
-                    node = null;
-                    size--;
-                    break;
-                }
-                node = node.next;
+        }
+        Node<T> node = head;
+        for (int i = 0; i < size(); i++) {
+            if (Objects.equals(t, node.value)) {
+                removed = node.value;
+                node.prev.next = node.next;
+                node.next.prev = node.prev;
+                node = null;
+                size--;
+                break;
             }
+            node = node.next;
         }
         return removed;
     }
