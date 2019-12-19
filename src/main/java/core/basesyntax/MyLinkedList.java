@@ -126,17 +126,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(T t) {
         Node<T> temp;
-        if ((t == null && first.getElement() == null)
-                || (t != null && first.getElement() != null
-                && first.getElement().equals(t))) {
+        if (t == first.getElement() || t != null && t.equals(first.getElement())) {
             temp = first;
             first = first.getNext();
             size--;
             return temp.getElement();
         }
-        if ((t == null && last.getElement() == null)
-                || (t != null && last.getElement() != null
-                && last.getElement().equals(t))) {
+        if (t == first.getElement() || t != null && t.equals(first.getElement())) {
             temp = last;
             last = null;
             size--;
@@ -144,8 +140,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         temp = first;
         for (int i = 0; i < size(); i++) {
-            if ((temp.getElement() == null && t == null)
-                    || (temp.getElement() != null && temp.getElement().equals(t))) {
+            if (t == first.getElement() || (temp.getElement() != null && temp.getElement().equals(t))) {
                 changeLinksAtRemove(temp);
                 size--;
                 return temp.getElement();
