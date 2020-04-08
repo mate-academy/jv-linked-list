@@ -4,19 +4,17 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Header<T> header;
-    private Header<T> entry;
     private int size;
 
     public MyLinkedList() {
         this.header = new Header(null);
         header.next = header.prev = header;
-        entry = header;
         this.size = 0;
     }
 
     @Override
     public boolean add(T value) {
-        entry = new Header<>(value, entry, header);
+        Header<T> entry = new Header<>(value, header.prev, header);
         entry.next.prev = entry;
         entry.prev.next = entry;
         size++;
@@ -25,7 +23,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        //Header<T> newEntry = entry(index);
         Header<T> newEntry = new Header<>(value, entry(index).prev, entry(index));
         newEntry.prev.next = newEntry;
         newEntry.next.prev = newEntry;
@@ -75,7 +72,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T t) {
         int index = size;
-        entry = header.next;
+        Header<T> entry = header.next;
         while (index != 0) {
             if ((t == null && entry.data == null) || (t != null && entry.data.equals(t))) {
                 entry.prev.next = entry.next;
