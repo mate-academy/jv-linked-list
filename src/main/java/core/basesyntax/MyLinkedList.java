@@ -93,12 +93,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         T result = getNodeByIndex(index).item;
         if (index == 0) {
             firstNode = firstNode.nextNode;
-            if (firstNode != null) {
-                firstNode.previousNode = null;
-            }
         } else if (index == size - 1) {
             lastNode = lastNode.previousNode;
-            lastNode.previousNode = null;
+            lastNode.nextNode = null;
         } else {
             Node<T> prevNode = getNodeByIndex(index - 1);
             Node<T> nextNode = getNodeByIndex(index + 1);
