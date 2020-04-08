@@ -62,9 +62,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         assertIndex(index);
-        T oldValue;
         Node<T> setNode = findByIndex(index);
-        oldValue = setNode.element;
+        T oldValue = setNode.element;;
         setNode.element = value;
         return oldValue;
     }
@@ -72,28 +71,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         assertIndex(index);
-        T oldValue;
-        if (index == 0 && size > 1) {
-            Node<T> newFirst = first.next;
-            oldValue = first.element;
-            newFirst.previous = null;
-            first = newFirst;
-        } else if (index == 0 && size == 1) {
-            oldValue = first.element;
-            first = null;
-            last = null;
-        } else if (index == size - 1) {
-            oldValue = last.element;
-            last = last.previous;
-            last.next = null;
+        Node<T> node = findByIndex(index);
+        Node<T> prev = node.previous;
+        Node<T> next = node.next;
+        if (prev == null) {
+            first = next;
         } else {
-            Node<T> deleteNode = findByIndex(index);
-            deleteNode.previous.next = deleteNode.next;
-            deleteNode.next.previous = deleteNode.previous;
-            oldValue = deleteNode.element;
+            prev.next = next;
+        }
+        if (next == null) {
+            last = prev;
+        } else {
+            next.previous = prev;
         }
         size--;
-        return oldValue;
+        return node.element;
     }
 
     @Override
@@ -144,9 +136,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findByIndex(int index) {
-        Node<T> removeNode = first;
-        for (int i = 0; i < index; i++) { ////
-            removeNode = removeNode.next;
+        Node<T> removeNode;
+        if (index <= size / 2) {
+            removeNode = first;
+            for (int i = 0; i < index; i++) {
+                removeNode = removeNode.next;
+            }
+        } else {
+            removeNode = last;
+            for (int i = size - 1; i > index; i--) {
+                removeNode = removeNode.previous;
+            }
         }
         return removeNode;
     }
