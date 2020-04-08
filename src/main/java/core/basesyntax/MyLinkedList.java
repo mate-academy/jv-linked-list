@@ -13,16 +13,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-        Entry<T> newEntry = new Entry<>(value, null, null);
+        Entry<T> newEntry = new Entry<>(value);
         if (size == 0) {
             entry = newEntry;
             size++;
             return true;
         }
-        Entry<T> lastEntry = entry;
-        while (lastEntry.next != null) {
-            lastEntry = lastEntry.next;
-        }
+        Entry<T> lastEntry = goToIndex(size - 1);
         lastEntry.next = newEntry;
         newEntry.prev = lastEntry;
         size++;
@@ -34,16 +31,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        Entry<T> newEntry = new Entry<>(value, null, null);
-        if (size == 0) {
-            entry = newEntry;
-            size++;
-            return;
-        }
-        if (index == size) {
+        if (size == 0 || index == size) {
             add(value);
             return;
         }
+        Entry<T> newEntry = new Entry<>(value);
         Entry<T> byIndexEntry = goToIndex(index);
         Entry<T> previousEntry = byIndexEntry.prev;
         newEntry.next = byIndexEntry;
@@ -156,10 +148,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Entry<T> next;
         Entry<T> prev;
 
-        Entry(T element, Entry<T> next, Entry<T> prev) {
+        Entry(T element) {
             this.element = element;
-            this.next = next;
-            this.prev = prev;
         }
     }
 }
