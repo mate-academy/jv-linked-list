@@ -81,25 +81,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("IndexOutOfBoundsException");
         }
         Node<T> removable;
-        if (index == 0) {
-            if (size == 1) {
-                removable = first;
-                first = null;
-                last = null;
-            } else {
-                removable = first;
-                first = removable.next;
-                removable.next.prev = null;
-            }
-        } else if (index == size - 1) {
-            removable = last;
-            last = removable.next;
-            removable.prev.next = null;
+        removable = getNode(index);
+        if (removable.prev == null) {
+            first = removable.next;
         } else {
-            removable = getNode(index);
             removable.prev.next = removable.next;
+        }
+        if (removable.next == null) {
+            last = removable.prev;
+        } else {
             removable.next.prev = removable.prev;
         }
+        removable.prev = null;
+        removable.next = null;
         size--;
         return removable.item;
     }
