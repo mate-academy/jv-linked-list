@@ -9,11 +9,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-        Node<T> current = new Node<>(value, null, last);
+        last = new Node<>(value, null, last);
         if (first == null) {
-            first = current;
+            first = last;
         }
-        last = current;
         size++;
         return true;
     }
