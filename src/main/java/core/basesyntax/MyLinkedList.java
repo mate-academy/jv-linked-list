@@ -69,9 +69,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         entry.prev.next = entry.next;
         entry.next.prev = entry.prev;
         size--;
-        T result = entry.data;
-        entry = entry.prev;
-        return result;
+        return entry.data;
     }
 
     @Override
@@ -82,7 +80,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if ((t == null && entry.data == null) || (t != null && entry.data.equals(t))) {
                 entry.prev.next = entry.next;
                 entry.next.prev = entry.prev;
-                entry = entry.prev;
+                entry = entry.next;
                 size--;
                 return true;
             }
