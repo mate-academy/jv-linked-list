@@ -15,12 +15,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-        Node<T> l = last;
-        last = new Node<>(l, value, null);
-        if (l == null) {
+        last = new Node<>(last, value, null);
+        if (last.prev == null) {
             first = last;
         } else {
-            l.next = last;
+            last.prev.next = last;
         }
         size++;
         return true;
