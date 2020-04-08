@@ -72,24 +72,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Entry<T> byIndexEntry = goToIndex(index);
         Entry<T> previousEntry = byIndexEntry.prev;
         Entry<T> nextEntry = byIndexEntry.next;
-        if (index == 0) {
-            if (size != 1) {
-                nextEntry.prev = null;
-                firstEntry = nextEntry;
-            } else {
-                firstEntry = null;
-            }
-            size--;
-            return byIndexEntry.element;
+        if (size == 1) {
+            firstEntry = null;
+            lastEntry = null;
         }
-        if (index == size - 1) {
+        if (index == 0 && size > 1) {
+            nextEntry.prev = null;
+            firstEntry = nextEntry;
+        }
+        if (index == size - 1 && size > 1) {
             previousEntry.next = null;
             lastEntry = previousEntry;
-            size--;
-            return byIndexEntry.element;
         }
-        previousEntry.next = nextEntry;
-        nextEntry.prev = previousEntry;
+        if (index > 0 && index < size - 1) {
+            previousEntry.next = nextEntry;
+            nextEntry.prev = previousEntry;
+        }
         size--;
         return byIndexEntry.element;
     }
