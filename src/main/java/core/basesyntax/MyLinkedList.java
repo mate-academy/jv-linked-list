@@ -30,28 +30,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index == 0) {
-            Node<T> f = first;
-            Node<T> newNode = new Node<>(null, value, f);
-            first = newNode;
-            if (f != null) {
-                f.prev = newNode;
-            } else {
-                last = newNode;
-            }
-        } else if (index == size) {
-            Node<T> l = last;
-            Node<T> newNode = new Node<>(l, value, null);
-            last = newNode;
-            l.next = newNode;
+        if (index == size) {
+            add(value);
         } else {
-            Node<T> prevNode = getNode(index - 1);
-            Node<T> nextNode = prevNode.next;
-            Node<T> newNode = new Node<>(prevNode, value, nextNode);
-            prevNode.next = newNode;
-            nextNode.prev = newNode;
+            Node<T> next = getNode(index);
+            Node<T> newNode = new Node<>(null, value, next);
+            if (next.prev == null) {
+                first = newNode;
+            } else {
+                next.prev.next = newNode;
+            }
+            next.prev = newNode;
+            size++;
         }
-        size++;
     }
 
     @Override
@@ -135,21 +126,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public Node<T> getNode(int index) {
-        indexExtends(index);
-        int current = 0;
-        Node<T> currentNode = first;
-        while (current != index) {
-            currentNode = currentNode.next;
-            current++;
-        }
-        return currentNode;
-    }
-
     public void indexExtends(int i) {
         if (i >= size || i < 0) {
             throw new IndexOutOfBoundsException("IndexOutOfBoundsException");
         }
+    }
+
+    public Node<T> getNode(int index) {
+        indexExtends(index);
+        int current;
+        Node<T> currentNode = first;
+        if (index < size / 2) {
+            current = 0;
+            while (current != index) {
+                currentNode = currentNode.next;
+                current++;
+            }
+        } else {
+            currentNode = last;
+            current = size - 1;
+            while (current != index) {
+                currentNode = currentNode.prev;
+                current--;
+            }
+        }
+        return currentNode;
     }
 
 }
