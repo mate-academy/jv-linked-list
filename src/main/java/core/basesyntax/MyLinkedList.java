@@ -62,7 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index == size) {
+        if (index == size || index < 0) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
         Header<T> entry = entry(index);
@@ -104,10 +104,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
-        Header<T> e = header.next;
-        while (index != 0) {
-            e = e.next;
-            index--;
+        Header<T> e = header;
+        if (index < (size >> 1)) {
+            for (int i = 0; i <= index; i++) {
+                e = e.next;
+            }
+        } else {
+            for (int i = size; i > index; i--) {
+                e = e.prev;
+            }
         }
         return e;
     }
