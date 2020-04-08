@@ -28,7 +28,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndex(index, size);
-        if (index == size && add(value)) {
+        if (index == size) {
+            add(value);
             return;
         }
         Node<T> afterNode = getNode(index);
@@ -107,7 +108,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return first == null && last == null;
+        return size == 0;
     }
 
     private void checkIndex(int index, int condition) {
