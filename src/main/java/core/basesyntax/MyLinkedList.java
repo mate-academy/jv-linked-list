@@ -46,8 +46,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Node<T> node = getNode(index);
-        return node != null ? node.data : null;
+        return getNode(index).data;
     }
 
     @Override
