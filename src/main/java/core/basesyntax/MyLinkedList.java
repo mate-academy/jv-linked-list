@@ -70,17 +70,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index, size - 1);
         Node<T> removedNode = getNode(index);
-        Node<T> before = removedNode.prev;
-        Node<T> after = removedNode.next;
-        if (before == null) {
-            first = after;
+        Node<T> beforeNode = removedNode.prev;
+        Node<T> afterNode = removedNode.next;
+        if (beforeNode == null) {
+            first = afterNode;
         } else {
-            before.next = after;
+            beforeNode.next = afterNode;
         }
-        if (after == null) {
-            last = before;
+        if (afterNode == null) {
+            last = beforeNode;
         } else {
-            after.prev = before;
+            afterNode.prev = beforeNode;
         }
         size--;
         return removedNode.element;
