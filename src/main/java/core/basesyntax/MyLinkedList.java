@@ -8,7 +8,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
 
     public MyLinkedList() {
-        this.header = new Header("Header");
+        this.header = new Header(null);
         header.next = header.prev = header;
         entry = header;
         this.size = 0;
