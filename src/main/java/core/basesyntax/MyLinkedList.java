@@ -3,6 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+
     private int size = 0;
     private Node<T> first;
     private Node<T> last;
@@ -26,6 +27,44 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean addAll(List<T> list) {
         return addAll(size, list);
+    }
+
+    private boolean addAll(int index, List<T> c) {
+        checkElementIndex(index);
+        Object[] a = c.toArray();
+        int lengthList = a.length;
+        if (lengthList == 0) {
+            return false;
+        }
+
+        Node<T> pred;
+        Node<T> succ;
+
+        if (index == size) {
+            succ = null;
+            pred = last;
+        } else {
+            succ = node(index);
+            pred = succ.prev;
+        }
+        for (Object o : a) {
+            T e = (T) o;
+            Node<T> newNode = new Node<>(pred, e, null);
+            if (pred == null) {
+                first = newNode;
+            } else {
+                pred.next = newNode;
+            }
+            pred = newNode;
+        }
+        if (succ == null) {
+            last = pred;
+        } else {
+            pred.next = succ;
+            succ.prev = pred;
+        }
+        size += lengthList;
+        return true;
     }
 
     @Override
@@ -132,40 +171,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             return node;
         }
-    }
-
-    private boolean addAll(int index, List<T> c) {
-        checkElementIndex(index);
-        Object[] a = c.toArray();
-        int lengthList = a.length;
-        if (lengthList == 0) {
-            return false;
-        }
-        Node<T> pred, succ;
-        if (index == size) {
-            succ = null;
-            pred = last;
-        } else {
-            succ = node(index);
-            pred = succ.prev;
-        }
-        for (Object o : a) {
-            T e = (T) o;
-            Node<T> newNode = new Node<>(pred, e, null);
-            if (pred == null)
-                first = newNode;
-            else
-                pred.next = newNode;
-            pred = newNode;
-        }
-        if (succ == null) {
-            last = pred;
-        } else {
-            pred.next = succ;
-            succ.prev = pred;
-        }
-        size += lengthList;
-        return true;
     }
 
     private T unlink(Node<T> x) {
