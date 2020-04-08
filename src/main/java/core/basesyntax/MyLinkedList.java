@@ -58,18 +58,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
         Entry<T> byIndexEntry = goToIndex(index);
         return byIndexEntry.element;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
         Entry<T> byIndexEntry = goToIndex(index);
         T element = byIndexEntry.element;
         byIndexEntry.element = value;
@@ -78,9 +72,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
         Entry<T> byIndexEntry = goToIndex(index);
         Entry<T> previousEntry = byIndexEntry.prev;
         Entry<T> nextEntry = byIndexEntry.next;
@@ -131,6 +122,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Entry<T> goToIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
         Entry<T> byIndexEntry;
         if (index < (size << 1)) {
             byIndexEntry = firstEntry;
