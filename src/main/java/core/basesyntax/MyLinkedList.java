@@ -76,7 +76,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 this.array = new MyLinkedList.Node[0];
                 return bufferedItem;
             }
-            removing(index);
+            cut(index);
+            changingPrevAndNextItems(index);
             return bufferedItem;
         }
         throw new ArrayIndexOutOfBoundsException("Index: " + index + " Size: " + this.array.length);
@@ -92,12 +93,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return false;
-    }
-
-    private void removing(int index) {
-        cut(index);
-        changingPrevAndNextItems(index);
-
     }
 
     private void changingPrevAndNextItems(int index) {
