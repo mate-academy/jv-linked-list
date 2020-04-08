@@ -123,14 +123,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException();
         }
         Entry<T> byIndexEntry;
-        if (index < (size << 1)) {
+        if (index < (size / 2)) {
             byIndexEntry = firstEntry;
             for (int i = 0; i < index; i++) {
                 byIndexEntry = byIndexEntry.next;
             }
         } else {
             byIndexEntry = lastEntry;
-            for (int i = size; i > index; i--) {
+            for (int i = size - 1; i > index; i--) {
                 byIndexEntry = byIndexEntry.prev;
             }
         }
