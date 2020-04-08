@@ -66,23 +66,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> addedNode = new Node(value, null, null);
+        Node<T> setNode = new Node(value, null, null);
         T result = getNodeByIndex(index).item;
         if (index == 0) {
-            addedNode.nextNode = firstNode.nextNode;
-            firstNode.nextNode.previousNode = addedNode;
-            firstNode = addedNode;
+            setNode.nextNode = firstNode.nextNode;
+            firstNode.nextNode.previousNode = setNode;
+            firstNode = setNode;
         } else if (index == size - 1) {
-            addedNode.previousNode = lastNode.previousNode;
-            lastNode.previousNode.nextNode = addedNode;
-            lastNode = addedNode;
+            setNode.previousNode = lastNode.previousNode;
+            lastNode.previousNode.nextNode = setNode;
+            lastNode = setNode;
         } else {
             Node<T> prevNode = getNodeByIndex(index - 1);
             Node<T> nextNode = getNodeByIndex(index + 1);
-            addedNode.nextNode = nextNode;
-            addedNode.previousNode = prevNode;
-            prevNode.nextNode = addedNode;
-            nextNode.previousNode = addedNode;
+            setNode.nextNode = nextNode;
+            setNode.previousNode = prevNode;
+            prevNode.nextNode = setNode;
+            nextNode.previousNode = setNode;
         }
         return result;
     }
@@ -93,9 +93,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         T result = getNodeByIndex(index).item;
         if (index == 0) {
             firstNode = firstNode.nextNode;
+            if (firstNode != null) {
+                firstNode.previousNode = null;
+            }
         } else if (index == size - 1) {
             lastNode = lastNode.previousNode;
-            lastNode.nextNode = null;
+            lastNode.previousNode = null;
         } else {
             Node<T> prevNode = getNodeByIndex(index - 1);
             Node<T> nextNode = getNodeByIndex(index + 1);
