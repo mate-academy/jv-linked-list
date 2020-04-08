@@ -16,7 +16,7 @@ public interface MyLinkedListInterface<T> {
 
     T remove(int index);
 
-    boolean remove(T t);
+    boolean remove(T value);
 
     int size();
 
