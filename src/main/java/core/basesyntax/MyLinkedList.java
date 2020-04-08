@@ -17,12 +17,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean add(T value) {
         Node<T> l = last;
-        Node<T> newNode = new Node<>(l, value, null);
-        last = newNode;
+        last = new Node<>(l, value, null);
         if (l == null) {
-            first = newNode;
+            first = last;
         } else {
-            l.next = newNode;
+            l.next = last;
         }
         size++;
         return true;
@@ -93,7 +92,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T t) {
         Node<T> currentNode = first;
         int i = 0;
-        while (!(Objects.equals(currentNode.item, t))) {
+        while (!((currentNode.item == t) || (currentNode != null && currentNode.item.equals(t)))) {
             if (i == size - 1) {
                 return false;
             }
