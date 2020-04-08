@@ -4,7 +4,8 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
-    private Entry<T> entry;
+    private Entry<T> firstEntry;
+    private Entry<T> lastEntry;
     private int size;
 
     public MyLinkedList() {
@@ -15,13 +16,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean add(T value) {
         Entry<T> newEntry = new Entry<>(value);
         if (size == 0) {
-            entry = newEntry;
+            firstEntry = newEntry;
+            lastEntry = newEntry;
             size++;
             return true;
         }
-        Entry<T> lastEntry = goToIndex(size - 1);
-        lastEntry.next = newEntry;
-        newEntry.prev = lastEntry;
+        Entry<T> currentEntry = goToIndex(size - 1);
+        currentEntry.next = newEntry;
+        newEntry.prev = currentEntry;
+        lastEntry = newEntry;
         size++;
         return true;
     }
@@ -84,29 +87,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == 0) {
             if (size != 1) {
                 nextEntry.prev = null;
-                entry = nextEntry;
+                firstEntry = nextEntry;
             } else {
-                entry = null;
+                firstEntry = null;
             }
             size--;
             return byIndexEntry.element;
         }
         if (index == size - 1) {
             previousEntry.next = null;
-            goToTheBeginning(previousEntry);
+            lastEntry = previousEntry;
             size--;
             return byIndexEntry.element;
         }
         previousEntry.next = nextEntry;
         nextEntry.prev = previousEntry;
-        goToTheBeginning(previousEntry);
         size--;
         return byIndexEntry.element;
     }
 
     @Override
     public boolean remove(T t) {
-        Entry<T> currentEntry = entry;
+        Entry<T> currentEntry = firstEntry;
         for (int i = 0; i < size; i++) {
             if (t == null && currentEntry.element == null
                     || t != null && t.equals(currentEntry.element)) {
@@ -129,18 +131,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Entry<T> goToIndex(int index) {
-        Entry<T> byIndexEntry = entry;
-        for (int i = 0; i < index; i++) {
-            byIndexEntry = byIndexEntry.next;
+        Entry<T> byIndexEntry;
+        if (index < (size << 1)) {
+            byIndexEntry = firstEntry;
+            for (int i = 0; i < index; i++) {
+                byIndexEntry = byIndexEntry.next;
+            }
+        } else {
+            byIndexEntry = lastEntry;
+            for (int i = size; i > index; i--) {
+                byIndexEntry = byIndexEntry.prev;
+            }
         }
-        return byIndexEntry;
-    }
 
-    private void goToTheBeginning(Entry<T> currentEntry) {
-        while (currentEntry.prev != null) {
-            currentEntry = currentEntry.prev;
-        }
-        entry = currentEntry;
+        return byIndexEntry;
     }
 
     private static class Entry<T> {
