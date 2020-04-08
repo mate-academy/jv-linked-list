@@ -59,8 +59,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        Node<T> result = getNodeByIndex(index);
-        return result.item;
+        return getNodeByIndex(index).item;
     }
 
     @Override
@@ -93,6 +92,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         T result = getNodeByIndex(index).item;
         if (index == 0) {
             firstNode = firstNode.nextNode;
+            if (firstNode != null) {
+                firstNode.previousNode = null;
+            }
         } else if (index == size - 1) {
             lastNode = lastNode.previousNode;
             lastNode.nextNode = null;
