@@ -138,15 +138,4 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.nextElement = nextElement;
         }
     }
-
-    public static void main(String[] args) {
-        MyLinkedList<String> linkedList = new MyLinkedList<>();
-        linkedList.add("dfsdf1");
-        linkedList.add("dfsdf2");
-        linkedList.add("dfsdf3");
-        linkedList.add("dfsdf4");
-        linkedList.add("dfsdf0",2);
-        linkedList.remove(0);
-        linkedList.get(0);
-    }
 }
