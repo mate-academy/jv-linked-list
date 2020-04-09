@@ -31,13 +31,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (index == size) {
                 add(value);
             } else {
-                Node<T> temp = first;
-                int i = 0;
-                while (i != index) {
-                    temp = temp.next;
-                    i++;
-                }
-                Node<T> next = temp;
+                Node<T> next = getNodaByIndex(index);
                 Node<T> prev = next.prev;
                 Node<T> newNode = new Node<>(value, next, prev);
                 if (prev == null) {
@@ -47,7 +41,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 }
                 next.prev = newNode;
                 size++;
-                return;
             }
         } else {
             throw new IndexOutOfBoundsException();
@@ -65,12 +58,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         if (indexIsExist(index)) {
-            Node<T> temp = first;
-            int i = 0;
-            while (i != index) {
-                temp = temp.next;
-                i++;
-            }
+            Node<T> temp = getNodaByIndex(index);
             return temp.data;
         }
         throw new IndexOutOfBoundsException();
@@ -79,14 +67,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         if (index < size && index >= 0) {
-            Node<T> temp = first;
-            int i = 0;
-            while (i != index) {
-                temp = temp.next;
-                i++;
-            }
+            Node<T> temp = getNodaByIndex(index);
             T oldValue = temp.data;
-            temp.data=value;
+            temp.data = value;
             return oldValue;
         }
         throw new IndexOutOfBoundsException();
@@ -95,13 +78,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         if (indexIsExist(index)) {
-            Node<T> temp = first;
-            int i = 0;
-            while (i != index) {
-                temp = temp.next;
-                i++;
-            }
-            removeThis(temp);
+            Node<T> temp = getNodaByIndex(index);
+            removeThis(getNodaByIndex(index));
             return temp.data;
         }
         throw new IndexOutOfBoundsException();
@@ -109,17 +87,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T t) {
-        if (!isEmpty()) {
-            Node<T> temp = first;
-            int i = 0;
-            while (i != size) {
-                if (temp.data == t || t != null && temp.data.equals((T) t)) {
-                    removeThis(temp);
-                    return true;
-                }
-                temp = temp.next;
-                i++;
+        Node<T> temp = first;
+        int i = 0;
+        while (i != size) {
+            if (temp.data == t || t != null && temp.data.equals(t)) {
+                removeThis(temp);
+                return true;
             }
+            temp = temp.next;
+            i++;
         }
         return false;
     }
@@ -148,8 +124,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    public boolean indexIsExist(int index) {
+    private boolean indexIsExist(int index) {
         return index >= 0 && index < size;
+    }
+
+    private Node<T> getNodaByIndex(int index) {
+        Node<T> temp = first;
+        int i = 0;
+        while (i != index) {
+            temp = temp.next;
+            i++;
+        }
+        return temp;
     }
 
     private class Node<T> {
