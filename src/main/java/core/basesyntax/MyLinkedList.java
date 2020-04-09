@@ -9,19 +9,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     public MyLinkedList() {
         this.size = 0;
-        this.first = null;
-        this.last = null;
     }
 
     @Override
     public boolean add(T value) {
-        Node<T> l = last;
-        Node<T> newNode = new Node<>(l, value, null);
+        Node<T> lastNode = last;
+        Node<T> newNode = new Node<>(lastNode, value, null);
         last = newNode;
-        if (l == null) {
+        if (lastNode == null) {
             first = newNode;
         } else {
-            l.next = last;
+            lastNode.next = last;
         }
         size++;
         return true;
@@ -29,7 +27,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (size - index == 0) {
+        if (size == index) {
             add(value);
         } else {
             Node<T> currentNode = getNodeByIndex(index);
@@ -56,15 +54,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         Node<T> currentNode = getNodeByIndex(index);
-        if (currentNode.prev == null) {
-            first = new Node<T>(null, value, currentNode.next);
-            currentNode.next.prev = first;
-        } else {
-            Node<T> newNode = new Node<T>(currentNode.prev, value, currentNode.next);
-            currentNode.prev.next = newNode;
-            currentNode.next.prev = newNode;
-        }
-        return currentNode.item;
+        T oldNodeItem = currentNode.item;
+        currentNode.item = value;
+        return oldNodeItem;
     }
 
     @Override
@@ -87,11 +79,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public boolean remove(T value) {
+    public boolean remove(T t) {
         Node<T> currentNode = first;
         for (int index = 0; index < size; index++) {
-            if (value == currentNode.item
-                    || currentNode.item != null && currentNode.item.equals(value)) {
+            if (t == currentNode.item
+                    || currentNode.item != null && currentNode.item.equals(t)) {
                 remove(index);
                 return true;
             }
@@ -134,11 +126,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         Node(Node<T> prev, T item, Node<T> next) {
             this.item = item;
-            this.next = next;
-            this.prev = prev;
-        }
-
-        Node(Node<T> prev, Node<T> next) {
             this.next = next;
             this.prev = prev;
         }
