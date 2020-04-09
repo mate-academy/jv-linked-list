@@ -9,19 +9,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
 
     public MyLinkedList() {
-        this.size = 0;
+        size = 0;
     }
 
     public void addLast(T value) {
-        Node<T> l = this.last;
-        Node<T> newNode = new Node(l, value, null);
-        this.last = newNode;
-        if (l == null) {
-            this.first = newNode;
+        Node<T> last = this.last;
+        Node<T> newNode = new Node(last, value, null);
+        last = newNode;
+        if (last == null) {
+            first = newNode;
         } else {
-            l.next = newNode;
+            last.next = newNode;
         }
-        ++this.size;
+        ++size;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        this.checkPositionIndex(index);
+        checkPositionIndex(index);
         return getNodeByIndex(index).item;
     }
 
@@ -99,12 +99,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return this.size == 0;
+        return size == 0;
     }
 
     private Node<T> getNodeByIndex(int index) {
