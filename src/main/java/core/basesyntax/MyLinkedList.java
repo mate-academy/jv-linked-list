@@ -103,11 +103,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private boolean checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= this.size) {
             throw new IndexOutOfBoundsException("Index: " + index + "out of Size: " + this.size);
         }
-        return true;
     }
 
     private void addLast(T element) {
