@@ -24,7 +24,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         last.next = node;
         node.prev = last;
-        node.next = null;
         last = node;
         elementsData += 1;
         return true;
@@ -43,9 +42,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = node;
         }
         if (index == elementsData) {
-            last.next = node;
-            node.prev = last;
-            last = node;
+            add(value);
+            return;
         }
         if (index > 0 && index < elementsData) {
             Node<T> buffer = searching(index);
