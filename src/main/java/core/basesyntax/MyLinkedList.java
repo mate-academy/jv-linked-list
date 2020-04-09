@@ -20,7 +20,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        this.checkPosition(index);
+        checkPosition(index);
         if (index == this.size) {
             this.addLast(value);
         } else {
@@ -39,16 +39,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return getNodeByIndex(index).currE;
+        return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        this.checkPosition(index);
         checkIndex(index);
         Node<T> oldNode = getNodeByIndex(index);
-        T returnValue = oldNode.currE;
-        oldNode.currE = value;
+        T returnValue = oldNode.value;
+        oldNode.value = value;
         return returnValue;
     }
 
@@ -56,42 +55,36 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> removed = getNodeByIndex(index);
-        Node<T> next = removed.nextE;
-        Node<T> prev = removed.prevE;
+        Node<T> next = removed.next;
+        Node<T> prev = removed.prev;
 
         if (prev == null) {
             this.first = next;
         } else {
-            prev.nextE = next;
-            removed.prevE = null;
+            prev.next = next;
+            removed.prev = null;
         }
         if (next == null) {
             this.last = prev;
         } else {
-            next.prevE = prev;
-            removed.nextE = null;
+            next.prev = prev;
+            removed.next = null;
         }
         size--;
-        return removed.currE;
+        return removed.value;
     }
 
     @Override
     public boolean remove(T t) {
-        int index = -1;
         Node<T> checked = first;
         for (int i = 0; i < size; i++) {
-            if (checked.currE == t || checked.currE != null && checked.currE.equals(t)) {
-                index = i;
-                break;
+            if (checked.value == t || checked.value != null && checked.value.equals(t)) {
+                remove(i);
+                return true;
             }
-            checked = checked.nextE;
+            checked = checked.next;
         }
-        if (index == -1) {
-            return false;
-        } else {
-            remove(index);
-        }
-        return true;
+        return false;
     }
 
     @Override
@@ -105,7 +98,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkPosition(int index) {
-        if (!(index >= 0 && index <= this.size)) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index: " + index + "out of Size: " + this.size);
         }
     }
@@ -119,56 +112,55 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void addLast(T element) {
         Node<T> last = this.last;
-        Node<T> newNode = new Node(last, element, (Node) null);
+        Node<T> newNode = new Node(last, element, null);
         this.last = newNode;
         if (last == null) {
             this.first = newNode;
         } else {
-            last.nextE = newNode;
+            last.next = newNode;
         }
         size++;
     }
 
     private Node<T> getNodeByIndex(int index) {
         Node<T> x;
-        int i;
-        if (index < this.size >> 1) {
+        if (index < size >> 1) {
             x = this.first;
 
-            for (i = 0; i < index; ++i) {
-                x = x.nextE;
+            for (int i = 0; i < index; ++i) {
+                x = x.next;
             }
         } else {
             x = this.last;
 
-            for (i = this.size - 1; i > index; --i) {
-                x = x.prevE;
+            for (int i = this.size - 1; i > index; --i) {
+                x = x.prev;
             }
         }
         return x;
     }
 
     private void addInside(T value, Node<T> nodeBefore) {
-        Node<T> pred = nodeBefore.prevE;
-        Node<T> newNode = new Node<T>(pred, value, nodeBefore);
-        nodeBefore.prevE = newNode;
-        if (pred == null) {
+        Node<T> prev = nodeBefore.prev;
+        Node<T> newNode = new Node<T>(prev, value, nodeBefore);
+        nodeBefore.prev = newNode;
+        if (prev == null) {
             this.first = newNode;
         } else {
-            pred.nextE = newNode;
+            prev.next = newNode;
         }
         ++this.size;
     }
 
     private class Node<T> {
-        private T currE;
-        private Node<T> prevE;
-        private Node<T> nextE;
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
 
         private Node(Node<T> prev, T curr, Node<T> next) {
-            currE = curr;
-            prevE = prev;
-            nextE = next;
+            value = curr;
+            this.prev = prev;
+            this.next = next;
         }
     }
 }
