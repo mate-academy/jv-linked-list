@@ -13,13 +13,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         elementsData = 0;
     }
 
-    public static void main(String[] args) {
-        MyLinkedList<String> a = new MyLinkedList<>();
-        a.add("dsadsa");
-        a.add("1", 1);
-        System.out.println(a);
-    }
-
     @Override
     public boolean add(T value) {
         Node<T> node = new Node<T>(null, value, null);
