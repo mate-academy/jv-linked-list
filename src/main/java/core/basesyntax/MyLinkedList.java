@@ -88,8 +88,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             after.prevLinkedList = before;
         } else if (before == null) {
             ourNode = after;
-        } else if (after == null) {
-            ourNode = before;
         }
         count--;
         return result;
