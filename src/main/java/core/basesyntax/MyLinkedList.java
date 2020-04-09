@@ -1,50 +1,149 @@
 package core.basesyntax;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private int size = 0;
+    private Node<T> first;
+    private Node<T> last;
+
+    public MyLinkedList() {
+    }
+
+    private static class Node<T> {
+        public T element;
+        public Node<T> next;
+        public Node<T> prev;
+
+        public Node(Node<T> prev, T element, Node<T> next) {
+            this.element = element;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+
     @Override
     public boolean add(T value) {
-        return false;
+        Node<T> newNode = new Node<T>(last, value, null);
+        if(size == 0) {
+            first = newNode;
+        } else {
+            last.next = newNode; // taking tail and tell it that new tail is linked with new node
+        }
+        last = newNode; // moving value of the Tail forward, if we have 15 elements and adding one we're just saying that last is going to be 16th element
+        size++;
+        return true;
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (index == size) {
+            add(value);
+            return;
+        }
+        checkIndex(index);
+        Node<T> addedNode = new Node<>(null, value, null);
+        if (index == 0) {
+            addedNode.next = first;
+            first.prev = addedNode;
+            first = addedNode;
+        } else {
+            Node<T> nextNode = getNodeByIndex(index);
+            addedNode.prev = nextNode.prev;
+            addedNode.next = nextNode;
+            nextNode.prev = addedNode;
+        }
+        size++;
     }
 
     @Override
     public boolean addAll(List<T> list) {
-        return false;
+        for(T l : list) {
+            add(l);
+        }
+        return true;
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndex(index);
+        return getNodeByIndex(index).element;
     }
 
     @Override
     public T set(T value, int index) {
-        return null;
+        checkIndex(index);
+
+        Node<T> replaceableNode = getNodeByIndex(index);
+        T oldElement = replaceableNode.element;
+        replaceableNode.element = value;
+        return oldElement;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIndex(index);
+        Node<T> removableNode = getNodeByIndex(index);
+
+        if (index == 0) {
+            first = first.next;
+            if (first != null) {
+                first.prev = null;
+            } else {
+                last = null;
+            }
+        } else if (index == size - 1) {
+            last = last.prev;
+            last.next = null;
+        } else {
+            removableNode.next.prev = removableNode.prev;
+            removableNode.prev.next = removableNode.next;
+        }
+        size--;
+        return removableNode.element;
     }
 
     @Override
     public boolean remove(T t) {
+        for (int i = 0; i < size; i++) {
+            Node<T> node = getNodeByIndex(i);
+            if ((node.element != null && node.element.equals(t)) || node.element == t) {
+                remove(i);
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+    }
+
+    private Node<T> getNodeByIndex(int index) {
+        Node<T> result = first;
+        if (size / 2 > index) {
+            for (int i = 0; i < index; i++) {
+                result = result.next;
+            }
+        } else {
+            result = last;
+            for (int i = size - 1; i > index; i--) {
+                result = result.prev;
+            }
+        }
+        return result;
     }
 }
