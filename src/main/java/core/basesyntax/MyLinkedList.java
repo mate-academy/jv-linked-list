@@ -8,12 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
 
-    public MyLinkedList() {
-        size = 0;
-        first = null;
-        last = null;
-    }
-
     private static class Node<T> {
         private T item;
         private Node<T> prev;
@@ -26,21 +20,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> getNode(int index) {
-        checkIndex(index, size - 1);
-        Node<T> result;
-        if (index > size / 2) {
-            result = last;
-            for (int i = size - 1; i > index; i--) {
-                result = result.prev;
-            }
-        } else {
-            result = first;
-            for (int i = 0; i < index; i++) {
-                result = result.next;
-            }
-        }
-        return result;
+    public MyLinkedList() {
+        size = 0;
+        first = null;
+        last = null;
     }
 
     @Override
@@ -94,8 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         checkIndex(index, size);
         T result = getNode(index).item;
-        remove(index);
-        add(value, index);
+        getNode(index).item = value;
         return result;
     }
 
@@ -148,5 +130,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException();
         }
+    }
+
+    private Node<T> getNode(int index) {
+        checkIndex(index, size - 1);
+        Node<T> result;
+        if (index > size / 2) {
+            result = last;
+            for (int i = size - 1; i > index; i--) {
+                result = result.prev;
+            }
+        } else {
+            result = first;
+            for (int i = 0; i < index; i++) {
+                result = result.next;
+            }
+        }
+        return result;
     }
 }
