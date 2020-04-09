@@ -79,7 +79,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         if (indexIsExist(index)) {
             Node<T> temp = getNodaByIndex(index);
-            removeThis(getNodaByIndex(index));
+            removeThis(temp);
             return temp.data;
         }
         throw new IndexOutOfBoundsException();
