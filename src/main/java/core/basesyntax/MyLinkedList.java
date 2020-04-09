@@ -8,18 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> lastNode;
     private int size = 0;
 
-    static class Node<T> {
-        T element;
-        Node<T> next;
-        Node<T> prev;
-
-        Node(T element, Node<T> next, Node<T> prev) {
-            this.element = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     @Override
     public boolean add(T value) {
 
@@ -55,9 +43,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            T t = list.get(i);
-            add(t);
+        for (T value : list) {
+            add(value);
         }
         return true;
     }
@@ -122,7 +109,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    public Node<T> findByIndex(int index) {
+    private Node<T> findByIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
@@ -139,5 +126,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return node;
+    }
+
+    static class Node<T> {
+        T element;
+        Node<T> next;
+        Node<T> prev;
+
+        Node(T element, Node<T> next, Node<T> prev) {
+            this.element = element;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
