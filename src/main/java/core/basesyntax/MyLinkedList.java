@@ -13,7 +13,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-        Node<T> interimLast = this.last;
+        Node<T> interimLast = last;
         last = new Node<>(value, null, interimLast);
         size++;
         if (interimLast == null) {
@@ -27,7 +27,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index == size) {
-            this.add(value);
+            add(value);
         } else {
             Node<T> node = getNode(index);
             Node<T> prevNode = node.prevNode;
@@ -45,7 +45,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean addAll(List<T> list) {
         for (T t : list) {
-            this.add(t);
+            add(t);
         }
         return true;
     }
@@ -120,7 +120,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNode(int index) {
         validIndex(index);
         Node<T> node;
-        if (index < size) {
+        if (index < size / 2) {
             node = first;
             for (int i = 0; i < index; i++) {
                 node = node.nextNode;
