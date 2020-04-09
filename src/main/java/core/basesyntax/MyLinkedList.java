@@ -21,7 +21,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         indexReview(index, size);
-        if (isEmpty() || (index == size && size > 0)) {
+        if (index == size ) {
             add(value);
             return;
         }
