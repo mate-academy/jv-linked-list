@@ -13,7 +13,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> next;
         Node<T> previous;
 
-        public Node(Node<T> previous, T element, Node<T> next) {
+        private Node(Node<T> previous, T element, Node<T> next) {
             this.previous = previous;
             this.element = element;
             this.next = next;
@@ -47,14 +47,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 if (isIndexExist(index)) {
                     Node<T> newNode = new Node<>(null,value,null);
                     Node<T> oldNode = findForIndex(index);
-                    Node<T> oldPrev = findForIndex(index - 1);
-                    if (oldNode.element != null) {
-                        newNode.previous = oldNode.previous;
-                        newNode.next = oldNode;
-                        oldNode.previous = newNode;
-                        oldPrev.next = newNode;
-                        size++;
-                    }
+                    newNode.previous = oldNode.previous;
+                    newNode.next = oldNode;
+                    Node<T> oldPrev = oldNode.previous;
+                    oldNode.previous = newNode;
+                    oldPrev.next = newNode;
+                    size++;
                 }
             }
         }
@@ -63,7 +61,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean addAll(List<T> list) {
         if (list == null) {
-            throw new NullPointerException();
+            return false;
         }
         for (T one: list) {
             add(one);
@@ -73,10 +71,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (isIndexExist(index)) {
-            return findForIndex(index).element;
-        }
-        return null;
+        return findForIndex(index).element;
     }
 
     @Override
@@ -102,7 +97,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 return null;
             }
             if (index == 0) {
+                Node<T> oldNode = first;
                 first = findForIndex(index + 1);
+                oldNode.next = null;
                 size--;
                 return requiredNode != null ? requiredNode.element : null;
             }
