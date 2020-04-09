@@ -59,20 +59,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
         Node<T> current = findByIndex(index);
-        Node<T> newNode = new Node<>(value);
-        if (current == first) {
-            first = newNode;
-        } else {
-            current.prev.next = newNode;
-            newNode.prev = current.prev;
-        }
-        if (current == last) {
-            last = newNode;
-        } else {
-            current.next.prev = newNode;
-            newNode.next = current.next;
-        }
-        return current.value;
+        T oldValue = current.value;
+        current.value = value;
+        return oldValue;
     }
 
     @Override
