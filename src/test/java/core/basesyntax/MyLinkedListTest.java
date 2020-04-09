@@ -71,7 +71,7 @@ public class MyLinkedListTest {
 
     @Test
     public void testAddByIndexToTheTop() {
-         myLinkedList.add(FIRST_ITEM, 0);
+        myLinkedList.add(FIRST_ITEM, 0);
         myLinkedList.add(SECOND_ITEM, 1);
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
