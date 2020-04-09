@@ -60,9 +60,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        if (list == null) {
-            return false;
-        }
         for (T one: list) {
             add(one);
         }
@@ -112,6 +109,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 T requiredElement = requiredNode.element;
                 return requiredElement;
             } else {
+                Node<T> oldNode = last;
+                oldNode.next = null;
+                oldNode.previous = null;
                 last = findForIndex(index - 1);
                 size--;
                 return requiredNode != null ? requiredNode.element : null;
@@ -148,9 +148,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findForIndex(int index) {
         if (isIndexExist(index)) {
-            Node<T> requiredNode = first;
-            for (int i = 0; i < index; i++) {
-                requiredNode = requiredNode.next;
+            Node<T> requiredNode;
+            if (index <= size() / 2) {
+                requiredNode = first;
+                for (int i = 0; i < index; i++) {
+                    requiredNode = requiredNode.next;
+                }
+            } else {
+                requiredNode = last;
+                for (int i = size() - 1; i > index; i--) {
+                    requiredNode = requiredNode.previous;
+                }
             }
             return requiredNode;
         }
@@ -198,5 +206,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException();
         }
         return true;
+    }
+
+    public static void main(String[] args) {
+        for (int i = 10; i > 6; i--) {
+            System.out.println(i);
+        }
     }
 }
