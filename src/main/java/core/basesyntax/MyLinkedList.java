@@ -111,7 +111,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-
     private Node<T> findByIndex(int index) {
         checkIndex(index);
         Node<T> node;
