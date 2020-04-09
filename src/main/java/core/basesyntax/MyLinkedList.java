@@ -24,7 +24,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public void add (T value,int index){
+    public void add(T value,int index) {
         if (index < 0 || index > count) {
             throw new IndexOutOfBoundsException();
         }
@@ -44,7 +44,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public boolean addAll (List < T > list) {
+    public boolean addAll(List<T> list) {
         for (T l: list) {
             add(l);
         }
@@ -52,7 +52,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public T get (int index){
+    public T get(int index) {
         checkIndex(index);
         Node<T> current = ourNode;
         for (int i = 0; i < index; i++) {
@@ -62,7 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public T set (T value,int index){
+    public T set(T value, int index) {
         checkIndex(index);
         Node<T> current = ourNode;
         for (int i = 0; i < index; i++) {
@@ -74,16 +74,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public T remove (int index){
+    public T remove(int index) {
         checkIndex(index);
         Node<T> current = ourNode;
-        for (int i = 0; i < index; i++) {
+        for (int i = 0; i <= index; i++) {
             current = current.nextLinkedList;
         }
         T result = current.item;
         Node<T> before = current.prevLinkedList;
         Node<T> after = current.nextLinkedList;
-        if ( before != null && after != null) {
+        if (before != null && after != null) {
             before.nextLinkedList = after;
             after.prevLinkedList = before;
         } else if (before == null) {
@@ -91,22 +91,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (after == null) {
             ourNode = before;
         }
-//        if (before == null) {
-//            ourNode = after;
-//        } else {
-//            before.nextLinkedList = after;
-//        }
-//        if (after == null) {
-//            ourNode = before;
-//        } else {
-//            after.prevLinkedList = before;
-//        }
         count--;
         return result;
     }
 
     @Override
-    public boolean remove (T t){
+    public boolean remove(T t) {
         Node<T> current = ourNode;
         for (int i = 0; i < count; i++) {
             T el = current.item;
@@ -117,17 +107,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current = current.nextLinkedList;
         }
         return false;
-        }
+    }
 
     @Override
-    public int size () {
-            return count;
-        }
+    public int size() {
+        return count;
+    }
 
     @Override
-    public boolean isEmpty () {
-            return count == 0;
-        }
+    public boolean isEmpty() {
+        return count == 0;
+    }
 
     public class Node<T> {
         private T item;
@@ -141,6 +131,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.prevLinkedList = prevLinkedList;
         }
     }
+
     public void checkIndex(int index) {
         if (index < 0 || index >= count) {
             throw new IndexOutOfBoundsException();
