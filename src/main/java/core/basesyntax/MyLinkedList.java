@@ -8,56 +8,53 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int elementsData;
 
     public MyLinkedList() {
-        this.first = new Node<T>(null, null, null);;
-        this.last = new Node<T>(null, null, null);;
-        this.elementsData = 0;
+        first = new Node<T>(null, null, null);;
+        last = new Node<T>(null, null, null);;
+        elementsData = 0;
     }
 
     public static void main(String[] args) {
         MyLinkedList<String> a = new MyLinkedList<>();
-        a.add("1");
-        a.add("2");
-        a.add("3");
-        a.remove("3");
+        a.add("dsadsa");
+        a.add("1", 1);
         System.out.println(a);
-        System.out.println(a.size());
     }
 
     @Override
     public boolean add(T value) {
         Node<T> node = new Node<T>(null, value, null);
         if (elementsData == 0) {
-            this.first = node;
-            this.last = node;
-            this.elementsData += 1;
+            first = node;
+            last = node;
+            elementsData += 1;
             return true;
         }
-        this.last.next = node;
-        node.prev = this.last;
+        last.next = node;
+        node.prev = last;
         node.next = null;
-        this.last = node;
-        this.elementsData += 1;
+        last = node;
+        elementsData += 1;
         return true;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > this.elementsData || index < 0) {
+        if (index > elementsData || index < 0) {
             throw new IndexOutOfBoundsException("Index: " + index
-                    + " Size: " + this.elementsData);
+                    + " Size: " + elementsData);
         }
         Node<T> node = new Node<T>(null, value, null);
         if (index == 0) {
-            this.first.prev = node;
-            node.next = this.first;
-            this.first = node;
+            first.prev = node;
+            node.next = first;
+            first = node;
         }
-        if (index == this.elementsData) {
-            this.last.next = node;
-            node.prev = this.last;
-            this.last = node;
+        if (index == elementsData) {
+            last.next = node;
+            node.prev = last;
+            last = node;
         }
-        if (index > 0 && index < this.elementsData) {
+        if (index > 0 && index < elementsData) {
             Node<T> buffer = searching(index);
             buffer.prev.next = node;
             node.next = buffer;
@@ -77,17 +74,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < this.elementsData && index >= 0) {
+        if (index < elementsData && index >= 0) {
             return searching(index).item;
         }
-        throw new IndexOutOfBoundsException("Index: " + index + " Size: " + this.elementsData);
+        throw new IndexOutOfBoundsException("Index: " + index + " Size: " + elementsData);
     }
 
     @Override
     public T set(T value, int index) {
-        if (index > this.elementsData - 1 || index < 0) {
+        if (index > elementsData - 1 || index < 0) {
             throw new IndexOutOfBoundsException("Index: " + index
-                    + " Size: " + this.elementsData);
+                    + " Size: " + elementsData);
         }
         Node<T> buffer = searching(index);
         T item = buffer.item;
@@ -97,35 +94,35 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index > this.elementsData - 1 || index < 0) {
+        if (index > elementsData - 1 || index < 0) {
             throw new IndexOutOfBoundsException("Index: " + index
-                    + " Size: " + this.elementsData);
+                    + " Size: " + elementsData);
         }
         Node<T> buffer = searching(index);
-        if (this.elementsData == 1) {
-            this.first = null;
-            this.last = null;
+        if (elementsData == 1) {
+            first = null;
+            last = null;
         }
-        if (index == 0 && this.elementsData > 1) {
-            this.first = this.first.next;
-            this.first.prev = null;
+        if (index == 0 && elementsData > 1) {
+            first = first.next;
+            first.prev = null;
         }
-        if (index == this.elementsData - 1 && this.elementsData > 1) {
-            this.last = this.last.prev;
-            this.last.next = null;
+        if (index == elementsData - 1 && elementsData > 1) {
+            last = last.prev;
+            last.next = null;
         }
-        if (index > 0 && index < this.elementsData - 1) {
+        if (index > 0 && index < elementsData - 1) {
             buffer.prev.next = buffer.next;
             buffer.next.prev = buffer.prev;
         }
-        this.elementsData -= 1;
+        elementsData -= 1;
         return buffer.item;
     }
 
     @Override
     public boolean remove(T t) {
-        Node<T> buffer = this.first;
-        for (int i = 0; i < this.elementsData; i++) {
+        Node<T> buffer = first;
+        for (int i = 0; i < elementsData; i++) {
             if (t == null ? buffer.item == null : buffer.item.equals(t)) {
                 remove(i);
                 return true;
@@ -136,7 +133,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> searching(int index) {
-        Node<T> buffer = this.first;
+        Node<T> buffer = first;
         for (int i = 0; i < index; i++) {
             buffer = buffer.next;
         }
@@ -156,21 +153,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder("[");
-        Node<T> buffer = this.first;
-        while (buffer != this.last) {
+        Node<T> buffer = first;
+        while (buffer != last) {
             result.append(buffer.item + ", ");
             buffer = buffer.next;
         }
-        result.append(this.last != null ? this.last.item : "" + "]");
+        result.append(last != null ? last.item : "" + "]");
         return result.toString();
     }
 
     private static class Node<E> {
         E item;
-        MyLinkedList.Node<E> next;
-        MyLinkedList.Node<E> prev;
+        Node<E> next;
+        Node<E> prev;
 
-        Node(MyLinkedList.Node<E> prev, E element, MyLinkedList.Node<E> next) {
+        Node(Node<E> prev, E element, Node<E> next) {
             this.item = element;
             this.next = next;
             this.prev = prev;
