@@ -10,6 +10,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean add(T value) {
         last = new Node<>(value, null, last);
+        connectLinks(last);
         if (first == null) {
             first = last;
         }
@@ -24,7 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         Node<T> current = getNode(index);
-        new Node<>(value, current, current.previous);
+        connectLinks(new Node<>(value, current, current.previous));
         size++;
     }
 
@@ -83,6 +84,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private void connectLinks(Node<T> node) {
+        if (node.next != null) {
+            node.next.previous = node;
+        }
+        if (node.previous != null) {
+            node.previous.next = node;
+        }
+    }
+
     private T removeNode(Node<T> node) {
         if (node.equals(first)) {
             first = node.next;
@@ -90,12 +100,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (node.equals(last)) {
             last = node.previous;
         }
-        node.delete();
+        if (node.next != null) {
+            node.next.previous = node.previous;
+        }
+        if (node.previous != null) {
+            node.previous.next = node.next;
+        }
         size--;
         return node.value;
     }
 
-    public Node<T> getNode(int index) {
+    private Node<T> getNode(int index) {
         checkIndexExists(index);
         Node<T> current = first;
         for (int i = 0; i < index; i++) {
@@ -113,21 +128,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             value = current;
             next = nextNode;
             previous = previousNode;
-            if (next != null) {
-                next.previous = this;
-            }
-            if (previous != null) {
-                previous.next = this;
-            }
         }
 
-        private void delete() {
-            if (next != null) {
-                next.previous = previous;
-            }
-            if (previous != null) {
-                previous.next = next;
-            }
-        }
     }
 }
