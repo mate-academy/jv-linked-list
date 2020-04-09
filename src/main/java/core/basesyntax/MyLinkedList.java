@@ -120,11 +120,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         indexExtends(index);
-        Node<T> atIndexNode = head;
-        for (int i = 0; i < index; i++) {
-            atIndexNode = atIndexNode.nextElement;
+        int current;
+        Node<T> currentNode = head;
+        if (index < size / 2) {
+            current = 0;
+            while (current != index) {
+                currentNode = currentNode.nextElement;
+                current++;
+            }
+        } else {
+            currentNode = tail;
+            current = size - 1;
+            while (current != index) {
+                currentNode = currentNode.prevElement;
+                current--;
+            }
         }
-        return atIndexNode;
+        return currentNode;
     }
 
     private static class Node<E> {
