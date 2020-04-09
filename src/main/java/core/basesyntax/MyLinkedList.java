@@ -7,42 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> headNode;
     private Node<T> tailNode;
 
-    private Node<T> getNodeFromIndex(int index) {
-        checkIndex(index);
-        Node<T> searchNode = headNode;
-
-        if (index < (size >> 1)) {
-            for (int i = 0; i < index; i++) {
-                searchNode = searchNode.next;
-            }
-        } else {
-            searchNode = tailNode;
-            for (int i = size() - 1; i > index; i--) {
-                searchNode = searchNode.previous;
-            }
-        }
-        return searchNode;
-
-    }
-
-    private void addToEmpty(T value) {
-        Node<T> newNode = new Node<>(value, null, null);
-        headNode = newNode;
-        tailNode = newNode;
-        size++;
-    }
-
-    private void addFirst(T value) {
-        if (size == 0) {
-            addToEmpty(value);
-        } else {
-            Node<T> newNode = new Node<>(value, null, headNode);
-            headNode.previous = newNode;
-            headNode = newNode;
-            size++;
-        }
-    }
-
     @Override
     public boolean add(T value) {
         if (size == 0) {
@@ -61,7 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndexForAdd(index);
         if (index == 0) {
             addFirst(value);
-        } else if (index == size() || size() == 0) {
+        } else if (index == size()) {
             add(value);
         } else {
             Node<T> afterNode = getNodeFromIndex(index);
@@ -74,22 +38,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 beforeNode.next = newNode;
             }
             size++;
-        }
-    }
-
-    private void checkIndexForAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("wrong index"
-                    + "\n" + "Mast be from 0 to "
-                    + (size() - 1));
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("wrong index"
-                    + "\n" + "Mast be from 0 to "
-                    + (size() - 1));
         }
     }
 
@@ -160,6 +108,58 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("wrong index"
+                    + "\n" + "Mast be from 0 to "
+                    + (size() - 1));
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("wrong index"
+                    + "\n" + "Mast be from 0 to "
+                    + (size() - 1));
+        }
+    }
+
+    private Node<T> getNodeFromIndex(int index) {
+        checkIndex(index);
+        Node<T> searchNode = headNode;
+
+        if (index < (size >> 1)) {
+            for (int i = 0; i < index; i++) {
+                searchNode = searchNode.next;
+            }
+        } else {
+            searchNode = tailNode;
+            for (int i = size() - 1; i > index; i--) {
+                searchNode = searchNode.previous;
+            }
+        }
+        return searchNode;
+
+    }
+
+    private void addToEmpty(T value) {
+        Node<T> newNode = new Node<>(value, null, null);
+        headNode = newNode;
+        tailNode = newNode;
+        size++;
+    }
+
+    private void addFirst(T value) {
+        if (size == 0) {
+            addToEmpty(value);
+        } else {
+            Node<T> newNode = new Node<>(value, null, headNode);
+            headNode.previous = newNode;
+            headNode = newNode;
+            size++;
+        }
     }
 
     private static class Node<T> {
