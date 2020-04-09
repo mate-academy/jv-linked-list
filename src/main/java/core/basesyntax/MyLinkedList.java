@@ -32,17 +32,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         checkIndex(index);
-        Node<T> addedNode = new Node(value, null, null);
+        Node<T> addedNode = new Node<>(value, null, null);
         if (index == 0) {
             addedNode.nextNode = firstNode;
             firstNode.previousNode = addedNode;
             firstNode = addedNode;
         } else {
-            Node<T> prevNode = getNodeByIndex(index - 1);
             Node<T> nextNode = getNodeByIndex(index);
-            addedNode.previousNode = prevNode;
+            addedNode.previousNode = nextNode.previousNode;
             addedNode.nextNode = nextNode;
-            prevNode.nextNode = addedNode;
             nextNode.previousNode = addedNode;
         }
         size++;
@@ -65,31 +63,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> setNode = new Node<>(value, null, null);
-        T result = getNodeByIndex(index).item;
-        if (index == 0) {
-            setNode.nextNode = firstNode.nextNode;
-            firstNode.nextNode.previousNode = setNode;
-            firstNode = setNode;
-        } else if (index == size - 1) {
-            setNode.previousNode = lastNode.previousNode;
-            lastNode.previousNode.nextNode = setNode;
-            lastNode = setNode;
-        } else {
-            Node<T> prevNode = getNodeByIndex(index - 1);
-            Node<T> nextNode = getNodeByIndex(index + 1);
-            setNode.nextNode = nextNode;
-            setNode.previousNode = prevNode;
-            prevNode.nextNode = setNode;
-            nextNode.previousNode = setNode;
-        }
-        return result;
+        Node<T> replaceableNode = getNodeByIndex(index);
+        T oldItem = replaceableNode.item;
+        replaceableNode.item = value;
+        return oldItem;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T result = getNodeByIndex(index).item;
+        Node<T> removableNode = getNodeByIndex(index);
         if (index == 0) {
             firstNode = firstNode.nextNode;
             if (firstNode != null) {
@@ -101,13 +84,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             lastNode = lastNode.previousNode;
             lastNode.nextNode = null;
         } else {
-            Node<T> prevNode = getNodeByIndex(index - 1);
-            Node<T> nextNode = getNodeByIndex(index + 1);
-            nextNode.previousNode = prevNode;
-            prevNode.nextNode = nextNode;
+            removableNode.nextNode.previousNode = removableNode.previousNode;
+            removableNode.previousNode.nextNode = removableNode.nextNode;
         }
         size--;
-        return result;
+        return removableNode.item;
     }
 
     @Override
