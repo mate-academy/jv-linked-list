@@ -4,124 +4,11 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
-    private MyLinkedList.Node<T> first;
-    private MyLinkedList.Node<T> last;
+    private Node<T> first;
+    private Node<T> last;
 
     public MyLinkedList() {
         this.size = 0;
-    }
-
-    private static class Node<T> {
-        T element;
-        MyLinkedList.Node<T> next;
-        MyLinkedList.Node<T> previous;
-
-        public Node(Node<T> previous, T element, Node<T> next) {
-            this.element = element;
-            this.next = next;
-            this.previous = previous;
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException();
-        }
-    }
-
-    private Node<T> findNodeByIndex(int index) {
-        if (index == 0) {
-            return first;
-        } else if (index == size - 1) {
-            return last;
-        }
-        int count = 0;
-        MyLinkedList.Node<T> currentNode = this.first;
-        while (true) {
-            if (count == index) {
-                break;
-            }
-            currentNode = currentNode.next;
-            count++;
-        }
-        return currentNode;
-    }
-
-    private Node<T> findNodeByValue(T t) {
-        if (size == 1) {
-            return first;
-        }
-        MyLinkedList.Node<T> currentNode = this.first;
-        int count = 0;
-        boolean found = false;
-        while (count < size - 1) {
-            if (currentNode.element == t || currentNode.element.equals(t)) {
-                found = true;
-                break;
-            }
-            currentNode = currentNode.next;
-            count++;
-        }
-        if (found) {
-            return currentNode;
-        }
-        return null;
-    }
-
-    private void linkFirst(T t) {
-        MyLinkedList.Node<T> first = this.first;
-        MyLinkedList.Node<T> newNode = new MyLinkedList.Node<T>(null, t, first);
-        if (first == null) {
-            this.first = newNode;
-            this.last = newNode;
-        } else {
-            first.previous = newNode;
-            this.first = newNode;
-        }
-        size++;
-    }
-
-    private void unLinkFirst() {
-        if (this.first.next == null) {
-            this.first = null;
-            this.last = null;
-            size = 0;
-            return;
-        }
-        this.first = this.first.next;
-        size--;
-    }
-
-    private void linkLast(T t) {
-        MyLinkedList.Node<T> last = this.last;
-        MyLinkedList.Node<T> newNode = new MyLinkedList.Node<T>(last, t, null);
-        if (last == null) {
-            this.first = newNode;
-            this.last = newNode;
-        } else {
-            last.next = newNode;
-            this.last = newNode;
-        }
-        size++;
-    }
-
-    private void unLinkLast() {
-        if (this.last.previous == null) {
-            this.first = null;
-            this.last = null;
-            size = 0;
-            return;
-        }
-        this.last = this.last.previous;
-        size--;
-    }
-
-    private void unlink(Node<T> node) {
-        MyLinkedList.Node<T> leftNode = node.previous;
-        MyLinkedList.Node<T> rightNode = node.next;
-        leftNode.next = rightNode;
-        rightNode.previous = leftNode;
-        size--;
     }
 
     @Override
@@ -132,19 +19,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index == 0) {
-            linkFirst(value);
-            return;
-        } else if (index == size) {
+        if (index == size) {
             linkLast(value);
             return;
         }
         checkIndex(index);
-        MyLinkedList.Node<T> newPrevioustNode = findNodeByIndex(index - 1);
-        MyLinkedList.Node<T> newNexttNode = findNodeByIndex(index);
-        MyLinkedList.Node<T> newNode = new MyLinkedList.Node<T>(newPrevioustNode,
-                value,
-                newNexttNode);
+        Node<T> newNexttNode = findNodeByIndex(index);
+        Node<T> newPrevioustNode = newNexttNode.previous;
+        Node<T> newNode = new Node<T>(newPrevioustNode, value, newNexttNode);
         newPrevioustNode.next = newNode;
         newNexttNode.previous = newNode;
         size++;
@@ -184,14 +66,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             unLinkLast();
             return t;
         }
-        MyLinkedList.Node<T> currentNode = findNodeByIndex(index);
+        Node<T> currentNode = findNodeByIndex(index);
         unlink(currentNode);
         return currentNode.element;
     }
 
     @Override
     public boolean remove(T t) {
-        MyLinkedList.Node<T> currentNode = findNodeByValue(t);
+        Node<T> currentNode = findNodeByValue(t);
         if (currentNode == null) {
             return false;
         }
@@ -215,5 +97,120 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+    }
+
+    private Node<T> findNodeByIndex(int index) {
+        if (index == 0) {
+            return first;
+        } else if (index == size - 1) {
+            return last;
+        }
+        Node<T> currentNode;
+        if (index < size / 2) {
+            int count = 0;
+            currentNode = this.first;
+            while (count != index) {
+                currentNode = currentNode.next;
+                count++;
+            }
+        } else {
+            int count = size - 1;
+            currentNode = this.last;
+            while (count != index) {
+                currentNode = currentNode.previous;
+                count--;
+            }
+        }
+        return currentNode;
+    }
+
+    private Node<T> findNodeByValue(T t) {
+        if (size == 1) {
+            return first;
+        }
+        Node<T> currentNode = this.first;
+        int count = 0;
+        while (count < size) {
+            if (currentNode.element == t || currentNode.element.equals(t)) {
+                return currentNode;
+            }
+            currentNode = currentNode.next;
+            count++;
+        }
+        return null;
+    }
+
+    private void linkFirst(T t) {
+        Node<T> first = this.first;
+        Node<T> newNode = new Node<T>(null, t, first);
+        if (first == null) {
+            this.first = newNode;
+            this.last = newNode;
+        } else {
+            first.previous = newNode;
+            this.first = newNode;
+        }
+        size++;
+    }
+
+    private void unLinkFirst() {
+        if (this.first.next == null) {
+            this.first = null;
+            this.last = null;
+            size = 0;
+            return;
+        }
+        this.first = this.first.next;
+        size--;
+    }
+
+    private void linkLast(T t) {
+        Node<T> last = this.last;
+        Node<T> newNode = new Node<T>(last, t, null);
+        if (last == null) {
+            this.first = newNode;
+            this.last = newNode;
+        } else {
+            last.next = newNode;
+            this.last = newNode;
+        }
+        size++;
+    }
+
+    private void unLinkLast() {
+        if (this.last.previous == null) {
+            this.first = null;
+            this.last = null;
+            size = 0;
+            return;
+        }
+        this.last = this.last.previous;
+        size--;
+    }
+
+    private void unlink(Node<T> node) {
+        Node<T> leftNode = node.previous;
+        Node<T> rightNode = node.next;
+        leftNode.next = rightNode;
+        rightNode.previous = leftNode;
+        size--;
+    }
+
+    private static class Node<T> {
+        T element;
+        Node<T> next;
+        Node<T> previous;
+
+        private Node(Node<T> previous, T element, Node<T> next) {
+            this.element = element;
+            this.next = next;
+            this.previous = previous;
+        }
     }
 }
