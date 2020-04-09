@@ -42,15 +42,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         checkIndex(index);
-        Node<T> addedNode = new Node<>(null, value, null);
         if (index == 0) {
-            addedNode.next = first;
+            // создали объект который ссылается на first и в нём находится value
+            Node<T> addedNode = new Node<>(null, value, first);
             first.prev = addedNode;
             first = addedNode;
         } else {
             Node<T> nextNode = getNodeByIndex(index);
-            addedNode.prev = nextNode.prev;
-            addedNode.next = nextNode;
+            Node<T> addedNode = new Node<>(nextNode.prev, value, nextNode);
+            nextNode.prev.next = addedNode;
             nextNode.prev = addedNode;
         }
         size++;
@@ -83,24 +83,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> removableNode = getNodeByIndex(index);
-
-        if (index == 0) {
-            first = first.next;
-            if (first != null) {
-                first.prev = null;
-            } else {
-                last = null;
-            }
-        } else if (index == size - 1) {
-            last = last.prev;
-            last.next = null;
+        Node<T> x = getNodeByIndex(index);
+        final T element = x.element;
+        Node<T> prev = x.prev;
+        Node<T> next = x.next;
+        if (prev == null) {
+            first = next;
         } else {
-            removableNode.next.prev = removableNode.prev;
-            removableNode.prev.next = removableNode.next;
+            prev.next = next;
+            x.prev = null;
         }
+        if (next == null) {
+            last = prev;
+        } else {
+            next.prev = prev;
+            x.next = null;
+        }
+        x.element = null;
         size--;
-        return removableNode.element;
+        return element;
     }
 
     @Override
