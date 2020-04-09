@@ -9,7 +9,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
 
     public MyLinkedList() {
-        this.head = this.tail = null;
+        head = tail = null;
         size = 0;
     }
 
@@ -33,31 +33,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException();
         }
+        if (index == size) {
+            add(value);
+            return;
+        }
         Node<T> node = new Node<>(value);
         if (index == 0) {
-            if (head == null) {
-                head = node;
-                tail = head;
-            } else {
-                node.next = head;
-                head.prev = node;
-                head = node;
-            }
-            size++;
-        } else if (index == size) {
-            add(value);
+            node.next = head;
+            head.prev = node;
+            head = node;
         } else {
-            Node<T> current = head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
+            Node<T> current = getNode(head, index);
             Node<T> previous = current.prev;
             previous.next = node;
             node.prev = previous;
             node.next = current;
             current.prev = node;
-            size++;
         }
+        size++;
     }
 
     @Override
@@ -73,11 +66,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
-        return current.value;
+        return getNode(head, index).value;
     }
 
     @Override
@@ -85,10 +74,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
+        Node<T> current = getNode(head, index);
         final T replacedValue = current.value;
         current.value = value;
         return replacedValue;
@@ -99,10 +85,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
+        Node<T> current = getNode(head, index);
         if (current.equals(head)) {
             head = current.next;
         }
@@ -122,25 +105,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T t) {
         Node<T> current = head;
+        int index = 0;
         while (current != null) {
             if (current.value == t || current.value != null
                     && current.value.equals(t)) {
-                if (current.equals(head)) {
-                    head = current.next;
-                }
-                if (current.equals(tail)) {
-                    tail = current.prev;
-                }
-                if (current.next != null) {
-                    current.next.prev = current.prev;
-                }
-                if (current.prev != null) {
-                    current.prev.next = current.next;
-                }
-                size--;
+                remove(index);
                 return true;
             }
             current = current.next;
+            index++;
         }
         return false;
     }
@@ -153,6 +126,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    public Node<T> getNode(Node<T> head, int index) {
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        return current;
     }
 
     private static class Node<T> {
