@@ -47,8 +47,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        for (T el : list) {
-            add(el);
+        for (T element : list) {
+            add(element);
         }
         return true;
     }
@@ -89,11 +89,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public boolean remove(T remove) {
+    public boolean remove(T t) {
         Node<T> node = first;
         for (int i = 0; i < size; i++) {
             T el = node.element;
-            if (remove == null ? el == null : el.equals(remove)) {
+            if (t == null ? el == null : el.equals(t)) {
                 remove(i);
                 return true;
             }
@@ -130,9 +130,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private static class Node<E> {
 
-        public E element;
-        public Node<E> prev;
-        public Node<E> next;
+        private E element;
+        private Node<E> prev;
+        private Node<E> next;
 
         public Node(Node<E> prev, E element, Node<E> next) {
             this.prev = prev;
