@@ -114,14 +114,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Illegal index: " + index);
         }
-        if (index == 0) {
-            return first;
-        }
-        if (index == size - 1) {
-            return last;
-        }
         Node<T> curr;
-        if (size >> 2 >= index) {
+        if (size >> 1 >= index) {
             curr = first;
             while (index-- > 0) {
                 curr = curr.next;
