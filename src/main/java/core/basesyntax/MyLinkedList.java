@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -15,54 +14,44 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-        if (first == null) {
-            first = new Node<>(value, last, null);
-            last = first;
-            size++;
+        Node<T> temp = new Node<>(value, null, last);
+        if (size == 0) {
+            first = temp;
         } else {
-            Node<T> temp = last;
-            last = new Node<>(value, null, temp);
-            temp.next = last;
-            size++;
+            last.setNext(temp);
         }
+        last = temp;
+        size++;
         return true;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index <= size && index >= 0) {
-            if (first == null) {
-                Node<T> temp = new Node<T>(value, null, null);
-                first = temp;
-                last = temp;
+        if (index >= 0 && index <= size) {
+            if (index == size) {
+                add(value);
+            } else {
+                Node<T> temp = first;
+                int i = 0;
+                while (i != index) {
+                    temp = temp.getNext();
+                    i++;
+                }
+                Node<T> next = temp;
+                Node<T> prev = next.prev;
+                Node<T> newNode = new Node<>(value, next, prev);
+                if (prev == null) {
+                    first = newNode;
+                } else {
+                    prev.next = newNode;
+                }
+                next.prev = newNode;
                 size++;
                 return;
             }
-            Node<T> newNode = new Node<T>(value, null, null);
-            Node<T> temp = first;
-            int i = 0;
-            while (i != index) {
-                temp = temp.getNext();
-                i++;
-            }
-            if (temp == null) {
-                temp = new Node<T>(value, null, last);
-            }
-            if (temp.getNext() == null) {
-                newNode.setPrev(temp);
-                temp.setPrev(newNode);
-                last = newNode;
-                size++;
-                return;
-            }
-            Node<T>next=temp.getNext();
-            newNode.setPrev(temp);
-            newNode.setNext(temp.getNext());
-            temp.setNext(newNode);
-            next.setPrev(newNode);
-            size++;
+        } else {
+            throw new IndexOutOfBoundsException();
         }
-        throw new IndexOutOfBoundsException();
     }
 
     @Override
@@ -75,21 +64,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (size > index && index >= 0) {
+        if (indexIsExist(index)) {
             Node<T> temp = first;
             int i = 0;
             while (i != index) {
                 temp = temp.getNext();
                 i++;
             }
-            return temp.data;
+            return temp.getData();
         }
         throw new IndexOutOfBoundsException();
     }
 
     @Override
     public T set(T value, int index) {
-        if (size > index && index >= 0) {
+        if (index < size && index >= 0) {
             Node<T> temp = first;
             int i = 0;
             while (i != index) {
@@ -105,14 +94,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (size > index && index >= 0) {
+        if (indexIsExist(index)) {
             Node<T> temp = first;
             int i = 0;
             while (i != index) {
                 temp = temp.getNext();
                 i++;
             }
-            remove(temp);
+            removeThis(temp);
             return temp.getData();
         }
         throw new IndexOutOfBoundsException();
@@ -120,16 +109,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T t) {
-        Node<T> temp = first;
-        int i = 0;
-        while (i != size) {
-            if (temp.getData() == t || temp.getData().equals((T) t)) {
-                remove(temp);
-
-                return true;
+        if (!isEmpty()) {
+            Node<T> temp = first;
+            int i = 0;
+            while (i != size) {
+                if (temp.getData() == t || t != null && temp.getData().equals((T) t)) {
+                    removeThis(temp);
+                    return true;
+                }
+                temp = temp.getNext();
+                i++;
             }
-            temp = temp.getNext();
-            i++;
         }
         return false;
     }
@@ -144,22 +134,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    public void remove(Node<T> temp) {
-        Node<T> perv = temp.getPrev();
-        Node<T> next = temp.getNext();
-        if (perv == null) {
-            first = next;
+    public void removeThis(Node<T> temp) {
+        if (temp.getPrev() == null) {
+            first = temp.getNext();
         } else {
-            perv.setNext(next);
+            temp.prev.next = temp.next;
         }
-        if (next == null) {
-            last = perv;
+        if (temp.getNext() == null) {
+            last = temp.getPrev();
         } else {
-            next.setPrev(perv);
+            temp.next.prev = temp.prev;
         }
+
         size--;
     }
 
+    public boolean indexIsExist(int index) {
+        return index >= 0 && index < size;
+    }
 
     private class Node<T> {
         private T data;
