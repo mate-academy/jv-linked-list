@@ -111,17 +111,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+
     private Node<T> findByIndex(int index) {
         checkIndex(index);
         Node<T> node;
-        if (index < size << 1) {
+        if (index < size >> 1) {
             node = first;
             for (int i = 0; i < index; i++) {
                 node = node.next;
             }
         } else {
             node = last;
-            for (int i = size - 1; i >= index; i--) {
+            for (int i = size - 1; i > index; i--) {
                 node = node.prev;
             }
         }
