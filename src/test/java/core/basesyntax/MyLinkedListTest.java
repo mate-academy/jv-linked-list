@@ -29,7 +29,7 @@ public class MyLinkedListTest {
     private static final List<String> DEFAULT_LIST = new LinkedList<>(
             Arrays.asList("First", "Second", "Third", "Fourth", "Fifth", "Sixth"));
 
-    private static MyLinkedList myLinkedList;
+    private static MyLinkedListInterface<String> myLinkedList;
 
     @Before
     public void setUp() {
@@ -42,10 +42,10 @@ public class MyLinkedListTest {
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);
         boolean actualResult = myLinkedList.add(NULL_ITEM);
-        String actualFirst = (String) myLinkedList.get(0);
-        String actualSecond = (String) myLinkedList.get(1);
-        String actualThird = (String) myLinkedList.get(2);
-        String actualFourth = (String) myLinkedList.get(3);
+        String actualFirst = myLinkedList.get(0);
+        String actualSecond = myLinkedList.get(1);
+        String actualThird = myLinkedList.get(2);
+        String actualFourth = myLinkedList.get(3);
         Assert.assertEquals("Test failed! First element should be " + FIRST_ITEM,
                 FIRST_ITEM, actualFirst);
         Assert.assertEquals("Test failed! Second element should be " + SECOND_ITEM,
@@ -73,8 +73,8 @@ public class MyLinkedListTest {
     public void testAddByIndexToTheTop() {
         myLinkedList.add(FIRST_ITEM, 0);
         myLinkedList.add(SECOND_ITEM, 1);
-        String actualFirst = (String) myLinkedList.get(0);
-        String actualSecond = (String) myLinkedList.get(1);
+        String actualFirst = myLinkedList.get(0);
+        String actualSecond = myLinkedList.get(1);
         Assert.assertEquals(FIRST_ITEM, actualFirst);
         Assert.assertEquals(SECOND_ITEM, actualSecond);
         exception.expect(IndexOutOfBoundsException.class);
@@ -88,10 +88,10 @@ public class MyLinkedListTest {
         myLinkedList.add(THIRD_ITEM);
         myLinkedList.add(FIRST_ITEM, 2);
 
-        String actualFirst = (String) myLinkedList.get(0);
-        String actualSecond = (String) myLinkedList.get(1);
-        String actualThird = (String) myLinkedList.get(2);
-        String actualFourth = (String) myLinkedList.get(3);
+        String actualFirst = myLinkedList.get(0);
+        String actualSecond = myLinkedList.get(1);
+        String actualThird = myLinkedList.get(2);
+        String actualFourth = myLinkedList.get(3);
 
         Assert.assertEquals(FIRST_ITEM, actualFirst);
         Assert.assertEquals(SECOND_ITEM, actualSecond);
@@ -112,9 +112,9 @@ public class MyLinkedListTest {
         myLinkedList.add(FIRST_ITEM);
         myLinkedList.add(SECOND_ITEM);
         boolean isAddedAll = myLinkedList.addAll(DEFAULT_LIST);
-        String actualFirst = (String) myLinkedList.get(0);
-        String actualSecond = (String) myLinkedList.get(1);
-        String actualLast = (String) myLinkedList.get(DEFAULT_LIST.size() - 1);
+        String actualFirst = myLinkedList.get(0);
+        String actualSecond = myLinkedList.get(1);
+        String actualLast = myLinkedList.get(DEFAULT_LIST.size() - 1);
         int actualSize = myLinkedList.size();
 
         String expectedLast = DEFAULT_LIST.get(DEFAULT_LIST.size() - 3);
@@ -159,10 +159,10 @@ public class MyLinkedListTest {
         myLinkedList.add(FIRST_ITEM);
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);
-        String oldFirstItem = (String) myLinkedList.set(NEW_ITEM, 0);
-        String oldSecondItem = (String) myLinkedList.set(ANOTHER_NEW_ITEM, 1);
-        String actualFirst = (String) myLinkedList.get(0);
-        String actualSecond = (String) myLinkedList.get(1);
+        String oldFirstItem = myLinkedList.set(NEW_ITEM, 0);
+        String oldSecondItem = myLinkedList.set(ANOTHER_NEW_ITEM, 1);
+        String actualFirst = myLinkedList.get(0);
+        String actualSecond = myLinkedList.get(1);
         Assert.assertEquals(oldFirstItem, FIRST_ITEM);
         Assert.assertEquals(oldSecondItem, SECOND_ITEM);
         Assert.assertEquals("Test failed! After setting expected element is " + NEW_ITEM,
@@ -188,10 +188,10 @@ public class MyLinkedListTest {
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);
         myLinkedList.add(NULL_ITEM);
-        String actualRemovedFirst = (String) myLinkedList.remove(0);
-        String actualRemovedSecond = (String) myLinkedList.remove(3);
-        String actualRemovedThird = (String) myLinkedList.remove(3);
-        String actualRemovedNull = (String) myLinkedList.remove(3);
+        String actualRemovedFirst = myLinkedList.remove(0);
+        String actualRemovedSecond = myLinkedList.remove(3);
+        String actualRemovedThird = myLinkedList.remove(3);
+        String actualRemovedNull = myLinkedList.remove(3);
         Assert.assertEquals("Test failed! Expected value after removing should be "
                 + FIRST_ITEM, FIRST_ITEM, actualRemovedFirst);
         Assert.assertEquals("Test failed! Expected value after removing should be "
@@ -201,9 +201,9 @@ public class MyLinkedListTest {
         Assert.assertEquals("Test failed! Expected value after removing should be "
                 + NULL_ITEM, NULL_ITEM, actualRemovedNull);
 
-        String actualSecondExist = (String) myLinkedList.get(0);
-        String actualThirdExist = (String) myLinkedList.get(1);
-        String actualNullExist = (String) myLinkedList.get(2);
+        String actualSecondExist = myLinkedList.get(0);
+        String actualThirdExist = myLinkedList.get(1);
+        String actualNullExist = myLinkedList.get(2);
         Assert.assertEquals("Test failed! After removing list should consist value  "
                 + SECOND_ITEM, SECOND_ITEM, actualSecondExist);
         Assert.assertEquals("Test failed! After removing list should consist value  "

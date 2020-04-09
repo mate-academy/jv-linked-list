@@ -37,7 +37,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current = current.nextLinkedList;
         }
         Node<T> prevNode = current.prevLinkedList;
-        Node<T> newNode = new Node<>(prevNode, value, current);
+        Node<T> newNode = new Node<>(current, value, prevNode);
         current.prevLinkedList = newNode;
         prevNode.nextLinkedList = newNode;
         count++;
@@ -83,8 +83,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         T result = current.item;
         Node<T> before = current.prevLinkedList;
         Node<T> after = current.nextLinkedList;
-        before.nextLinkedList = after;
-        after.prevLinkedList = before;
+        if ( before != null && after != null) {
+            before.nextLinkedList = after;
+            after.prevLinkedList = before;
+        } else if (before == null) {
+            ourNode = after;
+        } else if (after == null) {
+            ourNode = before;
+        }
 //        if (before == null) {
 //            ourNode = after;
 //        } else {
