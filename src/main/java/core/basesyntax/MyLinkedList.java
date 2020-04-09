@@ -4,15 +4,19 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node head;
+    private Node tail;
     private int size;
 
     @Override
     public boolean add(T value) {
         if (isEmpty()) {
             head = new Node(value, null, null);
+            tail = head;
             size++;
         } else {
-            getLast().next = new Node(value, getLast(), null);
+            Node current = new Node(value, tail, null);
+            tail.next = current;
+            tail = current;
             size++;
         }
         return true;
@@ -21,7 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         indexReview(index, size);
-        if (index == size ) {
+        if (index == size) {
             add(value);
             return;
         }
@@ -31,7 +35,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = current;
             size++;
         } else {
-            Node current = new Node(value, getByIndex(index).prev, getByIndex(index));
+            Node temp = getByIndex(index);
+            Node current = new Node(value, temp.prev, temp);
             current.prev.next = current;
             current.next.prev = current;
             size++;
@@ -55,7 +60,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         indexReview(index, size - 1);
-        T oldValue = get(index);
+        T oldValue = getByIndex(index).item;
         getByIndex(index).item = value;
         return oldValue;
     }
@@ -99,14 +104,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private Node getLast() {
-        Node current = head;
-        while (current.next != null) {
-            current = current.next;
-        }
-        return current;
     }
 
     private void indexReview(int index, int condition) {
