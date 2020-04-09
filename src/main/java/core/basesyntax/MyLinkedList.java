@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -26,12 +25,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean add(T value) {
         Node<T> newNode = new Node<T>(last, value, null);
-        if(size == 0) {
+        if (size == 0) {
             first = newNode;
         } else {
-            last.next = newNode; // taking tail and tell it that new tail is linked with new node
+            last.next = newNode;
         }
-        last = newNode; // moving value of the Tail forward, if we have 15 elements and adding one we're just saying that last is going to be 16th element
+        last = newNode;
         size++;
         return true;
     }
@@ -59,7 +58,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        for(T l : list) {
+        for (T l : list) {
             add(l);
         }
         return true;
