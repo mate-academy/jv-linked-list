@@ -13,13 +13,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public void addLast(T value) {
-        Node<T> last = this.last;
-        Node<T> newNode = new Node(last, value, null);
+        Node<T> lastNode = last;
+        Node<T> newNode = new Node(lastNode, value, null);
         last = newNode;
-        if (last == null) {
+        if (lastNode == null) {
             first = newNode;
         } else {
-            last.next = newNode;
+            lastNode.next = newNode;
         }
         ++size;
     }
