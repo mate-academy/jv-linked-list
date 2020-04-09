@@ -26,10 +26,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        indexCheck(index, size);
         if (index == size) {
             add(value);
+            return;
         }
+        indexCheck(index, size);
         Node<T> currentNode = getNode(index);
         Node<T> prevNode = currentNode.prev;
         Node<T> newNode = new Node<>(prevNode, value, currentNode);
