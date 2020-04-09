@@ -24,11 +24,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         checkIndex(index);
-        Node<T> newNexttNode = findNodeByIndex(index);
-        Node<T> newPrevioustNode = newNexttNode.previous;
-        Node<T> newNode = new Node<T>(newPrevioustNode, value, newNexttNode);
-        newPrevioustNode.next = newNode;
-        newNexttNode.previous = newNode;
+        Node<T> newNextNode = findNodeByIndex(index);
+        Node<T> newPreviousNode = newNextNode.previous;
+        Node<T> newNode = new Node<T>(newPreviousNode, value, newNextNode);
+        newPreviousNode.next = newNode;
+        newNextNode.previous = newNode;
         size++;
     }
 
@@ -49,8 +49,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        T returnValue = findNodeByIndex(index).element;
-        findNodeByIndex(index).element = value;
+        Node<T> node = findNodeByIndex(index);
+        T returnValue = node.element;
+        node.element = value;
         return returnValue;
     }
 
