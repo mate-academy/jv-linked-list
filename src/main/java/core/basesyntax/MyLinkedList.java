@@ -21,7 +21,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size++;
             return true;
         }
-        Entry<T> currentEntry = goToIndex(size - 1);
+        Entry<T> currentEntry = lastEntry;
         currentEntry.next = newEntry;
         newEntry.prev = currentEntry;
         lastEntry = newEntry;
@@ -132,7 +132,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 byIndexEntry = byIndexEntry.prev;
             }
         }
-
         return byIndexEntry;
     }
 
