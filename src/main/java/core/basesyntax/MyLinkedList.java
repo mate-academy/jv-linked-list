@@ -3,8 +3,8 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Entry first;
-    private Entry last;
+    private Entry<T> first;
+    private Entry<T> last;
     private int size;
 
     public MyLinkedList() {
@@ -24,12 +24,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Entry iterator(int index) {
-        Entry currentElement = first;
-        for (int i = 0; i <= index; i++) {
-            currentElement = currentElement.next;
-            if (i == index) {
-                return currentElement;
+    private Entry getByIndex(int index) {
+        if (index <= size / 2) {
+            Entry currentElement = first;
+            for (int i = 0; i <= index; i++) {
+                currentElement = currentElement.next;
+                if (i == index) {
+                    return currentElement;
+                }
+            }
+        } else {
+            Entry currentElement = last;
+            for (int i = (size - 1); i >= index; i--) {
+                currentElement = currentElement.prev;
+                if (i == index) {
+                    return currentElement;
+                }
             }
         }
         return null;
@@ -37,7 +47,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-        Entry newEntry = new Entry(value, last, last.prev);
+        Entry<T> newEntry = new Entry<>(value, last, last.prev);
         newEntry.prev.next = newEntry;
         newEntry.next.prev = newEntry;
         size++;
@@ -49,12 +59,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException();
         }
-        if (size == 0) {
+        if (size == index) {
             add(value);
             return;
         }
-        Entry element = iterator(index);
-        Entry newEntry = new Entry(value, element, element.prev);
+        Entry element = getByIndex(index);
+        Entry<T> newEntry = new Entry<>(value, element, element.prev);
         newEntry.prev.next = newEntry;
         newEntry.next.prev = newEntry;
         size++;
@@ -63,7 +73,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean addAll(List<T> list) {
         for (T element: list) {
-            this.add(element);
+            add(element);
         }
         return true;
     }
@@ -73,7 +83,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
-        return (T) (iterator(index).element);
+        return (T) (getByIndex(index).element);
     }
 
     @Override
@@ -92,7 +102,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
-        Entry elementAtIndex = iterator(index);
+        Entry elementAtIndex = getByIndex(index);
         final T result = (T) elementAtIndex.element;
         elementAtIndex.prev.next = elementAtIndex.next;
         elementAtIndex.next.prev = elementAtIndex.prev;
