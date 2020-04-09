@@ -4,7 +4,7 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
-    private static int size;
+    private int size;
     private Node<T> first;
     private Node<T> last;
 
@@ -36,7 +36,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         Node<T> lastNode = getNode(index);
-        Node<T> firstNode = last.prev;
+        Node<T> firstNode = lastNode.prev;
         Node<T> middleNode = new Node<T>(value,firstNode,lastNode);
         last.prev = middleNode;
         if (firstNode.prev == null) {
@@ -57,13 +57,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         return getNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> newNode = getNode(index);
         T oldValue = newNode.item;
         newNode.item = value;
