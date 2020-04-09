@@ -18,6 +18,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             first = last = node;
         }
+        size++;
         return true;
     }
 
@@ -34,6 +35,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == 0) {
             first = node;
         }
+        size++;
     }
 
     @Override
@@ -85,7 +87,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> addBefore(Node<T> curr, T elem) {
-        ++size;
         if (curr == null) {
             return new Node<>(elem, null, null);
         }
@@ -98,7 +99,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> addAfter(Node<T> curr, T elem) {
-        ++size;
         if (curr == null) {
             return new Node<>(elem, null, null);
         }
