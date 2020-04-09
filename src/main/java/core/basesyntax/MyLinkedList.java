@@ -20,63 +20,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             linkLast(value);
         } else {
-            linkBefore(value, node(index));
+            linkBefore(value, getNode(index));
         }
     }
 
     @Override
     public boolean addAll(List<T> list) {
-        return addAll(size, list);
-    }
-
-    private boolean addAll(int index, List<T> c) {
-        checkElementIndex(index);
-        Object[] a = c.toArray();
-        int lengthList = a.length;
-        if (lengthList == 0) {
-            return false;
+        for (T n : list) {
+            add(n);
         }
-
-        Node<T> pred;
-        Node<T> succ;
-
-        if (index == size) {
-            succ = null;
-            pred = last;
-        } else {
-            succ = node(index);
-            pred = succ.prev;
-        }
-        for (Object o : a) {
-            T e = (T) o;
-            Node<T> newNode = new Node<>(pred, e, null);
-            if (pred == null) {
-                first = newNode;
-            } else {
-                pred.next = newNode;
-            }
-            pred = newNode;
-        }
-        if (succ == null) {
-            last = pred;
-        } else {
-            pred.next = succ;
-            succ.prev = pred;
-        }
-        size += lengthList;
         return true;
     }
 
     @Override
     public T get(int index) {
         checkPositionIndex(index);
-        return node(index).item;
+        return getNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         checkPositionIndex(index);
-        Node<T> x = node(index);
+        Node<T> x = getNode(index);
         T oldVal = x.item;
         x.item = value;
         return oldVal;
@@ -85,24 +50,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkPositionIndex(index);
-        return unlink(node(index));
+        return unlink(getNode(index));
     }
 
     @Override
     public boolean remove(T t) {
-        if (t == null) {
-            for (Node<T> x = first; x != null; x = x.next) {
-                if (x.item == null) {
-                    unlink(x);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> x = first; x != null; x = x.next) {
-                if (t.equals(x.item)) {
-                    unlink(x);
-                    return true;
-                }
+        for (Node<T> x = first; x != null; x = x.next) {
+            if (x.item == t || t != null && t.equals(x.item)) {
+                unlink(x);
+                return true;
             }
         }
         return false;
@@ -156,7 +112,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> node(int index) {
+    private Node<T> getNode(int index) {
         checkElementIndex(index);
         if (index >= 0 && index < size / 2) {
             Node<T> node = first;
@@ -209,4 +165,3 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 }
-
