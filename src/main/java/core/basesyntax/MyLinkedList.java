@@ -3,8 +3,8 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    public Node<T> first = null;
-    public Node<T> last = null;
+    private Node<T> first = null;
+    private Node<T> last = null;
     private int size = 0;
 
     @Override
@@ -29,25 +29,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException();
         }
+        Node<T> node = new Node<>(value);
         if (size == index) {
             add(value);
+            return;
         } else if (index == 0) {
-            getNode(size - 1).next = null;
-            add(value);
-            first.prev = last;
-            Node<T> current = first;
-            first = last;
-            first.prev = null;
-            first.next = current;
+            first.prev = node;
+            node.next = first;
+            first = node;
         } else {
             Node<T> current = getNode(index);
             Node<T> currentPre = current.prev;
-            add(value);
-            current.prev = last;
-            currentPre.next = last;
-            last.prev = currentPre;
-            last.next = current;
+            node.next = current;
+            node.prev = currentPre;
+            current.prev = node;
+            currentPre.next = node;
         }
+        size++;
     }
 
     @Override
@@ -66,15 +64,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         Node<T> setter = getNode(index);
-        Node<T> currentSet = first;
         T result = setter.obj;
-        while (true) {
-            if (currentSet.equals(setter)) {
-                currentSet.obj = value;
-                return result;
-            }
-            currentSet = currentSet.next;
-        }
+        setter.obj = value;
+        return result;
+
     }
 
     @Override
@@ -141,5 +134,3 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentGet;
     }
 }
-
-
