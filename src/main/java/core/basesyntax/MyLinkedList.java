@@ -38,8 +38,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             firstNode.previousNode = addedNode;
             firstNode = addedNode;
         } else {
-            Node prevNode = getNodeByIndex(index - 1);
-            Node nextNode = getNodeByIndex(index);
+            Node<T> prevNode = getNodeByIndex(index - 1);
+            Node<T> nextNode = getNodeByIndex(index);
             addedNode.previousNode = prevNode;
             addedNode.nextNode = nextNode;
             prevNode.nextNode = addedNode;
@@ -65,7 +65,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> setNode = new Node(value, null, null);
+        Node<T> setNode = new Node<>(value, null, null);
         T result = getNodeByIndex(index).item;
         if (index == 0) {
             setNode.nextNode = firstNode.nextNode;
