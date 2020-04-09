@@ -45,9 +45,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        T old = getNode(index).item;
+        Node<T> node = getNode(index);
+        T oldValue = node.item;
         getNode(index).item = value;
-        return old;
+        return oldValue;
     }
 
     @Override
@@ -62,9 +63,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T t) {
+        Node<T> getValue;
         for (int i = 0; i < size; i++) {
-            if (getNode(i).item == null && t == null
-                    || getNode(i).item.equals(t) && getNode(i).item != null) {
+            getValue = getNode(i);
+            if (getValue.item == null && t == null
+                    || getValue.item.equals(t) && getValue.item != null) {
                 remove(i);
                 return true;
             }
