@@ -18,7 +18,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0) {
             first = temp;
         } else {
-            last.setNext(temp);
+            last.next = temp;
         }
         last = temp;
         size++;
@@ -34,7 +34,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 Node<T> temp = first;
                 int i = 0;
                 while (i != index) {
-                    temp = temp.getNext();
+                    temp = temp.next;
                     i++;
                 }
                 Node<T> next = temp;
@@ -68,10 +68,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> temp = first;
             int i = 0;
             while (i != index) {
-                temp = temp.getNext();
+                temp = temp.next;
                 i++;
             }
-            return temp.getData();
+            return temp.data;
         }
         throw new IndexOutOfBoundsException();
     }
@@ -82,11 +82,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> temp = first;
             int i = 0;
             while (i != index) {
-                temp = temp.getNext();
+                temp = temp.next;
                 i++;
             }
-            T oldValue = temp.getData();
-            temp.setData(value);
+            T oldValue = temp.data;
+            temp.data=value;
             return oldValue;
         }
         throw new IndexOutOfBoundsException();
@@ -98,11 +98,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> temp = first;
             int i = 0;
             while (i != index) {
-                temp = temp.getNext();
+                temp = temp.next;
                 i++;
             }
             removeThis(temp);
-            return temp.getData();
+            return temp.data;
         }
         throw new IndexOutOfBoundsException();
     }
@@ -113,11 +113,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> temp = first;
             int i = 0;
             while (i != size) {
-                if (temp.getData() == t || t != null && temp.getData().equals((T) t)) {
+                if (temp.data == t || t != null && temp.data.equals((T) t)) {
                     removeThis(temp);
                     return true;
                 }
-                temp = temp.getNext();
+                temp = temp.next;
                 i++;
             }
         }
@@ -135,17 +135,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public void removeThis(Node<T> temp) {
-        if (temp.getPrev() == null) {
-            first = temp.getNext();
+        if (temp.prev == null) {
+            first = temp.next;
         } else {
             temp.prev.next = temp.next;
         }
-        if (temp.getNext() == null) {
-            last = temp.getPrev();
+        if (temp.next == null) {
+            last = temp.prev;
         } else {
             temp.next.prev = temp.prev;
         }
-
         size--;
     }
 
@@ -164,28 +163,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.prev = prev;
         }
 
-        public T getData() {
-            return data;
-        }
-
-        public void setData(T data) {
-            this.data = data;
-        }
-
-        private Node<T> getNext() {
-            return this.next;
-        }
-
-        public void setNext(Node<T> next) {
-            this.next = next;
-        }
-
-        public Node<T> getPrev() {
-            return prev;
-        }
-
-        public void setPrev(Node<T> prev) {
-            this.prev = prev;
-        }
     }
 }
