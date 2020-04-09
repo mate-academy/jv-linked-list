@@ -58,15 +58,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         Node<T> node = findByIndex(index);
-        T oldVal = node.element;
+        T nodeForReturn = node.element;
         node.element = value;
-        return oldVal;
+        return nodeForReturn;
     }
 
     @Override
     public T remove(int index) {
         Node<T> node = findByIndex(index);
-        T nodeForReturn = node.element;
         Node<T> prevNode = node.prev;
         Node<T> nextNode = node.next;
         if (prevNode == null) {
@@ -80,7 +79,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             nextNode.prev = prevNode;
         }
         size--;
-        return nodeForReturn;
+        return node.element;
     }
 
     @Override
