@@ -135,9 +135,9 @@ public class MyLinkedListTest {
         myLinkedList.add(FIRST_ITEM);
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);
-        String actualFirst = myLinkedList.get(0);
-        String actualSecond = myLinkedList.get(1);
-        String actualThird = myLinkedList.get(2);
+        String actualFirst = (String) myLinkedList.get(0);
+        String actualSecond = (String) myLinkedList.get(1);
+        String actualThird = (String) myLinkedList.get(2);
         Assert.assertEquals("Test failed! First element should be " + FIRST_ITEM,
                 FIRST_ITEM, actualFirst);
         Assert.assertEquals("Test failed! Second element should be " + SECOND_ITEM,
@@ -246,10 +246,10 @@ public class MyLinkedListTest {
         Assert.assertTrue("Test failed! Result after removing should be true",
                 isNextFirstRemoveActual);
 
-        String actualSecondExist = myLinkedList.get(0);
-        String actualNullExist = myLinkedList.get(1);
-        String actualNextSecondExist = myLinkedList.get(2);
-        String actualThirdExist = myLinkedList.get(3);
+        String actualSecondExist = (String) myLinkedList.get(0);
+        String actualNullExist = (String) myLinkedList.get(1);
+        String actualNextSecondExist = (String) myLinkedList.get(2);
+        String actualThirdExist = (String) myLinkedList.get(3);
 
         Assert.assertEquals("Test failed! After removing list should consist value  "
                 + SECOND_ITEM, SECOND_ITEM, actualSecondExist);
