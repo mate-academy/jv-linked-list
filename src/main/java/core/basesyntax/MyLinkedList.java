@@ -47,13 +47,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (indexIsNotValid(index)) {
             throw new IndexOutOfBoundsException();
         }
-        Node<T> current = first;
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                break;
-            }
-            current = current.next;
-        }
+
+        Node<T> current = findByIndex(index);
         return current.value;
     }
 
@@ -62,13 +57,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (indexIsNotValid(index)) {
             throw new IndexOutOfBoundsException();
         }
-        Node<T> current = first;
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                break;
-            }
-            current = current.next;
-        }
+
+        Node<T> current = findByIndex(index);
         Node<T> newNode = new Node<>(value);
         if (current == first) {
             first = newNode;
@@ -91,13 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException();
         }
 
-        Node<T> current = first;
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                break;
-            }
-            current = current.next;
-        }
+        Node<T> current = findByIndex(index);
         stitchAfterRemove(current);
         size--;
         return current.value;
@@ -141,13 +125,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void insertBetween(T value, int index) {
         if (!isEmpty()) {
-            Node<T> current = first;
-            for (int i = 0; i < size; i++) {
-                if (i == index) {
-                    break;
-                }
-                current = current.next;
-            }
+            Node<T> current = findByIndex(index);
             Node<T> newNode = new Node<>(value);
             newNode.next = current;
             current.prev.next = newNode;
@@ -180,6 +158,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             removed.next.prev = removed.prev;
         }
+    }
+
+    private Node<T> findByIndex(int index) {
+        Node<T> current = first;
+        for (int i = 0; i < size; i++) {
+            if (i == index) {
+                break;
+            }
+            current = current.next;
+        }
+        return current;
     }
 
     private boolean isEqual(T issue, T keyIssue) {
