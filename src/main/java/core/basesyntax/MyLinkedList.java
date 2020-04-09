@@ -4,19 +4,19 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
-    private Node<T> head;
-    private Node<T> tail;
+    private Node<T> first;
+    private Node<T> last;
 
     public MyLinkedList() {
     }
 
     @Override
     public boolean add(T elem) {
-        Node<T> node = addAfter(tail, elem);
-        if (head != null) {
-            tail = node;
+        Node<T> node = addAfter(last, elem);
+        if (first != null) {
+            last = node;
         } else {
-            head = tail = node;
+            first = last = node;
         }
         return true;
     }
@@ -32,7 +32,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         Node<T> node = addBefore(getNode(index), elem);
         if (index == 0) {
-            head = node;
+            first = node;
         }
     }
 
@@ -115,20 +115,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Illegal index: " + index);
         }
         if (index == 0) {
-            return head;
+            return first;
         }
         if (index == size - 1) {
-            return tail;
+            return last;
         }
         Node<T> curr;
         if (size >> 2 >= index) {
-            curr = head;
+            curr = first;
             while (index > 0 && curr.next != null) {
                 curr = curr.next;
                 index--;
             }
         } else {
-            curr = tail;
+            curr = last;
             index = size - index - 1;
             while (index > 0 && curr.prev != null) {
                 curr = curr.prev;
@@ -142,7 +142,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0) {
             return null;
         }
-        Node<T> curr = head;
+        Node<T> curr = first;
         while (curr != null) {
             if (curr.data == elem || curr.data != null && curr.data.equals(elem)) {
                 return curr;
@@ -159,11 +159,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (node.next != null) {
             node.next.prev = node.prev;
         }
-        if (node == head) {
-            head = node.next;
+        if (node == first) {
+            first = node.next;
         }
-        if (node == tail) {
-            tail = node.prev;
+        if (node == last) {
+            last = node.prev;
         }
         --size;
     }
