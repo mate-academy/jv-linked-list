@@ -123,16 +123,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> curr;
         if (size >> 2 >= index) {
             curr = first;
-            while (index > 0 && curr.next != null) {
+            while (index-- > 0) {
                 curr = curr.next;
-                index--;
             }
         } else {
             curr = last;
             index = size - index - 1;
-            while (index > 0 && curr.prev != null) {
+            while (index-- > 0) {
                 curr = curr.prev;
-                index--;
             }
         }
         return curr;
