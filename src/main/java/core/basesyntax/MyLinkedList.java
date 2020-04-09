@@ -96,8 +96,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException();
         }
         Node<T> element = header;
-        for (int i = 0; i <= index; i++) {
-            element = element.next;
+        if (index < size / 2) {
+            for (int i = 0; i <= index; i++) {
+                element = element.next;
+            }
+        } else {
+            for (int i = size; i > index; i--) {
+                element = element.prev;
+            }
         }
         return element;
     }
