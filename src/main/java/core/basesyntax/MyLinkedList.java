@@ -3,23 +3,12 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> first;
     private Node<T> last;
 
     public MyLinkedList() {
-    }
-
-    private static class Node<T> {
-        public T element;
-        public Node<T> next;
-        public Node<T> prev;
-
-        public Node(Node<T> prev, T element, Node<T> next) {
-            this.element = element;
-            this.next = next;
-            this.prev = prev;
-        }
+        size = 0;
     }
 
     @Override
@@ -42,17 +31,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         checkIndex(index);
-        if (index == 0) {
-            // создали объект который ссылается на first и в нём находится value
-            Node<T> addedNode = new Node<>(null, value, first);
-            first.prev = addedNode;
-            first = addedNode;
+        Node<T> next = getNodeByIndex(index);
+        Node<T> prev = next.prev;
+        Node<T> newNode = new Node<>(prev, value, next);
+        if (prev == null) {
+            first = newNode;
         } else {
-            Node<T> nextNode = getNodeByIndex(index);
-            Node<T> addedNode = new Node<>(nextNode.prev, value, nextNode);
-            nextNode.prev.next = addedNode;
-            nextNode.prev = addedNode;
+            prev.next = newNode;
         }
+        next.prev = newNode;
         size++;
     }
 
@@ -145,5 +132,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return result;
+    }
+
+    private static class Node<T> {
+        public T element;
+        public Node<T> next;
+        public Node<T> prev;
+
+        public Node(Node<T> prev, T element, Node<T> next) {
+            this.element = element;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
