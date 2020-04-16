@@ -73,12 +73,39 @@ public class MyLinkedListTest {
     public void testAddByIndexToTheTop() {
         myLinkedList.add(FIRST_ITEM, 0);
         myLinkedList.add(SECOND_ITEM, 1);
+        myLinkedList.add(THIRD_ITEM, 2);
+
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
+        String actualThird = myLinkedList.get(2);
+
         Assert.assertEquals(FIRST_ITEM, actualFirst);
         Assert.assertEquals(SECOND_ITEM, actualSecond);
+        Assert.assertEquals(THIRD_ITEM, actualThird);
+
         exception.expect(IndexOutOfBoundsException.class);
-        myLinkedList.add(THIRD_ITEM, 3);
+        myLinkedList.add(THIRD_ITEM, 4);
+    }
+
+    @Test
+    public void testAddByIndexToTheBottom() {
+        myLinkedList.add(FIRST_ITEM, 0);
+        myLinkedList.add(SECOND_ITEM, 1);
+        myLinkedList.add(THIRD_ITEM, 0);
+        myLinkedList.add(SECOND_ITEM, 0);
+
+        String actualFirst = myLinkedList.get(0);
+        String actualSecond = myLinkedList.get(1);
+        String actualThird = myLinkedList.get(2);
+        String actualFourth = myLinkedList.get(3);
+
+        Assert.assertEquals(SECOND_ITEM, actualFirst);
+        Assert.assertEquals(THIRD_ITEM, actualSecond);
+        Assert.assertEquals(FIRST_ITEM, actualThird);
+        Assert.assertEquals(SECOND_ITEM, actualFourth);
+
+        exception.expect(IndexOutOfBoundsException.class);
+        myLinkedList.add(THIRD_ITEM, 5);
     }
 
     @Test
@@ -87,19 +114,22 @@ public class MyLinkedListTest {
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);
         myLinkedList.add(FIRST_ITEM, 2);
+        myLinkedList.add(THIRD_ITEM, 1);
 
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
         String actualThird = myLinkedList.get(2);
         String actualFourth = myLinkedList.get(3);
+        String actualFifth = myLinkedList.get(4);
 
         Assert.assertEquals(FIRST_ITEM, actualFirst);
-        Assert.assertEquals(SECOND_ITEM, actualSecond);
-        Assert.assertEquals(FIRST_ITEM, actualThird);
-        Assert.assertEquals(THIRD_ITEM, actualFourth);
-        Assert.assertEquals(4, myLinkedList.size());
+        Assert.assertEquals(THIRD_ITEM, actualSecond);
+        Assert.assertEquals(SECOND_ITEM, actualThird);
+        Assert.assertEquals(FIRST_ITEM, actualFourth);
+        Assert.assertEquals(THIRD_ITEM, actualFifth);
+        Assert.assertEquals(5, myLinkedList.size());
         exception.expect(IndexOutOfBoundsException.class);
-        myLinkedList.add(THIRD_ITEM, 5);
+        myLinkedList.add(THIRD_ITEM, 7);
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
