@@ -57,13 +57,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkingIndex(index);
+        checkIndex(index);
         return node(index).element;
     }
 
     @Override
     public T set(T value, int index) {
-        checkingIndex(index);
+        checkIndex(index);
         Node<T> oldNode = node(index);
         T oldValue = oldNode.element;
         oldNode.element = value;
@@ -72,7 +72,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkingIndex(index);
+        checkIndex(index);
         return unlink(node(index));
     }
 
@@ -130,7 +130,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    public void checkingIndex(int index) {
+    public void checkIndex(int index) {
         if (index > size - 1 || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Out of bounds search index");
         }
