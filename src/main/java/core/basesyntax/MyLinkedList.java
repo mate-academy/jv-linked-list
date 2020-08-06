@@ -61,7 +61,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         nodeToRemove.next = nodeToRemove.previous = null;
     }
 
-    public static <T>Node<T> findNode(int index, Node<T> first) {
+    public static <T> Node<T> findNode(int index, Node<T> first) {
         Node<T> handler = first;
         for (int i = 0; i < index && handler.next != null; i++) {
             handler = handler.next;
@@ -75,7 +75,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (head == null) {
             nodeToAdd.previous = null;
             nodeToAdd.next = null;
-            head =  nodeToAdd;
+            head = nodeToAdd;
             tail = nodeToAdd;
         } else {
             nodeToAdd.next = null;
@@ -139,13 +139,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> holder = head;
         int i = 0;
         while (i < size && holder.next != null) {
-            if (holder.storedItem == t || (holder.storedItem != null && holder.storedItem.equals(t))) {
+            if (holder.storedItem == t || (holder.storedItem != null
+                                        && holder.storedItem.equals(t))) {
                 break;
             }
             holder = holder.next;
             i++;
         }
-        if (!(holder.storedItem == t || (holder.storedItem != null && holder.storedItem.equals(t)))) {
+        if (!(holder.storedItem == t || (holder.storedItem != null
+                                        && holder.storedItem.equals(t)))) {
             return false;
         }
         removeOnIndex(i, holder);
