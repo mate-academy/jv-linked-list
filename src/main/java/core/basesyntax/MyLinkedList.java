@@ -15,6 +15,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private static final String INDEX_IS_OUT_OF_BOUNDS
+            = "This index is out of bounds for this list.";
     private Node<T> first;
     private Node<T> last;
     private int size;
@@ -92,7 +94,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException(INDEX_IS_OUT_OF_BOUNDS
+                    + " Index: " + index + " Size: " + size);
         }
     }
 
