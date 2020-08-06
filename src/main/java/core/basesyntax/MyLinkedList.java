@@ -119,8 +119,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     void linkLast(T e) {
-        final MyLinkedList.Node<T> l = last;
-        final MyLinkedList.Node<T> newNode = new MyLinkedList.Node<>(e, null, l);
+        final Node<T> l = last;
+        final Node<T> newNode = new MyLinkedList.Node<>(e, null, l);
         last = newNode;
         if (l == null) {
             first = newNode;
@@ -187,4 +187,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.prev = prev;
         }
     }
+
 }
