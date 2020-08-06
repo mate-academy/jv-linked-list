@@ -10,69 +10,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> last;
 
-    private void linkLast(T value) {
-        Node<T> oldLast = last;
-        last = new Node<>(oldLast, value, null);
-        if (oldLast == null) {
-            first = last;
-        } else {
-            oldLast.next = last;
-        }
-        size++;
-    }
-
-    private void linkBefore(T value, Node<T> target) {
-        Node<T> previous = target.prev;
-        Node<T> newNode = new Node<>(previous, value, target);
-        target.prev = newNode;
-        if (previous == null) {
-            first = newNode;
-        } else {
-            previous.next = newNode;
-        }
-        size++;
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
-    }
-
-    private Node<T> getNode(int index) {
-        checkIndex(index);
-        if (index < size >> 1) {
-            Node<T> node = first;
-            for (int i = 0; i < index; i++) {
-                node = node.next;
-            }
-            return node;
-        } else {
-            Node<T> node = last;
-            for (int i = size - 1; i > index; i--) {
-                node = node.prev;
-            }
-            return node;
-        }
-    }
-
-    private void unLink(Node<T> node) {
-        Node<T> previous = node.prev;
-        Node<T> next = node.next;
-
-        if (previous == null) {
-            first = next;
-        } else {
-            previous.next = next;
-        }
-        if (next == null) {
-            last = previous;
-        } else {
-            next.prev = previous;
-        }
-        size--;
-    }
-
     @Override
     public boolean add(T value) {
         linkLast(value);
@@ -137,6 +74,69 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void linkLast(T value) {
+        Node<T> oldLast = last;
+        last = new Node<>(oldLast, value, null);
+        if (oldLast == null) {
+            first = last;
+        } else {
+            oldLast.next = last;
+        }
+        size++;
+    }
+
+    private void linkBefore(T value, Node<T> target) {
+        Node<T> previous = target.prev;
+        Node<T> newNode = new Node<>(previous, value, target);
+        target.prev = newNode;
+        if (previous == null) {
+            first = newNode;
+        } else {
+            previous.next = newNode;
+        }
+        size++;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+    }
+
+    private Node<T> getNode(int index) {
+        checkIndex(index);
+        if (index < size >> 1) {
+            Node<T> node = first;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+            return node;
+        } else {
+            Node<T> node = last;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
+            return node;
+        }
+    }
+
+    private void unLink(Node<T> node) {
+        Node<T> previous = node.prev;
+        Node<T> next = node.next;
+
+        if (previous == null) {
+            first = next;
+        } else {
+            previous.next = next;
+        }
+        if (next == null) {
+            last = previous;
+        } else {
+            next.prev = previous;
+        }
+        size--;
     }
 
     private static class Node<T> {
