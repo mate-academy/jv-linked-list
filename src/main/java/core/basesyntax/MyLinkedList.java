@@ -4,18 +4,17 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size = 0;
-    Node<T> first;
-    Node<T> last;
+    private Node<T> first;
+    private Node<T> last;
 
     @Override
     public boolean add(T value) {
         Node<T> newElement = new Node<>(last, value, null);
-        if (size == 0) {
-            first = newElement;
-        }
         last = newElement;
-        if (newElement.prev != null) {
+        if (size != 0) {
             newElement.prev.next = newElement;
+        } else {
+            first = newElement;
         }
         size++;
         return true;
@@ -37,9 +36,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             currentNode.next = newElement;
             currentNode.next.prev = newElement;
         } else {
-            Node<T> currentNode = first;
-            Node<T> newElement = new Node<>(null, value, currentNode);
-            currentNode.prev = newElement;
+            Node<T> newElement = new Node<>(null, value, first);
+            first.prev = newElement;
             first = newElement;
         }
         size++;
@@ -82,10 +80,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 if (index == 0) {
                     first = currentNode.next;
                     currentNode.next.prev = null;
-                }
-                if (index == size - 1) {
-                    last = currentNode.prev;
-                    currentNode.prev.next = null;
+                } else {
+                    if (index == size - 1) {
+                        last = currentNode.prev;
+                        currentNode.prev.next = null;
+                    }
                 }
             }
         }
