@@ -94,11 +94,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         checkBounds(index);
-        if (index == 0) {
-            nodeInsertion(null, new Node<>(value), findNode(index, head));
-        } else {
-            nodeInsertion(findNode(index, head).previous, new Node<>(value), findNode(index, head));
-        }
+        nodeInsertion(findNode(index, head).previous, new Node<>(value), findNode(index, head));
         size++;
     }
 
@@ -138,21 +134,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T t) {
         Node<T> holder = head;
         int i = 0;
-        while (i < size && holder.next != null) {
-            if (holder.storedItem == t || (holder.storedItem != null
-                                        && holder.storedItem.equals(t))) {
-                break;
-            }
+        while (i < size && holder.next != null && !(holder.storedItem == t
+                || (holder.storedItem != null && holder.storedItem.equals(t)))) {
             holder = holder.next;
             i++;
         }
-        if (!(holder.storedItem == t || (holder.storedItem != null
-                                        && holder.storedItem.equals(t)))) {
-            return false;
+        if (holder.storedItem == t || (holder.storedItem != null && holder.storedItem.equals(t))) {
+            removeOnIndex(i, holder);
+            size--;
+            return true;
         }
-        removeOnIndex(i, holder);
-        size--;
-        return true;
+        return false;
     }
 
     @Override
