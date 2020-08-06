@@ -4,11 +4,15 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
-    private int size = 0;
+    private int size;
 
     private Node<T> first;
 
     private Node<T> last;
+
+    public MyLinkedList() {
+        size = 0;
+    }
 
     @Override
     public boolean add(T value) {
@@ -101,7 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
         }
     }
 
@@ -149,5 +153,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
             this.prev = prev;
         }
+    }
+
+    private String outOfBoundsMsg(int index) {
+        return "Index: " + index + ", Size: " + size;
     }
 }
