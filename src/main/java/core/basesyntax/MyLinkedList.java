@@ -14,19 +14,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size = 0;
     }
 
+    public MyLinkedList(T element) {
+        Node<T> firstNode = new Node<>(element);
+        head = tail = firstNode;
+        size = 1;
+    }
+
     private static class Node<T1> {
         T1 storedItem;
         Node<T1> previous;
         Node<T1> next;
 
         public Node(T1 element) {
-            this.storedItem = element;
+            storedItem = element;
+            previous = null;
+            next = null;
         }
     }
 
     public void checkBounds(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index is out of LinkedList bonds");
         }
     }
 
