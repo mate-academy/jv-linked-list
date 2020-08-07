@@ -61,12 +61,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         nodeToRemove.next = nodeToRemove.previous = null;
     }
 
-    public static <T> Node<T> findNode(int index, Node<T> first) {
-        Node<T> handler = first;
-        for (int i = 0; i < index && handler.next != null; i++) {
-            handler = handler.next;
+    public Node<T> findNode(int index) {
+        Node<T> headHandler = head;
+        Node<T> tailHandler = tail;
+        if (index < size / 2) {
+            for (int i = 0; i < index && headHandler.next != null; i++) {
+                headHandler = headHandler.next;
+            }
+            return headHandler;
+        } else {
+            for (int i = size - 1; i > index && tailHandler.previous != null; i--) {
+                tailHandler = tailHandler.previous;
+            }
+            return tailHandler;
         }
-        return handler;
     }
 
     @Override
@@ -94,7 +102,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         checkBounds(index);
-        nodeInsertion(findNode(index, head).previous, new Node<>(value), findNode(index, head));
+        nodeInsertion(findNode(index).previous, new Node<>(value), findNode(index));
+
         size++;
     }
 
@@ -109,13 +118,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkBounds(index);
-        return findNode(index, head).storedItem;
+        return findNode(index).storedItem;
     }
 
     @Override
     public T set(T value, int index) {
         checkBounds(index);
-        Node<T> nodeInPlace = findNode(index, head);
+        Node<T> nodeInPlace = findNode(index);
         T elementToReplace = nodeInPlace.storedItem;
         nodeInPlace.storedItem = value;
         return elementToReplace;
@@ -124,7 +133,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkBounds(index);
-        Node<T> nodeToRemove = findNode(index, head);
+        Node<T> nodeToRemove = findNode(index);
         removeOnIndex(index, nodeToRemove);
         --size;
         return nodeToRemove.storedItem;
