@@ -33,8 +33,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index != 0) {
             Node<T> currentNode = indexIterator(index).prev;
             Node<T> newElement = new Node<>(currentNode, value, currentNode.next);
-            currentNode.next = newElement;
             currentNode.next.prev = newElement;
+            currentNode.next = newElement;
         } else {
             Node<T> newElement = new Node<>(null, value, first);
             first.prev = newElement;
@@ -126,13 +126,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> indexIterator(int index) {
-        Node<T> currentNode = first;
-        int counter = 0;
-        while (counter < index) {
-            currentNode = currentNode.next;
-            counter++;
+        if (index <= size / 2) {
+            Node<T> currentNode = first;
+            int counter = 0;
+            while (counter < index) {
+                currentNode = currentNode.next;
+                counter++;
+            }
+            return currentNode;
+        } else {
+            Node<T> currentNode = last;
+            int counter = size - 1;
+            while (counter > index) {
+                currentNode = currentNode.prev;
+                counter--;
+            }
+            return currentNode;
         }
-        return currentNode;
     }
 
     private static class Node<T> {
