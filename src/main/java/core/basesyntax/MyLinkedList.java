@@ -188,7 +188,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean iterationFromTheFirstElement(int index) {
-        if (size - index > size / 2) {
+        if (index <= size / 2) {
             node = first;
             for (int i = 1; i <= index; i++) {
                 node = node.next;
@@ -199,7 +199,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean iterationFromTheLastElement(int index) {
-        if (size - index <= size / 2) {
+        if (index > size / 2) {
             node = first;
             for (int i = 1; i <= index; i++) {
                 node = node.next;
