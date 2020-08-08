@@ -263,8 +263,8 @@ public class MyLinkedListTest {
         myLinkedList.add(THIRD_ITEM);
 
         boolean isFirstRemoveActual = myLinkedList.remove(FIRST_ITEM);
-        boolean isNullRemoveActual = myLinkedList.remove(NULL_ITEM);
         boolean isThirdRemoveActual = myLinkedList.remove(THIRD_ITEM);
+        boolean isNullRemoveActual = myLinkedList.remove(NULL_ITEM);
         boolean isNextFirstRemoveActual = myLinkedList.remove(FIRST_ITEM);
 
         Assert.assertTrue("Test failed! Result after removing should be true",
