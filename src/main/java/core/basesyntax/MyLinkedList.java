@@ -29,7 +29,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("This is index either negative or bigger than the actual size of list");
+            throw new IndexOutOfBoundsException(
+                    "This is index either negative or "
+                            + "bigger than the actual size of list");
         }
         if (index == size) {
             add(value);
@@ -111,7 +113,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T removeLastElement() {
-        T removedValue = last.element;
+        final T removedValue = last.element;
         last = last.prev;
         last.next = null;
         size--;
@@ -144,7 +146,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void isIndexSuits(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("This is index either negative or bigger than the actual size of the list");
+            throw new IndexOutOfBoundsException(
+                    "This is index either negative "
+                            + "or bigger than the actual size of the list");
         }
     }
 
