@@ -10,7 +10,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean add(T value) {
         if (size == 0) {
-            first = new Node<>(value, null, null);
+            first = new Node<>(value, last, null);
             size++;
             return true;
         }
@@ -77,7 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         isIndexSuits(index);
         int currentSize = 0;
         Node<T> currentNode = first;
-        while(currentSize < index) {
+        while (currentSize < index) {
             currentNode = currentNode.next;
             currentSize++;
         }
@@ -91,6 +91,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         isIndexSuits(index);
         if (index == 0) {
             T removedValue = first.element;
+            if (size == 1) {
+                first = null;
+                last = null;
+                size--;
+                return removedValue;
+            }
             first = first.next;
             first.prev = null;
             size--;
@@ -119,6 +125,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T t) {
+        for (int i = 0; i < size; i++) {
+            if (get(i) == t || get(i) != null && get(i).equals(t)) {
+                remove(i);
+                return true;
+            }
+        }
         return false;
     }
 
