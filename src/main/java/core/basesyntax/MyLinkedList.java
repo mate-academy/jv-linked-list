@@ -5,7 +5,6 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private int size;
-
     private Node<T> first;
 
     private Node<T> last;
