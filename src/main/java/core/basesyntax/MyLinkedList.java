@@ -31,7 +31,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("This is index either negative or bigger than the actual size of list");
         }
-
+        if (index == size) {
+            add(value);
+        } else if (index == 0) {
+            Node<T> newNode = new Node<>(value, first, null);
+            first.prev = newNode;
+            first = newNode;
+            size++;
+        } else {
+            int currentSize = 0;
+            Node<T> currentFirstNode = first;
+            while (currentSize < index - 1) {
+                currentFirstNode = currentFirstNode.next;
+                currentSize++;
+            }
+            Node<T> currentLastNode = currentFirstNode.next;
+            currentFirstNode.next = new Node<>(value, currentLastNode, currentFirstNode);
+            currentLastNode.prev = currentFirstNode.next;
+            size++;
+        }
     }
 
     @Override
@@ -70,7 +88,33 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        return null;
+        isIndexSuits(index);
+        if (index == 0) {
+            T removedValue = first.element;
+            first = first.next;
+            first.prev = null;
+            size--;
+            return removedValue;
+        }
+        if (index == size - 1) {
+            T removedValue = last.element;
+            last = last.prev;
+            last.next = null;
+            size--;
+            return removedValue;
+        }
+        int currentSize = 0;
+        Node<T> currentNode = first;
+        while (currentSize < index) {
+            currentNode = currentNode.next;
+            currentSize++;
+        }
+        Node<T> cupNode = currentNode.prev;
+        cupNode.next = currentNode.next;
+        cupNode = currentNode.next;
+        cupNode.prev = currentNode.prev;
+        size--;
+        return currentNode.element;
     }
 
     @Override
