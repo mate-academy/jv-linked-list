@@ -32,8 +32,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             addLast(value);
         } else {
             Node<T> nodeIndex = nodeBy(index);
-            Node<T> newMiddle = new Node<>(nodeIndex.prev, value, nodeIndex);
-            nodeIndex.prev = newMiddle;
+            nodeIndex.prev = new Node<>(nodeIndex.prev, value, nodeIndex);
             currentAmount++;
         }
     }
