@@ -39,12 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = newNode;
             size++;
         } else {
-            int currentSize = 0;
-            Node<T> currentFirstNode = first;
-            while (currentSize < index - 1) {
-                currentFirstNode = currentFirstNode.next;
-                currentSize++;
-            }
+            Node<T> currentFirstNode = findNode(index - 1);
             Node<T> currentLastNode = currentFirstNode.next;
             currentFirstNode.next = new Node<>(value, currentLastNode, currentFirstNode);
             currentLastNode.prev = currentFirstNode.next;
@@ -54,8 +49,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T t : list) {
+            add(t);
         }
         return true;
     }
@@ -63,24 +58,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         isIndexSuits(index);
-        int currentSize = 0;
-        Node<T> currentNode = first;
-        while (currentSize < index) {
-            currentNode = currentNode.next;
-            currentSize++;
-        }
+        Node<T> currentNode = findNode(index);
         return currentNode.element;
     }
 
     @Override
     public T set(T value, int index) {
         isIndexSuits(index);
-        int currentSize = 0;
-        Node<T> currentNode = first;
-        while (currentSize < index) {
-            currentNode = currentNode.next;
-            currentSize++;
-        }
+        Node<T> currentNode = findNode(index);
         T returnElement = currentNode.element;
         currentNode.element = value;
         return returnElement;
@@ -90,31 +75,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         isIndexSuits(index);
         if (index == 0) {
-            T removedValue = first.element;
-            if (size == 1) {
-                first = null;
-                last = null;
-                size--;
-                return removedValue;
-            }
-            first = first.next;
-            first.prev = null;
-            size--;
-            return removedValue;
+            return removeFirstElement();
         }
         if (index == size - 1) {
-            T removedValue = last.element;
-            last = last.prev;
-            last.next = null;
-            size--;
-            return removedValue;
+            return removeLastElement();
         }
-        int currentSize = 0;
-        Node<T> currentNode = first;
-        while (currentSize < index) {
-            currentNode = currentNode.next;
-            currentSize++;
-        }
+        Node<T> currentNode = findNode(index);
         Node<T> cupNode = currentNode.prev;
         cupNode.next = currentNode.next;
         cupNode = currentNode.next;
@@ -144,9 +110,41 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private T removeLastElement() {
+        T removedValue = last.element;
+        last = last.prev;
+        last.next = null;
+        size--;
+        return removedValue;
+    }
+
+    private T removeFirstElement() {
+        T removedValue = first.element;
+        if (size == 1) {
+            first = null;
+            last = null;
+            size--;
+            return removedValue;
+        }
+        first = first.next;
+        first.prev = null;
+        size--;
+        return removedValue;
+    }
+
+    private Node<T> findNode(int index) {
+        int currentSize = 0;
+        Node<T> currentNode = first;
+        while (currentSize < index) {
+            currentNode = currentNode.next;
+            currentSize++;
+        }
+        return currentNode;
+    }
+
     private void isIndexSuits(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("This is index either negative or bigger than the actual size of list");
+            throw new IndexOutOfBoundsException("This is index either negative or bigger than the actual size of the list");
         }
     }
 
