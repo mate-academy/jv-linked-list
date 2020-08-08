@@ -139,6 +139,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             last = previous;
         } else {
             next.prev = previous;
+            node.next = null;
         }
         size--;
     }
