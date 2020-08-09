@@ -4,7 +4,7 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
-    private transient int currentAmount = 0;
+    private int currentAmount = 0;
     private transient Node<T> first;
     private transient Node<T> last;
 
@@ -126,9 +126,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
         }
 
-        private T setData(T value) {
+        private void setData(T value) {
             data = value;
-            return data;
         }
 
         private T getData() {
