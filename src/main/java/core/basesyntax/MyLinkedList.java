@@ -9,8 +9,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     public MyLinkedList() {
         size = 0;
-        first = new <T> Node<T>(null, null, null);
-        last = new <T> Node<T>(null, null, null);
+        first = new <T> Node<T>(null, null, last);
+        last = new <T> Node<T>(null, first, null);
     }
 
     private static class Node<T> {
@@ -28,21 +28,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-        if (size == 0) {
-            first.value = value;
-            last.value = value;
-            first.next = last;
-            last.previous = first;
-            size++;
-            return true;
-        }
-
-        Node<T> newNode = last;
-        newNode.value = value;
-        last = new <T>Node<T>(value, newNode, null);
-        last.value = value;
-        newNode.next = last;
-        size++;
+//        if (size == 0) {
+//            first.value = value;
+//            last.value = value;
+//            first.next = last;
+//            last.previous = first;
+//            size++;
+//            return true;
+//        }
+//
+//        Node<T> newNode = last;
+//        newNode.value = value;
+//        last = new <T>Node<T>(value, newNode, null);
+//        last.value = value;
+//        newNode.next = last;
+//        size++;
         return true;
     }
 
@@ -60,12 +60,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 //            return;
 //        }
 
-        Node<T> tempNode = new <T> Node<T>(value,null, null);
+        Node<T> tempNode = first;
         if (index == 0){
            tempNode.value = value;
            first.next = tempNode;
            tempNode.previous = first;
-           tempNode.next.previous = tempNode;
+           first.next = tempNode;
 
         }
 
@@ -99,47 +99,47 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Not in range");
-        }
-        if (index == 0) {
-            first.value = value;
-            return value;
-        }
-        Node<T> tempNode = first;
-        for (int i = 0; i <= index; i++) {
-            tempNode = tempNode.next;
-        }
-        tempNode.previous.value = value;
+//        if (index < 0 || index > size) {
+//            throw new IndexOutOfBoundsException("Not in range");
+//        }
+//        if (index == 0) {
+//            first.value = value;
+//            return value;
+//        }
+//        Node<T> tempNode = first;
+//        for (int i = 0; i <= index; i++) {
+//            tempNode = tempNode.next;
+//        }
+//        tempNode.value = value;
         return value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        Node<T> tempNode = first;
-        for (int i = 0; i < index; i++) {
-            tempNode = tempNode.next;
-        }
-        T result = tempNode.value;
-        tempNode.previous.next = tempNode.next;
-        tempNode.next.previous = tempNode.previous;
-        size--;
-        return result;
+//        checkIndex(index);
+//        Node<T> tempNode = first;
+//        for (int i = 0; i < index; i++) {
+//            tempNode = tempNode.next;
+//        }
+//        T result = tempNode.value;
+//        tempNode.previous.next = tempNode.next;
+//        tempNode.next.previous = tempNode.previous;
+//        size--;
+        return null;
     }
 
     @Override
     public boolean remove(T t) {
-        Node<T> tempNode = first;
-        for (int i = 0; i <= size; i++) {
-            if (tempNode.value == t) {
-                tempNode.previous.next = tempNode.next;
-                tempNode.next.previous = tempNode.previous;
-                return true;
-            }
-            tempNode = tempNode.next;
-
-        }
+//        Node<T> tempNode = first;
+//        for (int i = 0; i <= size; i++) {
+//            if (tempNode.value == t) {
+//                tempNode.previous.next = tempNode.next;
+//                tempNode.next.previous = tempNode.previous;
+//                return true;
+//            }
+//            tempNode = tempNode.next;
+//
+//        }
         return false;
     }
 
