@@ -80,7 +80,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size > 0) {
             Node<T> node = head;
             for (int i = 0; i < size; i++) {
-                if (node.value == t || node.value.equals(t)) {
+                if ((t == null || node.value == null)
+                        ? t == node.value : node.value.equals(t)) {
                     removingAction(node);
                     return true;
                 }
