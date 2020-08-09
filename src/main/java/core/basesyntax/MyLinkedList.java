@@ -24,8 +24,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> node = new Node<>(lastListElement, value, null);
         if (size == 0) {
             firstListElement = node;
-        }
-        if (size > 0) {
+        } else {
             lastListElement.next = node;
         }
         lastListElement = node;
