@@ -77,16 +77,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T t) {
-        Node<T> node = head;
-        if (node == null) {
-            return false;
-        }
-        while (node != null) {
-            if (node.value == t || node.value.equals(t)) {
-                removingAction(node);
-                return true;
+        if (size > 0) {
+            Node<T> node = head;
+            for (int i = 0; i < size; i++) {
+                if (node.value == t || node.value.equals(t)) {
+                    removingAction(node);
+                    return true;
+                }
+                node = node.next;
             }
-            node = node.next;
         }
         return false;
     }
