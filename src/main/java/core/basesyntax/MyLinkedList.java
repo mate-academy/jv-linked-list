@@ -30,13 +30,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
+        Entry<T> entry = findEntryByIndex(index);
+        Entry<T> newEntry = new Entry<>(value, entry.previous, entry);
         if (index == 0) {
-            Entry<T> newEntry = new Entry<>(value, null, first);
-            first.previous = newEntry;
+            entry.previous = newEntry;
             first = newEntry;
         } else {
-            Entry<T> entry = findEntryByIndex(index);
-            Entry<T> newEntry = new Entry<>(value, entry.previous, entry);
             entry.previous.next = newEntry;
             entry.previous = newEntry;
             if (index == size - 1) {
@@ -62,8 +61,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        Entry<T> entry = findEntryByIndex(index);
-        return entry.item;
+        return findEntryByIndex(index).item;
     }
 
     @Override
@@ -78,11 +76,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        if (index == 0) {
-            T element = first.item;
-            removeFirstElement();
-            return element;
-        }
         Entry<T> entry = findEntryByIndex(index);
         removeElement(entry);
         return entry.item;
@@ -93,10 +86,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Entry<T> entry = first;
         for (int i = 0; i < size; i++) {
             if ((entry.item == t) || (entry.item != null && entry.item.equals(t))) {
-                if (i == 0) {
-                    removeFirstElement();
-                    return true;
-                }
                 removeElement(entry);
                 return true;
             }
@@ -123,30 +112,36 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Entry<T> findEntryByIndex(int index) {
         Entry<T> entry = first;
-        for (int i = 0; i < index; i++) {
-            entry = entry.next;
+        if (size - index < size / 2) {
+            for (int i = 0; i < index; i++) {
+                entry = entry.next;
+            }
+        } else {
+            entry = last;
+            for (int i = size - 1; i > index; i--) {
+                entry = entry.previous;
+            }
         }
         return entry;
     }
 
-    private void removeFirstElement() {
-        if (size == 1) {
-            first = null;
-            last = null;
-        } else {
-            first.next.previous = null;
-            first = first.next;
-        }
-        --size;
-    }
-
     private void removeElement(Entry<T> entry) {
-        if (entry.equals(last)) {
-            last.previous.next = null;
-            last = entry.previous;
+        Entry<T> previousEntry = entry.previous;
+        Entry<T> nextEntry = entry.next;
+        if (entry.equals(first)) {
+            if (size == 1) {
+                first = null;
+                last = null;
+            } else {
+                nextEntry.previous = null;
+                first = nextEntry;
+            }
+        } else if (entry.equals(last)) {
+            previousEntry.next = null;
+            last = previousEntry;
         } else {
-            entry.previous.next = entry.next;
-            entry.next.previous = entry.previous;
+            previousEntry.next = nextEntry;
+            nextEntry.previous = previousEntry;
         }
         --size;
     }
@@ -156,7 +151,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Entry<T> previous;
         Entry<T> next;
 
-        public Entry(T item, Entry<T> previous, Entry<T> next) {
+        private Entry(T item, Entry<T> previous, Entry<T> next) {
             this.item = item;
             this.previous = previous;
             this.next = next;
