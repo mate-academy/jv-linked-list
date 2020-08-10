@@ -45,9 +45,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         checkElementIndex(index);
         Node<T> x = node(index);
-        T oldVlue = x.item;
+        T oldValue = x.item;
         x.item = value;
-        return oldVlue;
+        return oldValue;
     }
 
     Node<T> node(int index) {
@@ -132,6 +132,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> pred = success.prev;
         Node<T> newNode = new Node<>(pred, e, success);
         success.prev = newNode;
+
         if (pred == null) {
             first = newNode;
         } else {
