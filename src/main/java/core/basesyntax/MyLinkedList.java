@@ -94,38 +94,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkPositionIndex(int index) {
-        if (!isPositionIndex(index)) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
         }
-    }
-
-    private boolean isPositionIndex(int index) {
-        return (index >= 0 && index < size);
     }
 
     private void unlink(Node<T> node) {
         Node<T> next = node.next;
         Node<T> prev = node.prev;
-
         if (prev == null) {
             first = next;
         } else {
             prev.next = next;
         }
-
         if (next == null) {
             last = prev;
         } else {
             next.prev = prev;
             node.next = null;
         }
-
         size--;
     }
 
-    private void linkLast(T e) {
+    private void linkLast(T element) {
         Node<T> node = last;
-        Node<T> newNode = new Node<T>(node, e, null);
+        Node<T> newNode = new Node<T>(node, element, null);
         last = newNode;
         if (node == null) {
             first = newNode;
@@ -135,10 +128,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void linkBefore(T t, Node<T> targer) {
-        Node<T> pred = targer.prev;
-        Node<T> newNode = new Node<T>(pred, t, targer);
-        targer.prev = newNode;
+    private void linkBefore(T t, Node<T> targetNode) {
+        Node<T> pred = targetNode.prev;
+        Node<T> newNode = new Node<T>(pred, t, targetNode);
+        targetNode.prev = newNode;
         if (pred == null) {
             first = newNode;
         } else {
