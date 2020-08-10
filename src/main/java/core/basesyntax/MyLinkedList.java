@@ -5,8 +5,8 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private int size = 0;
-    private transient Node<T> first;
-    private transient Node<T> last;
+    private Node<T> first;
+    private Node<T> last;
 
     @Override
     public boolean add(T value) {
