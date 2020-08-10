@@ -9,36 +9,41 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-        addNodeToTheEnd(value);
+        if (isEmpty()) {
+            Node<T> newNode = new Node<>(value, null, null);
+            firstNode = newNode;
+            lastNode = newNode;
+        } else {
+            Node<T> newNode = new Node<>(value, null, lastNode);
+            lastNode.next = newNode;
+            lastNode = newNode;
+        }
+        size++;
         return true;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("This index is out of bounds.");
-        }
         if (index == size) {
-            addNodeToTheEnd(value);
-        } else {
-            Node<T> soughtForNode = findNodeByIndex(index);
-            Node<T> previousNode = soughtForNode.prev;
-            Node<T> newNode = new Node<>(value, soughtForNode, previousNode);
-            soughtForNode.prev = newNode;
-            if (previousNode == null) {
-                firstNode = newNode;
-            } else {
-                previousNode.next = newNode;
-            }
-            size++;
+            add(value);
+            return;
         }
+        if (index == 0) {
+            Node<T> newNode = new Node<>(value, firstNode, lastNode);
+            firstNode.prev = newNode;
+            firstNode = newNode;
+            size++;
+            return;
+        }
+        Node<T> nodeToBeShifted = findNodeByIndex(index);
+        Node<T> newNode = new Node<>(value, nodeToBeShifted, nodeToBeShifted.prev);
+        nodeToBeShifted.prev.next = newNode;
+        nodeToBeShifted.prev = newNode;
+        size++;
     }
 
     @Override
     public boolean addAll(List<T> list) {
-        if (list.size() == 0) {
-            return false;
-        }
         for (T value : list) {
             add(value);
         }
@@ -47,38 +52,52 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-        Node<T> soughtForNode = findNodeByIndex(index);
-        return soughtForNode.value;
+        return findNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
-        Node<T> nodeToBeShifted = findNodeByIndex(index);
-        T previousValue = nodeToBeShifted.value;
-        nodeToBeShifted.value = value;
-        return previousValue;
+        Node<T> nodeToBeChanged = findNodeByIndex(index);
+        T oldValue = nodeToBeChanged.value;
+        nodeToBeChanged.value = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> nodeToBeRemoved = findNodeByIndex(index);
-        removeNodeLinks(nodeToBeRemoved);
-        return nodeToBeRemoved.value;
+        Node<T> node = findNodeByIndex(index);
+        if (size == 1) {
+            firstNode = null;
+            lastNode = null;
+            size--;
+            return node.value;
+        }
+        if (index == 0) {
+            node.next.prev = null;
+            firstNode = node.next;
+            size--;
+            return node.value;
+        }
+        if (index == size - 1) {
+            node.prev.next = null;
+            lastNode = node.prev;
+            size--;
+            return node.value;
+        }
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+        size--;
+        return node.value;
     }
 
     @Override
     public boolean remove(T t) {
-        Node<T> nodeToBeRemoved = firstNode;
         for (int i = 0; i < size; i++) {
-            if (nodeToBeRemoved.value == t
-                    || nodeToBeRemoved.value != null && nodeToBeRemoved.value.equals(t)) {
-                removeNodeLinks(nodeToBeRemoved);
+            if (t == get(i) || t != null && findNodeByIndex(i).value.equals(t)) {
+                remove(i);
                 return true;
             }
-            nodeToBeRemoved = nodeToBeRemoved.next;
         }
         return false;
     }
@@ -106,46 +125,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
-        Node<T> soughtForNode;
-        if (index < size >> 1) {
-            soughtForNode = firstNode;
-            for (int i = 0; i < index; i++) {
-                soughtForNode = soughtForNode.next;
-            }
-        } else {
-            soughtForNode = lastNode;
-            for (int i = size - 1; i > index; i--) {
-                soughtForNode = soughtForNode.prev;
-            }
+        checkIndex(index);
+        int i = 0;
+        Node<T> node = firstNode;
+        while (i < index) {
+            node = node.next;
+            i++;
         }
-        return soughtForNode;
-    }
-
-    private void removeNodeLinks(Node<T> nodeToBeRemoved) {
-        Node<T> previousNode = nodeToBeRemoved.prev;
-        Node<T> nextNode = nodeToBeRemoved.next;
-        if (previousNode == null) {
-            firstNode = nextNode;
-        } else {
-            previousNode.next = nextNode;
-        }
-        if (nextNode == null) {
-            lastNode = previousNode;
-        } else {
-            nextNode.prev = previousNode;
-        }
-        size--;
-    }
-
-    private void addNodeToTheEnd(T value) {
-        Node<T> currentLastNode = lastNode;
-        lastNode = new Node<>(value, null, currentLastNode);
-        if (currentLastNode == null) {
-            firstNode = lastNode;
-        } else {
-            currentLastNode.next = lastNode;
-        }
-        size++;
+        return node;
     }
 
     private void checkIndex(int index) {
@@ -154,3 +141,4 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 }
+
