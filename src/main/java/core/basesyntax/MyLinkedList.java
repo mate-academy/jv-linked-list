@@ -25,15 +25,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
+        Node<T> newNode;
         if (size == 0) {
-            Node<T> newNode = new Node<>(null, value, null);
+            newNode = new Node<>(null, value, null);
             first = newNode;
-            last = newNode;
+
         } else {
-            Node<T> newNode = new Node<>(last, value, null);
+            newNode = new Node<>(last, value, null);
             last.next = newNode;
-            last = newNode;
         }
+        last = newNode;
         size++;
         return true;
     }
@@ -94,7 +95,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (!(index >= size)) {
             targetNode = findNode(index);
             if (targetNode.value == null && t == null
-                    || targetNode.value.equals(t)) {
+                    || targetNode.value != null && targetNode.value.equals(t)) {
                 unlink(targetNode);
                 size--;
                 return true;
