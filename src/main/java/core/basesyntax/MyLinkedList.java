@@ -5,25 +5,25 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
-    private int elementsNumber;
+    private int size;
 
     @Override
     public boolean add(T value) {
         Node<T> current = new Node<T>(tail, value, null);
-        if (elementsNumber == 0) {
+        if (size == 0) {
             head = current;
         } else {
             tail.next = current;
         }
         tail = current;
-        elementsNumber++;
+        size++;
         return true;
 
     }
 
     @Override
     public void add(T value, int index) {
-        if (index == elementsNumber) {
+        if (index == size) {
             add(value);
             return;
         }
@@ -36,7 +36,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = newNode;
         }
         oldNode.previous = newNode;
-        elementsNumber++;
+        size++;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             unlink(node);
         } else {
             head = node.next;
-            elementsNumber--;
+            size--;
         }
         return node.element;
     }
@@ -78,7 +78,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T t) {
         Node<T> node = head;
-        for (int i = 0; i < elementsNumber; i++) {
+        for (int i = 0; i < size; i++) {
             if (node.element == t || node.element.equals(t)) {
                 remove(i);
                 return true;
@@ -90,12 +90,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        return elementsNumber;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return elementsNumber == 0;
+        return size == 0;
     }
 
     private class Node<T> {
@@ -113,14 +113,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNode(int index) {
 
         Node<T> node;
-        if (index < (elementsNumber >> 1)) {
+        if (index < (size >> 1)) {
             node = head;
             for (int i = 0; i < index; i++) {
                 node = node.next;
             }
         } else {
             node = tail;
-            for (int i = elementsNumber - 1; i > index; i--) {
+            for (int i = size - 1; i > index; i--) {
                 node = node.previous;
             }
         }
@@ -128,7 +128,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkElementIndex(int index) {
-        if (index < 0 || index >= elementsNumber) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
     }
@@ -140,6 +140,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             tail = nodeToRemove.previous;
         }
-        elementsNumber--;
+        size--;
     }
 }
