@@ -25,7 +25,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             firsNode = node;
             size++;
             return;
-//            linkBefore(value, getNode(index));
         }
         Node<T> node = getNode(index);
         Node<T> newNode = new Node<>(node.prev, value, node);
