@@ -135,10 +135,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void linkBefore(T t, Node<T> succ) {
-        Node<T> pred = succ.prev;
-        Node<T> newNode = new Node<T>(pred, t, succ);
-        succ.prev = newNode;
+    private void linkBefore(T t, Node<T> targer) {
+        Node<T> pred = targer.prev;
+        Node<T> newNode = new Node<T>(pred, t, targer);
+        targer.prev = newNode;
         if (pred == null) {
             first = newNode;
         } else {
