@@ -9,18 +9,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     public MyLinkedList() {
         size = 0;
-        first = null;
-        last = null;
     }
 
     @Override
     public boolean add(T value) {
-        Node<T> newNode;
+        Node<T> newNode = new Node<>(value, last, null);
         if (size == 0) {
-            newNode = new Node<>(value, null, null);
             first = newNode;
         } else {
-            newNode = new Node<>(value, last, null);
             last.next = newNode;
         }
         last = newNode;
@@ -41,7 +37,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first.prev = newNode;
             first = newNode;
         } else {
-            Node<T> currentPlace = iterator(index);
+            Node<T> currentPlace = findNode(index);
             newNode = new Node<>(value, currentPlace.prev, currentPlace);
             currentPlace.prev.next = newNode;
             currentPlace.prev = newNode;
@@ -60,30 +56,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        if (index == size - 1) {
-            return last.element;
-        }
-        Node<T> currentNode = iterator(index);
+        Node<T> currentNode = findNode(index);
         return currentNode.element;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        T oldElement;
-        if (index == 0) {
-            oldElement = first.element;
-            first.element = value;
-            return oldElement;
-        }
-        if (index == size - 1) {
-            oldElement = last.element;
-            last.element = value;
-            return oldElement;
-        }
-        Node<T> currentNode = iterator(index);
-        oldElement = currentNode.element;
-        currentNode.element = value;
+        Node<T> newNode = findNode(index);
+        T oldElement = newNode.element;
+        newNode.element = value;
         return oldElement;
     }
 
@@ -104,7 +86,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             last = last.prev;
             last.next = null;
         } else {
-            Node<T> removedNode = iterator(index);
+            Node<T> removedNode = findNode(index);
             result = removedNode.element;
             removedNode.prev.next = removedNode.next;
             removedNode.next.prev = removedNode.prev;
@@ -137,7 +119,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node<T> iterator(int index) {
+    private Node<T> findNode(int index) {
         Node<T> currentNode;
         if (index <= size / 2) {
             currentNode = first;
@@ -155,7 +137,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("The index does not exist");
+            throw new IndexOutOfBoundsException("The index is out of bound");
         }
     }
 
@@ -164,7 +146,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> prev;
         Node<T> next;
 
-        public Node(T element, Node<T> previous, Node<T> next) {
+        Node(T element, Node<T> previous, Node<T> next) {
             this.element = element;
             this.prev = previous;
             this.next = next;
