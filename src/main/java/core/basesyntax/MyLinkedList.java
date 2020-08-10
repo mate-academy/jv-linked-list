@@ -43,17 +43,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException();
-        }
         return getNode(index).element;
     }
 
     @Override
     public T set(T value, int index) {
-        Node<T> x = getNode(index);
-        T oldValue = x.element;
-        x.element = value;
+        Node<T> node = getNode(index);
+        T oldValue = node.element;
+        node.element = value;
         return oldValue;
     }
 
@@ -63,23 +60,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 1) {
             lastNode = null;
             firsNode = null;
-            size--;
-            return node.element;
-        }
-        if (index == 0) {
+        } else if (index == 0) {
             node.next.prev = null;
             firsNode = node.next;
-            size--;
-            return node.element;
-        }
-        if (index == size - 1) {
+        } else if (index == size - 1) {
             node.prev.next = null;
             lastNode = node.next;
-            size--;
-            return node.element;
+        } else {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
         }
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
         size--;
         return node.element;
     }
@@ -87,7 +77,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (t == getNode(i).element || getNode(i).element.equals(t)) {
+            if (getNode(i).element != null && getNode(i).element.equals(t)
+                    || t == getNode(i).element) {
                 remove(i);
                 return true;
             }
@@ -118,8 +109,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    // присоединяет к последней node
-    public void addToLast(T value) {
+    private void addToLast(T value) {
         if (isEmpty()) {
             Node<T> newNode = new Node<>(null, value, null);
             firsNode = lastNode = newNode;
@@ -131,17 +121,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    // определяется узел, который находиться под нужным индексом
-    Node<T> getNode(int index) {
+    private Node<T> getNode(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
-        int i = 0;
-        Node<T> node = firsNode;
-        while (i < index) {
-            node = node.next;
-            i++;
+        if (index < (size >> 1)) {
+            int i = 0;
+            Node<T> node = firsNode;
+            while (i < index) {
+                node = node.next;
+                i++;
+            }
+            return node;
+        } else {
+            int i = 0;
+            Node<T> node = firsNode;
+            while (i < index) {
+                node = node.next;
+                i++;
+            }
+            return node;
         }
-        return node;
     }
 }
+
+
