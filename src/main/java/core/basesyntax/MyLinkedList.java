@@ -20,7 +20,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Not in range");
+            throw new IndexOutOfBoundsException("Index is not in the range of the list!");
         }
         if (index == size) {
             addLast(value);
@@ -83,8 +83,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T t) {
         for (int i = 0; i < size; i++) {
-            T check = get(i);
-            if (check == t || check != null && check.equals(t)) {
+            T currentValue = get(i);
+            if (currentValue == t || currentValue != null && currentValue.equals(t)) {
                 remove(i);
                 return true;
             }
@@ -104,7 +104,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Not in range of the list!");
+            throw new IndexOutOfBoundsException("Index is not in the range of the list!");
         }
     }
 
@@ -126,11 +126,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (first == null) {
             newNode.previous = null;
             first = newNode;
-            last = newNode;
         } else {
             last.next = newNode;
-            last = newNode;
         }
+        last = newNode;
         size++;
     }
 
@@ -138,19 +137,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Node<T> tempNode;
         if (index <= size / 2) {
-            int i = 0;
             tempNode = first;
-            while (i < index) {
+            for (int i = 0; i < index; i++) {
                 tempNode = tempNode.next;
-                i++;
             }
             return tempNode;
         }
         tempNode = last;
-        int i = size - 1;
-        while (i > index) {
+        for (int i = size - 1; i > index; i--) {
             tempNode = tempNode.previous;
-            i--;
         }
         return tempNode;
     }
@@ -160,7 +155,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> previous;
         private Node<T> next;
 
-        public Node(T value, Node<T> previous, Node<T> next) {
+        Node(T value, Node<T> previous, Node<T> next) {
             this.value = value;
             this.previous = previous;
             this.next = next;
