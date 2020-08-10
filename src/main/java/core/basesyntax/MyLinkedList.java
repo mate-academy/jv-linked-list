@@ -1,28 +1,11 @@
 package core.basesyntax;
 
-import java.util.Iterator;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
     private Node<T> firstNode;
     private Node<T> lastNode;
-
-    public MyLinkedList() {
-        size = 0;
-    }
-
-    private static class Node<T> {
-        T value;
-        Node<T> next;
-        Node<T> prev;
-
-        public Node(T value, Node<T> next, Node<T> prev) {
-            this.value = value;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
 
     @Override
     public boolean add(T value) {
@@ -56,9 +39,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (list.size() == 0) {
             return false;
         }
-        Iterator iterator = list.iterator();
-        while (iterator.hasNext()) {
-            add((T) iterator.next());
+        for (T value : list) {
+            add(value);
         }
         return true;
     }
@@ -70,7 +52,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return soughtForNode.value;
     }
 
-    // DOES THIS METHOD REPLACE THE NODE OR SHIFT IT?
     @Override
     public T set(T value, int index) {
         checkIndex(index);
@@ -110,6 +91,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private static class Node<T> {
+        T value;
+        Node<T> next;
+        Node<T> prev;
+
+        public Node(T value, Node<T> next, Node<T> prev) {
+            this.value = value;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 
     private Node<T> findNodeByIndex(int index) {
