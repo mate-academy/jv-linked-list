@@ -142,12 +142,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return element;
     }
 
-    private class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node<T> next;
         private Node<T> prev;
 
-        public Node(T value, Node<T> next, Node<T> prev) {
+        private Node(T value, Node<T> next, Node<T> prev) {
             this.value = value;
             this.next = next;
             this.prev = prev;
