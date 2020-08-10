@@ -28,7 +28,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         checkElementIndex(index);
-        Node<T> oldNode = node(index);
+        Node<T> oldNode = getNode(index);
         Node<T> newNode = new Node<>(oldNode.previous, value, oldNode);
         if (index > 0) {
             newNode.previous.next = newNode;
@@ -50,42 +50,36 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkElementIndex(index);
-        return node(index).element;
+        return getNode(index).element;
     }
 
     @Override
     public T set(T value, int index) {
         checkElementIndex(index);
-        Node<T> x = node(index);
-        T oldVal = x.element;
-        x.element = value;
+        Node<T> node = getNode(index);
+        T oldVal = node.element;
+        node.element = value;
         return oldVal;
     }
 
     @Override
     public T remove(int index) {
         checkElementIndex(index);
-        Node<T> node = node(index);
+        Node<T> node = getNode(index);
         if (index > 0) {
-            node.previous.next = node.next;
+            unlink(node);
         } else {
             head = node.next;
+            elementsNumber--;
         }
-        if (node.next != null) {
-            node.next.previous = node.previous;
-        } else {
-            tail = node.previous;
-        }
-        T removedItem = node.element;
-        elementsNumber--;
-        return removedItem;
+        return node.element;
     }
 
     @Override
     public boolean remove(T t) {
         Node<T> node = head;
         for (int i = 0; i < elementsNumber; i++) {
-            if (node.element == t || node.element == t || node.element.equals(t)) {
+            if (node.element == t || node.element.equals(t)) {
                 remove(i);
                 return true;
             }
@@ -116,26 +110,36 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> node(int index) {
+    private Node<T> getNode(int index) {
 
-        Node<T> x;
+        Node<T> node;
         if (index < (elementsNumber >> 1)) {
-            x = head;
+            node = head;
             for (int i = 0; i < index; i++) {
-                x = x.next;
+                node = node.next;
             }
         } else {
-            x = tail;
+            node = tail;
             for (int i = elementsNumber - 1; i > index; i--) {
-                x = x.previous;
+                node = node.previous;
             }
         }
-        return x;
+        return node;
     }
 
     private void checkElementIndex(int index) {
         if (index < 0 || index >= elementsNumber) {
             throw new IndexOutOfBoundsException();
         }
+    }
+
+    private void unlink(Node<T> nodeToRemove) {
+        nodeToRemove.previous.next = nodeToRemove.next;
+        if (nodeToRemove.next != null) {
+            nodeToRemove.next.previous = nodeToRemove.previous;
+        } else {
+            tail = nodeToRemove.previous;
+        }
+        elementsNumber--;
     }
 }
