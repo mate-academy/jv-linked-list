@@ -27,44 +27,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new ArrayIndexOutOfBoundsException("Out of bounds search index");
         }
         if (index == size) {
-            linkLast(value);
+            add(value);
         } else {
-            linkBefore(value, node(index));
+            linkBefore(value, findNode(index));
         }
     }
 
     @Override
     public boolean addAll(List<T> list) {
-        T[] addArray = (T[]) list.toArray();
-        int lengthOfArray = addArray.length;
-        if (lengthOfArray == 0) {
-            return false;
+        for (T elementOfList : list) {
+            add(elementOfList);
         }
-        Node<T> prev;
-        prev = last;
-        for (T elementAddArray : addArray) {
-            Node<T> inputNode = new Node<>(elementAddArray, null, prev);
-            if (prev == null) {
-                first = inputNode;
-            } else {
-                prev.next = inputNode;
-            }
-            prev = inputNode;
-        }
-        size += lengthOfArray;
         return true;
     }
+
 
     @Override
     public T get(int index) {
         checkIndex(index);
-        return node(index).element;
+        return findNode(index).element;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> oldNode = node(index);
+        Node<T> oldNode = findNode(index);
         T oldValue = oldNode.element;
         oldNode.element = value;
         return oldValue;
@@ -73,26 +60,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        return unlink(node(index));
+        return unlink(findNode(index));
     }
 
     @Override
     public boolean remove(T t) {
-        if (t == null) {
-            for (Node<T> i = first; i != null; i = i.next) {
-                if (i.element == null) {
-                    unlink(i);
-                    return true;
-                }
+        int i = 0;
+        while (i != size) {
+            if( t == get(i) || get(i).equals(t)) {
+                unlink(findNode(i));
+                return true;
             }
-        } else {
-            for (Node<T> i = first; i != null; i = i.next) {
-                if (i.element.equals(t)) {
-                    unlink(i);
-                    return true;
-                }
-            }
-        }
+            i = i + 1;
+        };
         return false;
     }
 
@@ -107,56 +87,66 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void linkFirst(T e) {
-        final MyLinkedList.Node<T> f = first;
-        final MyLinkedList.Node<T> newNode = new MyLinkedList.Node<>(e, f, null);
+        MyLinkedList.Node<T> firstElement = first;
+        MyLinkedList.Node<T> newNode = new MyLinkedList.Node<>(e, firstElement, null);
         first = newNode;
-        if (f == null) {
+        if (firstElement == null) {
             last = newNode;
         } else {
-            f.prev = newNode;
+            firstElement.prev = newNode;
         }
         size++;
     }
 
-    void linkLast(T e) {
-        final Node<T> l = last;
-        final Node<T> newNode = new MyLinkedList.Node<>(e, null, l);
+    private void linkLast(T e) {
+        Node<T> lastElement = last;
+        Node<T> newNode = new MyLinkedList.Node<>(e, null, lastElement);
         last = newNode;
-        if (l == null) {
+        if (lastElement == null) {
             first = newNode;
         } else {
-            l.next = newNode;
+            lastElement.next = newNode;
         }
         size++;
     }
 
-    public void checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index > size - 1 || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Out of bounds search index");
         }
     }
 
-    public void linkBefore(T element, Node<T> movingElement) {
+    private void linkBefore(T element, Node<T> movingElement) {
         Node<T> currentPrev = movingElement.prev;
         Node<T> inputNode = new Node<>(element, movingElement, currentPrev);
-        movingElement.prev = inputNode;
         if (currentPrev == null) {
             first = inputNode;
         } else {
             currentPrev.next = inputNode;
         }
+        movingElement.prev = inputNode;
         size++;
     }
 
-    public Node<T> node(int index) {
-        Node<T> currentElement = first;
-        for (int i = 0; i < index; i++) {
-            currentElement = currentElement.next;
+    private Node<T> findNode(int index) {
+        Node<T> currentElement;
+        if (index < (size >> 1)) {
+            currentElement = first;
+            for (int i = 0; i < index; i++) {
+                currentElement = currentElement.next;
+            }
+            return currentElement;
+        } else {
+            currentElement = last;
+            for (int i = size - 1; i > index ; i--) {
+                currentElement = currentElement.prev;
+            }
+            return currentElement;
         }
-        return currentElement;
+
     }
 
-    public T unlink(Node<T> currentObject) {
+    private T unlink(Node<T> currentObject) {
         T element = currentObject.element;
         Node<T> prev = currentObject.prev;
         Node<T> next = currentObject.next;
