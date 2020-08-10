@@ -9,15 +9,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
+        Node<T> node;
         if (isEmpty()) {
-            Node<T> node = new Node<>(value, null, null);
-            first = last = node;
+            node = new Node<>(value, null, null);
+            first = node;
         } else {
-            Node<T> node = new Node<>(value, null, last);
+            node = new Node<>(value, null, last);
             last.next = node;
-            last = node;
         }
-
+        last = node;
         size++;
         return true;
     }
@@ -116,11 +116,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new ArrayIndexOutOfBoundsException(
                     "This index is not suitable for the given size");
         }
-        int i = 0;
-        Node<T> node = first;
-        while (i < index) {
+        Node<T> node;
+        if (size / 2 < index) {
+            node = last;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
+            return node;
+        }
+        node = first;
+        for (int i = 0; i < index; i++) {
             node = node.next;
-            i++;
         }
         return node;
     }
