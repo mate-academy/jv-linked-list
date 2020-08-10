@@ -5,8 +5,8 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private int size;
-    private Node head;
-    private Node tail;
+    private Node<T> head;
+    private Node<T> tail;
 
     @Override
     public boolean add(T value) {
@@ -42,9 +42,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        node.next = getNode(index);
-        node.prev = getNode(index - 1);
-        getNode(index).prev = node;
+        Node tempNode = getNode(index);
+        node.next = tempNode;
+        node.prev = tempNode;
+        tempNode.prev = node;
         getNode(index - 1).next = node;
         size++;
     }
@@ -91,7 +92,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (getNode(i).value == t || getNode(i).value.equals(t)) {
+            if (getNode(i).value == t || (getNode(i) != null && getNode(i).value.equals(t))) {
                 remove(i);
                 return true;
             }
@@ -125,33 +126,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node getNode(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Invalid index!");
+            throw new ArrayIndexOutOfBoundsException("Index is out of bound!");
         }
         if (size - index > size / 2) {
-            int i = 0;
             Node element = head;
-            while (i < index) {
+            for (int i = 0; i < index; i++) {
                 element = element.next;
-                i++;
             }
             return element;
         } else {
-            int i = size - 1;
             Node element = tail;
-            while (i > index) {
+            for (int i = size - 1; i > index; i--) {
                 element = element.prev;
-                i--;
             }
             return element;
         }
     }
 
-    private class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node next;
         private Node prev;
 
-        public Node(T value, Node next, Node prev) {
+        Node(T value, Node next, Node prev) {
             this.value = value;
             this.next = next;
             this.prev = prev;
