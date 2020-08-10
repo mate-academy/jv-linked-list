@@ -41,7 +41,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return true;
     }
 
-
     @Override
     public T get(int index) {
         checkIndex(index);
@@ -67,12 +66,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T t) {
         int i = 0;
         while (i != size) {
-            if( t == get(i) || get(i).equals(t)) {
+            if (t == get(i) || get(i).equals(t)) {
                 unlink(findNode(i));
                 return true;
             }
             i = i + 1;
-        };
+        }
         return false;
     }
 
@@ -138,7 +137,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return currentElement;
         } else {
             currentElement = last;
-            for (int i = size - 1; i > index ; i--) {
+            for (int i = size - 1; i > index; i--) {
                 currentElement = currentElement.prev;
             }
             return currentElement;
