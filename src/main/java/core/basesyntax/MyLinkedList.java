@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
@@ -87,10 +86,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T t) {
-        for(int i = 0; i < count; i++){
-            if(getNodeByIndex(i).item == t || getNodeByIndex(i).item.equals(t)){
-               remove(i);
-               return true;
+        for (int i = 0; i < count; i++) {
+            if (getNodeByIndex(i).item == t || getNodeByIndex(i).item.equals(t)) {
+                remove(i);
+                return true;
             }
         }
         return false;
