@@ -110,7 +110,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public void addInTheEnd(T value) {
+    private void addInTheEnd(T value) {
         Entry<T> newEntry = new Entry<>(value, null, last);
         if (size == 0) {
             first = newEntry;
