@@ -59,11 +59,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size - 1) {
             return last.item;
         }
-        if (index <= size / 2) {
-            return iterationFromTheFirstElement(index).item;
-        } else {
-            return iterationFromTheLastElement(index).item;
-        }
+        return getNode(index).item;
     }
 
     @Override
@@ -74,11 +70,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == 0) {
             return setFirstNode(value);
         }
-        if (index >= size / 2) {
-            returnNode = iterationFromTheFirstElement(index);
-        } else {
-            returnNode = iterationFromTheLastElement(index);
-        }
+        returnNode = getNode(index);
         node = new Node<>(returnNode.prev, value, returnNode.next);
         returnNode.prev.next = node;
         returnNode.next.prev = node;
@@ -88,18 +80,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> removedNode = null;
+        Node<T> removedNode;
         if (index == 0) {
             return removeFirstElement().item;
         }
         if (index == size - 1) {
             return removeLastElement().item;
         }
-        if (index <= size / 2) {
-            removedNode = iterationFromTheFirstElement(index);
-        } else {
-            removedNode = iterationFromTheLastElement(index);
-        }
+        removedNode = getNode(index);
         removedNode.prev.next = removedNode.next;
         removedNode.next.prev = removedNode.prev;
         size--;
@@ -108,18 +96,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T t) {
-        Node<T> removedNode = null;
+        Node<T> removedNode;
         if (checkEquals(first, t)) {
             removeFirstElement();
             return true;
         }
         removedNode = first;
-        for (int i = 0; i < size - 1; i++) {
+        for (int i = 1; i < size; i++) {
             removedNode = removedNode.next;
             if (checkEquals(removedNode, t)) {
-                removedNode.prev.next = removedNode.next;
-                removedNode.next.prev = removedNode.prev;
-                size--;
+                remove(i);
                 return true;
             }
             if (i == size - 1 && checkEquals(last, t)) {
@@ -171,6 +157,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         last.next = null;
         size--;
         return last;
+    }
+    private Node<T> getNode (int index){
+        Node<T> removedNode;
+        if (index <= size / 2) {
+            removedNode = iterationFromTheFirstElement(index);
+        } else {
+            removedNode = iterationFromTheLastElement(index);
+        }
+        return removedNode;
     }
 
     private Node<T> removeFirstElement() {
