@@ -93,9 +93,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (Node<T> current = first; current != null; current = current.next) {
             if (t != null ? t.equals(current.item) : current.item == t) {
                 removeNode(current);
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     @Override
