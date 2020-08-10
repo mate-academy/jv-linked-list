@@ -158,7 +158,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
         return last;
     }
-    private Node<T> getNode (int index){
+
+    private Node<T> getNode(int index) {
         Node<T> removedNode;
         if (index <= size / 2) {
             removedNode = iterationFromTheFirstElement(index);
