@@ -28,7 +28,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         checkIndex(index);
         if (index == 0) {
-            addByIndexFirstElement(value);
+            addFirstElement(value);
             return;
         }
         Node<T> currentNode = getNode(index);
@@ -55,9 +55,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        if (index == 0) {
-            return setFirstNode(value);
-        }
         Node<T> returnNode = getNode(index);
         T setValue = returnNode.item;
         returnNode.item = value;
@@ -166,7 +163,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return returnNode.item;
     }
 
-    private void addByIndexFirstElement(T value) {
+    private void addFirstElement(T value) {
         Node<T> node = new Node<>(null, value, first);
         first.prev = node;
         first = node;
@@ -185,4 +182,3 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 }
-
