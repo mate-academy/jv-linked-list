@@ -116,7 +116,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             lastNode.next = newNode;
         }
         size++;
-
     }
 
     private void linkBefore(T element, Node<T> nextNode) {
