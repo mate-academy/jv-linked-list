@@ -24,6 +24,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
+        if (index == size) {
+            add(value);
+            return;
+        }
         Node<T> newNode = new Node<>(value, null, null);
         insertNode(newNode, getNodeByIndex(index));
     }
@@ -46,8 +50,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndexForRestFunctions(index);
-        T oldValue = getNodeByIndex(index).element;
-        getNodeByIndex(index).element = value;
+        Node<T> node = getNodeByIndex(index);
+        T oldValue = node.element;
+        node.element = value;
         return oldValue;
     }
 
@@ -99,7 +104,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0) {
             return tailNode;
         }
-        if ((index <= size >> 1) || size <= 2) {
+        if (index <= size >> 1) {
             return getDistantNext(index, headNode);
         } else {
             return getDistantPrev(size - index, tailNode);
