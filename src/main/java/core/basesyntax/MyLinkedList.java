@@ -10,13 +10,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-        Node<T> l = last;
-        Node<T> newNode = new Node(l, value, null);
+        Node<T> lastNode = last;
+        Node<T> newNode = new Node(lastNode, value, null);
         last = newNode;
-        if (l == null) {
+        if (lastNode == null) {
             first = newNode;
         } else {
-            l.next = newNode;
+            lastNode.next = newNode;
         }
         size++;
         return true;
