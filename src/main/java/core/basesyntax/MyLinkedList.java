@@ -30,14 +30,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         } else if (index == 0) {
-            Entry<T> insertEntry = new Entry<T>(value, head, null);
+            Entry<T> insertEntry = new Entry<>(value, head, null);
             head.prev = insertEntry;
             head = insertEntry;
             size++;
             return;
         }
         checkIndex(index);
-        Entry<T> insertEntry = new Entry<T>(value, null, null);
+        Entry<T> insertEntry = new Entry<>(value, null, null);
         Entry<T> currentWithIndex = getEntryByIndex(index);
         insertEntry.prev = currentWithIndex.prev;
         currentWithIndex.prev.next = insertEntry;
