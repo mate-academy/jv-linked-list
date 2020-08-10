@@ -17,58 +17,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size = 1;
     }
 
-    private void checkBounds(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is out of LinkedList bonds");
-        }
-    }
-
-    private void insertNode(Node<T> targetNode, T value) {
-        Node<T> nodeToInsert = new Node<>(targetNode.previous, value, targetNode);
-        if (targetNode.previous == null) {
-            targetNode.previous = nodeToInsert;
-            head = nodeToInsert;
-        } else {
-            targetNode.previous.next = nodeToInsert;
-            targetNode.previous = nodeToInsert;
-        }
-        size++;
-    }
-
-    private void unlink(Node<T> nodeToRemove) {
-        if (size == 1) {
-            head = tail = null;
-        } else if (nodeToRemove == head) {
-            nodeToRemove.next.previous = null;
-            head = nodeToRemove.next;
-        } else if (nodeToRemove == tail) {
-            nodeToRemove.previous.next = null;
-            tail = nodeToRemove.previous;
-        } else {
-            nodeToRemove.previous.next = nodeToRemove.next;
-            nodeToRemove.next.previous = nodeToRemove.previous;
-        }
-        nodeToRemove.next = nodeToRemove.previous = null;
-        nodeToRemove.storedItem = null;
-        --size;
-    }
-
-    private Node<T> findNode(int index) {
-        Node<T> headHandler = head;
-        Node<T> tailHandler = tail;
-        if (index < size / 2) {
-            for (int i = 0; i < index; i++) {
-                headHandler = headHandler.next;
-            }
-            return headHandler;
-        } else {
-            for (int i = size - 1; i > index; i--) {
-                tailHandler = tailHandler.previous;
-            }
-            return tailHandler;
-        }
-    }
-
     @Override
     public boolean add(T value) {
         Node<T> nodeToAdd = new Node<>(tail, value, null);
@@ -128,7 +76,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T t) {
         Node<T> holder = head;
         for (int i = 0; i < size; i++) {
-            if (holder.storedItem == t || holder.storedItem.equals(t)) {
+            if (holder.storedItem == t || (holder.storedItem != null
+                                        && holder.storedItem.equals(t))) {
                 unlink(holder);
                 return true;
             }
@@ -147,15 +96,67 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private static class Node<T1> {
-        T1 storedItem;
-        Node<T1> previous;
-        Node<T1> next;
+    private static class Node<T> {
+        T storedItem;
+        Node<T> previous;
+        Node<T> next;
 
-        Node(Node<T1> previous, T1 element, Node<T1> next) {
+        Node(Node<T> previous, T element, Node<T> next) {
             storedItem = element;
             this.previous = previous;
             this.next = next;
         }
+    }
+
+    private void checkBounds(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index is out of LinkedList bonds");
+        }
+    }
+
+    private void insertNode(Node<T> targetNode, T value) {
+        Node<T> nodeToInsert = new Node<>(targetNode.previous, value, targetNode);
+        if (targetNode.previous == null) {
+            targetNode.previous = nodeToInsert;
+            head = nodeToInsert;
+        } else {
+            targetNode.previous.next = nodeToInsert;
+            targetNode.previous = nodeToInsert;
+        }
+        size++;
+    }
+
+    private void unlink(Node<T> nodeToRemove) {
+        if (size == 1) {
+            head = tail = null;
+        } else if (nodeToRemove == head) {
+            nodeToRemove.next.previous = null;
+            head = nodeToRemove.next;
+        } else if (nodeToRemove == tail) {
+            nodeToRemove.previous.next = null;
+            tail = nodeToRemove.previous;
+        } else {
+            nodeToRemove.previous.next = nodeToRemove.next;
+            nodeToRemove.next.previous = nodeToRemove.previous;
+        }
+        nodeToRemove.next = nodeToRemove.previous = null;
+        nodeToRemove.storedItem = null;
+        --size;
+    }
+
+    private Node<T> findNode(int index) {
+        Node<T> currentNode;
+        if (index < size / 2) {
+            currentNode = head;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+        } else {
+            currentNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                currentNode = currentNode.previous;
+            }
+        }
+        return currentNode;
     }
 }
