@@ -37,7 +37,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkElementIndex(index);
-        return node(index).item;
+        return node(index).value;
 
     }
 
@@ -45,8 +45,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         checkElementIndex(index);
         Node<T> x = node(index);
-        T oldValue = x.item;
-        x.item = value;
+        T oldValue = x.value;
+        x.value = value;
         return oldValue;
     }
 
@@ -76,14 +76,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T value) {
         if (value == null) {
             for (Node<T> node = first; node != null; node = node.next) {
-                if (node.item == null) {
+                if (node.value == null) {
                     unlink(node);
                     return true;
                 }
             }
         } else {
             for (Node<T> node = first; node != null; node = node.next) {
-                if (value.equals(node.item)) {
+                if (value.equals(node.value)) {
                     unlink(node);
                     return true;
                 }
@@ -103,12 +103,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        private T item;
+        private T value;
         private Node<T> next;
         private Node<T> prev;
 
         Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
+            this.value = element;
             this.next = next;
             this.prev = prev;
         }
@@ -142,7 +142,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public T unlink(Node<T> node) {
-        final T element = node.item;
+        final T element = node.value;
         Node<T> next = node.next;
         Node<T> prev = node.prev;
 
@@ -158,7 +158,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             next.prev = prev;
             node.next = null;
         }
-        node.item = null;
+        node.value = null;
         size--;
         return element;
     }
