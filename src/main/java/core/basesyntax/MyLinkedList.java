@@ -3,21 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    transient int size;
-    transient Node<T> first;
-    transient Node<T> last;
-
-    private static class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> prev;
-
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
+    private int size;
+    private Node<T> first;
+    private Node<T> last;
 
     @Override
     public boolean add(T value) {
@@ -25,11 +13,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 1) {
             before = first;
         }
-        Node<T> node = new Node(before, value, null);
+        Node<T> node = new Node<>(before, value, null);
         if (size == 0) {
             first = node;
-        }
-        if (size >= 1) {
+        } else if (size >= 1) {
             before.next = node;
         }
         last = node;
@@ -40,24 +27,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        isIndexGood(index);
         if (index == size) {
             add(value);
             return;
-        } else if (index == 0) {
+        }
+        isIndexGood(index);
+        if (index == 0) {
             Node<T> node = new Node<>(null, value, first);
             first.prev = node;
             first = node;
-            size++;
-            return;
         } else {
             Node<T> node = new Node<>(findNodeWithIndex(index).prev,
                     value, findNodeWithIndex(index));
             findNodeWithIndex(index).prev.next = node;
             findNodeWithIndex(index).prev = node;
-            size++;
-            return;
         }
+        size++;
     }
 
     @Override
@@ -71,53 +56,40 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         isIndexGood(index);
-        if (index == size) {
-            throw new IndexOutOfBoundsException("Wrong index");
-        }
         return findNodeWithIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         isIndexGood(index);
-        if (index == size) {
-            throw new IndexOutOfBoundsException("Wring index");
-        }
-        T valueBeforeSetting = findNodeWithIndex(index).item;
-        findNodeWithIndex(index).item = value;
+        Node<T> temp = findNodeWithIndex(index);
+        T valueBeforeSetting = temp.item;
+        temp.item = value;
         return valueBeforeSetting;
     }
 
     @Override
     public T remove(int index) {
         isIndexGood(index);
-        if (index == size) {
-            throw new IndexOutOfBoundsException("Wrong index");
-        }
         Node<T> node = findNodeWithIndex(index);
         T item = node.item;
         if (index == size - 1 && index == 0) {
-            first.item = null;
-            last.item = null;
-            size--;
+            first = null;
+            last = null;
         } else if (index == 0 && index != size - 1) {
             node.next.prev = null;
             first = node.next;
-            node.next = null;
-            node.item = null;
-            size--;
+            node = null;
         } else if (index == size - 1 && index != 0) {
             node.prev.next = null;
             last = node.prev;
-            node.prev = null;
-            node.item = null;
-            size--;
+            node = null;
         } else {
             node.prev.next = node.next;
             node.next.prev = node.prev;
-            unlinkNode(node);
-            size--;
+            node = null;
         }
+        size--;
         return item;
     }
 
@@ -125,8 +97,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T t) {
         Node<T> node = first;
         for (int i = 0; i < size; i++) {
-            if (node.item == t
-                    || (node.item != null && node.item.equals(t))) {
+            if (node.item == t || (node.item != null && node.item.equals(t))) {
                 remove(i);
                 return true;
             }
@@ -146,27 +117,38 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public boolean isIndexGood(int index) {
-        if (index > size || index < 0) {
+        if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Wrong index");
-        } else {
-            return true;
         }
+        return true;
     }
 
     public Node<T> findNodeWithIndex(int index) {
-        Node<T> nodeWithIndex = first;
-        for (int i = 0; i < index; i++) {
-            nodeWithIndex = nodeWithIndex.next;
+        if (index <= size / 2) {
+            Node<T> nodeWithIndex = first;
+            for (int i = 0; i < index; i++) {
+                nodeWithIndex = nodeWithIndex.next;
+            }
+            return nodeWithIndex;
+        }
+
+        Node<T> nodeWithIndex = last;
+        for (int i = size - 1; i > index; i--) {
+            nodeWithIndex = nodeWithIndex.prev;
         }
         return nodeWithIndex;
     }
 
-    public Node<T> unlinkNode(Node<T> node) {
+    private static class Node<T> {
+        T item;
+        Node<T> next;
+        Node<T> prev;
 
-        node.prev = null;
-        node.next = null;
-        node.item = null;
-        return node;
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
 
