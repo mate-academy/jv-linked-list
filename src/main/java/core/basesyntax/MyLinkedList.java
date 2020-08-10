@@ -1,85 +1,96 @@
 package core.basesyntax;
 
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
-
-class Train {
-    public static void main(String[] args) {
-        MyLinkedList<Integer> myLinkedList = new MyLinkedList<>();
-
-        myLinkedList.add(7);
-        myLinkedList.add(2);
-        myLinkedList.remove(0);
-            System.out.println(myLinkedList.get(0));
-    }
-}
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
     private Node<T> firsNode;
     private Node<T> lastNode;
-    int modCount = 0;
 
     @Override
     public boolean add(T value) {
-        linkLast(value);
+        addToLast(value);
         return true;
     }
 
     @Override
     public void add(T value, int index) {
-//        if (index >= 0 && index <= size)
-//            throw new IndexOutOfBoundsException();
-        if (index == size)
-            linkLast(value);
-        else
-            linkBefore(value, node(index));
+        if (index == size) {
+            add(value);
+            return;
+        }
+        if (index == 0) {
+            Node<T> node = new Node<>(null, value, firsNode);
+            firsNode.prev = node;
+            firsNode = node;
+            size++;
+            return;
+//            linkBefore(value, getNode(index));
+        }
+        Node<T> node = getNode(index);
+        Node<T> newNode = new Node<>(node.prev, value, node);
+        node.prev.next = newNode;
+        node.prev = newNode;
+        size++;
     }
 
     @Override
     public boolean addAll(List<T> list) {
-//        for (int i = 0; i < list.size(); i++) {
-//            add(list.get(i));
-//        }
-        return addAll(size, list);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
+        return true;
     }
 
     @Override
     public T get(int index) {
-//        if (index > 0 && index < size)
-//            throw new IndexOutOfBoundsException();
-        return node(index).element;
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException();
+        }
+        return getNode(index).element;
     }
 
     @Override
     public T set(T value, int index) {
-        Node<T> x = node(index);
-        T oldVal = x.element;
+        Node<T> x = getNode(index);
+        T oldValue = x.element;
         x.element = value;
-        return oldVal;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        return unlink(node(index));
+        Node<T> node = getNode(index);
+        if (size == 1) {
+            lastNode = null;
+            firsNode = null;
+            size--;
+            return node.element;
+        }
+        if (index == 0) {
+            node.next.prev = null;
+            firsNode = node.next;
+            size--;
+            return node.element;
+        }
+        if (index == size - 1) {
+            node.prev.next = null;
+            lastNode = node.next;
+            size--;
+            return node.element;
+        }
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+        size--;
+        return node.element;
     }
 
     @Override
     public boolean remove(T t) {
-        if (t == null) {
-            for (Node<T> x = firsNode; x != null; x = x.next) {
-                if (x.element == null) {
-                    unlink(x);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> x = firsNode; x != null; x = x.next) {
-                if (t.equals(x.element)) {
-                    unlink(x);
-                    return true;
-                }
+        for (int i = 0; i < size; i++) {
+            if (t == getNode(i).element || getNode(i).element.equals(t)) {
+                remove(i);
+                return true;
             }
         }
         return false;
@@ -108,109 +119,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public boolean addAll(int index, Collection<? extends T> c) {
-
-        Object[] a = c.toArray();
-        int numNew = a.length;
-        if (numNew == 0)
-            return false;
-
-        Node<T> pred, succ;
-        if (index == size) {
-            succ = null;
-            pred = lastNode;
+    // присоединяет к последней node
+    public void addToLast(T value) {
+        if (isEmpty()) {
+            Node<T> newNode = new Node<>(null, value, null);
+            firsNode = lastNode = newNode;
         } else {
-            succ = node(index);
-            pred = succ.prev;
-        }
-
-        for (Object o : a) {
-            @SuppressWarnings("unchecked") T e = (T) o;
-            Node<T> newNode = new Node<T>(pred, e, null);
-            if (pred == null)
-                firsNode = newNode;
-            else
-                pred.next = newNode;
-            pred = newNode;
-        }
-
-        if (succ == null) {
-            lastNode = pred;
-        } else {
-            pred.next = succ;
-            succ.prev = pred;
-        }
-
-        size += numNew;
-        modCount++;
-        return true;
-    }
-
-    T unlink(Node<T> x) {
-        // assert x != null;
-        final T element = x.element;
-        final Node<T> next = x.next;
-        final Node<T> prev = x.prev;
-
-        if (prev == null) {
-            firsNode = next;
-        } else {
-            prev.next = next;
-            x.prev = null;
-        }
-
-        if (next == null) {
-            lastNode = prev;
-        } else {
-            next.prev = prev;
-            x.next = null;
-        }
-
-        x.element = null;
-        size--;
-        modCount++;
-        return element;
-    }
-
-
-        public void linkLast(T value) {
-            final Node<T> tempLast = lastNode;
-            final Node<T> newNode = new Node<T>(tempLast, value, null);
+            Node<T> newNode = new Node<>(lastNode, value, null);
+            lastNode.next = newNode;
             lastNode = newNode;
-            if (tempLast == null) {
-                firsNode = newNode;
-            } else {
-                tempLast.next = newNode;
-            }
-            size++;
         }
+        size++;
+    }
 
-        public void linkBefore(T value, Node<T> succ) {
-            final Node<T> pred = succ.prev;
-            final Node<T> newNode = new Node<>(pred, value, succ);
-            succ.prev = newNode;
-            if (pred == null)
-                firsNode = newNode;
-            else
-                pred.next = newNode;
-            size++;
+    // определяется узел, который находиться под нужным индексом
+    Node<T> getNode(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
         }
-
-        Node<T> node(int index) {
-            if (index < (size >> 1)) {
-                Node<T> x = firsNode;
-                for (int i = 0; i < index; i++)
-                    x = x.next;
-                return x;
-            } else {
-                Node<T> x = lastNode;
-                for (int i = size - 1; i > index; i--)
-                    x = x.prev;
-                return x;
-            }
+        int i = 0;
+        Node<T> node = firsNode;
+        while (i < index) {
+            node = node.next;
+            i++;
         }
-
+        return node;
+    }
 }
-
-
-
