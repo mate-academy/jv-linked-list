@@ -130,7 +130,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T removeNode(Node<T> current) {
-        T toReturn = current.item;
         Node<T> next = current.next;
         Node<T> prev = current.prev;
         if (prev == null) {
@@ -145,6 +144,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             next.prev = prev;
             current.next = null;
         }
+        T toReturn = current.item;
         current.item = null;
         size--;
         return toReturn;
