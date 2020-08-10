@@ -19,7 +19,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             linkLast(value);
         } else {
-            linkBefore(value, node(index));
+            linkBefore(value, getNode(index));
         }
     }
 
@@ -37,13 +37,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return node(index).element;
+        return getNode(index).element;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> node = node(index);
+        Node<T> node = getNode(index);
         T oldValue = node.element;
         node.element = value;
         return oldValue;
@@ -52,7 +52,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        return unLink(node(index));
+        return unLink(getNode(index));
     }
 
     @Override
@@ -76,7 +76,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    public static class Node<T> {
+    private static class Node<T> {
         private Node<T> prev;
         private T element;
         private Node<T> next;
@@ -113,18 +113,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void linkBefore(T value, Node<T> node) {
-        Node<T> pred = node.prev;
-        Node<T> newNode = new Node<>(pred, value, node);
+        Node<T> prev = node.prev;
+        Node<T> newNode = new Node<>(prev, value, node);
         node.prev = newNode;
-        if (pred == null) {
+        if (prev == null) {
             first = newNode;
         } else {
-            pred.next = newNode;
+            prev.next = newNode;
         }
         size++;
     }
 
-    private Node<T> node(int index) {
+    private Node<T> getNode(int index) {
         if (index < (size >> 1)) {
             Node<T> node = first;
             for (int i = 0; i < index; i++) {
