@@ -80,7 +80,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> node = getNode(index);
-        unLink(node, index);
+        Node<T> previousNode = node.prev;
+        Node<T> nextNode = node.next;
+        if (index == 0) {
+            first = nextNode;
+        } else {
+            previousNode.next = nextNode;
+        }
+        if (index == size - 1) {
+            last = previousNode;
+        } else {
+            nextNode.prev = previousNode;
+            node.next = null;
+        }
         size--;
         return node.element;
     }
@@ -123,22 +135,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return currentNode;
-    }
-
-    private void unLink(Node<T> node, int index) {
-        Node<T> previousNode = node.prev;
-        Node<T> next = node.next;
-        if (index == 0) {
-            first = next;
-        } else {
-            previousNode.next = next;
-        }
-        if (index == size - 1) {
-            last = previousNode;
-        } else {
-            next.prev = previousNode;
-            node.next = null;
-        }
     }
 
     private void checkIndex(int index) {
