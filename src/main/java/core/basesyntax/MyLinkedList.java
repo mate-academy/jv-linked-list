@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
@@ -124,7 +123,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private boolean isEquals(Node<T> node, T t) {
 
-        return Objects.equals(node.item, t);
+        return node.item == t || node.item != null && node.item.equals(t);
     }
 
     private void removeNode(Node<T> node) {
