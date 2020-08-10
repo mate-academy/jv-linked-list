@@ -16,7 +16,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.element = element;
             this.prev = prev;
             this.next = next;
-
         }
     }
 
