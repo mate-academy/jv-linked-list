@@ -9,19 +9,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-        if (size == 0) {
-            first = new Node<>(value, last, null);
-            size++;
-            return true;
+        if (isEmpty()) {
+            Node<T> currentNode = new Node<>(value, null, null);
+            first = currentNode;
+            last = currentNode;
+        } else {
+            Node<T> currentNode = new Node<>(value, null, last);
+            last.next = currentNode;
+            last = currentNode;
         }
-        if (size == 1) {
-            last = new Node<>(value, null, first);
-            first.next = last;
-            size++;
-            return true;
-        }
-        last.next = new Node<>(value, null, last);
-        last = last.next;
         size++;
         return true;
     }
@@ -59,14 +55,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        isIndexSuits(index);
+        checkIndex(index);
         Node<T> currentNode = findNode(index);
         return currentNode.element;
     }
 
     @Override
     public T set(T value, int index) {
-        isIndexSuits(index);
+        checkIndex(index);
         Node<T> currentNode = findNode(index);
         T returnElement = currentNode.element;
         currentNode.element = value;
@@ -75,7 +71,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        isIndexSuits(index);
+        checkIndex(index);
         if (index == 0) {
             return removeFirstElement();
         }
@@ -83,10 +79,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return removeLastElement();
         }
         Node<T> currentNode = findNode(index);
-        Node<T> cupNode = currentNode.prev;
-        cupNode.next = currentNode.next;
-        cupNode = currentNode.next;
-        cupNode.prev = currentNode.prev;
+        currentNode.prev.next = currentNode.next;
+        currentNode.next.prev = currentNode.prev;
         size--;
         return currentNode.element;
     }
@@ -135,16 +129,32 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNode(int index) {
-        int currentSize = 0;
-        Node<T> currentNode = first;
-        while (currentSize < index) {
-            currentNode = currentNode.next;
-            currentSize++;
+        if (index == 0) {
+            return first;
+        }
+        if (index == size - 1) {
+            return last;
+        }
+        Node<T> currentNode;
+        if (size / 2 >= index) {
+            int currentSize = 0;
+            currentNode = first;
+            while (currentSize < index) {
+                currentNode = currentNode.next;
+                currentSize++;
+            }
+        } else {
+            int currentSize = size - 1;
+            currentNode = last;
+            while (currentSize > index) {
+                currentNode = currentNode.prev;
+                currentSize--;
+            }
         }
         return currentNode;
     }
 
-    private void isIndexSuits(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(
                     "This is index either negative "
