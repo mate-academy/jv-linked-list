@@ -11,13 +11,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean add(T value) {
         if (isEmpty()) {
             Node<T> node = new Node<>(value, null, null);
-            first = node;
-            last = node;
+            first = last = node;
         } else {
             Node<T> node = new Node<>(value, null, last);
             last.next = node;
             last = node;
         }
+
         size++;
         return true;
     }
@@ -56,20 +56,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return getNode(index).value;
     }
 
-    private Node<T> getNode(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException(
-                    "This index is not suitable for the given size");
-        }
-        int i = 0;
-        Node<T> node = first;
-        while (i < index) {
-            node = node.next;
-            i++;
-        }
-        return node;
-    }
-
     @Override
     public T set(T value, int index) {
         Node<T> node = getNode(index);
@@ -82,19 +68,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Node<T> node = getNode(index);
         if (size == 1) {
-
             first = null;
             last = null;
             size--;
             return node.value;
-        }
-        if (index == size - 1) {
+        } else if (index == size - 1) {
             node.prev.next = null;
             last = node.prev;
             size--;
             return node.value;
-        }
-        if (index == 0) {
+        } else if (index == 0) {
             node.next.prev = null;
             first = node.next;
             size--;
@@ -126,6 +109,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private Node<T> getNode(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException(
+                    "This index is not suitable for the given size");
+        }
+        int i = 0;
+        Node<T> node = first;
+        while (i < index) {
+            node = node.next;
+            i++;
+        }
+        return node;
     }
 
     private static class Node<T> {
