@@ -10,28 +10,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean add(T value) {
         Node<T> newElement = new Node<>(last, value, null);
-        last = newElement;
         if (size != 0) {
-            newElement.prev.next = newElement;
+            last.next = newElement;
         } else {
             first = newElement;
         }
+        last = newElement;
         size++;
         return true;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException(
-                    String.format("Index %s out of bounds for length %s", index, size));
-        }
-        if (first == null || index == size) {
+        if (index == size) {
             add(value);
             return;
         }
+        indexCheck(index);
         if (index != 0) {
-            Node<T> currentNode = indexIterator(index).prev;
+            Node<T> currentNode = getNodeByIndex(index).prev;
             Node<T> newElement = new Node<>(currentNode, value, currentNode.next);
             currentNode.next.prev = newElement;
             currentNode.next = newElement;
@@ -54,39 +51,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         indexCheck(index);
-        return indexIterator(index).item;
+        return getNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         indexCheck(index);
-        T oldItem = indexIterator(index).item;
-        indexIterator(index).item = value;
-        return oldItem;
+        Node<T> oldNode = getNodeByIndex(index);
+        T deletedItem = oldNode.item;
+        oldNode.item = value;
+        return deletedItem;
     }
 
     @Override
     public T remove(int index) {
         indexCheck(index);
-        Node<T> currentNode = indexIterator(index);
-        if (index > 0 && index < size - 1) {
-            currentNode.prev.next = currentNode.next;
-            currentNode.next.prev = currentNode.prev;
+        Node<T> currentNode = getNodeByIndex(index);
+        if (currentNode.prev == null) {
+            first = currentNode.next;
         } else {
-            if (size == 1) {
-                first = null;
-                last = null;
-            } else {
-                if (index == 0) {
-                    first = currentNode.next;
-                    currentNode.next.prev = null;
-                } else {
-                    if (index == size - 1) {
-                        last = currentNode.prev;
-                        currentNode.prev.next = null;
-                    }
-                }
-            }
+            currentNode.prev.next = currentNode.next;
+        }
+        if (currentNode.next == null) {
+            last = currentNode.prev;
+        } else {
+            currentNode.next.prev = currentNode.prev;
         }
         size--;
         return currentNode.item;
@@ -95,14 +84,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T t) {
         Node<T> currentNode = first;
-        int counter = 0;
-        while (counter < size) {
+        for (int i = 0; i < size; i++) {
             if (currentNode.item == null ? t == null : currentNode.item.equals(t)) {
-                remove(counter);
+                remove(i);
                 return true;
             }
             currentNode = currentNode.next;
-            counter++;
         }
         return false;
     }
@@ -117,15 +104,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private boolean indexCheck(int index) {
+    private void indexCheck(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException(
                     String.format("Index %s out of bounds for length %s", index, size));
         }
-        return true;
     }
 
-    private Node<T> indexIterator(int index) {
+    private Node<T> getNodeByIndex(int index) {
         if (index <= size / 2) {
             Node<T> currentNode = first;
             int counter = 0;
