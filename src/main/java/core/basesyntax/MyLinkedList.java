@@ -11,18 +11,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size = 0;
     }
 
-    private static class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> prev;
-
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     @Override
     public boolean add(T value) {
         addLast(value);
@@ -35,7 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             addLast(value);
         } else {
             Node<T> currentNode = getNode(index);
-            Node<T> prev = getNode(index).prev;
+            Node<T> prev = currentNode.prev;
             Node<T> newNode = new Node<>(prev, value, currentNode);
             currentNode.prev = newNode;
             if (prev == null) {
@@ -119,7 +107,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (t == get(i) || get(i).equals(t)) {
+            if (t == get(i) || get(i) != null && get(i).equals(t)) {
                 remove(i);
                 return true;
             }
@@ -153,5 +141,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             oldLast.next = tail;
         }
         size++;
+    }
+
+    private static class Node<T> {
+        T item;
+        Node<T> next;
+        Node<T> prev;
+
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
