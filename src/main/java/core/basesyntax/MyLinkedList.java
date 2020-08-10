@@ -27,7 +27,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new ArrayIndexOutOfBoundsException("Out of bounds search index");
         }
         if (index == size) {
-            add(value);
+            linkLast(value);
         } else {
             linkBefore(value, findNode(index));
         }
@@ -102,7 +102,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new MyLinkedList.Node<>(e, null, lastElement);
         last = newNode;
         if (lastElement == null) {
-            first = newNode;
+            first = last;
         } else {
             lastElement.next = newNode;
         }
