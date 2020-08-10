@@ -35,13 +35,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         checkIndex(index);
         if (index == 0) {
-            addBuIndexFirstElement(value);
+            addByIndexFirstElement(value);
             return;
         }
-        Node<T> currentNode = first;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
+        Node<T> currentNode = iterationFromTheFirstElement(index);
         Node<T> addNode = new Node<>(currentNode.prev, value, currentNode);
         currentNode.prev.next = addNode;
         currentNode.prev = addNode;
@@ -72,8 +69,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> returnNode = null;
-        Node<T> node = null;
+        Node<T> returnNode;
+        Node<T> node;
         if (index == 0) {
             return setFirstNode(value);
         }
@@ -198,7 +195,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return returnNode.item;
     }
 
-    private void addBuIndexFirstElement(T value) {
+    private void addByIndexFirstElement(T value) {
         Node<T> node = new Node<>(null, value, first);
         first.prev = node;
         first = node;
