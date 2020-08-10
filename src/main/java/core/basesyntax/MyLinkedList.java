@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> firstListElement;
     private Node<T> lastListElement;
 
-    private static class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> prev;
-
-        Node(Node<T> prev, T item, Node<T> next) {
-            this.item = item;
-            this.prev = prev;
-            this.next = next;
-        }
-    }
-
     @Override
     public boolean add(T value) {
         Node<T> node = new Node<>(lastListElement, value, null);
@@ -97,7 +85,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T t) {
         Node<T> node = firstListElement;
         for (int i = 0; i < size; i++) {
-            if (node.item == t || node.item.equals(t)) {
+            if (node.item == null || node.item == t || node.item.equals(t)) {
                 remove(i);
                 return true;
             }
@@ -124,10 +112,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeFromList(int index) {
-        Node<T> node = firstListElement;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
+        Node<T> node;
+        if (index < size / 2) {
+            node = firstListElement;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+        } else {
+            node = lastListElement;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
         }
         return node;
+    }
+
+    private static class Node<T> {
+        T item;
+        Node<T> next;
+        Node<T> prev;
+
+        Node(Node<T> prev, T item, Node<T> next) {
+            this.item = item;
+            this.prev = prev;
+            this.next = next;
+        }
     }
 }
