@@ -52,17 +52,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     Node<T> node(int index) {
         if (index < (size >> 1)) {
-            Node<T> x = first;
+            Node<T> node = first;
             for (int i = 0; i < index; i++) {
-                x = x.next;
+                node = node.next;
             }
-            return x;
+            return node;
         } else {
-            Node<T> x = last;
+            Node<T> node = last;
             for (int i = size - 1; i > index; i--) {
-                x = x.prev;
+                node = node.prev;
             }
-            return x;
+            return node;
         }
     }
 
@@ -73,18 +73,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public boolean remove(T t) {
-        if (t == null) {
-            for (Node<T> x = first; x != null; x = x.next) {
-                if (x.item == null) {
-                    unlink(x);
+    public boolean remove(T value) {
+        if (value == null) {
+            for (Node<T> node = first; node != null; node = node.next) {
+                if (node.item == null) {
+                    unlink(node);
                     return true;
                 }
             }
         } else {
-            for (Node<T> x = first; x != null; x = x.next) {
-                if (t.equals(x.item)) {
-                    unlink(x);
+            for (Node<T> node = first; node != null; node = node.next) {
+                if (value.equals(node.item)) {
+                    unlink(node);
                     return true;
                 }
             }
@@ -103,9 +103,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> prev;
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
         Node(Node<T> prev, T element, Node<T> next) {
             this.item = element;
@@ -141,24 +141,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    public T unlink(Node<T> x) {
-        final T element = x.item;
-        Node<T> next = x.next;
-        Node<T> prev = x.prev;
+    public T unlink(Node<T> node) {
+        final T element = node.item;
+        Node<T> next = node.next;
+        Node<T> prev = node.prev;
 
         if (prev == null) {
             first = next;
         } else {
             prev.next = next;
-            x.prev = null;
+            node.prev = null;
         }
         if (next == null) {
             last = prev;
         } else {
             next.prev = prev;
-            x.next = null;
+            node.next = null;
         }
-        x.item = null;
+        node.item = null;
         size--;
         return element;
     }
