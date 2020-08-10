@@ -40,25 +40,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (isIndexGood(index) == true) {
-            if (index == size) {
-                add(value);
-            } else {
-                if (index == 0) {
-                    Node<T> node = new Node<>(null, value, first);
-                    first = node;
-                    size++;
-                } else {
-                    Node<T> node = new Node<>(findNodeWithIndex(index).prev,
-                            value, findNodeWithIndex(index));
-                    findNodeWithIndex(index).prev.next = node;
-                    findNodeWithIndex(index).prev = node;
-                    size++;
-                }
-            }
+        isIndexGood(index);
+        if (index == size) {
+            add(value);
+            return;
+        } else if (index == 0) {
+            Node<T> node = new Node<>(null, value, first);
+            first.prev = node;
+            first = node;
+            size++;
+            return;
+        } else {
+            Node<T> node = new Node<>(findNodeWithIndex(index).prev,
+                    value, findNodeWithIndex(index));
+            findNodeWithIndex(index).prev.next = node;
+            findNodeWithIndex(index).prev = node;
+            size++;
             return;
         }
-        throw new IndexOutOfBoundsException("Not right index");
     }
 
     @Override
@@ -71,9 +70,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (isIndexGood(index) != true) {
-            throw new IndexOutOfBoundsException("Wrong index");
-        }
+        isIndexGood(index);
         if (index == size) {
             throw new IndexOutOfBoundsException("Wrong index");
         }
@@ -82,9 +79,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (isIndexGood(index) != true) {
-            throw new IndexOutOfBoundsException("Wring index");
-        }
+        isIndexGood(index);
         if (index == size) {
             throw new IndexOutOfBoundsException("Wring index");
         }
@@ -95,9 +90,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (isIndexGood(index) != true) {
-            throw new IndexOutOfBoundsException("Wrong index");
-        }
+        isIndexGood(index);
         if (index == size) {
             throw new IndexOutOfBoundsException("Wrong index");
         }
@@ -132,7 +125,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T t) {
         Node<T> node = first;
         for (int i = 0; i < size; i++) {
-            if (node.item == t || (node.item != null && node.item.equals(t))) {
+            if (node.item == t
+                    || (node.item != null && node.item.equals(t))) {
                 remove(i);
                 return true;
             }
@@ -152,7 +146,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public boolean isIndexGood(int index) {
-        return (index <= size && index >= 0);
+        if (index > size || index < 0) {
+            throw new IndexOutOfBoundsException("Wrong index");
+        } else {
+            return true;
+        }
     }
 
     public Node<T> findNodeWithIndex(int index) {
