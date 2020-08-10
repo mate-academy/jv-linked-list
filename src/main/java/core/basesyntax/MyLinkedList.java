@@ -122,7 +122,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> nodeByIndex(int index) {
         check(index);
-        Node<T> resultNode = new Node<>(null, null, null);
+        Node<T> resultNode;
         if (index > size / 2) {
             resultNode = last;
             for (int i = size - 1; i > index; i--) {
