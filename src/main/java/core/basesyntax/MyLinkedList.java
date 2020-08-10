@@ -101,7 +101,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if ((index <= listSize >> 1) || listSize <= 2) {
             return getDistantNext(index, headNode);
         } else {
-            return getDistantPrev(listSize - index - 1, tailNode);
+            return getDistantPrev(listSize - index, tailNode);
         }
     }
 
@@ -114,10 +114,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getDistantPrev(int index, Node<T> node) {
+        index--;
         if (index <= 0) {
             return node.prev;
         }
-        index--;
         return getDistantPrev(index, node.prev);
     }
 
