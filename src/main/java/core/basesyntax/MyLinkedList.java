@@ -4,7 +4,7 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
-    private int listSize;
+    private int size;
     private Node<T> headNode;
     private Node<T> tailNode;
 
@@ -57,18 +57,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> nodeToRemove = getNodeByIndex(index);
         nodeToRemove.prev.next = nodeToRemove.next;
         nodeToRemove.next.prev = nodeToRemove.prev;
-        listSize--;
+        size--;
         return nodeToRemove.element;
     }
 
     @Override
     public boolean remove(T t) {
         Node<T> nodeToRemove = headNode.next;
-        for (int i = 0; i < listSize; i++) {
-            if (nodeToRemove.element == t || (t != null && nodeToRemove.element.equals(t))) {
+        for (int i = 0; i < size; i++) {
+            if (nodeToRemove.element == t || (nodeToRemove.element != null
+                    && nodeToRemove.element.equals(t))) {
                 nodeToRemove.prev.next = nodeToRemove.next;
                 nodeToRemove.next.prev = nodeToRemove.prev;
-                listSize--;
+                size--;
                 return true;
             }
             nodeToRemove = nodeToRemove.next;
@@ -78,12 +79,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        return listSize;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return listSize == 0;
+        return size == 0;
     }
 
     private void insertNode(Node<T> newNode, Node<T> currentNode) {
@@ -91,17 +92,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         newNode.prev = currentNode.prev; // <prev> <-> <new>
         newNode.next = currentNode; // <prev> <-> <new> -> <cur>
         currentNode.prev = newNode; // <prev> <-> <new> <-> <cur>
-        listSize++;
+        size++;
     }
 
     private Node<T> getNodeByIndex(int index) {
-        if (listSize == 0) {
+        if (size == 0) {
             return tailNode;
         }
-        if ((index <= listSize >> 1) || listSize <= 2) {
+        if ((index <= size >> 1) || size <= 2) {
             return getDistantNext(index, headNode);
         } else {
-            return getDistantPrev(listSize - index, tailNode);
+            return getDistantPrev(size - index, tailNode);
         }
     }
 
@@ -122,13 +123,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndexForAdd(int index) {
-        if (index > listSize || index < 0) {
+        if (index > size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("List has no such index");
         }
     }
 
     private void checkIndexForRestFunctions(int index) {
-        if (index >= listSize || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("List has no such index");
         }
     }
