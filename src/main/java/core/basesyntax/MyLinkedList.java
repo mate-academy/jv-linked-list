@@ -7,10 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Entry<T> last;
     private int size;
 
-    public MyLinkedList() {
-        this.size = 0;
-    }
-
     @Override
     public boolean add(T value) {
         Entry<T> tempLast = last;
@@ -31,17 +27,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         if (size == index) {
             add(value);
-        } else {
-            Entry<T> tempEntry = getEntryByIndex(index);
-            if (tempEntry.previous == null) {
-                first = new Entry<>(value, null, tempEntry);
-            } else {
-                Entry<T> currentEntry = new Entry<>(value, tempEntry.previous, tempEntry);
-                tempEntry.previous.next = currentEntry;
-                tempEntry.previous = currentEntry;
-            }
-            size++;
+            return;
         }
+        Entry<T> tempEntry = getEntryByIndex(index);
+        if (tempEntry.previous == null) {
+            first = new Entry<>(value, null, tempEntry);
+        } else {
+            Entry<T> currentEntry = new Entry<>(value, tempEntry.previous, tempEntry);
+            tempEntry.previous.next = currentEntry;
+            tempEntry.previous = currentEntry;
+        }
+        size++;
     }
 
     @Override
@@ -70,19 +66,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Entry<T> removedEntry = getEntryByIndex(index);
-        if (removedEntry.previous == null) {
-            first = removedEntry.next;
-        } else {
-            removedEntry.previous.next = removedEntry.next;
-        }
-        if (removedEntry.next == null) {
-            last = removedEntry.previous;
-        } else {
-            removedEntry.next.previous = removedEntry.previous;
-        }
-        size--;
-        return removedEntry.element;
+        Entry<T> entryToRemove = getEntryByIndex(index);
+        unlink(entryToRemove);
+        return entryToRemove.element;
     }
 
     @Override
@@ -106,6 +92,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void unlink(Entry<T> entryToRemove) {
+        if (entryToRemove.previous == null) {
+            first = entryToRemove.next;
+        } else {
+            entryToRemove.previous.next = entryToRemove.next;
+        }
+        if (entryToRemove.next == null) {
+            last = entryToRemove.previous;
+        } else {
+            entryToRemove.next.previous = entryToRemove.previous;
+        }
+        size--;
     }
 
     private Entry<T> getEntryByIndex(int index) {
