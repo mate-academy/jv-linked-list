@@ -78,7 +78,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T t) {
         Node<T> deleteNode = first;
         for (int i = 0; i < size; i++) {
-            if (deleteNode.element == t || t != null && deleteNode.element.equals(t)) {
+            if (deleteNode.element == t || t != null && t.equals(deleteNode.element)) {
                 unlink(deleteNode);
                 return true;
             }
@@ -125,11 +125,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> prevNode = node.prev;
         if (prevNode == null) {
             first = nextNode;
-
         } else {
             prevNode.next = nextNode;
         }
-
         if (nextNode == null) {
             last = prevNode;
         } else {
