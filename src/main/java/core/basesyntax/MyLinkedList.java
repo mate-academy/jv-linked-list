@@ -85,7 +85,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T t) {
         Node<T> currentNode = first;
         for (int i = 0; i < size; i++) {
-            if (t == currentNode.element || currentNode.element.equals(t)) {
+            if (currentNode.element == t || currentNode.element != null
+                    && currentNode.element.equals(t)) {
                 remove(i);
                 return true;
             }
