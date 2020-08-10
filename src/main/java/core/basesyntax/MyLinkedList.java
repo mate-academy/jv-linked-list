@@ -1,21 +1,15 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
-    private T value;
-    private MyLinkedList<T> next;
-    private MyLinkedList<T> prev;
-
     private int size;
-    private int counter;
-    private MyLinkedList<T> first;
-    private MyLinkedList<T> lastElement;
+    private Node<T> first;
+    private Node<T> lastElement;
 
     private void firstElement(T value) {
-        MyLinkedList<T> newElement = new MyLinkedList<>();
+        Node<T> newElement = new Node<>();
         newElement.value = value;
         first = newElement;
         lastElement = newElement;
@@ -27,7 +21,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0) {
             firstElement(value);
         } else {
-            MyLinkedList<T> newElement = new MyLinkedList<>();
+            Node<T> newElement = new Node<>();
             newElement.value = value;
             newElement.prev = lastElement;
             lastElement.next = newElement;
@@ -48,7 +42,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0 || index == size) {
             add(value);
         } else {
-            MyLinkedList<T> newElement = new MyLinkedList<>();
+            Node<T> newElement = new Node<>();
             newElement.value = value;
             newElement.next = getElement(index);
             getElement(index).prev = newElement;
@@ -65,9 +59,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        if (list.isEmpty()) {
-            throw new NoSuchElementException("List is empty");
-        }
         for (int i = 0; i < list.size(); i++) {
             add((T) list.get(i));
         }
@@ -111,7 +102,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T t) {
-        counter = 0;
+        int counter = 0;
         while (counter < size) {
             if (getElement(counter).value == t
                     || (t != null && t.equals(getElement(counter).value))) {
@@ -133,16 +124,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private MyLinkedList<T> getElement(int index) {
+    private Node<T> getElement(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException(index);
         }
-        MyLinkedList<T> element = first;
-        counter = 0;
+        Node<T> element = first;
+        int counter = 0;
         while (counter < index) {
             element = element.next;
             counter++;
         }
         return element;
+    }
+
+    private class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
     }
 }
