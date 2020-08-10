@@ -95,7 +95,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkPositionIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+            throw new IndexOutOfBoundsException(
+                    String.format("Index: " + index + ", Size: " + size));
         }
     }
 
@@ -150,9 +151,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.prev = prev;
             this.next = next;
         }
-    }
-
-    private String outOfBoundsMsg(int index) {
-        return "Index: " + index + ", Size: " + size;
     }
 }
