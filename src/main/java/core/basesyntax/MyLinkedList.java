@@ -10,7 +10,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean add(T value) {
         Node<T> newNode = new Node<>(value, null, null);
-        if ( sizeList == 0) {
+        if (sizeList == 0) {
             head = newNode;
             tail = newNode;
             sizeList++;
