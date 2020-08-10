@@ -95,7 +95,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean isEquals(Node<T> node, T t) {
-
         return node.item == t || node.item != null && node.item.equals(t);
     }
 
