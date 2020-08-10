@@ -21,7 +21,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Node<T> entryPoint = index == size ? header : entry(index);
+        Node<T> entryPoint = index == size ? header : getNodeByIndex(index);
         Node<T> element = new Node<>(value, entryPoint, entryPoint.prev);
         element.prev.next = element;
         element.next.prev = element;
@@ -38,12 +38,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return entry(index).item;
+        return getNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        Node<T> element = entry(index);
+        Node<T> element = getNodeByIndex(index);
         T prevValue = element.item;
         element.item = value;
         return prevValue;
@@ -51,14 +51,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node<T> element = entry(index);
-        element.prev.next = element.next;
-        element.next.prev = element.prev;
-        element.next = null;
-        element.prev = null;
-        T value = element.item;
-        element.item = null;
-        size--;
+        Node<T> element = getNodeByIndex(index);
+        T value = unlink(element);
         return value;
     }
 
@@ -85,7 +79,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node<T> entry(int index) {
+    private T unlink(Node<T> nodeToRemove) {
+        nodeToRemove.prev.next = nodeToRemove.next;
+        nodeToRemove.next.prev = nodeToRemove.prev;
+        nodeToRemove.next = null;
+        nodeToRemove.prev = null;
+        T value = nodeToRemove.item;
+        nodeToRemove.item = null;
+        size--;
+        return value;
+    }
+
+    private Node<T> getNodeByIndex(int index) {
         checkIndex(index);
         Node<T> element = header;
         if (index < (size >> 1)) {
