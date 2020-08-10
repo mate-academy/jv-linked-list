@@ -9,7 +9,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-        Node<T> newNode = new Node(null, value, null);
+        Node<T> newNode = new Node<>(null, value, null);
         if (isEmpty()) {
             first = last = newNode;
         } else {
@@ -53,7 +53,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T get(int index) {
         checkIndex(index);
         Node<T> result = getNode(index);
-        return (T) result.element;
+        return result.element;
     }
 
     @Override
