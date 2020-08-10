@@ -155,13 +155,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkElementIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index out of bounds");
         }
     }
 
     private void checkPositionIndex(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index out of size");
         }
     }
 }
