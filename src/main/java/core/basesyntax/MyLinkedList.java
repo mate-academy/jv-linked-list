@@ -113,12 +113,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> tempNode = getNode(index);
         Node<T> newNode = new Node<>(value, tempNode.previous, tempNode);
         if (tempNode.previous == null) {
-            newNode.next = tempNode;
             tempNode.next.previous = newNode;
             first = newNode;
         } else {
-            newNode.next = tempNode;
-            newNode.previous = tempNode.previous;
             tempNode.previous.next = newNode;
             tempNode.previous = newNode;
         }
@@ -129,8 +126,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(value, last, null);
         if (first == null) {
             newNode.previous = null;
-            newNode.next = null;
-            first = newNode;
             first = newNode;
             last = newNode;
         } else {
@@ -142,9 +137,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         checkIndex(index);
-        Node<T> tempNode = first;
-        for (int i = 0; i < index; i++) {
-            tempNode = tempNode.next;
+        Node<T> tempNode;
+        if (index <= size / 2) {
+            int i = 0;
+            tempNode = first;
+            while (i < index) {
+                tempNode = tempNode.next;
+                i++;
+            }
+            return tempNode;
+        }
+        tempNode = last;
+        int i = size - 1;
+        while (i > index) {
+            tempNode = tempNode.previous;
+            i--;
         }
         return tempNode;
     }
