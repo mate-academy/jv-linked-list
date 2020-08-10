@@ -30,7 +30,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Node<T> nextNode = getNode(index);
         Node<T> prevNode = nextNode.prev;
-        Node<T> newNode = new Node<T>(prevNode, value, nextNode);
+        Node<T> newNode = new Node<>(prevNode, value, nextNode);
         if (index == 0) {
             first = newNode;
         }
