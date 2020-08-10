@@ -16,19 +16,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index != size) {
-            check(index);
-        }
-        if (index == 0) {
+        if (index < 0 || index > size) {
+            throw new ArrayIndexOutOfBoundsException("Non-valid index");
+        } else if (index > 0 && index < size) {
+            Node<T> oldNode = nodeByIndex(index);
+            Node<T> newNode = new Node<>(oldNode.prev, value, oldNode);
+            oldNode.prev.next = newNode;
+            oldNode.prev = newNode;
+            size++;
+        } else if (index == 0) {
             addFirst(value);
         } else if (index == size) {
             addLast(value);
-        } else {
-            Node<T> oldNode = nodeByIndex(index);
-            Node<T> newNode = new Node<>(oldNode.prev, value, oldNode);
-            oldNode.prev = newNode;
-            oldNode.prev.next = newNode;
-            size++;
         }
     }
 
@@ -85,13 +84,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> removableNode = nodeByIndex(index);
             if (t == removableNode.data
                     || t != null && t.equals(removableNode.data)) {
-                if (index != 0) {
-                    removableNode.prev.next = removableNode.next;
-                }
-                if (index != size - 1) {
-                    removableNode.next.prev = removableNode.prev;
-                }
-                size--;
+                remove(index);
                 return true;
             }
         }
@@ -129,10 +122,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> nodeByIndex(int index) {
         check(index);
-        Node<T> resultNode = last;
-        while (index != size - 1) {
-            resultNode = resultNode.prev;
-            index++;
+        Node<T> resultNode = new Node<>(null, null, null);
+        if (index > size / 2) {
+            resultNode = last;
+            for (int i = size - 1; i > index; i--) {
+                resultNode = resultNode.prev;
+            }
+        } else {
+            resultNode = first;
+            for (int i = 0; i < index; i++) {
+                resultNode = resultNode.next;
+            }
         }
         return resultNode;
     }
