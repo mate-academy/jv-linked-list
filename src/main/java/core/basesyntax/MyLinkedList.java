@@ -8,12 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Entry<T> first;
     private Entry<T> last;
 
-    private void checkExeptionFilledElement(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
-    }
-
     @Override
     public boolean add(T value) {
         addInTheEnd(value);
@@ -48,14 +42,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkExeptionFilledElement(index);
+        checkIndex(index);
         Entry<T> element = findByIndex(index);
         return element.element;
     }
 
     @Override
     public T set(T value, int index) {
-        checkExeptionFilledElement(index);
+        checkIndex(index);
         Entry<T> oldElement = findByIndex(index);
         T oldValue = oldElement.element;
         oldElement.element = value;
@@ -64,8 +58,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkExeptionFilledElement(index);
-
+        checkIndex(index);
         return deleteLink(index).element;
     }
 
@@ -111,6 +104,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+    }
+
     public void addInTheEnd(T value) {
         Entry<T> newEntry = new Entry<>(value, null, last);
         if (size == 0) {
@@ -119,7 +118,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             newEntry.prev.next = newEntry;
         }
         last = newEntry;
-        ++size;
+        size++;
     }
 
     private Entry<T> findByIndex(int index) {
