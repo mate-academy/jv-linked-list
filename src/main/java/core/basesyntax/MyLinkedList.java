@@ -8,9 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> lastNode;
     private int count;
 
-    public MyLinkedList() {
-    }
-
     @Override
     public boolean add(T value) {
         Node<T> temp = new Node<>(value, null, lastNode);
@@ -28,21 +25,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         if (index < 0 || index > count) {
             throw new IndexOutOfBoundsException();
+        }
+        if (index == count) {
+            add(value);
         } else {
-            if (index == count) {
-                add(value);
+            Node<T> nextNode = getNodeByIndex(index);
+            Node<T> prewNode = nextNode.prev;
+            Node<T> newNode = new Node<>(value, nextNode, prewNode);
+            if (prewNode == null) {
+                firstNode = newNode;
             } else {
-                Node<T> nextNode = getNodeByIndex(index);
-                Node<T> prewNode = nextNode.prev;
-                Node<T> newNode = new Node<>(value, nextNode, prewNode);
-                if (prewNode == null) {
-                    firstNode = newNode;
-                } else {
-                    prewNode.next = newNode;
-                }
-                nextNode.prev = newNode;
-                count++;
+                prewNode.next = newNode;
             }
+            nextNode.prev = newNode;
+            count++;
         }
     }
 
@@ -87,8 +83,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T t) {
         for (int i = 0; i < count; i++) {
-            if (getNodeByIndex(i).item == t || getNodeByIndex(i) != null
-                    && getNodeByIndex(i).item.equals(t)) {
+            Node<T> node = getNodeByIndex(i);
+            if (node.item == t || node != null
+                    && node.item.equals(t)) {
                 remove(i);
                 return true;
             }
@@ -106,7 +103,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return count == 0;
     }
 
-    public void unlink(Node<T> tempNode) {
+    private void unlink(Node<T> tempNode) {
         if (tempNode.prev == null) {
             firstNode = tempNode.next;
         } else {
