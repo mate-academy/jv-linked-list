@@ -131,7 +131,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return nodeToFind;
     }
 
-    public void indexValidation(int index) {
+    private void indexValidation(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Not valid index.");
         }
