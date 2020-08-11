@@ -9,7 +9,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-        Node<T> current = new Node<T>(tail, value, null);
+        Node<T> current = new Node<>(tail, value, null);
         if (size == 0) {
             head = current;
         } else {
@@ -79,7 +79,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T t) {
         Node<T> node = head;
         for (int i = 0; i < size; i++) {
-            if (node.element == t || node.element.equals(t)) {
+            if (node.element == null || node.element == t || node.element.equals(t)) {
                 remove(i);
                 return true;
             }
@@ -111,7 +111,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-
         Node<T> node;
         if (index < (size >> 1)) {
             node = head;
