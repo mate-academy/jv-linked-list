@@ -4,7 +4,7 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
-    int size;
+    private int size;
     private Entry<T> first;
     private Entry<T> last;
 
@@ -19,17 +19,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkExeption(index);
         if (index == size) {
             addInTheEnd(value);
-        } else {
-            Entry<T> entryAtIndex = findByIndex(index);
-            if (entryAtIndex.prev == null) {
-                first = new Entry<>(value, entryAtIndex, null);
-            } else {
-                Entry<T> newNode = new Entry<T>(value, entryAtIndex, entryAtIndex.prev);
-                newNode.prev.next = newNode;
-                entryAtIndex.prev = newNode;
-            }
-            size++;
+            return;
         }
+        Entry<T> entryAtIndex = findByIndex(index);
+        if (entryAtIndex.prev == null) {
+            first = new Entry<>(value, entryAtIndex, null);
+        } else {
+            Entry<T> newNode = new Entry<T>(value, entryAtIndex, entryAtIndex.prev);
+            newNode.prev.next = newNode;
+            entryAtIndex.prev = newNode;
+        }
+        size++;
     }
 
     @Override
