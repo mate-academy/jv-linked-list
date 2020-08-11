@@ -7,7 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
     private Node<T> first;
     private Node<T> lastElement;
-    private Node<T> element;
 
     @Override
     public boolean add(T value) {
@@ -33,7 +32,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0 || index == size) {
             add(value);
         } else {
-            element = getElement(index);
+            Node<T> element = getElement(index);
             Node<T> newElement = new Node<T>(value, element, element.prev);
             if (index > 0) {
                 element.prev.next = newElement;
@@ -60,7 +59,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        element = getElement(index);
+        Node<T> element = getElement(index);
         T oldValue = element.value;
         element.value = value;
         return oldValue;
@@ -68,7 +67,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        element = getElement(index);
+        Node<T> element = getElement(index);
         T removedItemValue = element.value;
         if (size == 1) {
             first = null;
