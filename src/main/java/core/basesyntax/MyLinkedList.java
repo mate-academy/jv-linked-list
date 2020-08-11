@@ -94,8 +94,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> targetNode;
         while (!(index >= size)) {
             targetNode = findNode(index);
-            if (targetNode.value == null && t == null
-                    || targetNode.value != null && targetNode.value.equals(t)) {
+            if (targetNode.value == t || targetNode.value != null && targetNode.value.equals(t)) {
                 unlink(targetNode);
                 size--;
                 return true;
