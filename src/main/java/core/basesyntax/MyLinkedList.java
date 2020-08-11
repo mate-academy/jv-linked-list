@@ -155,14 +155,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    private T setFirstNode(T value) {
-        Node<T> returnNode = first;
-        Node<T> node = new Node<>(null, value, first.next);
-        first.next.prev = node;
-        first = node;
-        return returnNode.item;
-    }
-
     private void addFirstElement(T value) {
         Node<T> node = new Node<>(null, value, first);
         first.prev = node;
