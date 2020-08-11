@@ -91,7 +91,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (t == getNode(i).value || getNode(i).value.equals(t)) {
+            if (t == getNode(i).value || (t != null && getNode(i).value.equals(t))) {
                 remove(i);
                 return true;
             }
