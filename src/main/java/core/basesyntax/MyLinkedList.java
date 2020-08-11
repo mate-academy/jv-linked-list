@@ -13,13 +13,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
+        Node<T> tmp = tail;
+        tail = new Node<>(value);
+
         if (size == 0) {
-            tail = new Node<>(value);
             head = tail;
             wire(head, tail);
         } else {
-            Node<T> tmp = tail;
-            tail = new Node<>(value);
             wire(tmp, tail);
         }
         size++;
@@ -105,7 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (get(i) == t || get(i).equals(t)) {
+            if (get(i) == t || get(i) != null && get(i).equals(t)) {
                 remove(i);
                 return true;
             }
