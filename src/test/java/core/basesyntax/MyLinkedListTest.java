@@ -184,6 +184,15 @@ public class MyLinkedListTest {
         myLinkedList.get(-1);
     }
 
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testGetByIndexEqualsSize() {
+        myLinkedList.add(FIRST_ITEM);
+        myLinkedList.add(SECOND_ITEM);
+        myLinkedList.add(THIRD_ITEM);
+        Assert.assertEquals(3, myLinkedList.size());
+        myLinkedList.get(3);
+    }
+
     @Test
     public void testSetByIndex() {
         myLinkedList.add(FIRST_ITEM);
@@ -207,6 +216,15 @@ public class MyLinkedListTest {
     @Test(expected = IndexOutOfBoundsException.class)
     public void testSetByNegativeIndex() {
         myLinkedList.set(NEW_ITEM, -1);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testSetByIndexEqualsSize() {
+        myLinkedList.add(FIRST_ITEM);
+        myLinkedList.add(SECOND_ITEM);
+        myLinkedList.add(THIRD_ITEM);
+        Assert.assertEquals(3, myLinkedList.size());
+        myLinkedList.set(FIRST_ITEM, 3);
     }
 
     @Test
@@ -249,6 +267,15 @@ public class MyLinkedListTest {
     @Test(expected = IndexOutOfBoundsException.class)
     public void testRemoveByNegativeIndex() {
         myLinkedList.remove(-1);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testRemoveByIndexEqualsSize() {
+        myLinkedList.add(FIRST_ITEM);
+        myLinkedList.add(SECOND_ITEM);
+        myLinkedList.add(THIRD_ITEM);
+        Assert.assertEquals(3, myLinkedList.size());
+        myLinkedList.remove(3);
     }
 
     @Test

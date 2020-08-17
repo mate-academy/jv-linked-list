@@ -1,2 +1,3 @@
 # jv-linked-list
-Дано класс MyLinkedList который имплементирует интерфейс MyLinkedListInterface. Реализовать в нём свой LinkedList 
+
+Given `MyLinkedList` class implementing `MyLinkedListInterface`, implement all the required methods. 
