@@ -34,7 +34,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public boolean remove(T t) {
+    public boolean remove(T object) {
         return false;
     }
 
