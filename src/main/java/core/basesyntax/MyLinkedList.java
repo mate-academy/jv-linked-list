@@ -9,7 +9,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        public Node(Node<T> next, T item, Node<T> prev) {
+        public Node(Node<T> prev, T item, Node<T> next) {
             this.item = item;
             this.next = next;
             this.prev = prev;
@@ -26,7 +26,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-
+        if (size == 0) {
+            first = new Node<>(null, value, null);
+            last = first;
+            size++;
+            return true;
+        }
+        Node<T> preLast = last;
+        last = new Node<>(preLast, value, null);
+        size++;
         return true;
     }
 
