@@ -67,12 +67,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> remove = getNode(index);
-        remove.prev.next = remove.next.prev;
-        remove.next.prev = remove.prev.next;
+        removeNode(remove);
         size--;
         return remove.item;
     }
-
+    //+
     @Override
     public boolean remove(T object) {
         Node<T> node = first;
@@ -81,6 +80,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         if (node.item.equals(object)) {
             removeNode(node);
+            size--;
             return true;
         }
         return false;
