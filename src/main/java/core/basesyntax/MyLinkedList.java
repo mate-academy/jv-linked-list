@@ -54,13 +54,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         validateIndex(index);
+
+
+
         return null;
     }
 
     @Override
     public T set(T value, int index) {
         validateIndex(index);
-        return null;
+
+        T removed;
+        Node<T> node;
+
+        if (size - index > size >> 1) {
+            int iteration = 0;
+            node = first;
+            while (iteration != index) {
+                node = node.next;
+            }
+            removed = node.item;
+            node.item = value;
+            return removed;
+        }
+        int iteration = size - 1;
+        node = last;
+        while (iteration != index) {
+            node = node.prev;
+        }
+        removed = node.item;
+        node.item = value;
+        return removed;
     }
 
     @Override
@@ -92,5 +116,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0) {
             throw new IndexOutOfBoundsException("Given index is less than 0");
         }
+    }
+
+    private Node<T> getNode(int index) {
+        validateIndex(index);
+        Node<T> node;
+        if (size - index > size >> 1) {
+            int iteration = 0;
+            node = first;
+            while (iteration++ != index) {
+                node = node.next;
+            }
+            return node;
+        }
+        int iteration = size - 1;
+        node = last;
+        while (iteration++ != index) {
+            node = node.prev;
+        }
+        return node;
     }
 }
