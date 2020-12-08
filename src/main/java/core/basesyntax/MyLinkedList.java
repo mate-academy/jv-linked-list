@@ -75,6 +75,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
+        Node<T> node = first;
+        while (!node.item.equals(object)) {
+            node = node.next;
+        }
         return false;
     }
     //+
@@ -115,5 +119,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node = node.prev;
         }
         return node;
+    }
+
+    private void removeNode(Node<T> node) {
+        node.prev.next = node.next.prev;
+        node.next.prev = node.prev.next;
     }
 }
