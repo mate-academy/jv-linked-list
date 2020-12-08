@@ -25,8 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = new Node<>(null, value, null);
             tail = head;
         } else {
-            Node<T> element = new Node<>(tail, value, null);
-            tail = element;
+            tail = new Node<>(tail, value, null);
         }
         size++;
         return true;
@@ -34,17 +33,39 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException();
+        }
+        Node<T> current = head;
+        int count = 0;
+        while (count < index) {
+            current = current.next;
+            count++;
+        }
+        Node<T> previous = current.prev;
+        Node<T> element = new Node<>(previous, value, current);
+        previous.next = element;
+        current.prev = element;
+        size++;
     }
 
     @Override
     public boolean addAll(List<T> list) {
-        return false;
+        for (T element : list) {
+            add(element);
+        }
+        return true;
     }
 
     @Override
     public T get(int index) {
-        return null;
+        Node<T> current = head;
+        int count = 0;
+        while (count < index) {
+            current = current.next;
+            count++;
+        }
+        return current.item;
     }
 
     @Override
