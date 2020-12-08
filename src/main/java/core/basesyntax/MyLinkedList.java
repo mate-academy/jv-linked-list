@@ -36,21 +36,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         isValidIndex(index, true);
-        Node<T> iterationNode = head;
-        Node<T> newNode;
-        if (isEmpty()) {
-            this.add(value);
-        } else if (index == size) {
+        if (isEmpty() || (index == size)) {
             this.add(value);
         } else {
+            Node<T> iterationNode = head;
+            Node<T> newNode;
             for (int i = 0; i < index; i++) {
                 iterationNode = iterationNode.next;
             }
-            if (iterationNode == this.tail) {
-                newNode = new Node<>(iterationNode.prev, value, iterationNode);
-                iterationNode.prev.next = newNode;
-                iterationNode.prev = newNode;
-            } else if (iterationNode == this.head) {
+            if (iterationNode == this.head) {
                 newNode = new Node<>(null, value, iterationNode);
                 iterationNode.prev = newNode;
                 this.head = newNode;
@@ -121,9 +115,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             for (int i = 0; i < this.size; i++) {
                 if (iterationNode == null) {
-                    return true;
-                } else if (iterationNode.value == null) {
-                    continue;
+                    return false;
                 } else if (iterationNode.value.equals(object)) {
                     size--;
                     return analyzeFoundNode(iterationNode) != null;
