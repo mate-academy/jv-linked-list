@@ -69,4 +69,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean isEmpty() {
         return first == null;
     }
+
+    private void validateIndex(int index) {
+        if (index >= size) {
+            throw new IndexOutOfBoundsException("Given index "
+                    + index + " isn't within list size " + size);
+        }
+        if (index < 0) {
+            throw new IndexOutOfBoundsException("Given index is less than 0");
+        }
+    }
 }
