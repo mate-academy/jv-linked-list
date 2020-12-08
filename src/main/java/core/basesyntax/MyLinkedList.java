@@ -53,7 +53,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        validateIndex(index);
 
 
 
@@ -62,27 +61,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        validateIndex(index);
-
-        T removed;
-        Node<T> node;
-
-        if (size - index > size >> 1) {
-            int iteration = 0;
-            node = first;
-            while (iteration != index) {
-                node = node.next;
-            }
-            removed = node.item;
-            node.item = value;
-            return removed;
-        }
-        int iteration = size - 1;
-        node = last;
-        while (iteration != index) {
-            node = node.prev;
-        }
-        removed = node.item;
+        Node<T> node = getNode(index);
+        T removed = node.item;
         node.item = value;
         return removed;
     }
