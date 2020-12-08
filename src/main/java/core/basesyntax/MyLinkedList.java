@@ -34,9 +34,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new ArrayIndexOutOfBoundsException("Incorrect index");
         }
         if (size == 0) {
-            head = new Node<>(null, value, null);
-            tail = head;
-            size++;
+            add(value);
             return;
         }
         if (index == 0) {
