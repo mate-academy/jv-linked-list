@@ -26,7 +26,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-        return false;
+
+        return true;
     }
 
     @Override
@@ -66,6 +67,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return first == null;
     }
 }
