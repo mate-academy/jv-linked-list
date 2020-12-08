@@ -23,7 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public MyLinkedList() {
         size = 0;
     }
-
+    //+
     @Override
     public boolean add(T value) {
         if (size == 0) {
@@ -42,7 +42,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         validateIndex(index);
     }
-
+    //+
     @Override
     public boolean addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
@@ -50,12 +50,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return true;
     }
-
+    //+
     @Override
     public T get(int index) {
         return getNode(index).item;
     }
-
+    //+
     @Override
     public T set(T value, int index) {
         Node<T> node = getNode(index);
@@ -63,23 +63,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         node.item = value;
         return removed;
     }
-
+    //+
     @Override
     public T remove(int index) {
-        validateIndex(index);
-        return null;
+        Node<T> remove = getNode(index);
+        remove.prev.next = remove.next.prev;
+        remove.next.prev = remove.prev.next;
+        size--;
+        return remove.item;
     }
 
     @Override
     public boolean remove(T object) {
         return false;
     }
-
+    //+
     @Override
     public int size() {
         return size;
     }
-
+    //+
     @Override
     public boolean isEmpty() {
         return first == null;
