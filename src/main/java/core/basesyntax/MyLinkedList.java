@@ -40,7 +40,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-
+        validateIndex(index);
     }
 
     @Override
@@ -53,16 +53,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
+        validateIndex(index);
         return null;
     }
 
     @Override
     public T set(T value, int index) {
+        validateIndex(index);
         return null;
     }
 
     @Override
     public T remove(int index) {
+        validateIndex(index);
         return null;
     }
 
