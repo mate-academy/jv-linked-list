@@ -20,6 +20,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size;
 
+    public MyLinkedList() {
+        size = 0;
+    }
+
     @Override
     public boolean add(T value) {
         return false;
