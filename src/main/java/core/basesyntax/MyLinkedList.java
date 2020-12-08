@@ -3,6 +3,19 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+
+    private static class Node<T> {
+        T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(Node<T> next, T item, Node<T> prev) {
+            this.item = item;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+
     @Override
     public boolean add(T value) {
         return false;
