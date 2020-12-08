@@ -79,6 +79,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (!node.item.equals(object)) {
             node = node.next;
         }
+        if (node.item.equals(object)) {
+            removeNode(node);
+            return true;
+        }
         return false;
     }
     //+
