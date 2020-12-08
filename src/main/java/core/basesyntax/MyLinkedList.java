@@ -45,7 +45,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        return false;
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
+        return true;
     }
 
     @Override
