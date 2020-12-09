@@ -33,8 +33,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return true;
         }
         Node<T> preLast = last;
-        last = new Node<>(preLast, value, null);
-        preLast.next = last;
+        preLast.next = new Node<>(preLast, value, null);
+        last = preLast.next;
         size++;
         return true;
     }
@@ -84,25 +84,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Node<T> remove = getNode(index);
         removeNode(remove);
-        size--;
         return remove.item;
     }
     //+
     @Override
     public boolean remove(T object) {
         if (isEmpty()) {
+            return true;
+        } else if (object == null) {
+            for (Node<T> node = first; node != last; node = node.next) {
+                if (null == node.item) {
+                    removeNode(node);
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            for (Node<T> node = first; node != last; node = node.next) {
+                if (object.equals(node.item)) {
+                    removeNode(node);
+                    return true;
+                }
+            }
             return false;
         }
-        Node<T> node = first;
-        while (!node.item.equals(object)) {
-            node = node.next;
-        }
-        if (node.item.equals(object)) {
-            removeNode(node);
-            size--;
-            return true;
-        }
-        return false;
     }
     //+
     @Override
@@ -140,15 +145,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
+    private T removeFirst(){
+        Node<T> node = first;
+        first = first.next;
+        first.prev = null;
+        return node.item;
+    }
+
+    private T removeLast(){
+        Node<T> node = last;
+        last = last.prev;
+        last.next = null;
+        return node.item;
+    }
+
     private void removeNode(Node<T> node) {
         if (first == node) {
-            first = first.next;
-            first.prev = null;
+            removeFirst();
+            size--;
         } else if (node == last) {
-            last = last.prev;
-            last.next = null;
+            removeLast();
+            size--;
         } else {
-
+            node.prev.next = node.next.prev;
+            size--;
         }
     }
 }
