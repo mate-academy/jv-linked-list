@@ -94,32 +94,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIncludeIndex(index);
-        
-        //if (index == 0) {
-        //    currentNode = head;
-        //    Node<T> nextNode = currentNode.next;
-        //    nextNode.prev = null;
-        //    head = nextNode;
-        //    size--;
-        //    return currentNode.value;
-        //}
-        //if (index == size - 1) {
-        //    currentNode = tail;
-        //    Node<T> prevNode = currentNode.prev;
-        //    prevNode.next = null;
-        //    tail = currentNode;
-        //    size--;
-        //    return currentNode.value;
-        //}
-        
-        Node<T> currentNode;
         if (size == 1 && index == 0) {
             head = null;
             tail = null;
             size = 0;
         }
         int i = 0;
-        currentNode = head;
+        Node<T> currentNode = head;
         while (currentNode != null) {
             if (i == index) {
                 Node<T> nextNode = currentNode.next;
@@ -177,22 +158,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 prevNode.next = nextNode;
                 size--;
                 return true;
-/*
-                Node<T> nextNode = currentNode.next;
-                Node<T> prevNode = currentNode.prev;
-                if (nextNode != null) {
-                    nextNode.next = prevNode;
-                } else {
-                    tail = prevNode;
-                }
-                if (prevNode != null) {
-                    prevNode.next = nextNode;
-                } else {
-                    head = nextNode;
-                }
-                size--;
-                return true;
-*/
             }
             currentNode = currentNode.next;
         }
@@ -207,6 +172,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+    
+    public T getFirst() {
+        return head.value;
+    }
+    
+    public T getLast() {
+        return tail.value;
     }
     
     private Node<T> getNode(int index) {
