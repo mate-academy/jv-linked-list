@@ -173,7 +173,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             removeLast();
             size--;
         } else {
-            node.prev.next = node.next.prev;
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
             size--;
         }
     }
