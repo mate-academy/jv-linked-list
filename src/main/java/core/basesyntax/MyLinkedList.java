@@ -92,7 +92,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (isEmpty()) {
             return true;
         } else if (object == null) {
-            for (Node<T> node = first; node != last; node = node.next) {
+            for (Node<T> node = first; node != null; node = node.next) {
                 if (null == node.item) {
                     removeNode(node);
                     return true;
@@ -100,7 +100,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             return false;
         } else {
-            for (Node<T> node = first; node != last; node = node.next) {
+            for (Node<T> node = first; node != null; node = node.next) {
                 if (object.equals(node.item)) {
                     removeNode(node);
                     return true;
