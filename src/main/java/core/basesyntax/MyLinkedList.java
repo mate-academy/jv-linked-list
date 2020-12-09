@@ -50,11 +50,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size++;
         } else {
             validateIndex(index);
-            Node<T> nodeIndex = getNode(index);
-            Node<T> prevNodeIndex = nodeIndex.prev;
-            Node<T> add = new Node<>(prevNodeIndex, value, nodeIndex);
-            prevNodeIndex.next = add;
-            nodeIndex.prev = add;
+            Node<T> node = getNode(index);
+            Node<T> add = new Node<>(node.prev, value, node);
+            node.prev.next = add;
+            node.prev = add;
             size++;
         }
     }
