@@ -23,7 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public MyLinkedList() {
         size = 0;
     }
-    //+
+
     @Override
     public boolean add(T value) {
         if (size == 0) {
@@ -38,10 +38,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
         return true;
     }
-    //+
+
     @Override
     public void add(T value, int index) {
-        if((isEmpty() && index == 0) || index == size) {
+        if ((isEmpty() && index == 0) || index == size) {
             add(value);
         } else if (index == 0) {
             Node<T> add = new Node<>(null, value, first);
@@ -57,7 +57,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size++;
         }
     }
-    //+
+
     @Override
     public boolean addAll(List<T> list) {
         for (T t : list) {
@@ -65,12 +65,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return true;
     }
-    //+
+
     @Override
     public T get(int index) {
         return getNode(index).item;
     }
-    //+
+
     @Override
     public T set(T value, int index) {
         Node<T> node = getNode(index);
@@ -78,14 +78,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         node.item = value;
         return removed;
     }
-    //+
+
     @Override
     public T remove(int index) {
         Node<T> remove = getNode(index);
         removeNode(remove);
         return remove.item;
     }
-    //+
+
     @Override
     public boolean remove(T object) {
         if (isEmpty()) {
@@ -108,12 +108,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return false;
         }
     }
-    //+
+
     @Override
     public int size() {
         return size;
     }
-    //+
+
     @Override
     public boolean isEmpty() {
         return first == null;
@@ -144,7 +144,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    private T removeFirst(){
+    private T removeFirst() {
         if (size == 1) {
             T item = first.item;
             first = null;
@@ -157,7 +157,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node.item;
     }
 
-    private T removeLast(){
+    private T removeLast() {
         Node<T> node = last;
         last = last.prev;
         last.next = null;
