@@ -90,6 +90,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     //+
     @Override
     public boolean remove(T object) {
+        if (isEmpty()) {
+            return false;
+        }
         Node<T> node = first;
         while (!node.item.equals(object)) {
             node = node.next;
