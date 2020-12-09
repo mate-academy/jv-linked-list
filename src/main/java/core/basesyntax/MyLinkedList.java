@@ -34,29 +34,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         Node<T> preLast = last;
         last = new Node<>(preLast, value, null);
+        preLast.next = last;
         size++;
         return true;
     }
     //+
     @Override
     public void add(T value, int index) {
-        if (index == 0) {
-            Node<T> add = new Node<>(null, value, null);
+        if((isEmpty() && index == 0) || index == size) {
+            add(value);
+        } else if (index == 0) {
+            Node<T> add = new Node<>(null, value, first);
             first.prev = add;
-            add.next = first;
             first = add;
             size++;
-            return;
+        } else {
+            validateIndex(index);
+            Node<T> nodeIndex = getNode(index);
+            Node<T> prevNodeIndex = nodeIndex.prev;
+            Node<T> add = new Node<>(prevNodeIndex, value, nodeIndex);
+            prevNodeIndex.next = add;
+            nodeIndex.prev = add;
+            size++;
         }
-        if (index == size - 1) {
-            add(value);
-        }
-        Node<T> nodeIndex = getNode(index);
-        Node<T> prevNodeIndex = nodeIndex.prev;
-        Node<T> add = new Node<>(prevNodeIndex, value, nodeIndex);
-        prevNodeIndex.next = add;
-        nodeIndex.prev = add;
-        size++;
     }
     //+
     @Override
@@ -113,12 +113,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void validateIndex(int index) {
-        if (index >= size) {
-            throw new IndexOutOfBoundsException("Given index "
-                    + index + " isn't within list size " + size);
-        }
-        if (index < 0) {
-            throw new IndexOutOfBoundsException("Given index is less than 0");
+        if (index >= size || index < 0 || isEmpty()) {
+            throw new IndexOutOfBoundsException();
         }
     }
 
@@ -135,14 +131,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         int iteration = size - 1;
         node = last;
-        while (iteration++ != index) {
+        while (iteration-- != index) {
             node = node.prev;
         }
         return node;
     }
 
     private void removeNode(Node<T> node) {
-        node.prev.next = node.next.prev;
-        node.next.prev = node.prev.next;
+        if (first == node) {
+            first = first.next;
+            first.prev = null;
+        } else if (node == last) {
+            last = last.prev;
+            last.next = null;
+        } else {
+
+        }
     }
 }
