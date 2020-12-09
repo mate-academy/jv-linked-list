@@ -119,6 +119,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return first == null;
     }
 
+    public void removeFirst() {
+        if (size == 1) {
+            T item = first.item;
+            first = null;
+            last = null;
+            return;
+        }
+        Node<T> node = first;
+        first = first.next;
+        first.prev = null;
+    }
+
+    public void removeLast() {
+        Node<T> node = last;
+        last = last.prev;
+        last.next = null;
+    }
+
     private void validateIndex(int index) {
         if (index >= size || index < 0 || isEmpty()) {
             throw new IndexOutOfBoundsException();
@@ -142,26 +160,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node = node.prev;
         }
         return node;
-    }
-
-    private T removeFirst() {
-        if (size == 1) {
-            T item = first.item;
-            first = null;
-            last = null;
-            return item;
-        }
-        Node<T> node = first;
-        first = first.next;
-        first.prev = null;
-        return node.item;
-    }
-
-    private T removeLast() {
-        Node<T> node = last;
-        last = last.prev;
-        last.next = null;
-        return node.item;
     }
 
     private void removeNode(Node<T> node) {
