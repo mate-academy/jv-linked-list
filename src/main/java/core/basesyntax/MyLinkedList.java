@@ -37,7 +37,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
         return true;
     }
-
+    //+
     @Override
     public void add(T value, int index) {
         if (index == 0) {
@@ -45,11 +45,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first.prev = add;
             add.next = first;
             first = add;
+            size++;
             return;
         }
         if (index == size - 1) {
             add(value);
         }
+        Node<T> nodeIndex = getNode(index);
+        Node<T> prevNodeIndex = nodeIndex.prev;
+        Node<T> add = new Node<>(prevNodeIndex, value, nodeIndex);
+        prevNodeIndex.next = add;
+        nodeIndex.prev = add;
+        size++;
     }
     //+
     @Override
