@@ -32,8 +32,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-
-
+        Node<T> node = getNodeByIndex(index);
+        Node<T> newNode = new Node<>(node.prev, value, node);
+        newNode.prev.next = newNode;
+        node.prev = newNode;
+        size++;
     }
 
     @Override
@@ -91,6 +94,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
+        if (!isIndexValid(index)) {
+            throw new IndexOutOfBoundsException();
+        }
         Node<T> result = head;
         for (int i = 0; i != index; i++) {
             result = result.next;
