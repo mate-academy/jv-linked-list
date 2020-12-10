@@ -144,7 +144,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private int getItemIndex(T value) {
         for (int i = 0; i < size; i++) {
-            if (value == getNodeByIndex(i).item) {
+            if (value == getNodeByIndex(i).item || value != null
+                    && value.equals(getNodeByIndex(i).item)) {
                 return i;
             }
         }
