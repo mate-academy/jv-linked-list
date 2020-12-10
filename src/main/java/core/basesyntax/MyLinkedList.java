@@ -3,13 +3,31 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> head;
     private Node<T> tail;
 
+    public MyLinkedList() {
+        size = 0;
+        head = null;
+        tail = null;
+    }
+
     @Override
     public boolean add(T value) {
-        return false;
+        if (size == 0) {
+            head = new Node<>(null, value, null);
+            tail = head;
+        }
+        if (size == 1) {
+            tail = new Node<>(head, value, null);
+            head.next = tail;
+        } else {
+            tail.next = new Node<>(tail, value, null);
+            tail = tail.next;
+        }
+        size++;
+        return true;
     }
 
     @Override
