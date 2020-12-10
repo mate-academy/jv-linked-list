@@ -42,7 +42,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return null;
+        if (!isIndexValid(index)) {
+            throw new RuntimeException();
+        }
+        T value = head.item;
+        Node<T> tempNode = head.next;
+        for (int i = 0; i != index; i++) {
+            value = tempNode.item;
+            tempNode = tempNode.next;
+        }
+        return value;
     }
 
     @Override
@@ -80,5 +89,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.item = item;
             this.next = next;
         }
+    }
+
+    private boolean isIndexValid(int index) {
+        return index >= 0 && index < size;
     }
 }
