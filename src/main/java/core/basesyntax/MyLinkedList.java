@@ -8,53 +8,42 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
 
     public MyLinkedList() {
-        this.size = 0;
-    }
-
-    private boolean isValidIndex(int index, boolean isNextIndexValid) {
-        if (isNextIndexValid && index == size) {
-            return true;
-        } else if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index for LinkedList with size " + size);
-        }
-        return false;
+        size = 0;
     }
 
     @Override
     public boolean add(T value) {
-        Node<T> newNode = new Node<>(this.tail, value, null);
-        if (this.tail == null) {
-            this.head = newNode;
-        } else {
-            this.tail.next = newNode;
-        }
-        this.tail = newNode;
-        size++;
+        this.add(value, size);
         return true;
     }
 
     @Override
     public void add(T value, int index) {
-        isValidIndex(index, true);
-        if (isEmpty() || (index == size)) {
-            this.add(value);
+        Node<T> newNode;
+        if (size == 0 && index == 0) {
+            newNode = new Node<>(null, value, null);
+            head = tail = newNode;
+        } else if (index == size) {
+            newNode = new Node<>(tail, value, null);
+            tail.next = newNode;
+            tail = newNode;
         } else {
+            isValidIndex(index);
             Node<T> iterationNode = head;
-            Node<T> newNode;
             for (int i = 0; i < index; i++) {
                 iterationNode = iterationNode.next;
             }
-            if (iterationNode == this.head) {
+            if (iterationNode == head) {
                 newNode = new Node<>(null, value, iterationNode);
                 iterationNode.prev = newNode;
-                this.head = newNode;
+                head = newNode;
             } else {
                 newNode = new Node<>(iterationNode.prev, value, iterationNode);
                 iterationNode.prev.next = newNode;
                 iterationNode.prev = newNode;
             }
-            size++;
         }
+        size++;
     }
 
     @Override
@@ -67,7 +56,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        isValidIndex(index, false);
+        isValidIndex(index);
         Node<T> iterationNode = head;
         for (int i = 0; i < index; i++) {
             iterationNode = iterationNode.next;
@@ -77,7 +66,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        isValidIndex(index, false);
+        isValidIndex(index);
         Node<T> iterationNode = head;
         for (int i = 0; i < index; i++) {
             iterationNode = iterationNode.next;
@@ -89,12 +78,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        isValidIndex(index, false);
+        isValidIndex(index);
         Node<T> iterationNode = head;
         for (int i = 0; i < index; i++) {
             iterationNode = iterationNode.next;
         }
-        analyzeFoundNode(iterationNode);
+        reassignReferences(iterationNode);
         size--;
         return iterationNode.value;
     }
@@ -102,56 +91,45 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> iterationNode = head;
-        if (object == null) {
-            while (iterationNode != null && iterationNode.value != null) {
-                iterationNode = iterationNode.next;
-            }
-            if (analyzeFoundNode(iterationNode) != null) {
+        while (iterationNode != null) {
+            if ((object == null && iterationNode.value == null)
+                    || (iterationNode.value != null && iterationNode.value.equals(object))) {
+                reassignReferences(iterationNode);
                 size--;
                 return true;
-            } else {
-                return false;
             }
-        } else {
-            for (int i = 0; i < this.size; i++) {
-                if (iterationNode == null) {
-                    return false;
-                } else if (iterationNode.value.equals(object)) {
-                    size--;
-                    return analyzeFoundNode(iterationNode) != null;
-                }
-                iterationNode = iterationNode.next;
-            }
+            iterationNode = iterationNode.next;
         }
         return false;
     }
 
-    private Boolean analyzeFoundNode(Node<T> node) {
-        if (node == null) {
-            return null;
-        } else if (node == this.tail) {
-            this.tail.next = null;
-            this.tail = node.prev;
-            return true;
+    private void reassignReferences(Node<T> node) {
+        if (node == tail) {
+            tail.next = null;
+            tail = node.prev;
         } else if (node == head) {
-            this.head = node.next;
-            this.head.prev = null;
-            return true;
+            head = node.next;
+            head.prev = null;
         } else {
             node.prev.next = node.next;
             node.next.prev = node.prev;
-            return true;
+        }
+    }
+
+    private void isValidIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Invalid index for LinkedList with size " + size);
         }
     }
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return this.size == 0;
+        return size == 0;
     }
 
     private static class Node<T> {
