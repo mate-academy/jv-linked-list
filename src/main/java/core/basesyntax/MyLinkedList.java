@@ -21,16 +21,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
+        Node<T> newNode;
         if (size == 0) {
-            Node<T> currentNode = new Node<>(null, value, null);
-            head = currentNode;
-            tail = currentNode;
+            newNode = new Node<>(null, value, null);
+            head = newNode;
+            tail = newNode;
             size++;
             return true;
         }
-        Node<T> currentNode = new Node<>(tail, value, null);
-        tail.next = currentNode;
-        tail = currentNode;
+        newNode = new Node<>(tail, value, null);
+        tail.next = newNode;
+        tail = newNode;
         size++;
         return true;
     }
@@ -38,7 +39,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         Node<T> newNode;
-        int startIndex;
         if (index == size) {
             add(value);
             return;
@@ -115,7 +115,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        int currentIndex = 0;
         Node<T> currentNode = head;
         for (int i = 0; i < size; i++) {
             if (currentNode.value == object
@@ -124,7 +123,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 return true;
             }
             currentNode = currentNode.next;
-            currentIndex++;
         }
         return false;
     }
