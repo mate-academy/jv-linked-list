@@ -33,17 +33,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new ArrayIndexOutOfBoundsException("Incorrect index");
         }
-        if (size == 0) {
+        if (size == 0 || size == index) {
             add(value);
             return;
         }
         if (index == 0) {
             head = new Node<>(null, value, head);
             size++;
-            return;
-        }
-        if (size == index) {
-            add(value);
             return;
         }
         Node<T> localHead = head;
@@ -60,32 +56,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T t : list) {
+            add(t);
         }
         return true;
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Incorrect index");
-        }
+        checkIndex(index);
         Node<T> localHead = head;
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                return localHead.item;
-            }
+        for (int i = 0; i < index; i++) {
             localHead = localHead.next;
         }
-        return null;
+        return localHead.item;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Incorrect index");
-        }
+        checkIndex(index);
         Node<T> localHead = head;
         for (int i = 0; i < size; i++) {
             if (i == index) {
@@ -100,15 +89,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Incorrect index");
-        }
+        checkIndex(index);
         if (index == 0) {
             T deletedValue = head.item;
-            if (size == 1) {
-                head = null;
-                tail = null;
-                size = 0;
+            if (removeIfSizeOne()) {
                 return deletedValue;
             }
             head.next.prev = null;
@@ -141,11 +125,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> localHead = head;
         for (int i = 0; i < size; i++) {
-            if (localHead.item == object || localHead.item.equals(object)) {
-                if (size == 1) {
-                    head = null;
-                    tail = null;
-                    size--;
+            if (localHead.item == object || (localHead.item != null
+                    && localHead.item.equals(object))) {
+                if (removeIfSizeOne()) {
                     return true;
                 }
                 if (i == 0) {
@@ -176,6 +158,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private boolean removeIfSizeOne() {
+        if (size == 1) {
+            head = null;
+            tail = null;
+            size = 0;
+            return true;
+        }
+        return false;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Incorrect index");
+        }
     }
 
     private class Node<T> {
