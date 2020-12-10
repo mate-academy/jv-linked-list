@@ -38,6 +38,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         Node<T> node = getNodeByIndex(index);
         Node<T> newNode = new Node<>(node.prev, value, node);
+        if (index == 0) {
+            head.prev = newNode;
+            head = newNode;
+            size++;
+            return;
+        }
         newNode.prev.next = newNode;
         node.prev = newNode;
         size++;
