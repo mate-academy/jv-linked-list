@@ -41,7 +41,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        return false;
+        for (T element: list) {
+            tail.next = new Node<>(tail.prev, element, null);
+            tail = tail.next;
+        }
+        size += list.size();
+        return true;
     }
 
     @Override
