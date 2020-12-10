@@ -51,9 +51,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (!isIndexValid(index)) {
+        /*if (!isIndexValid(index)) {
             throw new IndexOutOfBoundsException();
-        }
+        }*/
         return getNodeByIndex(index).item;
     }
 
@@ -64,12 +64,36 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        return null;
+        T value = get(index);
+        if (index == 0 && size == 1) {
+            head = null;
+            tail = null;
+            size = 0;
+            return value;
+        }
+        Node<T> node = getNodeByIndex(index);
+        if (index == 0) {
+            head = null;
+            head = node.next;
+        } else if (index == size - 1) {
+            tail = null;
+            tail = node.prev;
+        } else {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        }
+        size--;
+        return value;
     }
 
     @Override
     public boolean remove(T object) {
-        return false;
+        int index = getItemIndex(object);
+        if (index == -1) {
+            return false;
+        }
+        remove(index);
+        return true;
     }
 
     @Override
@@ -107,5 +131,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             result = result.next;
         }
         return result;
+    }
+
+    /*private boolean contains(T value) {
+        for (int i = 0; i < size; i++) {
+            if (value == getNodeByIndex(i)) {
+                return true;
+            }
+        }
+        return false;
+    }*/
+
+    private int getItemIndex(T value) {
+        for (int i = 0; i < size; i++) {
+            if (value == getNodeByIndex(i).item) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
