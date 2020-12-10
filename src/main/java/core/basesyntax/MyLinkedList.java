@@ -60,7 +60,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        return null;
+        T oldItem;
+        if (isIndexValid(index)) {
+            Node<T> editNode = getNodeByIndex(index);
+            oldItem = editNode.item;
+            editNode.item = value;
+        } else {
+            throw new IndexOutOfBoundsException();
+        }
+        return oldItem;
     }
 
     @Override
