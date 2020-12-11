@@ -5,9 +5,9 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> first;
-
     private Node<T> last;
     private int size;
+
     public MyLinkedList() {
         size = 0;
     }
@@ -75,25 +75,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (isEmpty()) {
-            return true;
-        } else if (object == null) {
-            for (Node<T> node = first; node != null; node = node.next) {
-                if (null == node.item) {
-                    removeNode(node);
-                    return true;
-                }
+        for (Node<T> node = first; node != null; node = node.next) {
+            if (object == node.item || object != null && object.equals(node.item)) {
+                removeNode(node);
+                return true;
             }
-            return false;
-        } else {
-            for (Node<T> node = first; node != null; node = node.next) {
-                if (object.equals(node.item)) {
-                    removeNode(node);
-                    return true;
-                }
-            }
-            return false;
         }
+        return false;
     }
 
     @Override
