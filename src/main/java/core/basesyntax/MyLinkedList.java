@@ -108,18 +108,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     public void removeFirst() {
         if (size == 1) {
-            T item = first.item;
             first = null;
             last = null;
             return;
         }
-        Node<T> node = first;
         first = first.next;
         first.prev = null;
     }
 
     public void removeLast() {
-        Node<T> node = last;
         last = last.prev;
         last.next = null;
     }
