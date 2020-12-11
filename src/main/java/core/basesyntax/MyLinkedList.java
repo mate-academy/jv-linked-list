@@ -6,13 +6,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
 
     @Override
-    public boolean add(T value) {
+     public boolean add(T value) {
         return false;
     }
 
     @Override
     public void add(T value, int index) {
-
     }
 
     @Override
@@ -48,5 +47,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return false;
+    }
+
+    private static class Node <T> {
+        private T value;
+        private Node <T> head;
+        private Node <T> tail;
+
+        public Node(Node<T> head, Node<T> tail) {
+            this.head = head;
+            this.tail = tail;
+        }
     }
 }
