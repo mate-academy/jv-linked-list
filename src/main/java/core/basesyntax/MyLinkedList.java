@@ -25,7 +25,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-
     private boolean isInvalidIndex(int index) {
         return index < 0 || index >= size;
     }
