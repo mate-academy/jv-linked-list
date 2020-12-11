@@ -72,7 +72,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         isValidIndex(index);
         Node<T> nodeAtIndex = getNodeByIndex(index);
         unlinkNode(nodeAtIndex);
-        size--;
         return nodeAtIndex.value;
     }
 
@@ -83,7 +82,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if ((object == null && iterationNode.value == null)
                     || (iterationNode.value != null && iterationNode.value.equals(object))) {
                 unlinkNode(iterationNode);
-                size--;
                 return true;
             }
             iterationNode = iterationNode.next;
@@ -118,6 +116,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.prev.next = node.next;
             node.next.prev = node.prev;
         }
+        size--;
     }
 
     private void isValidIndex(int index) {
