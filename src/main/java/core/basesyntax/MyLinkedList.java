@@ -7,6 +7,95 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
 
+    @Override
+    public boolean add(T value) {
+        Node<T> newNode = new Node<>(last, value, null);
+        if (newNode.prev == null) {
+            first = newNode;
+            last = newNode;
+        } else {
+            last.next = newNode;
+            last = newNode;
+        }
+        size++;
+        return true;
+    }
+
+    @Override
+    public void add(T value, int index) {
+        if (index == size) {
+            add(value);
+        } else {
+            Node<T> indexNode = getNode(index);
+            Node<T> prev = indexNode.prev;
+            Node<T> newNode = new Node<>(prev, value, indexNode);
+            indexNode.prev = newNode;
+            if (prev == null) {
+                first = newNode;
+            } else {
+                prev.next = newNode;
+            }
+            size++;
+        }
+    }
+
+    @Override
+    public boolean addAll(List<T> list) {
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
+        return true;
+    }
+
+    @Override
+    public T get(int index) {
+        isIndexValid(index);
+        return getNode(index).item;
+    }
+
+    @Override
+    public T set(T value, int index) {
+        isIndexValid(index);
+        Node<T> x = getNode(index);
+        T oldVal = x.item;
+        x.item = value;
+        return oldVal;
+    }
+
+    @Override
+    public T remove(int index) {
+        isIndexValid(index);
+        return breakLink(getNode(index));
+    }
+
+    @Override
+    public boolean remove(T object) {
+        for (Node<T> x = first; x != null; x = x.next) {
+            if (object == null) {
+                if (x.item == null) {
+                    breakLink(x);
+                    return true;
+                }
+            } else {
+                if (object.equals(x.item)) {
+                    breakLink(x);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
     private boolean isIndexValid(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Wrong index");
@@ -14,7 +103,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return true;
     }
 
-    private Node<T> node(int index) {
+    private Node<T> getNode(int index) {
         isIndexValid(index);
         if (index < (size >> 1)) {
             Node<T> x = first;
@@ -48,117 +137,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         size--;
         return x.item;
-    }
-
-    @Override
-    public boolean add(T value) {
-        Node<T> l = last;
-        Node<T> newNode = new Node<>(l, value, null);
-        last = newNode;
-        if (l == null) {
-            first = newNode;
-        } else {
-            l.next = newNode;
-        }
-        size++;
-        return true;
-    }
-
-    @Override
-    public void add(T value, int index) {
-        if (index == size) {
-            add(value);
-        } else {
-            Node<T> indexNode = node(index);
-            Node<T> pred = indexNode.prev;
-            Node<T> newNode = new Node<T>(pred, value, indexNode);
-            indexNode.prev = newNode;
-            if (pred == null) {
-                first = newNode;
-            } else {
-                pred.next = newNode;
-            }
-            size++;
-        }
-    }
-
-    @Override
-    public boolean addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
-        }
-        return true;
-    }
-
-    @Override
-    public T get(int index) {
-        isIndexValid(index);
-        Node<T> x = first;
-        for (int i = 0; i < index; i++) {
-            x = x.next;
-        }
-        return x.item;
-    }
-
-    @Override
-    public T set(T value, int index) {
-        isIndexValid(index);
-        Node<T> x = node(index);
-        T oldVal = x.item;
-        x.item = value;
-        return oldVal;
-    }
-
-    @Override
-    public T remove(int index) {
-        isIndexValid(index);
-        Node<T> x = node(index);
-        Node<T> next = x.next;
-        Node<T> prev = x.prev;
-        if (prev == null) {
-            first = next;
-        } else {
-            prev.next = next;
-            x.prev = null;
-        }
-        if (next == null) {
-            last = prev;
-        } else {
-            next.prev = prev;
-            x.next = null;
-        }
-        size--;
-        return x.item;
-    }
-
-    @Override
-    public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> x = first; x != null; x = x.next) {
-                if (x.item == null) {
-                    breakLink(x);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> x = first; x != null; x = x.next) {
-                if (object.equals(x.item)) {
-                    breakLink(x);
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
     }
 
     private static class Node<T> {
