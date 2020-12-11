@@ -68,20 +68,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             if (currentNode == null) {
                 return false;
-            } else {
+            }
+            removing(currentNode);
+            return true;
+        }
+        for (int i = 0; i < size; i++) {
+             if (currentNode.item.equals(object)) {
                 removing(currentNode);
                 return true;
             }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (currentNode == null) {
-                    return false;
-                } else if (currentNode.item.equals(object)) {
-                    removing(currentNode);
-                    return true;
-                }
-                currentNode = currentNode.nextNode;
-            }
+            currentNode = currentNode.nextNode;
         }
         return false;
     }
@@ -97,9 +93,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        T item;
-        Node<T> nextNode;
-        Node<T> previous;
+        private T item;
+        private Node<T> nextNode;
+        private Node<T> previous;
 
         public Node(Node<T> previous, T item, Node<T> next) {
             this.item = item;
