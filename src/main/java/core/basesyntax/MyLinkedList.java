@@ -97,30 +97,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        if (index == 0) {
-            T deletedValue = head.item;
-            if (removeIfSizeOne()) {
-                return deletedValue;
-            }
-            head.next.prev = null;
-            head = head.next;
-            size--;
-            return deletedValue;
-        }
-        if (index == size - 1) {
-            tail.prev.next = null;
-            T deletedValue = tail.item;
-            tail = tail.prev;
-            size--;
-            return deletedValue;
-        }
         Node<T> localHead = head;
         for (int i = 0; i < size; i++) {
             if (i == index) {
-                size--;
                 T value = localHead.item;
-                localHead.prev.next = localHead.next;
-                localHead.next.prev = localHead.prev;
+                unlink(localHead);
                 return value;
             }
             localHead = localHead.next;
@@ -134,22 +115,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < size; i++) {
             if (localHead.item == object || (localHead.item != null
                     && localHead.item.equals(object))) {
-                if (removeIfSizeOne()) {
-                    return true;
-                }
-                if (i == 0) {
-                    head = head.next;
-                    size--;
-                    return true;
-                }
-                if (i == size - 1) {
-                    tail = tail.prev;
-                    size--;
-                    return true;
-                }
-                localHead.prev.next = localHead.next;
-                localHead.next.prev = localHead.prev;
-                size--;
+                unlink(localHead);
                 return true;
             }
             localHead = localHead.next;
@@ -167,14 +133,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private boolean removeIfSizeOne() {
+    private void unlink(Node<T> node) {
         if (size == 1) {
             head = null;
             tail = null;
-            size = 0;
-            return true;
+        } else if (node == head) {
+            head = head.next;
+            head.prev = null;
+        } else if (node == tail) {
+            tail = tail.prev;
+            tail.next = null;
+        } else {
+            node.next.prev = node.prev;
+            node.prev.next = node.next;
         }
-        return false;
+        size--;
     }
 
     private void checkIndex(int index) {
