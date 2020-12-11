@@ -16,11 +16,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean add(T value) {
         Node<T> node = new Node<>(last, value, null);
         if (first == null) {
-            first = node;
-            last = first;
+            first = last = node;
         } else {
-            last.next = node;
-            last = node;
+            last = last.next = node;
         }
         size++;
         return true;
@@ -30,19 +28,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         if (index == size) {
             add(value);
-        } else if (index == 0) {
-            Node<T> add = new Node<>(null, value, first);
-            first.prev = add;
-            first = add;
-            size++;
-        } else {
-            validateIndex(index);
-            Node<T> prevNode = getNode(index - 1);
-            Node<T> add = new Node<>(prevNode, value, prevNode.next);
-            prevNode.next = add;
-            add.next.prev = add;
-            size++;
+            return;
         }
+        if (index == 0) {
+            addFirst(value);
+            return;
+        }
+        validateIndex(index);
+        Node<T> prevNode = getNode(index - 1);
+        Node<T> add = new Node<>(prevNode, value, prevNode.next);
+        prevNode.next = add;
+        add.next.prev = add;
+        size++;
     }
 
     @Override
@@ -96,8 +93,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     public void removeFirst() {
         if (size == 1) {
-            first = null;
-            last = null;
+            first = last = null;
             return;
         }
         first = first.next;
@@ -107,6 +103,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void removeLast() {
         last = last.prev;
         last.next = null;
+    }
+
+    public void addFirst(T value) {
+        Node<T> node = new Node<>(null, value, first);
+        first.prev = node;
+        first = node;
+        size++;
     }
 
     private void removeNode(Node<T> node) {
