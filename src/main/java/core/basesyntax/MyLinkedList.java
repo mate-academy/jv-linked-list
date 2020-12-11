@@ -69,7 +69,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void rangeCheck(int index) {
-        if (index > size || index < 0) {
+        if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Index more than size or less than 0");
         }
     }
