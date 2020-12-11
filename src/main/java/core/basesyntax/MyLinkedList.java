@@ -29,18 +29,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = newNode;
         } else {
             isValidIndex(index);
-            Node<T> iterationNode = head;
-            for (int i = 0; i < index; i++) {
-                iterationNode = iterationNode.next;
-            }
-            if (iterationNode == head) {
-                newNode = new Node<>(null, value, iterationNode);
-                iterationNode.prev = newNode;
+            Node<T> nodeAtIndex = getNodeByIndex(index);
+            if (nodeAtIndex == head) {
+                newNode = new Node<>(null, value, nodeAtIndex);
+                nodeAtIndex.prev = newNode;
                 head = newNode;
             } else {
-                newNode = new Node<>(iterationNode.prev, value, iterationNode);
-                iterationNode.prev.next = newNode;
-                iterationNode.prev = newNode;
+                newNode = new Node<>(nodeAtIndex.prev, value, nodeAtIndex);
+                nodeAtIndex.prev.next = newNode;
+                nodeAtIndex.prev = newNode;
             }
         }
         size++;
@@ -57,35 +54,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         isValidIndex(index);
-        Node<T> iterationNode = head;
-        for (int i = 0; i < index; i++) {
-            iterationNode = iterationNode.next;
-        }
-        return iterationNode.value;
+        Node<T> nodeAtIndex = getNodeByIndex(index);
+        return nodeAtIndex.value;
     }
 
     @Override
     public T set(T value, int index) {
         isValidIndex(index);
-        Node<T> iterationNode = head;
-        for (int i = 0; i < index; i++) {
-            iterationNode = iterationNode.next;
-        }
-        T oldValue = iterationNode.value;
-        iterationNode.value = value;
+        Node<T> nodeAtIndex = getNodeByIndex(index);
+        T oldValue = nodeAtIndex.value;
+        nodeAtIndex.value = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
         isValidIndex(index);
-        Node<T> iterationNode = head;
-        for (int i = 0; i < index; i++) {
-            iterationNode = iterationNode.next;
-        }
-        reassignReferences(iterationNode);
+        Node<T> nodeAtIndex = getNodeByIndex(index);
+        unlinkNode(nodeAtIndex);
         size--;
-        return iterationNode.value;
+        return nodeAtIndex.value;
     }
 
     @Override
@@ -94,7 +82,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (iterationNode != null) {
             if ((object == null && iterationNode.value == null)
                     || (iterationNode.value != null && iterationNode.value.equals(object))) {
-                reassignReferences(iterationNode);
+                unlinkNode(iterationNode);
                 size--;
                 return true;
             }
@@ -103,7 +91,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return false;
     }
 
-    private void reassignReferences(Node<T> node) {
+    private Node<T> getNodeByIndex(int index) {
+        Node<T> iterationNode;
+        if (index < size / 2) {
+            iterationNode = head;
+            for (int i = 0; i < index; i++) {
+                iterationNode = iterationNode.next;
+            }
+            return iterationNode;
+        } else {
+            iterationNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                iterationNode = iterationNode.prev;
+            }
+            return iterationNode;
+        }
+    }
+
+    private void unlinkNode(Node<T> node) {
         if (node == tail) {
             tail.next = null;
             tail = node.prev;
