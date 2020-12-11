@@ -28,7 +28,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if ((isEmpty() && index == 0) || index == size) {
+        if (index == size) {
             add(value);
         } else if (index == 0) {
             Node<T> add = new Node<>(null, value, first);
@@ -37,18 +37,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size++;
         } else {
             validateIndex(index);
-            Node<T> node = getNode(index);
-            Node<T> add = new Node<>(node.prev, value, node);
-            node.prev.next = add;
-            node.prev = add;
+            Node<T> prevNode = getNode(index - 1);
+            Node<T> add = new Node<>(prevNode, value, prevNode.next);
+            prevNode.next = add;
+            add.next.prev = add;
             size++;
         }
     }
 
     @Override
     public boolean addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T listItem : list) {
+            add(listItem);
         }
         return true;
     }
