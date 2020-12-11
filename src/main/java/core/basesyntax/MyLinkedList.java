@@ -14,16 +14,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean add(T value) {
         if (linkedListSize == 0) {
-            Node<T> headNode = new Node<>(null, value, null);
-            head = headNode;
-            tail = headNode;
-            linkedListSize++;
+            Node<T> firstNode = new Node<>(null, value, null);
+            head = firstNode;
+            tail = firstNode;
         } else {
             Node<T> newNode = new Node<>(tail, value, null);
             tail.next = newNode;
             tail = newNode;
-            linkedListSize++;
         }
+        linkedListSize++;
         return true;
     }
 
@@ -33,23 +32,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        Node<T> findNode = head;
-        for (int i = 0; i < linkedListSize; i++) {
-            if (i == index) {
-                Node<T> prevNode = findNode.prev;
-                Node<T> newNode = new Node<>(prevNode, value, findNode);
-                if (prevNode != null) {
-                    prevNode.next = newNode;
-                } else {
-                    head = newNode;
-                }
-                findNode.prev = newNode;
-                linkedListSize++;
-                return;
-            }
-            findNode = findNode.next;
+        Node<T> findNode = findNode(index);
+        Node<T> prevNode = findNode.prev;
+        Node<T> newNode = new Node<>(prevNode, value, findNode);
+        if (prevNode != null) {
+            prevNode.next = newNode;
+        } else {
+            head = newNode;
         }
-        throw new IndexOutOfBoundsException("Index [" + index + "] does not exist!");
+        findNode.prev = newNode;
+        linkedListSize++;
     }
 
     @Override
@@ -62,41 +54,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Node<T> findNode = head;
-        for (int i = 0; i < linkedListSize; i++) {
-            if (i == index) {
-                return findNode.item;
-            }
-            findNode = findNode.next;
-        }
-        throw new IndexOutOfBoundsException("Index [" + index + "] does not exist!");
+        return findNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        Node<T> findNode = head;
-        for (int i = 0; i < linkedListSize; i++) {
-            if (i == index) {
-                T oldValue = findNode.item;
-                findNode.item = value;
-                return oldValue;
-            }
-            findNode = findNode.next;
-        }
-        throw new IndexOutOfBoundsException("Index [" + index + "] does not exist!");
+        Node<T> findNode = findNode(index);
+        T oldValue = findNode.item;
+        findNode.item = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        Node<T> findNode = head;
-        for (int i = 0; i < linkedListSize; i++) {
-            if (i == index) {
-                delete(findNode);
-                return findNode.item;
-            }
-            findNode = findNode.next;
-        }
-        throw new IndexOutOfBoundsException("Index [" + index + "] does not exist!");
+        Node<T> findNode = findNode(index);
+        delete(findNode);
+        return findNode.item;
     }
 
     @Override
@@ -110,6 +83,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             findNode = findNode.next;
         }
         return false;
+    }
+
+    @Override
+    public int size() {
+        return linkedListSize;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return linkedListSize == 0;
     }
 
     private boolean delete(Node<T> node) {
@@ -129,20 +112,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return true;
     }
 
-    @Override
-    public int size() {
-        return linkedListSize;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return linkedListSize == 0 ? true : false;
+    private Node<T> findNode(int index) {
+        Node<T> findNode = head;
+        for (int i = 0; i < linkedListSize; i++) {
+            if (i == index) {
+                return findNode;
+            }
+            findNode = findNode.next;
+        }
+        throw new IndexOutOfBoundsException("Index [" + index + "] does not exist!");
     }
 
     static class Node<E> {
-        E item;
-        Node<E> next;
-        Node<E> prev;
+        private E item;
+        private Node<E> next;
+        private Node<E> prev;
 
         public Node(Node<E> prev, E item, Node<E> next) {
             this.item = item;
