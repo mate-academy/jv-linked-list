@@ -65,11 +65,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        Node<T> localHead = head;
-        for (int i = 0; i < index; i++) {
-            localHead = localHead.next;
+        if (index < (size >> 1)) {
+            Node<T> localHead = head;
+            for (int i = 0; i < index; i++) {
+                localHead = localHead.next;
+            }
+            return localHead.item;
         }
-        return localHead.item;
+        Node<T> localTail = tail;
+        for (int i = 0; i < size - index - 1; i++) {
+            localTail = localTail.prev;
+        }
+        return localTail.item;
     }
 
     @Override
