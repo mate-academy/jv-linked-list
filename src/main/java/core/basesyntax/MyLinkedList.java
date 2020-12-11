@@ -67,13 +67,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         T oldItem;
-        if (isIndexValid(index)) {
-            Node<T> editNode = getNodeByIndex(index);
-            oldItem = editNode.item;
-            editNode.item = value;
-        } else {
-            throw new IndexOutOfBoundsException();
-        }
+        Node<T> editNode = getNodeByIndex(index);
+        oldItem = editNode.item;
+        editNode.item = value;
         return oldItem;
     }
 
@@ -121,26 +117,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private static class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> prev;
-
-        Node(Node<T> prev, T item, Node<T> next) {
-            this.prev = prev;
-            this.item = item;
-            this.next = next;
-        }
-    }
-
     private boolean isIndexValid(int index) {
-        return index >= 0 && index < size;
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        return true;
     }
 
     private Node<T> getNodeByIndex(int index) {
-        if (!isIndexValid(index)) {
-            throw new IndexOutOfBoundsException();
-        }
         Node<T> current;
         if (size / 2 >= index) {
             current = head;
@@ -164,5 +148,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return -1;
+    }
+
+    private static class Node<T> {
+        T item;
+        Node<T> next;
+        Node<T> prev;
+
+        Node(Node<T> prev, T item, Node<T> next) {
+            this.prev = prev;
+            this.item = item;
+            this.next = next;
+        }
     }
 }
