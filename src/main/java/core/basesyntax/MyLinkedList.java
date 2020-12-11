@@ -88,9 +88,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         rangeCheck(index);
-        if (index == size) {
-            throw new IndexOutOfBoundsException("Index equal size");
-        }
         return getCurrentNode(index).value;
     }
 
