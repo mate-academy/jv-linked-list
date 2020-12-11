@@ -91,7 +91,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return first == null;
+        return size == 0;
     }
 
     public void removeFirst() {
@@ -107,6 +107,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void removeLast() {
         last = last.prev;
         last.next = null;
+    }
+
+    private void removeNode(Node<T> node) {
+        if (first == node) {
+            removeFirst();
+        } else if (node == last) {
+            removeLast();
+        } else {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        }
+        size--;
     }
 
     private void validateIndex(int index) {
@@ -132,20 +144,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node = node.prev;
         }
         return node;
-    }
-
-    private void removeNode(Node<T> node) {
-        if (first == node) {
-            removeFirst();
-            size--;
-        } else if (node == last) {
-            removeLast();
-            size--;
-        } else {
-            node.prev.next = node.next;
-            node.next.prev = node.prev;
-            size--;
-        }
     }
 
     private static class Node<T> {
