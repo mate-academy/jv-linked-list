@@ -27,8 +27,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        rangeCheck(index);
-
         if (index == size) {
             addToLast(value);
         } else {
@@ -61,6 +59,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public Node<T> getCurrentNode(int index) {
+        rangeCheck(index);
+
         Node<T> currentNode = head;
         for (int i = 0; i < index; i++) {
             currentNode = currentNode.next;
