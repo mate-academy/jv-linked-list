@@ -24,7 +24,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkAddIndex(index);
-        if (index == size ) {
+        if (index == size) {
             add(value);
             return;
         }
@@ -88,7 +88,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         int index = nodeIndex(object);
-        if (index == -1) {         // refactor
+        if (index == -1) {
             return false;
         }
         remove(index);
