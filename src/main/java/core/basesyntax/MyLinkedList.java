@@ -52,7 +52,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean addAll(List<T> list) {
         for (T element: list) {
-            tail.next = new Node<>(tail.prev, element, null);
+            tail.next = new Node<>(tail, element, null);
             tail = tail.next;
         }
         size += list.size();
@@ -141,11 +141,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (!isIndexValid(index)) {
             throw new IndexOutOfBoundsException();
         }
-        Node<T> result = head;
-        for (int i = 0; i != index; i++) {
-            result = result.next;
+        Node<T> current;
+        if (size / 2 >= index) {
+            current = head;
+            for (int i = 0; i != index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i != index; i--) {
+                current = current.prev;
+            }
         }
-        return result;
+        return current;
     }
 
     private int getItemIndex(T value) {
