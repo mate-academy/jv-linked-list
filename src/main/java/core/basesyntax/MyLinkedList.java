@@ -96,9 +96,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (index == size) {
-            throw new IndexOutOfBoundsException("Index equal size");
-        }
         rangeCheck(index);
 
         Node<T> nodeForReplace = getCurrentNode(index);
