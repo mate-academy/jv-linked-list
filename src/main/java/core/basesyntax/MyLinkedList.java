@@ -98,14 +98,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             for (int i = 0; i < index; i++) {
                 iterationNode = iterationNode.next;
             }
-            return iterationNode;
         } else {
             iterationNode = tail;
             for (int i = size - 1; i > index; i--) {
                 iterationNode = iterationNode.prev;
             }
-            return iterationNode;
         }
+        return iterationNode;
     }
 
     private void unlinkNode(Node<T> node) {
