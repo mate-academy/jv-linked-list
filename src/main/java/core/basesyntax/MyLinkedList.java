@@ -122,7 +122,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void validateIndex(int index) {
-        if (index > size || index < 0 || isEmpty()) {
+        if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
     }
