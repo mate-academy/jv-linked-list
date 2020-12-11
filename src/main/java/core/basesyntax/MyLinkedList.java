@@ -53,14 +53,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        isValidIndex(index);
         Node<T> nodeAtIndex = getNodeByIndex(index);
         return nodeAtIndex.value;
     }
 
     @Override
     public T set(T value, int index) {
-        isValidIndex(index);
         Node<T> nodeAtIndex = getNodeByIndex(index);
         T oldValue = nodeAtIndex.value;
         nodeAtIndex.value = value;
@@ -69,7 +67,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        isValidIndex(index);
         Node<T> nodeAtIndex = getNodeByIndex(index);
         unlinkNode(nodeAtIndex);
         return nodeAtIndex.value;
@@ -90,6 +87,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
+        isValidIndex(index);
         Node<T> iterationNode;
         if (index < size / 2) {
             iterationNode = head;
