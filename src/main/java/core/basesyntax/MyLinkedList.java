@@ -30,10 +30,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException("Incorrect index");
-        }
-        if (size == 0 || size == index) {
+        if (size == index) {
             add(value);
             return;
         }
@@ -42,6 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size++;
             return;
         }
+        checkIndex(index);
         Node<T> localHead = head;
         int count = 0;
         while (count != index) {
