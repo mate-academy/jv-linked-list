@@ -85,20 +85,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        rangeCheck(index);
-        if (index == size) {
-            throw new IndexOutOfBoundsException("Index equal size");
-        }
         return getCurrentNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index == size) {
-            throw new IndexOutOfBoundsException("Index equal size");
-        }
-        rangeCheck(index);
-
         Node<T> nodeForReplace = getCurrentNode(index);
         T oldValue = nodeForReplace.value;
         nodeForReplace.value = value;
@@ -108,7 +99,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        rangeCheck(index);
         return unlink(getCurrentNode(index));
     }
 
