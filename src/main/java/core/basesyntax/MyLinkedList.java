@@ -32,8 +32,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size++;
             return true;
         }
-        Node<T> newNode = new Node<>(null, value, null);
-        newNode.prev = tail;
+        Node<T> newNode = new Node<>(tail, value, null);
         tail.next = newNode;
         tail = newNode;
         size++;
@@ -52,10 +51,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size++;
             return;
         }
-        Node<T> newNode = findNodeByIndex(index);
-        Node<T> node = new Node<>(newNode.prev, value, newNode);
-        node.prev.next = node;
-        newNode.prev = node;
+        Node<T> currentNode = findNodeByIndex(index);
+        Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
+        newNode.prev.next = newNode;
+        currentNode.prev = newNode;
         size++;
     }
 
@@ -73,8 +72,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> node = findNodeByIndex(index);
         if (node == head) {
             return head.value;
-        } else if (node == tail) {
-            return tail.value;
         }
         return node.value;
     }
@@ -144,12 +141,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
-        int i = 0;
-        Node<T> node = head;
-        while (i < index) {
-            node = node.next;
-            i++;
+        Node<T> currentNode;
+        if (index < size / 2) {
+            currentNode = head;
+            int i = 0;
+            while (i < index) {
+                currentNode = currentNode.next;
+                i++;
+            }
+        } else {
+            currentNode = tail;
+            int i = size - 1;
+            while (i > index) {
+                currentNode = currentNode.prev;
+                i--;
+            }
         }
-        return node;
+        return currentNode;
     }
 }
