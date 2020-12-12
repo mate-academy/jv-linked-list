@@ -13,7 +13,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-        this.add(value, size);
+        add(value, size);
         return true;
     }
 
@@ -46,7 +46,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean addAll(List<T> list) {
         for (T item : list) {
-            this.add(item);
+            add(item);
         }
         return true;
     }
