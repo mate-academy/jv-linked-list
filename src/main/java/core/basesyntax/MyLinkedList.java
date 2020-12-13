@@ -80,7 +80,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == size - 1) {
             lastNode.prev.next = null;
             lastNode = lastNode.prev;
-
         } else {
             temp.prev.next = temp.next;
             temp.next.prev = temp.prev;
@@ -130,7 +129,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        T data;
+        private T data;
         private Node<T> prev;
         private Node<T> next;
 
