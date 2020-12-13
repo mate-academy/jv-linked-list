@@ -56,9 +56,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             for (int i = 0; i < index - 1; i++) {
                 newNode = newNode.nextNode;
             }
-            Node afteradditingNode = newNode.nextNode;
-
             insertingNode = new Node<>(newNode, value, newNode.nextNode);
+            Node afteradditingNode = newNode.nextNode;
             newNode.nextNode = insertingNode;
             insertingNode.previousNode = newNode;
             afteradditingNode.previousNode = insertingNode;
@@ -77,14 +76,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         indexCheck(index);
-        Node getteadNote=whatHalf(index);
+        Node getteadNote = whatHalf(index);
         return (T) getteadNote.value;
     }
 
     @Override
     public T set(T value, int index) {
         indexCheck(index);
-        Node<T> currentNode=whatHalf(index);
+        Node<T> currentNode = whatHalf(index);
         T valueReplacing = (T) currentNode.value;
         currentNode.value = value;
         return valueReplacing;
@@ -93,29 +92,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         indexCheck(index);
-        Node<T> currentNode;
-        T removedValue = null;
+        Node<T> currentNode = whatHalf(index);
         if (size / 2 - 1 < index) {
-            currentNode = new Node<>(tail, null, null);
-            for (int i = size - 1; i >= index; i--) {
-                currentNode = currentNode.previousNode;
-            }
-            removedValue = (T) currentNode.value;
-         //   Node<T> temp = currentNode.previousNode;//was Node<T> temp = currentNode.previousNode;
-            currentNode.nextNode = currentNode.previousNode;//was currentNode.nextNode = temp;
-
+            currentNode.nextNode = currentNode.previousNode;
         } else {
-            currentNode = new Node<>(null, null, head);
-            for (int i = 0; i <= index; i++) {
-                currentNode = currentNode.nextNode;
-            }
-            removedValue = (T) currentNode.value;
-            Node<T> temp = currentNode.nextNode;//was Node<T> temp = currentNode.nextNode;
-            if (index == 0) {
-                head = currentNode.nextNode;
-            }
             currentNode.previousNode = currentNode.nextNode;
         }
+        if (index == 0) {
+            head = currentNode.nextNode;
+        }
+        T removedValue = (T) currentNode.value;
         size--;
         return removedValue;
     }
@@ -169,22 +155,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node whatHalf(int index){
+    private Node whatHalf(int index) {
         Node currentNode = null;
-        if(size/2-1 <index){
+        if (size / 2 - 1 < index) {
             currentNode = new Node<>(tail, null, null);
             for (int i = size - 1; i >= index; i--) {
                 currentNode = currentNode.previousNode;
             }
-        }
-        else{
+        } else {
             currentNode = new Node<>(null, null, head);
             for (int i = 0; i <= index; i++) {
                 currentNode = currentNode.nextNode;
             }
         }
         return currentNode;
-        }
-
-
     }
+}
