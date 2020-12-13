@@ -61,15 +61,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node<T> pointedNode = null;
-        if (index == 0) {
-            pointedNode = getNodeByIndex(index);
-            final T value = pointedNode.item;
-            removeNode(pointedNode);
-            return value;
-        }
         checkIndex(index);
-        pointedNode = getNodeByIndex(index);
+        Node<T> pointedNode = getNodeByIndex(index);
         final T value = pointedNode.item;
         removeNode(pointedNode);
         return value;
