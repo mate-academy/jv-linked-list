@@ -86,6 +86,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return true;
     }
 
+    private void remove(Node<T> node) {
+        if (node.previous == null) {
+            head = node.next;
+        } else {
+            node.previous.next = node.next;
+        }
+        if (node.next == null) {
+            tail = node.previous;
+        } else {
+            node.next.previous = node.previous;
+        }
+        size--;
+    }
+
     @Override
     public int size() {
         return size;
@@ -110,7 +124,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findByIndex(int index) {
         Node<T> node;
-        if(index <= size / 2) {
+        if (index <= size / 2) {
             node = head;
             int listIndex = 0;
             while (listIndex != index) {
@@ -144,19 +158,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node = node.next;
         }
         throw new NoSuchElementException("No such element in list");
-    }
-
-    private void remove(Node<T> node) {
-        if (node.previous == null) {
-            head = node.next;
-        } else {
-            node.previous.next = node.next;
-        }
-        if (node.next == null) {
-            tail = node.previous;
-        } else {
-            node.next.previous = node.previous;
-        }
-        size--;
     }
 }
