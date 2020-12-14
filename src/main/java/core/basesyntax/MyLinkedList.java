@@ -83,21 +83,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index, index >= size);
-        Node<T> currentNode = findElement(index);
-        Node<T> prev = currentNode.prev;
-        Node<T> next = currentNode.next;
-        if (prev == null) {
-            first = next;
-        } else {
-            prev.next = next;
-        }
-        if (next == null) {
-            last = prev;
-        } else {
-            next.prev = prev;
-        }
-        size--;
-        return currentNode.item;
+        return delete(index);
     }
 
     @Override
@@ -146,37 +132,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void removeFirst(Node<T> currentNode) {
-        if (size == 1) {
-            first = last = null;
-            size--;
-            return;
-        }
-        first = currentNode.next;
-        currentNode.prev = null;
-        size--;
-    }
-
-    private void removeLast(Node<T> currentNode) {
-        last = currentNode.prev;
-        currentNode.next = null;
-        size--;
-    }
-
-    private void delete(int index) {
+    private T delete(int index) {
         Node<T> currentNode = findElement(index);
-        Node<T> oldValue = currentNode;
-        if (index == 0) {
-            removeFirst(currentNode);
-            return;
+        Node<T> prev = currentNode.prev;
+        Node<T> next = currentNode.next;
+        if (prev == null) {
+            first = next;
+        } else {
+            prev.next = next;
         }
-        if (index == size - 1) {
-            removeLast(currentNode);
-            return;
+        if (next == null) {
+            last = prev;
+        } else {
+            next.prev = prev;
         }
-        currentNode.prev.next = oldValue.next;
-        currentNode.next.prev = oldValue.prev;
         size--;
+        return currentNode.item;
     }
 
     private static class Node<E> {
