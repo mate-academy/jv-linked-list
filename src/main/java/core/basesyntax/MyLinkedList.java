@@ -20,26 +20,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private T unlink(Node<T> removeNode) {
-        Node<T> nextNode = removeNode.next;
-        Node<T> prevNode = removeNode.prev;
-        if (prevNode == null) {
-            head = nextNode;
-        } else {
-            prevNode.next = nextNode;
-            removeNode.prev = null;
+    private void checkException(int index) {
+        if (!(isAvailableIndex(index))) {
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bound");
         }
-
-        if (nextNode == null) {
-            tail = prevNode;
-        } else {
-            nextNode.prev = prevNode;
-            removeNode.next = null;
-        }
-        T valueNode = removeNode.value;
-        removeNode.value = null;
-        size--;
-        return valueNode;
     }
 
     private boolean isAvailableIndex(int index) {
@@ -58,7 +42,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private Node<T> node(int index) {
+    private Node<T> getNode(int index) {
         Node<T> current;
         if (index < size / 2) {
             current = head;
@@ -102,7 +86,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             linkLast(value);
         } else {
-            linkBefore(value, node(index));
+            linkBefore(value, getNode(index));
         }
     }
 
@@ -117,29 +101,45 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (!(isAvailableIndex(index))) {
-            throw new IndexOutOfBoundsException("Index " + index + " is out of bound");
-        }
-        return node(index).value;
+        checkException(index);
+        return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        if (!(isAvailableIndex(index))) {
-            throw new IndexOutOfBoundsException("Index " + index + " is out of bound");
-        }
-        Node<T> findNode = node(index);
+        checkException(index);
+        Node<T> findNode = getNode(index);
         T oldVal = findNode.value;
         findNode.value = value;
         return oldVal;
     }
 
+    private T unlink(Node<T> removeNode) {
+        Node<T> nextNode = removeNode.next;
+        Node<T> prevNode = removeNode.prev;
+        if (prevNode == null) {
+            head = nextNode;
+        } else {
+            prevNode.next = nextNode;
+            removeNode.prev = null;
+        }
+
+        if (nextNode == null) {
+            tail = prevNode;
+        } else {
+            nextNode.prev = prevNode;
+            removeNode.next = null;
+        }
+        T valueNode = removeNode.value;
+        removeNode.value = null;
+        size--;
+        return valueNode;
+    }
+
     @Override
     public T remove(int index) {
-        if (!(isAvailableIndex(index))) {
-            throw new IndexOutOfBoundsException("Index " + index + " is out of bound");
-        }
-        return unlink(node(index));
+        checkException(index);
+        return unlink(getNode(index));
     }
 
     @Override
