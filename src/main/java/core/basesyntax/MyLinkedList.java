@@ -7,12 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
     
-    public MyLinkedList() {
-        head = null;
-        tail = null;
-        size = 0;
-    }
-    
     private static class Node<T> {
         T value;
         Node<T> next;
@@ -31,11 +25,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> newNode = new Node<>(null, value, null);
             head = newNode;
             tail = newNode;
-            size++;
-            return true;
+        } else {
+            tail.next = new Node<>(tail, value, null);
+            tail = tail.next;
         }
-        tail.next = new Node<>(tail, value, null);
-        tail = tail.next;
         size++;
         return true;
     }
@@ -86,12 +79,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIncludeIndex(index);
-        if (size == 1 && index == 0) {
-            head = null;
-            tail = null;
-            size = 0;
-            return null;
-        }
         return unlinkNode(getNode(index)).value;
     }
     
@@ -101,12 +88,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (currentNode != null) {
             if (currentNode.value == object
                     || (currentNode.value != null && currentNode.value.equals(object))) {
-                if (size == 1) {
-                    head = null;
-                    tail = null;
-                    size = 0;
-                    return true;
-                }
                 unlinkNode(currentNode);
                 return true;
             }
@@ -126,47 +107,42 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
     
     private Node<T> getNode(int index) {
+        Node<T> currentNode;
+        int i;
         if (index < size / 2) {
-            Node<T> currentNode = head;
-            int i = 0;
-            while (currentNode != null) {
-                if (i == index) {
-                    return currentNode;
-                }
+            currentNode = head;
+            i = 0;
+            while (i < index) {
                 i++;
                 currentNode = currentNode.next;
             }
         } else {
-            Node<T> currentNode = tail;
-            int i = size - 1;
-            while (currentNode != null) {
-                if (i == index) {
-                    return currentNode;
-                }
+            currentNode = tail;
+            i = size - 1;
+            while (i > index) {
                 i--;
                 currentNode = currentNode.prev;
             }
         }
-        return new Node<>(null, null, null);
+        return currentNode;
     }
     
     private Node<T> unlinkNode(Node<T> currentNode) {
         Node<T> nextNode = currentNode.next;
         Node<T> prevNode = currentNode.prev;
-        if (prevNode == null) {
+        if (prevNode == null && nextNode == null) {
+            head = null;
+            tail = null;
+        } else if (prevNode == null) {
             nextNode.prev = null;
             head = nextNode;
-            size--;
-            return currentNode;
-        }
-        if (nextNode == null) {
+        } else if (nextNode == null) {
             prevNode.next = null;
             tail = prevNode;
-            size--;
-            return currentNode;
+        } else {
+            nextNode.prev = prevNode;
+            prevNode.next = nextNode;
         }
-        nextNode.prev = prevNode;
-        prevNode.next = nextNode;
         size--;
         return currentNode;
     }
