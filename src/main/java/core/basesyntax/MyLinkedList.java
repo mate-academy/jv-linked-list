@@ -8,7 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
 
     public MyLinkedList() {
-        size = 0;
     }
 
     @Override
@@ -83,32 +82,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        if (head == null) {
-            return true;
-        }
-        return false;
+        return size == 0;
     }
 
     private void linkFirst(T value) {
-        Node<T> h = head;
-        Node<T> newNode = new Node<>(null, value, h);
+        Node<T> prevHead = head;
+        Node<T> newNode = new Node<>(null, value, prevHead);
         head = newNode;
-        if (h == null) {
+        if (prevHead == null) {
             tail = newNode;
         } else {
-            h.prev = newNode;
+            prevHead.prev = newNode;
         }
         size++;
     }
 
     private void linkLast(T value) {
-        Node<T> t = tail;
-        Node<T> newNode = new Node<>(t, value,null);
+        Node<T> prevTail = tail;
+        Node<T> newNode = new Node<>(prevTail, value,null);
         tail = newNode;
-        if (t == null) {
+        if (prevTail == null) {
             head = newNode;
         } else {
-            t.next = newNode;
+            prevTail.next = newNode;
         }
         size++;
     }
