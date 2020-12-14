@@ -34,11 +34,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        if (list == null) {
-            return false;
-        }
-        for (T t : list) {
-            add(t);
+        for (T element: list) {
+            add(element);
         }
         return true;
     }
