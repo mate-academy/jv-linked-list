@@ -80,9 +80,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (size == 0) {
-            throw new IndexOutOfBoundsException();
-        }
         Node<T> currentNode = searchByIndex(index);
         unlink(currentNode);
         return currentNode.value;
