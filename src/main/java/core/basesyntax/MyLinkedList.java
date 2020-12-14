@@ -5,12 +5,10 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
-    private int sizeOfFilledList;
+    private int size;
 
     public MyLinkedList() {
-        this.head = null;
-        this.tail = null;
-        this.sizeOfFilledList = 0;
+        this.size = 0;
     }
 
     private static class Node<T> {
@@ -34,9 +32,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndex(index);
-        if (index == sizeOfFilledList) {
+        if (index == size) {
             add(value);
-        } else if (index < sizeOfFilledList && index >= 0) {
+        } else if (index < size && index >= 0) {
             linkNode(value, findNodeByIndex(index));
         }
     }
@@ -72,24 +70,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        for (int i = 0; i < sizeOfFilledList; i++) {
-            T valueToRemove = findNodeByIndex(i).value;
-            if (object == valueToRemove || object != null && object.equals(valueToRemove)) {
-                remove(i);
+        Node<T> iterationNode = head;
+        for (int i = 0; i < size; i++) {
+            if (object == iterationNode.value
+                        || object != null && object.equals(iterationNode.value)) {
+                removeNode(iterationNode);
                 return true;
             }
+            iterationNode = iterationNode.next;
         }
         return false;
     }
 
     @Override
     public int size() {
-        return sizeOfFilledList;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return sizeOfFilledList == 0;
+        return size == 0;
     }
 
     private T removeNode(Node<T> nodeToRemove) {
@@ -105,20 +105,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             beforeNodeToRemove.next = afterNodeToRemove;
             afterNodeToRemove.previous = beforeNodeToRemove;
         }
-        sizeOfFilledList--;
+        size--;
         return nodeToRemove.value;
     }
 
     private void linkTail(T elementToAdd) {
-        Node<T> lastElement = this.tail;
+        Node<T> lastElement = tail;
         Node<T> nodeToAdd = new Node<>(lastElement, elementToAdd,null);
-        this.tail = nodeToAdd;
+        tail = nodeToAdd;
         if (lastElement == null) {
             head = nodeToAdd;
         } else {
             lastElement.next = nodeToAdd;
         }
-        sizeOfFilledList++;
+        size++;
     }
 
     private void linkNode(T valueToAdd, Node<T> currentNode) {
@@ -130,22 +130,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             previousNode.next = nodeToAdd;
         }
-        sizeOfFilledList++;
+        size++;
     }
 
     private Node<T> findNodeByIndex(int index) {
-        if (index >= sizeOfFilledList || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
         Node<T> nodeToFind;
-        if (index < sizeOfFilledList / 2) {
+        if (index < size / 2) {
             nodeToFind = head;
             for (int i = 0; i < index; i++) {
                 nodeToFind = nodeToFind.next;
             }
         } else {
             nodeToFind = tail;
-            for (int i = sizeOfFilledList - 1; i > index; i--) {
+            for (int i = size - 1; i > index; i--) {
                 nodeToFind = nodeToFind.previous;
             }
         }
@@ -153,7 +153,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndex(int index) {
-        if (index > sizeOfFilledList || index < 0) {
+        if (index > size || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
     }
