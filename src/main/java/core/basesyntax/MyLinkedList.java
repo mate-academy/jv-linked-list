@@ -27,7 +27,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T data, int index) {
-        checkBounds(index);
+        checkAddBounds(index);
         if (index == size) {
             insertLast(data);
         } else {
@@ -37,21 +37,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        for (T t : list) {
-            insertLast(t);
+        for (T element : list) {
+            insertLast(element);
         }
         return true;
     }
 
     @Override
     public T get(int index) {
-        checkElementIndex(index);
+        checkBounds(index);
         return getNode(index).data;
     }
 
     @Override
     public T set(T value, int index) {
-        checkElementIndex(index);
+        checkBounds(index);
         Node<T> node = getNode(index);
         T oldValue = node.data;
         node.data = value;
@@ -60,19 +60,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkElementIndex(index);
+        checkBounds(index);
         return removeNode(getNode(index));
     }
 
     @Override
     public boolean remove(T object) {
-
         for (Node<T> first = head; first != null; first = first.next) {
-            if (first.data == null) {
-                removeNode(first);
-                return true;
-            }
-            if (object != null && object.equals(first.data)) {
+            if (first.data == object || object != null && object.equals(first.data)) {
                 removeNode(first);
                 return true;
             }
@@ -152,14 +147,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void checkBounds(int index) {
+    private void checkAddBounds(int index) {
         if (index > size || index < 0) {
             throw new IndexOutOfBoundsException(
                     "This index: " + index + " is not valid for add operation");
         }
     }
 
-    private void checkElementIndex(int index) {
+    private void checkBounds(int index) {
         if (!(index >= 0 && index < size)) {
             throw new IndexOutOfBoundsException(
                     "This index: " + index + " not point at any element in this list");
