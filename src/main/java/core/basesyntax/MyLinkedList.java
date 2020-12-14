@@ -90,35 +90,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index, index >= size);
-        if (size / 2 > index) {
-            Node<T> currentNode = first;
-            for (int i = 0; i < index; i++) {
-                currentNode = currentNode.next;
-            }
-            Node<T> oldValue = currentNode;
-            if (index == 0) {
-                removeFirst(currentNode);
-                return oldValue.item;
-            }
-            currentNode.prev.next = oldValue.next;
-            currentNode.next.prev = oldValue.prev;
-            size--;
-            return oldValue.item;
-        } else {
-            Node<T> currentNode = last;
-            for (int i = size - 1; i > index; i--) {
-                currentNode = currentNode.prev;
-            }
-            Node<T> oldValue = currentNode;
-            if (index == size - 1) {
-                removeLast(currentNode);
-                return oldValue.item;
-            }
-            currentNode.prev.next = oldValue.next;
-            currentNode.next.prev = oldValue.prev;
-            size--;
+        Node<T> currentNode = findElement(index);
+        Node<T> oldValue = currentNode;
+        if (index == 0) {
+            removeFirst(currentNode);
             return oldValue.item;
         }
+        if (index == size - 1) {
+            removeLast(currentNode);
+            return oldValue.item;
+        }
+        currentNode.prev.next = oldValue.next;
+        currentNode.next.prev = oldValue.prev;
+        size--;
+        return oldValue.item;
     }
 
     @Override
@@ -173,6 +158,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void removeFirst(Node<T> currentNode) {
+        if (size == 1) {
+            first = last = null;
+            size--;
+            return;
+        }
         first = currentNode.next;
         currentNode.prev = null;
         size--;
