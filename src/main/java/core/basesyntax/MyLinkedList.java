@@ -24,10 +24,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             linkFirst(value);
         } else {
             indexValidator(index);
-            Node<T> currentNode = head;
-            for (int i = 0; i < index; i++) {
-                currentNode = currentNode.next;
-            }
+            Node<T> currentNode = getNode(index);
             newNode = new Node<>(currentNode.previous, value, currentNode);
             currentNode.previous.next = newNode;
             currentNode.previous = newNode;
