@@ -21,29 +21,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
+        Node<T> newNode = new Node<>(tail, value, null);
         if (size == 0) {
-            head = new Node<>(null, value, null);
-            tail = head;
-            size++;
-            return true;
+            head = newNode;
+        } else {
+            tail.next = newNode;
         }
-        Node<T> lastTail = tail;
-        Node<T> newTail = new Node<>(lastTail, value, null);
-        lastTail.next = newTail;
-        tail = newTail;
+        tail = newNode;
         size++;
         return true;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > size && size != 0 || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("Houston we have a BUG!");
-        }
         if (index == size) {
             add(value);
             return;
         }
+        checkIndex(index);
         Node<T> currentNext = search(index);
         Node<T> currentPrev = currentNext.prev;
         Node<T> newTail = new Node<>(currentPrev, value, currentNext);
@@ -59,8 +54,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T element : list) {
+            add(element);
         }
         return true;
     }
@@ -85,19 +80,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = search(index);
         Node<T> currentNext = current.next;
         Node<T> currentPrev = current.prev;
-        if (index == 0) {
-            head = currentNext;
-        }
-        if (index == size - 1) {
-            tail = currentPrev;
-        }
-        if (currentPrev != null) {
-            currentPrev.next = currentNext;
-        }
-        if (currentNext != null) {
-            currentNext.prev = currentPrev;
-        }
-        size--;
+        unlink(currentPrev, currentNext, index);
         return current.value;
     }
 
@@ -108,16 +91,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (current.value == object || object != null && object.equals(current.value)) {
                 Node<T> currentNext = current.next;
                 Node<T> currentPrev = current.prev;
-                if (currentPrev != null) {
-                    currentPrev.next = currentNext;
-                }
-                if (currentNext != null) {
-                    currentNext.prev = currentPrev;
-                }
-                if (i == 0) {
-                    head = head.next;
-                }
-                size--;
+                unlink(currentPrev, currentNext, i);
                 return true;
             }
             current = current.next;
@@ -136,15 +110,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndex(int index) {
-        if (index >= size || index < 0) {
+        if (index >= size && size != 0 || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Houston we have a BUG!");
         }
     }
 
     private Node<T> search(int index) {
-        if (index >= size && size != 0 || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("Houston we have a BUG!");
-        }
+        checkIndex(index);
         Node<T> current;
         if (size / 2 > index) {
             current = head;
@@ -158,5 +130,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return current;
+    }
+
+    private void unlink(Node<T> currentPrev, Node<T> currentNext, int index) {
+        if (index == 0) {
+            head = currentNext;
+        }
+        if (index == size - 1) {
+            tail = currentPrev;
+        }
+        if (currentPrev != null) {
+            currentPrev.next = currentNext;
+        }
+        if (currentNext != null) {
+            currentNext.prev = currentPrev;
+        }
+        size--;
     }
 }
