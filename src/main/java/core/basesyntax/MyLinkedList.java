@@ -71,36 +71,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        T settedValue = findNodeByIndex(index).value;
-        findNodeByIndex(index).value = value;
-        return settedValue;
+        Node<T> node = findNodeByIndex(index);
+        T oldValue = node.value;
+        node.value = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        Node<T> node = findNodeByIndex(index);
-        if (index == size - 1) {
-            if (index == 0) {
-                head = null;
-                tail = null;
-                size--;
-                return node.value;
-            }
-            node.prev.next = null;
-            tail = node.prev;
-            size--;
-            return node.value;
-        }
-        if (index == 0) {
-            node.next.prev = null;
-            head = node.next;
-            size--;
-            return node.value;
-        }
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
-        size--;
-        return node.value;
+        return unlink(index);
     }
 
     @Override
@@ -108,7 +87,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < size; i++) {
             if (findNodeByIndex(i).value == object
                     || (object != null && object.equals(findNodeByIndex(i).value))) {
-                remove(i);
+                unlink(i);
                 return true;
             }
         }
@@ -147,5 +126,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return node;
+    }
+
+    private T unlink(int index) {
+        Node<T> node = findNodeByIndex(index);
+        if (index == size - 1) {
+            if (index == 0) {
+                head = null;
+                tail = null;
+                size--;
+                return node.value;
+            }
+            node.prev.next = null;
+            tail = node.prev;
+            size--;
+            return node.value;
+        }
+        if (index == 0) {
+            node.next.prev = null;
+            head = node.next;
+            size--;
+            return node.value;
+        }
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+        size--;
+        return node.value;
     }
 }
