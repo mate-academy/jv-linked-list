@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -77,16 +76,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (isEmpty()) {
             throw new IndexOutOfBoundsException("Cannot delete from empty list");
         }
-        try {
-            Node<T> node = findByValue(object);
-            remove(node);
-        } catch (NoSuchElementException e) {
-            return false;
-        }
-        return true;
+        Node<T> node = findByValue(object);
+        return remove(node);
     }
 
-    private void remove(Node<T> node) {
+    private boolean remove(Node<T> node) {
+        if (node == null) {
+            return false;
+        }
         if (node.previous == null) {
             head = node.next;
         } else {
@@ -98,6 +95,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.next.previous = node.previous;
         }
         size--;
+        return true;
     }
 
     @Override
@@ -157,6 +155,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             node = node.next;
         }
-        throw new NoSuchElementException("No such element in list");
+        return null;
     }
 }
