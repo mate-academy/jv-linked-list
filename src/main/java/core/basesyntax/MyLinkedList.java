@@ -95,7 +95,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size--;
             return output.value;
         }
-        if (size != 0 && index == size - 1) {
+        if (index == size - 1) {
             output = tail;
             if (tail.prev != null) {
                 tail.prev.next = null;
@@ -147,12 +147,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         Node<T> currentNode;
         int startIndex;
-        if (index == 0) {
-            return head;
-        }
-        if (index == size - 1) {
-            return tail;
-        }
         if (index < size / 2) {
             startIndex = 0;
             currentNode = head;
