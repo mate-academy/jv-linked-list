@@ -73,7 +73,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return true;
         }
         for (int i = 0; i < size; i++) {
-             if (currentNode.item.equals(object)) {
+            if (currentNode.item.equals(object)) {
                 removing(currentNode);
                 return true;
             }
