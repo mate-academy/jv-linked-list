@@ -9,16 +9,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-        addToEnd(value);
+        addToTail(value);
         return true;
     }
 
     @Override
     public void add(T value, int index) {
         indexCheckForAdd(index);
-        if (index == size && value != null) {
-            addToEnd(value);
-        } else if (value != null) {
+        if (index == size) {
+            addToTail(value);
+        } else {
             addInBetween(value, getNode(index));
         }
     }
@@ -115,9 +115,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void addToEnd(T value) {
+    private void addToTail(T value) {
         final Node<T> current = tail;
-        final Node<T> newNode = new Node<>(current, value,null);
+        final Node<T> newNode = new Node<>(current, value, null);
         tail = newNode;
         if (current == null) {
             head = newNode;
