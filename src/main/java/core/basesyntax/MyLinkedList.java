@@ -23,42 +23,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        Node<T> currentNode = findElement(index);
         checkIndex(index, index > size);
+        if (index == 0) {
+            addFirst(value, currentNode);
+            return;
+        }
         if (index == size) {
             add(value);
+
         } else {
-            if (size / 2 > index) {
-                Node<T> currentNode = first;
-                for (int i = 0; i < index; i++) {
-                    currentNode = currentNode.next;
-                }
-                Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
-                if (index == 0) {
-                    currentNode = first;
-                    newNode = new Node<>(null, value, currentNode);
-                    first = newNode;
-                    if (currentNode == null) {
-                        first = newNode;
-                    } else {
-                        currentNode.prev = newNode;
-                    }
-                    size++;
-                    return;
-                }
-                newNode.prev.next = newNode;
-                currentNode.next = newNode;
-                size++;
+            Node<T> pred = currentNode.prev;
+            Node<T> newNode = new Node<>(pred, value, currentNode);
+            currentNode.prev = newNode;
+            if (pred == null) {
+                first = newNode;
             } else {
-                Node<T> currentNode = last;
-                for (int i = size - 1; i > index; i--) {
-                    currentNode = currentNode.prev;
-                }
-                Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
-                newNode.next.prev = newNode;
-                currentNode.prev = newNode;
-                size++;
+                pred.next = newNode;
             }
+            size++;
         }
+    }
+
+    private void addFirst(T value, Node<T> currentNode) {
+        Node<T> newNode = new Node<>(null, value, currentNode);
+        first = newNode;
+        if (currentNode == null) {
+            last = newNode;
+        } else {
+            currentNode.prev = newNode;
+        }
+        size++;
     }
 
     @Override
