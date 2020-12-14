@@ -98,9 +98,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             Node<T> oldValue = currentNode;
             if (index == 0) {
-                first = null;
-                first = currentNode.next;
-                size--;
+                removeFirst(currentNode);
                 return oldValue.item;
             }
             currentNode.prev.next = oldValue.next;
@@ -114,9 +112,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             Node<T> oldValue = currentNode;
             if (index == size - 1) {
-                last = null;
-                last = currentNode.prev;
-                size--;
+                removeLast(currentNode);
                 return oldValue.item;
             }
             currentNode.prev.next = oldValue.next;
@@ -124,6 +120,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size--;
             return oldValue.item;
         }
+    }
+
+    private void removeLast(Node<T> currentNode) {
+        last = currentNode.prev;
+        currentNode.next = null;
+        size--;
+    }
+
+    private void removeFirst(Node<T> currentNode) {
+        first = currentNode.next;
+        currentNode.prev = null;
+        size--;
     }
 
     @Override
