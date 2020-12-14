@@ -69,18 +69,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         indexChecker(index);
-        return deleteByIndex(index);
+        Node<T> oldNode = getNode(index);
+        return deleteNode(oldNode);
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> header = head;
+        Node<T> currentNode = head;
         for (int i = 0; i < size; i++) {
-            if (header.items == null || header.items.equals(object)) {
-                deleteByIndex(i);
+            if (currentNode.items == null || currentNode.items.equals(object)) {
+                deleteNode(currentNode);
                 return true;
             }
-            header = head.next;
+            currentNode = head.next;
         }
         return false;
     }
@@ -117,8 +118,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private T deleteByIndex(int index) {
-        Node<T> oldNode = getNode(index);
+    private T deleteNode(Node<T> node) {
+        Node<T> oldNode = node;
         Node<T> prevNode = oldNode.prev;
         Node<T> nextNode = oldNode.next;
         final T returnElement = oldNode.items;
