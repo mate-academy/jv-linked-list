@@ -85,10 +85,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         indexCheck(index);
         Node<T> node = findNodeByIndex(index);
-        T oldValue = node.value;
-        linkNewNode(node);
-        size--;
-        return oldValue;
+        return deleteNode(node);
     }
 
     @Override
@@ -98,7 +95,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (i < size()) {
             if (node.value == null && object == null
                     || node.value != null && node.value.equals(object)) {
-                remove(i);
+                deleteNode(node);
                 return true;
             }
             node = node.next;
@@ -143,7 +140,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    private void linkNewNode(Node<T> node) {
+    private T deleteNode(Node<T> node) {
+        T oldValue = node.value;
         if (size == 1) {
             head.value = null;
         } else {
@@ -158,5 +156,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 node.next.prev = node.prev;
             }
         }
+        size--;
+        return oldValue;
     }
 }
