@@ -13,7 +13,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         this.sizeOfFilledList = 0;
     }
 
-    private static class Node<T>{
+    private static class Node<T> {
         private Node<T> previous;
         private T value;
         private Node<T> next;
@@ -35,8 +35,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         checkIndex(index);
         if (index == sizeOfFilledList) {
-            add (value);
-        } else if (index < sizeOfFilledList && index >= 0){
+            add(value);
+        } else if (index < sizeOfFilledList && index >= 0) {
             linkNode(value, findNodeByIndex(index));
         }
     }
@@ -93,10 +93,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return sizeOfFilledList == 0;
     }
 
-    private T removeNode(Node<T> nodeToRemove){
+    private T removeNode(Node<T> nodeToRemove) {
         Node<T> beforeNodeToRemove = nodeToRemove.previous;
         Node<T> afterNodeToRemove = nodeToRemove.next;
-        if(afterNodeToRemove == null){
+        if (afterNodeToRemove == null) {
             tail = beforeNodeToRemove;
             nodeToRemove.previous = null;
         } else if (beforeNodeToRemove == null) {
@@ -106,54 +106,54 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             beforeNodeToRemove.next = afterNodeToRemove;
             afterNodeToRemove.previous = beforeNodeToRemove;
         }
-        sizeOfFilledList --;
+        sizeOfFilledList--;
         return nodeToRemove.value;
     }
 
-    private void linkTail(T elementToAdd){
+    private void linkTail(T elementToAdd) {
         Node<T> lastElement = this.tail;
         Node<T> nodeToAdd = new Node<>(lastElement, elementToAdd,null);
         this.tail = nodeToAdd;
-        if (lastElement == null){
+        if (lastElement == null) {
             head = nodeToAdd;
         } else {
             lastElement.next = nodeToAdd;
         }
-        sizeOfFilledList ++;
+        sizeOfFilledList++;
     }
 
-    private void linkNode(T valueToAdd, Node<T> currentNode){
+    private void linkNode(T valueToAdd, Node<T> currentNode) {
         Node<T> previousNode = currentNode.previous;
-        Node<T> nodeToAdd = new Node<>(previousNode, valueToAdd, currentNode );
+        Node<T> nodeToAdd = new Node<>(previousNode, valueToAdd, currentNode);
         currentNode.previous = nodeToAdd;
-        if (previousNode == null){
+        if (previousNode == null) {
             head = nodeToAdd;
         } else {
-           previousNode.next = nodeToAdd;
+            previousNode.next = nodeToAdd;
         }
         sizeOfFilledList++;
     }
 
-    private Node<T> findNodeByIndex (int index){
+    private Node<T> findNodeByIndex(int index) {
         if (index >= sizeOfFilledList || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        Node<T> nodeToFind ;
-        if(index < sizeOfFilledList/2){
+        Node<T> nodeToFind;
+        if (index < sizeOfFilledList / 2) {
             nodeToFind = head;
             for (int i = 0; i < index; i++) {
                 nodeToFind = nodeToFind.next;
             }
-        }else{
-           nodeToFind = tail;
-            for (int i = sizeOfFilledList - 1 ; i > index; i--) {
+        } else {
+            nodeToFind = tail;
+            for (int i = sizeOfFilledList - 1; i > index; i--) {
                 nodeToFind = nodeToFind.previous;
             }
         }
         return nodeToFind;
     }
 
-    private void checkIndex (int index){
+    private void checkIndex(int index) {
         if (index > sizeOfFilledList || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
