@@ -7,9 +7,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    public MyLinkedList() {
-        size = 0;
-    }
+    public MyLinkedList() {}
 
     @Override
     public boolean add(T value) {
