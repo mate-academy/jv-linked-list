@@ -114,7 +114,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void unlink(Node<T> node) {
         if (node.prev == null & node.next == null) {
-            node.value = null;
             head = null;
             tail = null;
         } else if (node.prev == null) {
