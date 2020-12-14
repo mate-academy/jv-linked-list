@@ -40,8 +40,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T element : list) {
+            add(element);
         }
         return true;
     }
@@ -64,10 +64,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> oldNode = getNode(index);
         T value = oldNode.value;
         if (index == 0 && oldNode.next != null) {
+            oldNode.next.prev = null;
             head = oldNode.next;
         } else if (oldNode.next != null && oldNode.prev != null) {
             oldNode.next.prev = oldNode.prev;
             oldNode.prev.next = oldNode.next;
+        } else if (oldNode.prev != null) {
+            oldNode.prev.next = null;
+            tail = oldNode.prev;
         }
         size--;
         return value;
