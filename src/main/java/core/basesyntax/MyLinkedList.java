@@ -65,13 +65,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    public Node<T> getNode(int index) {
+    private Node<T> getNode(int index) {
         checkSize(index);
-        Node<T> node = head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
+        Node<T> nodeFromHead = head;
+        Node<T> nodeFromTail = tail;
+        if (index <= size / 2) {
+            for (int i = 0; i < index; i++) {
+                nodeFromHead = nodeFromHead.next;
+            }
+            return nodeFromHead;
+        } else {
+            for (int i = 0; i < (size - 1) - index; i++) {
+                nodeFromTail = nodeFromTail.prev;
+            }
+            return nodeFromTail;
         }
-        return node;
     }
 
     private void unlink(Node<T> node) {
@@ -88,7 +96,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    public void checkSize(int index) {
+    private void checkSize(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Wrong index!");
         }
