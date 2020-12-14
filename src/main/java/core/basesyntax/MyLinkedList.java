@@ -63,9 +63,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException();
-        }
+        isIndexOutOfBound(index);
         return find(index).item;
     }
 
@@ -141,11 +139,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    public void isIndexOutOfBound(int index) {
+    private void isIndexOutOfBound(int index) {
         if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index is out of bound!");
         }
     }
 }
-
-
