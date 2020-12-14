@@ -30,7 +30,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size++;
             return;
         }
-        isValid(index);
+        validateIndex(index);
         nodeTemp = getNode(index);
         if (nodeTemp == first) {
             nodeNew = new Node<>(null, value, nodeTemp);
@@ -110,7 +110,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        isValid(index);
+        validateIndex(index);
         if (index < size / 2) {
             nodeTemp = first;
             for (int i = 0; i < index; i++) {
@@ -139,7 +139,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private void isValid(int index) {
+    private void validateIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Wrong index");
         }
