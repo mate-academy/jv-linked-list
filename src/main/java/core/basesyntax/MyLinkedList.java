@@ -33,18 +33,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         isValid(index);
         nodeTemp = getNode(index);
         if (nodeTemp == first) {
-                nodeNew = new Node<>(null, value, nodeTemp);
-                nodeTemp.previous = nodeNew;
-                first = nodeNew;
+            nodeNew = new Node<>(null, value, nodeTemp);
+            nodeTemp.previous = nodeNew;
+            first = nodeNew;
             size++;
             return;
-            } else {
-                nodeNew = new Node<>(nodeTemp.previous, value, nodeTemp);
-                nodeTemp.previous.next = nodeNew;
-                nodeTemp.previous = nodeNew;
-                size++;
-            }
+        } else {
+            nodeNew = new Node<>(nodeTemp.previous, value, nodeTemp);
+            nodeTemp.previous.next = nodeNew;
+            nodeTemp.previous = nodeNew;
+            size++;
+        }
     }
+
     @Override
     public boolean addAll(List<T> list) {
         for (T object : list) {
@@ -74,8 +75,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public boolean remove(T object) {
-       nodeTemp = first;
+   public boolean remove(T object) {
+        nodeTemp = first;
         while (nodeTemp != null) {
             if (nodeTemp.value == null || nodeTemp.value.equals(object)) {
                 deletedNode(nodeTemp);
@@ -143,5 +144,4 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Wrong index");
         }
     }
-
 }
