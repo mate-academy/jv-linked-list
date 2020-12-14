@@ -16,7 +16,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         Node<T> nodeNew;
-        Node<T> nodeTemp;
         if (size == 0 && index == 0) {
             nodeNew = new Node<>(null, value, null);
             first = last = nodeNew;
@@ -31,7 +30,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         validateIndex(index);
-        nodeTemp = getNode(index);
+        Node<T> nodeTemp = getNode(index);
         if (nodeTemp == first) {
             nodeNew = new Node<>(null, value, nodeTemp);
             nodeTemp.previous = nodeNew;
