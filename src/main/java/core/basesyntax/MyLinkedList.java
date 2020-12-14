@@ -35,9 +35,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         validateIndex(index);
         Node<T> prevNode = getNode(index - 1);
-        Node<T> add = new Node<>(prevNode, value, prevNode.next);
-        prevNode.next = add;
-        add.next.prev = add;
+        Node<T> newNode = new Node<>(prevNode, value, prevNode.next);
+        prevNode.next = newNode;
+        newNode.next.prev = newNode;
         size++;
     }
 
