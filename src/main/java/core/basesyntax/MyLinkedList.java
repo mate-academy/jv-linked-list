@@ -126,10 +126,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void deletedNode(Node<T> node) {
-        if (node == last) {
+        if (node.next == null) {
             last.next = null;
             last = node.previous;
-        } else if (node == first) {
+        } else if (node.previous == null) {
             first = node.next;
             first.previous = null;
         } else {
