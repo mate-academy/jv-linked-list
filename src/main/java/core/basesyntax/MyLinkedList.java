@@ -45,12 +45,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = insertingNode;
             size++;
         } else {
-            Node<T> insertingNode;
-            Node newNode = getNodeNyIndex(index - 1);
-            insertingNode = new Node<>(newNode, value, newNode.nextNode);
-            Node afteradditingNode = newNode.nextNode;
-            newNode.nextNode = insertingNode;
-            insertingNode.previousNode = newNode;
+            Node previousNode = getNodeNyIndex(index - 1);
+            Node<T> insertingNode = new Node<>(previousNode, value, previousNode.nextNode);
+            Node afteradditingNode = previousNode.nextNode;
+            previousNode.nextNode = insertingNode;
             afteradditingNode.previousNode = insertingNode;
             size++;
         }
@@ -67,8 +65,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         indexCheck(index);
-        Node currentNote = getNodeNyIndex(index);
-        return (T) currentNote.value;
+        Node<T> currentNote = getNodeNyIndex(index);
+        return currentNote.value;
     }
 
     @Override
@@ -84,10 +82,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         indexCheck(index);
         Node<T> currentNode = getNodeNyIndex(index);
-        T removedValue = (T) currentNode.value;
-        delete(currentNode);
-        size--;
-        return removedValue;
+        return delete(currentNode);
     }
 
     @Override
@@ -97,9 +92,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             currentNode = currentNode.nextNode;
             if (object == currentNode.value || object != null && object.equals(currentNode.value)) {
                 delete(currentNode);
-                size--;
                 return true;
-
             }
         }
         return false;
@@ -143,15 +136,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    private void delete(Node removedNode) {
-        if (removedNode == head) {
-            head = removedNode.nextNode;
-            removedNode.nextNode = removedNode.previousNode;
-            if (removedNode == tail) {
-                tail = removedNode.previousNode;
-                removedNode.previousNode = removedNode.nextNode;
-            }
+    private T delete(Node<T> removedNode) {
+        Node<T> prev = removedNode.previousNode;
+        Node<T> next = removedNode.nextNode;
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.nextNode = next;
         }
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.previousNode = prev;
+        }
+        T oldValue = removedNode.value;
+        size--;
+        return oldValue;
     }
 
 }
