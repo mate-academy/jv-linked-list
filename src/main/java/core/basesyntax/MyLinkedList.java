@@ -103,26 +103,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
         if (index == 0 && index == size - 1) { //removing last element
+            size--;
             Node<T> removedNode = head;
             head = null;
             tail = null;
-            size--;
             return removedNode.getValue();
         }
 
         if (index == 0) { //removing head
+            size--;
             Node<T> removedNode = head;
             Node<T> nodeAfter = removedNode.getNext();
             head = nodeAfter;
-            size--;
             return removedNode.getValue();
         }
 
         if (index == size - 1) { //removing tail
+            size--;
             Node<T> removedNode = tail;
             Node<T> nodeBefore = removedNode.getPrev();
             tail = nodeBefore;
-            size--;
             return removedNode.getValue();
         }
 
