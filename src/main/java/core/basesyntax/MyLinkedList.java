@@ -7,7 +7,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    public MyLinkedList() {}
+    public MyLinkedList() {
+    }
 
     @Override
     public boolean add(T value) {
@@ -121,8 +122,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void unlinkNode(Node<T> node) {
         if (node == tail) {
-            tail.next = null;
-            tail = node.previous;
+            if (size == 1) {
+                head = tail = null;
+            } else {
+                tail = tail.previous;
+                tail.next = null;
+            }
         } else if (node == head) {
             head = node.next;
             head.previous = null;
