@@ -29,7 +29,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> newNode = new Node<>(tail, value, null);
             tail.nextNode = newNode;
             tail = newNode;
-         
+
         }
         size++;
         return true;
@@ -84,15 +84,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         indexCheck(index);
         Node<T> currentNode = getNodeNyIndex(index);
-        if (size / 2 - 1 < index) {
-            currentNode.nextNode = currentNode.previousNode;
-        } else {
-            currentNode.previousNode = currentNode.nextNode;
-        }
-        if (index == 0) {
-            head = currentNode.nextNode;
-        }
         T removedValue = (T) currentNode.value;
+        delete(currentNode);
         size--;
         return removedValue;
     }
@@ -103,22 +96,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < size; i++) {
             currentNode = currentNode.nextNode;
             if (object == currentNode.value || object != null && object.equals(currentNode.value)) {
-                Node<T> afterDeleteNode = currentNode.nextNode;
-                Node<T> beforeDeleteNode = currentNode.previousNode;
-                if (currentNode.equals(head) && size > 1) {
-                    head = currentNode.nextNode;
-                    currentNode.nextNode.previousNode = null;
-                    size--;
-                    return true;
-                } else if (currentNode.equals(head) && size == 1) {
-                    size--;
-                    return true;
-                } else {
-                    afterDeleteNode.previousNode = beforeDeleteNode;
-                    beforeDeleteNode.nextNode = afterDeleteNode;
-                    size--;
-                    return true;
-                }
+                delete(currentNode);
+                size--;
+                return true;
+
             }
         }
         return false;
@@ -161,4 +142,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return currentNode;
     }
+
+    private void delete(Node removedNode) {
+        if (removedNode == head) {
+            head = removedNode.nextNode;
+            removedNode.nextNode = removedNode.previousNode;
+            if (removedNode == tail) {
+                tail = removedNode.previousNode;
+                removedNode.previousNode = removedNode.nextNode;
+            }
+        }
+    }
+
 }
+
