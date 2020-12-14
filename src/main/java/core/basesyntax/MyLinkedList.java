@@ -8,17 +8,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int linkedListSize;
 
     public MyLinkedList() {
-        linkedListSize = 0;
     }
 
     @Override
     public boolean add(T value) {
+        Node<T> newNode;
         if (linkedListSize == 0) {
-            Node<T> firstNode = new Node<>(null, value, null);
-            head = firstNode;
-            tail = firstNode;
+            newNode = new Node<>(null, value, null);
+            head = newNode;
+            tail = newNode;
         } else {
-            Node<T> newNode = new Node<>(tail, value, null);
+            newNode = new Node<>(tail, value, null);
             tail.next = newNode;
             tail = newNode;
         }
@@ -32,15 +32,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        Node<T> findNode = findNode(index);
-        Node<T> prevNode = findNode.prev;
-        Node<T> newNode = new Node<>(prevNode, value, findNode);
+        Node<T> currentNode = findNode(index);
+        Node<T> prevNode = currentNode.prev;
+        Node<T> newNode = new Node<>(prevNode, value, currentNode);
         if (prevNode != null) {
             prevNode.next = newNode;
         } else {
             head = newNode;
         }
-        findNode.prev = newNode;
+        currentNode.prev = newNode;
         linkedListSize++;
     }
 
@@ -113,12 +113,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNode(int index) {
-        Node<T> findNode = head;
-        for (int i = 0; i < linkedListSize; i++) {
-            if (i == index) {
-                return findNode;
+        Node<T> findNode;
+        if (index < linkedListSize / 2) {
+            findNode = head;
+            for (int i = 0; i < linkedListSize; i++) {
+                if (i == index) {
+                    return findNode;
+                }
+                findNode = findNode.next;
             }
-            findNode = findNode.next;
+        } else {
+            findNode = tail;
+            for (int i = linkedListSize - 1; i >= 0; i--) {
+                if (i == index) {
+                    return findNode;
+                }
+                findNode = findNode.prev;
+            }
         }
         throw new IndexOutOfBoundsException("Index [" + index + "] does not exist!");
     }
