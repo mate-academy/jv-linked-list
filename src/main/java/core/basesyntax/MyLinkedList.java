@@ -1,21 +1,16 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node head;
-    private Node tail;
+    private Node<T> head;
+    private Node<T> tail;
     private int size;
-
-    public MyLinkedList() {
-        size = 0;
-        head = null;
-        tail = null;
-    }
 
     @Override
     public boolean add(T value) {
-        Node node = new Node(tail, value, null);
+        Node<T> node = new Node<T>(tail, value, null);
         if (isEmpty()) {
             head = node;
         } else {
@@ -28,15 +23,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (!(checkIndex(index) || index == size)) {
+        if (!((index >= 0 && index < size) || index == size)) {
             throw new IndexOutOfBoundsException("Failed add to LinkedList. Please check index");
         }
         if (index == size) {
             add(value);
             return;
         }
-        Node currentNode = findIndex(index);
-        Node newNode = new Node(currentNode.previous, value, currentNode);
+        Node<T> currentNode = findByIndex(index);
+        Node<T> newNode = new Node<T>(currentNode.previous, value, currentNode);
         if (index == 0) {
             head = newNode;
         } else {
@@ -56,18 +51,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (!checkIndex(index)) {
-            throw new IndexOutOfBoundsException("Failed get from LinkedList. Please check index");
-        }
-        return findIndex(index).value;
+        checkIndex(index);
+        return findByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        if (!checkIndex(index)) {
-            throw new IndexOutOfBoundsException("Failed set in LinkedList. Please check index");
-        }
-        Node node = findIndex(index);
+        checkIndex(index);
+        Node<T> node = findByIndex(index);
         T oldValue = node.value;
         node.value = value;
         return oldValue;
@@ -75,25 +66,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (!checkIndex(index)) {
-            throw new IndexOutOfBoundsException("Failed delete from LinkedList."
-                    + " Please check index");
-        }
-        Node node = findIndex(index);
-        if (node == tail && node == head) {
-            head = null;
-            tail = null;
-        } else if (node == tail) {
-            node.previous.next = null;
-            tail = node.previous;
-        } else if (node == head) {
-            node.next.previous = null;
-            head = node.next;
-        } else {
-            node.previous.next = node.next;
-            node.next.previous = node.previous;
-        }
-        size--;
+        checkIndex(index);
+        Node<T> node = findByIndex(index);
+        remove(node);
         return node.value;
     }
 
@@ -102,11 +77,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (isEmpty()) {
             throw new IndexOutOfBoundsException("Cannot delete from empty list");
         }
-        int index = getIndex(object);
-        if (index == -1) {
+        try {
+            Node<T> node = findByValue(object);
+            remove(node);
+        } catch (NoSuchElementException e) {
             return false;
         }
-        remove(index);
         return true;
     }
 
@@ -120,42 +96,67 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private class Node {
-        private Node previous;
+    private class Node<T> {
+        private Node<T> previous;
         private T value;
-        private Node next;
+        private Node<T> next;
 
-        public Node(Node previous, T value, Node next) {
+        public Node(Node<T> previous, T value, Node<T> next) {
             this.previous = previous;
             this.value = value;
             this.next = next;
         }
     }
 
-    private Node findIndex(int index) {
-        Node node = head;
-        int listIndex = 0;
-        while (listIndex != index) {
-            node = node.next;
-            listIndex++;
+    private Node<T> findByIndex(int index) {
+        Node<T> node;
+        if(index <= size / 2) {
+            node = head;
+            int listIndex = 0;
+            while (listIndex != index) {
+                node = node.next;
+                listIndex++;
+            }
+        } else {
+            node = tail;
+            int listIndex = size - 1;
+            while (listIndex != index) {
+                node = node.previous;
+                listIndex--;
+            }
         }
         return node;
     }
 
     private boolean checkIndex(int index) {
-        return index >= 0 && index < size;
+        if (index >= 0 && index < size) {
+            return true;
+        }
+        throw new IndexOutOfBoundsException("Please check index");
     }
 
-    private int getIndex(T value) {
-        Node node = head;
-        int index = 0;
+    private Node<T> findByValue(T value) {
+        Node<T> node = head;
         while (node != null) {
             if (node.value == value || (node.value != null && node.value.equals(value))) {
-                return index;
+                return node;
             }
-            index++;
             node = node.next;
         }
-        return -1;
+        throw new NoSuchElementException("No such element in list");
+    }
+
+    private void remove(Node<T> node) {
+        if (node.previous == null) {
+            head = node.next;
+        } else {
+            node.previous.next = node.next;
+        }
+        if (node.next == null) {
+            tail = node.previous;
+        } else {
+            node.next.previous = node.previous;
+        }
+        size--;
     }
 }
