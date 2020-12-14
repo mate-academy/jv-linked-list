@@ -5,7 +5,6 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
-    private Node<T> nodeTemp;
     private int size = 0;
 
     @Override
@@ -17,6 +16,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         Node<T> nodeNew;
+        Node<T> nodeTemp;
         if (size == 0 && index == 0) {
             nodeNew = new Node<>(null, value, null);
             first = last = nodeNew;
@@ -61,7 +61,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        nodeTemp = getNode(index);
+        Node<T> nodeTemp = getNode(index);
         T value1 = nodeTemp.value;
         nodeTemp.value = value;
         return value1;
@@ -69,16 +69,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        nodeTemp = getNode(index);
+        Node<T> nodeTemp = getNode(index);
         deletedNode(nodeTemp);
         return nodeTemp.value;
     }
 
     @Override
    public boolean remove(T object) {
-        nodeTemp = first;
+        Node<T> nodeTemp = first;
         while (nodeTemp != null) {
-            if (nodeTemp.value == null || nodeTemp.value.equals(object)) {
+            if ((object == null && nodeTemp.value == null)
+                    || (nodeTemp.value != null && nodeTemp.value.equals(object))) {
                 deletedNode(nodeTemp);
                 return true;
             }
@@ -111,6 +112,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         validateIndex(index);
+        Node<T> nodeTemp;
         if (index < size / 2) {
             nodeTemp = first;
             for (int i = 0; i < index; i++) {
