@@ -3,13 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private Node<T> head;
     private Node<T> tail;
     private int size = 0;
-
-    public MyLinkedList() {
-    }
 
     private static class Node<T> {
         private T data;
@@ -41,9 +37,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        T[] array = (T[])list.toArray();
-        for (int k = 0; k < array.length; k++) {
-            insertLast(array[k]);
+        for (T t : list) {
+            insertLast(t);
         }
         return true;
     }
@@ -66,24 +61,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkElementIndex(index);
-        return removing(getNode(index));
+        return removeNode(getNode(index));
     }
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> first = head; first != null; first = first.next) {
-                if (first.data == null) {
-                    removing(first);
-                    return true;
-                }
+
+        for (Node<T> first = head; first != null; first = first.next) {
+            if (first.data == null) {
+                removeNode(first);
+                return true;
             }
-        } else {
-            for (Node<T> first = head; first != null; first = first.next) {
-                if (object.equals(first.data)) {
-                    removing(first);
-                    return true;
-                }
+            if (object != null && object.equals(first.data)) {
+                removeNode(first);
+                return true;
             }
         }
         return false;
@@ -99,14 +90,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    public void insertLast(T data) {
-        Node<T> tmp = new Node<T>(tail, data, null);
+    private void insertLast(T data) {
+        Node<T> newNode = new Node<T>(tail, data, null);
         if (tail != null) {
-            tail.next = tmp;
+            tail.next = newNode;
         }
-        tail = tmp;
+        tail = newNode;
         if (head == null) {
-            head = tmp;
+            head = newNode;
         }
         size++;
     }
@@ -123,7 +114,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    T removing(Node<T> removed) {
+    private T removeNode(Node<T> removed) {
         final T element = removed.data;
         Node<T> next = removed.next;
         Node<T> prev = removed.previous;
@@ -146,13 +137,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        Node<T> current = this.head;
-        int counter = 0;
-        while (current != null & counter != index) {
-            current = current.next;
-            counter++;
+        if (index < (size / 2)) {
+            Node<T> forward = head;
+            for (int k = 0; k < index; k++) {
+                forward = forward.next;
+            }
+            return forward;
+        } else {
+            Node<T> backward = tail;
+            for (int k = size - 1; k > index; k--) {
+                backward = backward.previous;
+            }
+            return backward;
         }
-        return current;
     }
 
     private void checkBounds(int index) {
