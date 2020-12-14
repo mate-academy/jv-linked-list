@@ -39,13 +39,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-
-        Node<T> oldNode = getNodeByIndex(index);
-        Node<T> newNode = new Node<T>(oldNode.prev, value, oldNode);
-
-        if (oldNode.prev != null) {
-            oldNode.prev.next = newNode;
-            oldNode.prev = newNode;
+        Node<T> currentNode = getNodeByIndex(index);
+        Node<T> newNode = new Node<T>(currentNode.prev, value, currentNode);
+        if (currentNode.prev != null) {
+            currentNode.prev.next = newNode;
+            currentNode.prev = newNode;
         } else {
             head = newNode;
         }
@@ -54,8 +52,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T value : list) {
+            add(value);
         }
         return true;
     }
@@ -76,17 +74,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> temp = getNodeByIndex(index);
-        if (temp.prev != null) {
-            temp.prev.next = temp.next;
-        } else {
-            head = temp.next;
-        }
-        if (temp.next != null) {
-            temp.next.prev = temp.prev;
-        } else {
-            tail = temp.prev;
-        }
-        size--;
+        unlink(temp);
         return temp.value;
     }
 
@@ -95,7 +83,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> temp = head;
         for (int i = 0; i < size; i++) {
             if (temp.value == object || temp.value.equals(object)) {
-                remove(i);
+                unlink(temp);
                 return true;
             }
             temp = temp.next;
@@ -117,10 +105,32 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("");
         }
-        Node<T> temp = head;
-        for (int i = 0; i < index; i++) {
-            temp = temp.next;
+        Node<T> temp;
+        if (index <= size >> 2) {
+            temp = head;
+            for (int i = 0; i < index; i++) {
+                temp = temp.next;
+            }
+        } else {
+            temp = tail;
+            for (int i = 0; i < size - index - 1; i++) {
+                temp = temp.prev;
+            }
         }
         return temp;
+    }
+
+    private void unlink(Node<T> node) {
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        } else {
+            head = node.next;
+        }
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        } else {
+            tail = node.prev;
+        }
+        size--;
     }
 }
