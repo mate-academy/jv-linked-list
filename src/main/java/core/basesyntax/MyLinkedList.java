@@ -3,48 +3,150 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private Node<T> head = null;
+    private Node<T> tail = null;
+    private int size = 0;
+
+    private static class Node<T> {
+        private Node<T> prev;
+        private T value;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
+    }
+
+    private void isInvalidIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(index + " index is out of bounds");
+        }
+    }
+
     @Override
     public boolean add(T value) {
-        return false;
+        linkToTail(value);
+        return true;
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (index == size) {
+            linkToTail(value);
+        } else {
+            linkToNode(value, getNodeByIndex(index));
+        }
     }
 
     @Override
     public boolean addAll(List<T> list) {
-        return false;
+        for (T item: list) {
+            add(item);
+        }
+        return true;
+    }
+
+    private void linkToNode(T elementToInsert, Node<T> successor) {
+        Node<T> predecessor = successor.prev;
+        Node<T> newNode = new Node<>(predecessor, elementToInsert, successor);
+        successor.prev = newNode;
+        if (predecessor == null) {
+            head = newNode;
+        } else {
+            predecessor.next = newNode;
+        }
+        size++;
+    }
+
+    private void linkToTail(T elementToInsert) {
+        Node<T> predecessor = tail;
+        Node<T> newNode = new Node<>(predecessor, elementToInsert, null);
+        tail = newNode;
+        if (predecessor == null) {
+            head = newNode;
+        } else {
+            predecessor.next = newNode;
+        }
+        size++;
     }
 
     @Override
     public T get(int index) {
-        return null;
+        return getNodeByIndex(index).value;
+    }
+
+    private Node<T> getNodeByIndex(int index) {
+        isInvalidIndex(index);
+        Node<T> targetNode;
+        if (index > size / 2) {
+            targetNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                targetNode = targetNode.prev;
+            }
+        } else {
+            targetNode = head;
+            for (int i = 0; i < index; i++) {
+                targetNode = targetNode.next;
+            }
+        }
+        return targetNode;
     }
 
     @Override
     public T set(T value, int index) {
-        return null;
+        isInvalidIndex(index);
+        Node<T> oldElement = getNodeByIndex(index);
+        T oldNodeValue = oldElement.value;
+        oldElement.value = value;
+        return oldNodeValue;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        isInvalidIndex(index);
+        return removeNode(getNodeByIndex(index));
     }
 
     @Override
     public boolean remove(T object) {
+        Node<T> currentNode = head;
+        while (currentNode != null) {
+            if ((object == null && currentNode.value == null)
+                    || (currentNode.value != null && currentNode.value.equals(object))) {
+                removeNode(currentNode);
+                return true;
+            }
+            currentNode = currentNode.next;
+        }
         return false;
+    }
+
+    private T removeNode(Node<T> nodeToRemove) {
+        if (nodeToRemove.next == null) {
+            tail = nodeToRemove.prev;
+            nodeToRemove.prev = null;
+        } else if (nodeToRemove.prev == null) {
+            head = nodeToRemove.next;
+            nodeToRemove.next = null;
+        } else {
+            nodeToRemove.prev.next = nodeToRemove.next;
+            nodeToRemove.next.prev = nodeToRemove.prev;
+            nodeToRemove.prev = null;
+            nodeToRemove.next = null;
+        }
+        size--;
+        return nodeToRemove.value;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 }
