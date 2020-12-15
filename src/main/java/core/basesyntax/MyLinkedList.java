@@ -19,8 +19,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private boolean isInvalidIndex(int index) {
-        return index < 0 || index >= size;
+    private void isInvalidIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(index + " index is out of bounds");
+        }
     }
 
     @Override
@@ -33,11 +35,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         if (index == size) {
             linkToTail(value);
-        } else if (!isInvalidIndex(index)) {
+        } else {
             linkToNode(value, getNodeByIndex(index));
-        }
-        if (isInvalidIndex(index)) {
-            throw new IndexOutOfBoundsException(index + " index is out of bounds");
         }
     }
 
@@ -75,13 +74,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (isInvalidIndex(index)) {
-            throw new IndexOutOfBoundsException(index + " index is out of bounds");
-        }
         return getNodeByIndex(index).value;
     }
 
     private Node<T> getNodeByIndex(int index) {
+        isInvalidIndex(index);
         Node<T> targetNode;
         if (index > size / 2) {
             targetNode = tail;
@@ -99,9 +96,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (isInvalidIndex(index)) {
-            throw new IndexOutOfBoundsException(index + " index is out of bounds");
-        }
+        isInvalidIndex(index);
         Node<T> oldElement = getNodeByIndex(index);
         T oldNodeValue = oldElement.value;
         oldElement.value = value;
@@ -110,9 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (isInvalidIndex(index)) {
-            throw new IndexOutOfBoundsException(index + " index is out of bounds");
-        }
+        isInvalidIndex(index);
         return removeNode(getNodeByIndex(index));
     }
 
