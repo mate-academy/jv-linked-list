@@ -4,8 +4,8 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
-    public void add(T value) {
-
+    public boolean add(T value) {
+        return false;
     }
 
     @Override
@@ -14,8 +14,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public void addAll(List<T> list) {
-
+    public boolean addAll(List<T> list) {
+        return false;
     }
 
     @Override
@@ -24,8 +24,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public void set(T value, int index) {
-
+    public T set(T value, int index) {
+        return null;
     }
 
     @Override
@@ -34,8 +34,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public T remove(T t) {
-        return null;
+    public boolean remove(T object) {
+        return false;
     }
 
     @Override
