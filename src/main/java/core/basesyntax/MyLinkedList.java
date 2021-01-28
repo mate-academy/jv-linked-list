@@ -40,16 +40,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public void add(T value) {
+    public boolean add(T value) {
         if (size == 0) {
             head = new Node<>(value, null, null);
             tail = head;
             size++;
-            return;
+            return true;
         }
         tail = new Node<>(value, null, tail);
         tail.prev.next = tail;
         size++;
+        return true;
     }
 
     @Override
