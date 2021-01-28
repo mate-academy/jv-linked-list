@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Cat {
     private String name;
-    private String color;
+    private String сolor;
 
     public Cat(String name, String color) {
         this.name = name;
