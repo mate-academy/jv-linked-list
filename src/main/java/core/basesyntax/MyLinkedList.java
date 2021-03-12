@@ -7,7 +7,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    static class Node<T> {
+    private static class Node<T> {
         private T item;
         private Node<T> next;
         private Node<T> prev;
@@ -19,21 +19,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    @Override
-    public String toString() {
-        Node<T> current = head;
-        String content = "";
-        if (current != null) {
-            content = current.item.toString();
-            while (current.next != null) {
-                current = current.next;
-                content = content + " " + current.item;
-            }
-        }
-        return "MyLinkedList {"
-                + "content = " + content
-                + ", size = " + size
-                + '}';
+    private void throwException() {
+        throw new IndexOutOfBoundsException("Index is wrong!");
     }
 
     @Override
@@ -45,23 +32,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail.prev.next = tail;
         }
         size++;
-        return size > 1;
+        return true;
     }
 
     @Override
     public void add(T value, int index) {
         if (index > size() || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + " is wrong!");
+            throwException();
         }
         if (index == size()) {
             add(value);
             return;
         }
         Node<T> currentNode = head;
+        if (currentNode == null) {
+            throwException();
+        }
         for (int i = 0; i < index - 1; i++) {
-            if (currentNode == null) {
-                throw new IndexOutOfBoundsException("Index: " + index + " is wrong!");
-            }
             currentNode = currentNode.next;
         }
         if (index == 0) {
@@ -78,8 +65,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        for (T elemFromList : list) {
-            add(elemFromList);
+        for (T elem : list) {
+            add(elem);
         }
         return true;
     }
@@ -95,7 +82,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         if (index >= size() || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + " is wrong!");
+            throwException();
         }
         Node<T> node = getNode(index);
         return node.item;
@@ -104,7 +91,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + " is wrong!");
+            throwException();
         }
         Node<T> node = getNode(index);
         T item = node.item;
@@ -115,7 +102,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + " is wrong!");
+            throwException();
         }
         Node<T> node = getNode(index);
         if (size() == 1 && index == 0) {
@@ -154,11 +141,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return true;
         }
         for (int i = 0; i < size(); i++) {
-            if (object == null && get(i) == null) {
-                index = i;
-                break;
-            }
-            if (object != null && object.equals(get(i))) {
+            if (object != null && object.equals(get(i)) || object == null && get(i) == null) {
                 index = i;
                 break;
             }
