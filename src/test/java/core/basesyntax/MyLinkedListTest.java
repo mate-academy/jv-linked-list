@@ -357,7 +357,7 @@ public class MyLinkedListTest {
         Assert.assertEquals("Expected size is incorrect", 2, cats.size());
 
         boolean isThirdCatRemove = cats.remove(THIRD_CAT);
-        Assert.assertFalse("Test failed! Result after removing should be true", isThirdCatRemove);
+        Assert.assertFalse("Test failed! Result after removing non existed element should be false", isThirdCatRemove);
         Assert.assertEquals("Expected size is incorrect", 2, cats.size());
     }
 
