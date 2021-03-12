@@ -19,10 +19,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void throwException() {
-        throw new IndexOutOfBoundsException("Index is wrong!");
-    }
-
     @Override
     public boolean add(T value) {
         if (head == null && tail == null) {
@@ -38,7 +34,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index > size() || index < 0) {
-            throwException();
+            throw new IndexOutOfBoundsException("Index: " + index + " is wrong!");
         }
         if (index == size()) {
             add(value);
@@ -46,7 +42,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         Node<T> currentNode = head;
         if (currentNode == null) {
-            throwException();
+            throw new IndexOutOfBoundsException("Index: " + index + " is wrong!");
         }
         for (int i = 0; i < index - 1; i++) {
             currentNode = currentNode.next;
@@ -81,18 +77,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size() || index < 0) {
-            throwException();
-        }
+        checkIndex(index);
         Node<T> node = getNode(index);
         return node.item;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index >= size || index < 0) {
-            throwException();
-        }
+        checkIndex(index);
         Node<T> node = getNode(index);
         T item = node.item;
         node.item = value;
@@ -101,9 +93,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throwException();
-        }
+        checkIndex(index);
         Node<T> node = getNode(index);
         if (size() == 1 && index == 0) {
             head = null;
@@ -173,5 +163,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size() || index < 0) {
+            throw new IndexOutOfBoundsException("Index: " + index + " is wrong!");
+        }
     }
 }
