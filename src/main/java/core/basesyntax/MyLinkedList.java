@@ -48,16 +48,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index out of bounds");
         }
         if ((size >> 1) < index) {
-            return searchFromTail(index).data;
+            return searchFromTail(index).item;
         }
-        return searchFromHead(index).data;
+        return searchFromHead(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         Node<T> node = getNode(index);
-        T oldData = node.data;
-        node.data = value;
+        T oldData = node.item;
+        node.item = value;
         return oldData;
     }
 
@@ -70,18 +70,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == 0) {
             Node<T> deletedHeadItem = head;
             unlinkHead();
-            return deletedHeadItem.data;
+            return deletedHeadItem.item;
         }
 
         if (index == size - 1) {
             Node<T> deletedTailItem = tail;
             unlinkTail();
-            return deletedTailItem.data;
+            return deletedTailItem.item;
         }
 
         Node<T> deletedNode = getNode(index);
         unlinkNode(deletedNode);
-        return deletedNode.data;
+        return deletedNode.item;
     }
 
     @Override
@@ -120,6 +120,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<T>(null, value, head);
         head.prev = newNode;
         head = newNode;
+        size++;
+    }
+
+    private void addToHead(T value) {
+        Node<T> node = new Node<>(null, value, null);
+        head = node;
+        tail = node;
+        head.next = tail;
+        tail.prev = head;
         size++;
     }
 
@@ -167,23 +176,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    private void addToHead(T value) {
-        Node<T> node = new Node<>(null, value, null);
-        head = node;
-        tail = node;
-        head.next = tail;
-        tail.prev = head;
-        size++;
-    }
-
-    private class Node<T> {
-        private T data;
+    private static class Node<T> {
+        private T item;
         private Node<T> prev;
         private Node<T> next;
 
         public Node(Node<T> prev, T data, Node<T> next) {
             this.prev = prev;
-            this.data = data;
+            this.item = data;
             this.next = next;
         }
     }
