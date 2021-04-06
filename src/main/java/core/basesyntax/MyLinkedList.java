@@ -80,11 +80,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeNodeByIndex(int index) {
+        if (this.size / 2 > index) {
+            return getNodeFromFirstHalfOfList(index);
+        } else {
+            return getNodeFromSecondHalfOfList(index);
+        }
+    }
+
+    private Node<T> getNodeFromFirstHalfOfList(int index) {
         int indexCounter = 0;
         Node<T> nodeWithInputIndex = this.first;
         while (indexCounter < index) {
             nodeWithInputIndex = nodeWithInputIndex.getNext();
             indexCounter++;
+        }
+        return nodeWithInputIndex;
+    }
+
+    private Node<T> getNodeFromSecondHalfOfList(int index) {
+        int indexCounter = this.size - 1;
+        Node<T> nodeWithInputIndex = this.last;
+        while (indexCounter > index) {
+            nodeWithInputIndex = nodeWithInputIndex.getPrev();
+            indexCounter--;
         }
         return nodeWithInputIndex;
     }
@@ -106,7 +124,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("This index is not valid");
         }
         Node<T> nodeForDeletion = getNodeNodeByIndex(index);
-        deleteInputNode(nodeForDeletion);
+        unlinkNode(nodeForDeletion);
         return nodeForDeletion.getItem();
     }
 
@@ -116,11 +134,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (nodeForDeletion == null) {
             return false;
         }
-        deleteInputNode(nodeForDeletion);
+        unlinkNode(nodeForDeletion);
         return true;
     }
 
-    private void deleteInputNode(Node<T> nodeForDeletion) {
+    private void unlinkNode(Node<T> nodeForDeletion) {
         if (nodeForDeletion == this.first) {
             deleteFirstNode(nodeForDeletion);
         } else if (nodeForDeletion == this.last) {
