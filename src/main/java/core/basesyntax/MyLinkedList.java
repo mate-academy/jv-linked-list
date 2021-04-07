@@ -7,10 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size;
 
-    public MyLinkedList() {
-        this.size = 0;
-    }
-
     @Override
     public boolean add(T value) {
         Node<T> newNode = new Node(null, value, null);
