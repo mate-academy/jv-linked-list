@@ -3,35 +3,36 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final String MESSAGE_INDEX_OUT_OF_BOUNDS_EXCEPTION
+            = "The index passed to the method is invalid";
     private Node<T> first;
     private Node<T> last;
     private int size;
 
     @Override
     public boolean add(T value) {
-        Node<T> newNode = new Node(null, value, null);
-        if (this.first == null) {
-            this.first = newNode;
-            this.last = newNode;
+        if (first == null) {
+            first = new Node(value);
+            last = first;
         } else {
-            newNode.setPrev(this.last);
-            this.last.setNext(newNode);
-            this.last = newNode;
+            Node<T> newNode = new Node(last, value, null);
+            last.setNext(newNode);
+            last = newNode;
         }
-        this.size++;
+        size++;
         return true;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > this.size || index < 0) {
-            throw new IndexOutOfBoundsException("This index is not valid");
+        if (index > size || index < 0) {
+            throw new IndexOutOfBoundsException(MESSAGE_INDEX_OUT_OF_BOUNDS_EXCEPTION);
         }
         if (index == 0) {
-            addByIndexAtTheBegin(value, index);
+            prepend(value);
             return;
         }
-        if (index < this.size) {
+        if (index < size) {
             addByIndexAtTheMiddle(value, index);
             return;
         }
@@ -43,19 +44,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node(nodeWithInputIndex.getPrev(), value, nodeWithInputIndex);
         nodeWithInputIndex.getPrev().setNext(newNode);
         nodeWithInputIndex.setPrev(newNode);
-        this.size++;
+        size++;
     }
 
-    private void addByIndexAtTheBegin(T value, int index) {
-        Node<T> nodeWithInputIndex = getNodeNodeByIndex(index);
+    private void prepend(T value) {
+        Node<T> nodeWithInputIndex = getNodeNodeByIndex(0);
         if (nodeWithInputIndex == null) {
             add(value);
             return;
         }
         Node<T> newNode = new Node(nodeWithInputIndex.getPrev(), value, nodeWithInputIndex);
         nodeWithInputIndex.setPrev(newNode);
-        this.first = newNode;
-        this.size++;
+        first = newNode;
+        size++;
     }
 
     @Override
@@ -68,15 +69,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index >= this.size || index < 0) {
-            throw new IndexOutOfBoundsException("This index is not valid");
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException(MESSAGE_INDEX_OUT_OF_BOUNDS_EXCEPTION);
         }
         Node<T> nodeWithInputIndex = getNodeNodeByIndex(index);
         return nodeWithInputIndex.getItem();
     }
 
     private Node<T> getNodeNodeByIndex(int index) {
-        if (this.size / 2 > index) {
+        if (size / 2 > index) {
             return getNodeFromFirstHalfOfList(index);
         } else {
             return getNodeFromSecondHalfOfList(index);
@@ -85,7 +86,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeFromFirstHalfOfList(int index) {
         int indexCounter = 0;
-        Node<T> nodeWithInputIndex = this.first;
+        Node<T> nodeWithInputIndex = first;
         while (indexCounter < index) {
             nodeWithInputIndex = nodeWithInputIndex.getNext();
             indexCounter++;
@@ -94,8 +95,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeFromSecondHalfOfList(int index) {
-        int indexCounter = this.size - 1;
-        Node<T> nodeWithInputIndex = this.last;
+        int indexCounter = size - 1;
+        Node<T> nodeWithInputIndex = last;
         while (indexCounter > index) {
             nodeWithInputIndex = nodeWithInputIndex.getPrev();
             indexCounter--;
@@ -105,8 +106,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (index >= this.size || index < 0) {
-            throw new IndexOutOfBoundsException("This index is not valid");
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException(MESSAGE_INDEX_OUT_OF_BOUNDS_EXCEPTION);
         }
         Node<T> actualNode = getNodeNodeByIndex(index);
         T oldValue = actualNode.getItem();
@@ -116,8 +117,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index >= this.size || index < 0) {
-            throw new IndexOutOfBoundsException("This index is not valid");
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException(MESSAGE_INDEX_OUT_OF_BOUNDS_EXCEPTION);
         }
         Node<T> nodeForDeletion = getNodeNodeByIndex(index);
         unlinkNode(nodeForDeletion);
@@ -135,31 +136,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlinkNode(Node<T> nodeForDeletion) {
-        if (nodeForDeletion == this.first) {
+        if (nodeForDeletion == first) {
             deleteFirstNode(nodeForDeletion);
-        } else if (nodeForDeletion == this.last) {
+        } else if (nodeForDeletion == last) {
             deleteLastNode(nodeForDeletion);
         } else {
             nodeForDeletion.getNext().setPrev(nodeForDeletion.getPrev());
             nodeForDeletion.getPrev().setNext(nodeForDeletion.getNext());
         }
-        this.size--;
+        size--;
     }
 
     private void deleteLastNode(Node<T> nodeForDeletion) {
         nodeForDeletion.getPrev().setNext(null);
-        this.last = nodeForDeletion.getPrev();
+        last = nodeForDeletion.getPrev();
     }
 
     private void deleteFirstNode(Node<T> nodeForDeletion) {
-        this.first = nodeForDeletion.getNext();
-        if (this.first != null) {
+        first = nodeForDeletion.getNext();
+        if (first != null) {
             nodeForDeletion.getNext().setPrev(null);
         }
     }
 
     private Node<T> getNodeByItem(T item) {
-        Node<T> nodeForDeletion = this.first;
+        Node<T> nodeForDeletion = first;
         while (nodeForDeletion != null) {
             if (nodeForDeletion.equalsItems(item)) {
                 break;
@@ -171,18 +172,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return this.size == 0;
+        return size == 0;
     }
 
     private static class Node<T> {
         private T item;
         private Node<T> next;
         private Node<T> prev;
+
+        public Node(T item) {
+            this.item = item;
+        }
 
         public Node(Node<T> prev, T item, Node<T> next) {
             this.prev = prev;
