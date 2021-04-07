@@ -40,18 +40,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (listSize == 0) {
             return false;
         }
-        Node<T> previousNode = last;
-        for (T element : list) {
-            Node<T> newNode = new Node<>(previousNode, element, null);
-            if (previousNode == null) {
-                first = newNode;
-            } else {
-                previousNode.next = newNode;
-            }
-            previousNode = newNode;
+        for (T t : list) {
+            add(t);
         }
-        last = previousNode;
-        size += listSize;
         return true;
     }
 
