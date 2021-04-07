@@ -28,34 +28,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index > size || index < 0) {
             throw new IndexOutOfBoundsException(MESSAGE_INDEX_OUT_OF_BOUNDS_EXCEPTION);
         }
-        if (index == 0) {
-            prepend(value);
-            return;
-        }
-        if (index < size) {
-            addByIndexAtTheMiddle(value, index);
-            return;
-        }
-        add(value);
-    }
-
-    private void addByIndexAtTheMiddle(T value, int index) {
-        Node<T> nodeWithInputIndex = getNodeNodeByIndex(index);
-        Node<T> newNode = new Node(nodeWithInputIndex.getPrev(), value, nodeWithInputIndex);
-        nodeWithInputIndex.getPrev().setNext(newNode);
-        nodeWithInputIndex.setPrev(newNode);
-        size++;
-    }
-
-    private void prepend(T value) {
-        Node<T> nodeWithInputIndex = getNodeNodeByIndex(0);
-        if (nodeWithInputIndex == null) {
+        if (index == size) {
             add(value);
             return;
         }
+        Node<T> nodeWithInputIndex = getNodeNodeByIndex(index);
         Node<T> newNode = new Node(nodeWithInputIndex.getPrev(), value, nodeWithInputIndex);
         nodeWithInputIndex.setPrev(newNode);
-        first = newNode;
+        if (index == 0) {
+            first = newNode;
+        }
+        if (index != 0) {
+            newNode.getPrev().setNext(newNode);
+        }
         size++;
     }
 
