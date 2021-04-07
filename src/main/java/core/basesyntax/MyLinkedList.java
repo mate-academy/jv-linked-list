@@ -3,6 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final String MESSAGE = "Index is out of bounds";
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -38,7 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = newNode;
             size++;
         } else {
-            throw new IndexOutOfBoundsException("Index is out of bounds");
+            throw new IndexOutOfBoundsException(MESSAGE);
         }
     }
 
@@ -87,9 +88,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> searchNodeByIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Index is out of bounds");
-        }
+        indexCheck(index);
         if (index <= size / 2) {
             Node<T> temporaryNode = tail;
             while (index > 0) {
@@ -163,6 +162,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (nodeToBeRemoved.previous != null) {
             Node<T> previous = nodeToBeRemoved.getPrevious();
             previous.next = newNode;
+        }
+    }
+
+    private void indexCheck(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException(MESSAGE);
         }
     }
 
