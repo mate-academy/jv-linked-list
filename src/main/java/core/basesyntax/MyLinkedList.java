@@ -89,21 +89,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> searchNodeByIndex(int index) {
         indexCheck(index);
+        Node<T> temporaryNode;
         if (index <= size / 2) {
-            Node<T> temporaryNode = tail;
+            temporaryNode = tail;
             while (index > 0) {
                 temporaryNode = temporaryNode.getNext();
                 index--;
             }
-            return temporaryNode;
         } else {
-            Node<T> temporaryNode = head;
+            temporaryNode = head;
             while (index + 1 != size) {
                 temporaryNode = temporaryNode.getPrevious();
                 index++;
             }
-            return temporaryNode;
         }
+        return temporaryNode;
     }
 
     private boolean searchNodeByValue(T value) {
