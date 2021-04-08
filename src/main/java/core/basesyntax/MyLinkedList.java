@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final String MESSAGE = "Index is out of bounds";
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -26,21 +25,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         if (index == size) {
             add(value);
-        } else if (index < size && index > 0) {
-            Node<T> nodeToBeMoved = searchNodeByIndex(index);
-            Node<T> newNode = new Node<>(nodeToBeMoved.previous, value, nodeToBeMoved);
-            nodeToBeMoved.getPrevious().next = newNode;
-            nodeToBeMoved.previous = newNode;
-            size++;
-        } else if (index == 0) {
-            Node<T> nodeToBeMoved = tail;
-            Node<T> newNode = new Node<>(null, value, nodeToBeMoved);
-            nodeToBeMoved.previous = newNode;
-            tail = newNode;
-            size++;
-        } else {
-            throw new IndexOutOfBoundsException(MESSAGE);
+            return;
         }
+        Node<T> node = searchNodeByIndex(index);
+        Node<T> previous = node.getPrevious();
+        Node<T> newNode = new Node<>(previous, value, node);
+        if (previous == null) {
+            tail = newNode;
+        } else {
+            previous.next = newNode;
+        }
+        node.previous = newNode;
+        size++;
     }
 
     @Override
@@ -58,23 +54,44 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        Node<T> nodeToBeRemoved = searchNodeByIndex(index);
-        Node<T> newNode = new Node<>(nodeToBeRemoved.previous, value, nodeToBeRemoved.next);
-        rearrangeLinks(index, nodeToBeRemoved, newNode);
-        size++;
-        return unlink(nodeToBeRemoved);
+        Node<T> nodeToBeChanged = searchNodeByIndex(index);
+        T temporaryValue = nodeToBeChanged.getValue();
+        nodeToBeChanged.value = value;
+        return temporaryValue;
     }
 
     @Override
     public T remove(int index) {
-        Node<T> nodeToBeRemoved = searchNodeByIndex(index);
-        rearrangeLinks(index, nodeToBeRemoved);
-        return unlink(nodeToBeRemoved);
+        Node<T> node = searchNodeByIndex(index);
+        Node<T> previous = node.getPrevious();
+        Node<T> next = node.getNext();
+        if (size == 1) {
+            tail = null;
+            head = null;
+        } else if (previous == null) {
+            tail = node.getNext();
+            next.previous = node.previous;
+        } else if (next == null) {
+            head = node.getPrevious();
+            previous.next = node.next;
+        } else {
+            next.previous = node.previous;
+            previous.next = node.next;
+        }
+        return unlink(node);
     }
 
     @Override
-    public boolean remove(T object) {
-        return searchNodeByValue(object);
+    public boolean remove(T value) {
+        Node<T> node = tail;
+        for (int index = 0; index < size; index++) {
+            if (node.value != null && node.value.equals(value) || node.value == value) {
+                remove(index);
+                return true;
+            }
+            node = node.getNext();
+        }
+        return false;
     }
 
     @Override
@@ -89,85 +106,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> searchNodeByIndex(int index) {
         indexCheck(index);
-        Node<T> temporaryNode;
-        if (index <= size / 2) {
-            temporaryNode = tail;
-            while (index > 0) {
-                temporaryNode = temporaryNode.getNext();
-                index--;
-            }
+        if (index > size / 2) {
+            return searchFromHead(index);
         } else {
-            temporaryNode = head;
-            while (index + 1 != size) {
-                temporaryNode = temporaryNode.getPrevious();
-                index++;
-            }
+            return searchFromTail(index);
         }
-        return temporaryNode;
     }
 
-    private boolean searchNodeByValue(T value) {
-        Node<T> nodeToBeRemoved = tail;
-        int index = 0;
-        while (index < size) {
-            if (nodeToBeRemoved.value != null && nodeToBeRemoved.value.equals(value)
-                    || nodeToBeRemoved.value == value) {
-                rearrangeLinks(index, nodeToBeRemoved);
-                unlink(nodeToBeRemoved);
-                return true;
-            }
-            nodeToBeRemoved = nodeToBeRemoved.getNext();
+    private Node<T> searchFromHead(int index) {
+        Node<T> node = head;
+        while (index + 1 != size) {
+            node = node.getPrevious();
             index++;
         }
-        return false;
+        return node;
     }
 
-    private void rearrangeLinks(int index, Node<T> nodeToBeRemoved) {
-        if (size == 1) {
-            tail = null;
-            head = null;
-        } else {
-            if (index == 0 && size > 1) {
-                tail = nodeToBeRemoved.getNext();
-                tail.next = nodeToBeRemoved.getNext().next;
-            }
-            if (index == size - 1) {
-                head = nodeToBeRemoved.getPrevious();
-                head.previous = nodeToBeRemoved.previous;
-            }
-            if (nodeToBeRemoved.next != null) {
-                Node<T> next = nodeToBeRemoved.getNext();
-                next.previous = nodeToBeRemoved.previous;
-            }
-            if (nodeToBeRemoved.previous != null) {
-                Node<T> previous = nodeToBeRemoved.getPrevious();
-                previous.next = nodeToBeRemoved.next;
-            }
+    private Node<T> searchFromTail(int index) {
+        Node<T> node = tail;
+        while (index > 0) {
+            node = node.getNext();
+            index--;
         }
-    }
-
-    private void rearrangeLinks(int index, Node<T> nodeToBeRemoved, Node<T> newNode) {
-        if (index == 0) {
-            tail = newNode;
-            tail.next = nodeToBeRemoved.next;
-        }
-        if (index == size - 1) {
-            head = newNode;
-            head.previous = nodeToBeRemoved.previous;
-        }
-        if (nodeToBeRemoved.next != null) {
-            Node<T> next = nodeToBeRemoved.getNext();
-            next.previous = newNode;
-        }
-        if (nodeToBeRemoved.previous != null) {
-            Node<T> previous = nodeToBeRemoved.getPrevious();
-            previous.next = newNode;
-        }
+        return node;
     }
 
     private void indexCheck(int index) {
         if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException(MESSAGE);
+            throw new IndexOutOfBoundsException("Index is out of bounds");
         }
     }
 
