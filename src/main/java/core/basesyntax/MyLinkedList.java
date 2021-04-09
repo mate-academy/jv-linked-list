@@ -19,7 +19,84 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public boolean checkBoundaries(int index) {
+    @Override
+    public boolean add(T value) {
+        linkLast(value);
+        return true;
+    }
+
+    @Override
+    public void add(T value, int index) {
+        if ((index < 0 && index > size)) {
+            throw new IndexOutOfBoundsException("Index beyond boundaries");
+        }
+        if (index == size) {
+            linkLast(value);
+        } else {
+            linkBefore(value, getNode(index));
+        }
+    }
+
+    @Override
+    public boolean addAll(List<T> list) {
+        for (int i = 0; i < list.size(); i++) {
+            linkLast(list.get(i));
+        }
+        return true;
+    }
+
+    @Override
+    public T get(int index) {
+        if (checkBoundaries(index)) {
+            return getNode(index).item;
+        }
+        return null;
+    }
+
+    @Override
+    public T set(T value, int index) {
+        if (checkBoundaries(index)) {
+            T tempItem = getNode(index).item;
+            getNode(index).item = value;
+            return tempItem;
+        }
+        return null;
+    }
+
+    @Override
+    public T remove(int index) {
+        if (checkBoundaries(index)) {
+            return unlink(getNode(index));
+        }
+        return null;
+    }
+
+    @Override
+    public boolean remove(T object) {
+
+        for (Node<T> iterator = head; iterator != null; iterator = iterator.next) {
+            if (iterator.item == null && object == null) {
+                unlink(iterator);
+                return true;
+            } else if (iterator.item.equals(object)) {
+                unlink(iterator);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    private boolean checkBoundaries(int index) {
         if (index >= 0 && index < size) {
             return true;
         }
@@ -69,52 +146,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
-    @Override
-    public boolean add(T value) {
-        linkLast(value);
-        return true;
-    }
-
-    @Override
-    public void add(T value, int index) {
-        if ((index >= 0 && index <= size)) {
-            if (index == size) {
-                linkLast(value);
-            } else {
-                linkBefore(value, getNode(index));
-            }
-        } else {
-            throw new IndexOutOfBoundsException("Index beyond boundaries");
-        }
-    }
-
-    @Override
-    public boolean addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            linkLast(list.get(i));
-        }
-        return true;
-    }
-
-    @Override
-    public T get(int index) {
-        if (checkBoundaries(index)) {
-            return getNode(index).item;
-        }
-        throw new IndexOutOfBoundsException("Index out of bounds");
-    }
-
-    @Override
-    public T set(T value, int index) {
-        if (checkBoundaries(index)) {
-            T tempItem = getNode(index).item;
-            getNode(index).item = value;
-            return tempItem;
-        } else {
-            throw new IndexOutOfBoundsException("Index is out of bounds");
-        }
-    }
-
     private T unlink(Node<T> element) {
         final T value = element.item;
         Node<T> next = element.next;
@@ -137,41 +168,4 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return value;
     }
 
-    @Override
-    public T remove(int index) {
-        if (checkBoundaries(index)) {
-            return unlink(getNode(index));
-        }
-        return null;
-    }
-
-    @Override
-    public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> iterator = head; iterator != null; iterator = iterator.next) {
-                if (iterator.item == null) {
-                    unlink(iterator);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> iterator = head; iterator != null; iterator = iterator.next) {
-                if (iterator.item.equals(object)) {
-                    unlink(iterator);
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
 }
