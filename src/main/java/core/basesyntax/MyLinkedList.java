@@ -8,22 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size;
 
-    public Node<T> getFirst() {
-        return first;
-    }
-
-    public void setFirst(Node<T> first) {
-        this.first = first;
-    }
-
-    public Node<T> getLast() {
-        return last;
-    }
-
-    public void setLast(Node<T> last) {
-        this.last = last;
-    }
-
     @Override
     public boolean add(T value) {
         Node<T> oldLast = last;
@@ -91,10 +75,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        for (int i = 0; i < size; i++) {
-            if (get(i) == object || get(i).equals(object)) {
-                unlink(getNodeByIndex(i));
-                return true;
+        Node<T> current = first;
+        if (object == null) {
+            for (int i = 0; current != null; i++) {
+                if (current.value == null) {
+                    unlink(current);
+                    return true;
+                }
+                current = current.next;
+            }
+        } else {
+            for (int i = 0; current != null; i++) {
+                if (object.equals(current.value)) {
+                    unlink(current);
+                    return true;
+                }
+                current = current.next;
             }
         }
         return false;
