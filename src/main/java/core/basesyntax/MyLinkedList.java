@@ -40,8 +40,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (listSize == 0) {
             return false;
         }
-        for (T t : list) {
-            add(t);
+        for (T element : list) {
+            add(element);
         }
         return true;
     }
@@ -69,19 +69,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> node = first; node != null; node = node.next) {
-                if (node.item == null) {
-                    unlink(node);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> node = first; node != null; node = node.next) {
-                if (object.equals(node.item)) {
-                    unlink(node);
-                    return true;
-                }
+        for (Node<T> node = first; node != null; node = node.next) {
+            if (safeObjCompare(object, node.item)) {
+                unlink(node);
+                return true;
             }
         }
         return false;
@@ -165,5 +156,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (!(index >= 0 && index < size)) {
             throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE);
         }
+    }
+
+    private boolean safeObjCompare(T a, T b) {
+        return a == null ? b == null : a.equals(b);
     }
 }
