@@ -3,6 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final String EXCEPTION_MESSAGE = "Index out of bounds";
     private Node<T> first;
     private Node<T> last;
     private int size;
@@ -15,7 +16,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexPosition(index);
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE + "[" + index + "]");
+        }
         if (index == size) {
             linkNode(value);
             return;
@@ -33,13 +36,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkElementPosition(index);
+        checkIndexPosition(index);
         return getNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkElementPosition(index);
+        checkIndexPosition(index);
         Node<T> node = getNodeByIndex(index);
         T oldItem = node.item;
         node.item = value;
@@ -48,13 +51,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkElementPosition(index);
+        checkIndexPosition(index);
         return unlinkNode(getNodeByIndex(index));
     }
 
     @Override
     public boolean remove(T object) {
-        return unlinkNode(object);
+        Node<T> currentNode = first;
+        for (int i = 0; i < size; i++) {
+            if (object == currentNode.item
+                    || object != null && object.equals(currentNode.item)) {
+                unlinkNode(currentNode);
+                return true;
+            }
+            currentNode = currentNode.next;
+        }
+        return false;
     }
 
     @Override
@@ -110,39 +122,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node.item;
     }
 
-    private boolean unlinkNode(T item) {
-        Node<T> currentNode = first;
-        for (int i = 0; i < size; i++) {
-            if (item == currentNode.item || item != null && item.equals(currentNode.item)) {
-                unlinkNode(currentNode);
-                return true;
-            }
-            currentNode = currentNode.next;
-        }
-        return false;
-    }
-
-    private boolean isIndexPosition(int index) {
-        return index >= 0 && index <= size;
-    }
-
     private boolean isElementPosition(int index) {
         return index >= 0 && index < size;
     }
 
-    private String indexOutOfBoundMessage(int index) {
-        return "Index out of bounds [" + index + "]";
-    }
-
-    private void checkElementPosition(int index) {
-        if (!isElementPosition(index)) {
-            throw new IndexOutOfBoundsException(indexOutOfBoundMessage(index));
-        }
-    }
-
     private void checkIndexPosition(int index) {
-        if (!isIndexPosition(index)) {
-            throw new IndexOutOfBoundsException(indexOutOfBoundMessage(index));
+        if (!isElementPosition(index)) {
+            throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE + "[" + index + "]");
         }
     }
 
