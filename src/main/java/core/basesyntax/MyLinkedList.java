@@ -36,8 +36,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        int listSize = list.size();
-        if (listSize == 0) {
+        if (list.size() == 0) {
             return false;
         }
         for (T element : list) {
@@ -69,11 +68,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        for (Node<T> node = first; node != null; node = node.next) {
+        Node<T> node = first;
+        while (node != null) {
             if (safeObjCompare(object, node.item)) {
                 unlink(node);
                 return true;
             }
+            node = node.next;
         }
         return false;
     }
@@ -104,21 +105,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         final T element = node.item;
         final Node<T> nextNode = node.next;
         final Node<T> previousNode = node.prev;
-
         if (previousNode == null) {
             first = nextNode;
         } else {
             previousNode.next = nextNode;
             node.prev = null;
         }
-
         if (nextNode == null) {
             last = previousNode;
         } else {
             nextNode.prev = previousNode;
             node.next = null;
         }
-
         node.item = null;
         size--;
         return element;
