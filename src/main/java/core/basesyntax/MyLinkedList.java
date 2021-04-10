@@ -3,48 +3,158 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+
+    private int size;
+    private Node<T> first;
+    private Node<T> last;
+
+    private static class Node<T> {
+        private Node<T> prev;
+        private T item;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T item, Node<T> next) {
+            this.prev = prev;
+            this.item = item;
+            this.next = next;
+        }
+    }
+
+    private T unlink(Node<T> node) {
+        final T element = node.item;
+        final Node<T> previous = node.prev;
+        final Node<T> nextOne = node.next;
+        if (previous == null) {
+            first = nextOne;
+        } else {
+            previous.next = nextOne;
+            node.prev = null;
+        }
+        if (nextOne == null) {
+            last = previous;
+        } else {
+            nextOne.prev = previous;
+            node.next = null;
+        }
+        node.item = null;
+        size--;
+        return element;
+    }
+
+    private void addBefore(T element, Node<T> node) {
+        Node<T> newPrev = node.prev;
+        Node<T> newNode = new Node<>(newPrev, element, node);
+        node.prev = newNode;
+        if (newPrev == null) {
+            first = newNode;
+        } else {
+            newPrev.next = newNode;
+        }
+        size++;
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Index out of bounds");
+        }
+    }
+
+    private Node<T> searchNode(int index) {
+        checkIndex(index);
+        Node<T> lostNode;
+        if (index < size / 2) {
+            lostNode = first;
+            for (int i = 0; i < index; i++) {
+                lostNode = lostNode.next;
+            }
+            return lostNode;
+        }
+        lostNode = last;
+        for (int i = 1; i < size - index; i++) {
+            lostNode = lostNode.prev;
+        }
+        return lostNode;
+    }
+
     @Override
     public boolean add(T value) {
-        return false;
+        final Node<T> currentTail = last;
+        final Node<T> newNode = new Node<>(last, value, null);
+        last = newNode;
+        if (currentTail == null) {
+            first = newNode;
+        } else {
+            currentTail.next = newNode;
+        }
+        size++;
+        return true;
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (index == size) {
+            add(value);
+        } else {
+            addBefore(value, searchNode(index));
+        }
     }
 
     @Override
     public boolean addAll(List<T> list) {
-        return false;
+        for (T value : list) {
+            add(value);
+        }
+        return true;
     }
 
     @Override
     public T get(int index) {
-        return null;
+        return searchNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        return null;
+        Node<T> removedNode = searchNode(index);
+        final Node<T> newNode = new Node<>(removedNode.prev, value, removedNode.next);
+        if (removedNode.next == null) {
+            last = newNode;
+        } else {
+            removedNode.next.prev = newNode;
+        }
+        if (removedNode.prev == null) {
+            first = newNode;
+        } else {
+            removedNode.prev.next = newNode;
+        }
+        return removedNode.item;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        return unlink(searchNode(index));
     }
 
     @Override
     public boolean remove(T object) {
+        Node<T> lostNode = first;
+        while (lostNode != null) {
+            if (lostNode.item == object || lostNode.item != null && lostNode.item.equals(object)) {
+                unlink(lostNode);
+                return true;
+            } else {
+                lostNode = lostNode.next;
+            }
+        }
         return false;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 }
