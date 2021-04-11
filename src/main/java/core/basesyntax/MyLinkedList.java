@@ -9,18 +9,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
+        Node<T> newNode = new Node<>(null, value, null);
         if (head == null) {
-            head = new Node<>(null, value, null);
-            tail = new Node<>(null, value, null);
+            head = newNode;
+            tail = head;
         } else {
-            if (head.next == null) {
-                tail = new Node<>(head, value, null);
-                head.next = tail;
-            } else {
-                Node<T> temp = new Node<>(tail, value, null);
-                tail.next = temp;
-                tail = temp;
-            }
+            tail.next = newNode;
+            newNode.previous = tail;
+            tail = newNode;
         }
         size++;
         return true;
@@ -33,7 +29,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-
         if (index == 0) {
             addAtBeginning(value);
             return;
