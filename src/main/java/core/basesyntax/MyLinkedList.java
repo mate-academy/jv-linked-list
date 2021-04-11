@@ -22,9 +22,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean add(T value) {
         Node<T> node = new Node<>(tail, value, null);
-        if (head == null) { // сама перша нода
+        if (head == null) {
             head = node;
-        } else { // інші ноди
+        } else {
             tail.next = node;
         }
         tail = node;
@@ -67,7 +67,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index, size - 1);
-        Node<T> removeNode = node(index); // нода яку затираємо
+        Node<T> removeNode = node(index);
         T removeValue = removeNode.item;
         removeNode.item = value;
         return removeValue;
@@ -80,13 +80,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (removeNode.prev == null && removeNode.next == null) {
             head = null;
             tail = null;
-        } else if (removeNode.next != null && removeNode.prev != null) { // нода в середині
+        } else if (removeNode.next != null && removeNode.prev != null) {
             removeNode.next.prev = removeNode.prev;
             removeNode.prev.next = removeNode.next;
-        } else if (removeNode.next == null) { // ця нода є хвостом
+        } else if (removeNode.next == null) {
             removeNode.prev.next = removeNode.next;
             tail = removeNode.prev;
-        } else if (removeNode.prev == null) { // ця нода є головою
+        } else if (removeNode.prev == null) {
             removeNode.next.prev = removeNode.prev;
             head = removeNode.next;
         }
