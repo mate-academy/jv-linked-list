@@ -9,15 +9,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-        if (size == 0) {
-            last = new Node<>(null, value, null);
-            first = last;
-        } else {
-            Node<T> addElement = new Node<>(last, value, null);
-            last.next = addElement;
-            last = addElement;
-        }
-        size++;
+        addTail(value);
         return true;
     }
 
@@ -28,23 +20,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         indexOutOfBoundsException(index);
-        if (index == 0) {
-            Node<T> newNode = new Node<>(null, value, first);
-            first.prev = newNode;
-            first = newNode;
-        } else {
-            Node<T> current = find(index);
-            Node<T> addIndex = new Node<>(null, value, current);
-            current.prev.next = addIndex;
-            current.prev = addIndex;
-        }
-        size++;
+        addLast(value, index);
     }
 
     @Override
     public boolean addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T value : list) {
+            add(value);
         }
         return true;
     }
@@ -69,17 +51,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         indexOutOfBoundsException(index);
         Node<T> removed = find(index);
         final T result = removed.item;
-        if (removed.next == null) {
-            last = removed.prev;
-        } else {
-            removed.next.prev = removed.prev;
-        }
-        if (removed.prev == null) {
-            first = removed.next;
-        } else {
-            removed.prev.next = removed.next;
-        }
-        size--;
+        unlink(removed);
         return result;
     }
 
@@ -88,7 +60,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = first;
         for (int i = 0; i < size; i++) {
             if (object == current.item || object != null && object.equals(current.item)) {
-                remove(i);
+                unlink(current);
                 return true;
             }
             current = current.next;
@@ -106,10 +78,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return first == null;
     }
 
-    private class Node<T> {
+    static class Node<T> {
         private T item;
         private Node<T> prev;
         private Node<T> next;
+
+        public Node(T item) {
+            this.item = item;
+        }
 
         public Node(Node<T> prev, T item, Node<T> next) {
             this.prev = prev;
@@ -122,6 +98,46 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index is out of bounce");
         }
+    }
+
+    private void addTail(T value) {
+        if (size == 0) {
+            last = new Node<>(value);
+            first = last;
+        } else {
+            Node<T> addElement = new Node<>(last, value, null);
+            last.next = addElement;
+            last = addElement;
+        }
+        size++;
+    }
+
+    private void addLast(T value, int index) {
+        if (index == 0) {
+            Node<T> newNode = new Node<>(null, value, first);
+            first.prev = newNode;
+            first = newNode;
+        } else {
+            Node<T> current = find(index);
+            Node<T> addIndex = new Node<>(null, value, current);
+            current.prev.next = addIndex;
+            current.prev = addIndex;
+        }
+        size++;
+    }
+
+    private void unlink(Node<T> removed) {
+        if (removed.next == null) {
+            last = removed.prev;
+        } else {
+            removed.next.prev = removed.prev;
+        }
+        if (removed.prev == null) {
+            first = removed.next;
+        } else {
+            removed.prev.next = removed.next;
+        }
+        size--;
     }
 
     private Node<T> find(int index) {
