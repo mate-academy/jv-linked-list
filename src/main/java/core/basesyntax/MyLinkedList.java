@@ -20,9 +20,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public MyLinkedList() {
-    }
-
     @Override
     public boolean add(T value) {
         linkLast(value);
@@ -111,20 +108,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void linkLast(T item) {
-        Node<T> l = last;
-        Node<T> newNode = new Node<>(l, item, null);
+        Node<T> lastNode = last;
+        Node<T> newNode = new Node<>(lastNode, item, null);
         last = newNode;
-        if (l == null) {
+        if (lastNode == null) {
             first = newNode;
         } else {
-            l.next = newNode;
+            lastNode.next = newNode;
         }
         size++;
     }
 
-    private void linkBefore(T type, Node<T> current) {
+    private void linkBefore(T value, Node<T> current) {
         Node<T> previus = current.prev;
-        Node<T> newNode = new Node<>(previus, type, current);
+        Node<T> newNode = new Node<>(previus, value, current);
         current.prev = newNode;
         if (previus == null) {
             first = newNode;
@@ -151,9 +148,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             unlinkNnode.prev = null;
         }
 
-        T type = unlinkNnode.value;
+        T value = unlinkNnode.value;
         unlinkNnode.value = null;
         size--;
-        return type;
+        return value;
     }
 }
