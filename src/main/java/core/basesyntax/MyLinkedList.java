@@ -26,15 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-        Node<T> newNode = new Node<>(last, value, null);
-        Node<T> lastForThisNode = last;
-        last = newNode;
-        if (lastForThisNode == null) {
-            first = newNode;
-        } else {
-            lastForThisNode.next = newNode;
-        }
-        size++;
+        addElement(value);
         return true;
     }
 
@@ -44,8 +36,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
         }
         if (index == size) {
-            add(value);
-        } else if (index == 0) {
+            addElement(value);
+        } else {
+            addElementByIndex(value, index);
+        }
+    }
+
+    private void addElement(T value) {
+        Node<T> newNode = new Node<>(last, value, null);
+        Node<T> lastForThisNode = last;
+        last = newNode;
+        if (lastForThisNode == null) {
+            first = newNode;
+        } else {
+            lastForThisNode.next = newNode;
+        }
+        size++;
+    }
+
+    private void addElementByIndex(T value, int index) {
+        if (index == 0) {
             Node<T> newNode = new Node<>(null, value, findByIndex(index));
             findByIndex(index).prev = newNode;
             first = newNode;
@@ -62,25 +72,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        Object[] addedList = list.toArray();
-        int sizeList = addedList.length;
-        if (sizeList == 0) {
+        if (list.size() == 0) {
             return false;
         }
-        Node<T> before = last;
-
-        for (Object o : addedList) {
-            Node<T> newNode = new Node<>(before, (T) o, null);
-            if (before == null) {
-                first = newNode;
-            } else {
-                before.next = newNode;
-                before = newNode;
-            }
+        for (T value : list) {
+            add(value);
         }
-
-        last = before;
-        size += sizeList;
         return true;
     }
 
@@ -140,6 +137,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             after.prev = before;
             removeNode.next = null;
         }
+        removeNode.element = null;
         size--;
         return removeElement;
     }
@@ -155,23 +153,42 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findByIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
-        }
+        indexOutOfBoundsExceptionCheck(index);
         if (index == 0) {
             return first;
         } else if (index == size - 1) {
             return last;
         }
-        int variableForCatchIndex = 0;
-        Node<T> findNode = first;
+        return findNode(index);
+    }
 
-        while (findNode.next != null) {
-            findNode = findNode.next;
-            if (index == ++variableForCatchIndex) {
-                return findNode;
+    private Node<T> findNode(int index) {
+        int variableForCatchIndexFirst = 0;
+        int variableForCatchIndexLast = size - 1;
+        Node<T> findNode;
+        if (index <= size / 2) {
+            findNode = first;
+            while (variableForCatchIndexFirst <= size / 2) {
+                findNode = findNode.next;
+                if (++variableForCatchIndexFirst == index) {
+                    return findNode;
+                }
+            }
+        } else {
+            findNode = last;
+            while (variableForCatchIndexLast > size / 2) {
+                findNode = findNode.prev;
+                if (--variableForCatchIndexLast == index) {
+                    return findNode;
+                }
             }
         }
-        throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
+        return findNode;
+    }
+
+    private void indexOutOfBoundsExceptionCheck(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
+        }
     }
 }
