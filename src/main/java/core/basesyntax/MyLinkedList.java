@@ -22,13 +22,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean add(T value) {
         Node<T> node = new Node<>(tail, value, null);
-        if (head == null) {
-            head = node;
-        } else {
-            tail.next = node;
-        }
-        tail = node;
-        size++;
+        addHeadOrTail(node);
         return true;
     }
 
@@ -38,15 +32,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            Node<T> nodeUnderIndex = findNode(index);
-            Node<T> newNode = new Node<>(nodeUnderIndex.prev, value, nodeUnderIndex);
-            nodeUnderIndex.prev = newNode;
-            if (newNode.prev == null) {
-                head = newNode;
-            } else {
-                newNode.prev.next = newNode;
-            }
-            size++;
+            addByIndex(value, index);
         }
     }
 
@@ -76,9 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index, size - 1);
-        Node<T> removeNode = findNode(index);
-        size--;
-        return unlink(removeNode);
+        return unlink(index);
     }
 
     @Override
@@ -86,7 +70,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode = head;
         for (int i = 0; i < size; i++) {
             if (object == currentNode.item || (object != null && object.equals(currentNode.item))) {
-                remove(i);
+                unlink(i);
                 return true;
             } else {
                 currentNode = currentNode.next;
@@ -105,7 +89,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    public T unlink(Node<T> removeNode) {
+    private void addHeadOrTail(Node node) {
+        if (head == null) {
+            head = node;
+        } else {
+            tail.next = node;
+        }
+        tail = node;
+        size++;
+    }
+
+    private void addByIndex(T value, int index) {
+        Node<T> nodeUnderIndex = findNode(index);
+        Node<T> newNode = new Node<>(nodeUnderIndex.prev, value, nodeUnderIndex);
+        nodeUnderIndex.prev = newNode;
+        if (newNode.prev == null) {
+            head = newNode;
+        } else {
+            newNode.prev.next = newNode;
+        }
+        size++;
+    }
+
+    public T unlink(int index) {
+        Node<T> removeNode = findNode(index);
         Node<T> nextNode = removeNode.next;
         Node<T> prevNode = removeNode.prev;
         if (removeNode == head && removeNode == tail) {
@@ -125,6 +132,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         removeNode.prev = null;
         T removeItem = removeNode.item;
         removeNode.item = null;
+        size--;
         return removeItem;
     }
 
@@ -135,24 +143,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNode(int index) {
+        Node<T> currentNode;
         if (index <= size / 2) {
-            Node<T> currentNode = head;
+            currentNode = head;
             for (int i = 0; i <= index; i++) {
-                if (i == index) {
-                    return currentNode;
-                } else {
-                    currentNode = currentNode.next;
-                }
+                currentNode = currentNode.next;
             }
-        } else {
-            Node<T> currentNode = tail;
-            int newIndexFromTail = size - index - 1;
-            for (int i = 0; i <= newIndexFromTail; i++) {
-                if (i == newIndexFromTail) {
-                    return currentNode;
-                } else {
-                    currentNode = currentNode.prev;
-                }
+        }
+        currentNode = tail;
+        int newIndexFromTail = size - index - 1;
+        for (int i = 0; i <= newIndexFromTail; i++) {
+            if (i == newIndexFromTail) {
+                return currentNode;
+            } else {
+                currentNode = currentNode.prev;
             }
         }
         return null;
