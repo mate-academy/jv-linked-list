@@ -108,7 +108,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    void addToTheEnd(T value) {
+    private void addToTheEnd(T value) {
         Node<T> lastNode = tail;
         Node<T> newNode = new Node(lastNode, value, null);
         tail = newNode;
@@ -121,7 +121,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    void addBefore(T value, Node<T> nextNode) {
+    private void addBefore(T value, Node<T> nextNode) {
         Node<T> previous = nextNode.prev;
         Node<T> newNode = new Node(previous, value, nextNode);
         nextNode.prev = newNode;
