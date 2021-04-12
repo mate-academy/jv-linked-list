@@ -9,15 +9,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-        Node<T> newNode = new Node<>(null, value, null);
+        Node<T> newNode = new Node<>(tail, value, null);
         if (head == null) {
             head = newNode;
-            tail = head;
         } else {
             tail.next = newNode;
-            newNode.previous = tail;
-            tail = newNode;
         }
+        tail = newNode;
         size++;
         return true;
     }
@@ -62,25 +60,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndexIsValid(index, size - 1, "Trying to remove at nonexistent or negative index");
         if (index == 0) {
-            return removeFirstElement();
+            return unlink(head);
         }
         if (index == size - 1) {
-            return removeLastElement();
+            return unlink(tail);
         }
-        return removeFromMiddle(findNodeByIndex(index));
+        return unlink(findNodeByIndex(index));
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> temp = head;
-        if (head.value == object || head.value.equals(object)) {
-            removeFirstElement();
-            return true;
-        }
-
         while (temp != null) {
-            if (temp.value == null || temp.value.equals(object)) {
-                removeFromMiddle(temp);
+            if (temp.value == object || temp.value != null && temp.value.equals(object)) {
+                unlink(temp);
                 return true;
             }
             temp = temp.next;
@@ -117,6 +110,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
+        return index < size / 2 ? findFromHead(index) : findFromTail(index);
+    }
+
+    private Node<T> findFromTail(int index) {
+        int count = size - 1;
+        Node<T> searchResult = tail;
+        while (count != index) {
+            searchResult = searchResult.previous;
+            count--;
+        }
+        return searchResult;
+    }
+
+    private Node<T> findFromHead(int index) {
         int count = 0;
         Node<T> searchResult = head;
         while (count < index) {
@@ -126,35 +133,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return searchResult;
     }
 
-    private T removeFromMiddle(Node<T> nodeAtIndex) {
-        Node<T> previous = nodeAtIndex.previous;
-        Node<T> next = nodeAtIndex.next;
-        previous.next = next;
-        next.previous = previous;
-        size--;
-        return nodeAtIndex.value;
-    }
-
-    private T removeLastElement() {
-        Node<T> previousToTail = tail.previous;
-        previousToTail.next = null;
-        T oldValue = tail.value;
-        tail = previousToTail;
-        size--;
-        return oldValue;
-    }
-
-    private T removeFirstElement() {
-        Node<T> nextToHead = head.next;
-        T oldValue = head.value;
-        if (nextToHead != null) {
-            nextToHead.previous = null;
-            head = nextToHead;
-        } else {
+    private T unlink(Node<T> temp) {
+        Node<T> previous = temp.previous;
+        Node<T> next = temp.next;
+        T value = temp.value;
+        if (previous == null && next == null) {
             head = null;
+            tail = null;
+        } else if (previous == null) {
+            next.previous = null;
+            head = next;
+        } else if (next == null) {
+            previous.next = null;
+            tail = temp.previous;
+        } else {
+            previous.next = next;
+            next.previous = previous;
         }
         size--;
-        return oldValue;
+        return value;
     }
 
     private void addInMiddle(T value, int index) {
@@ -172,5 +169,4 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         head = tempNode;
         size++;
     }
-
 }
