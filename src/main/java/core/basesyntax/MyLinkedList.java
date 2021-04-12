@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     @Override
     public boolean add(T value) {
         Node<T> node = new Node<>(tail, value, null);
@@ -89,6 +77,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+
     private void addHeadOrTail(Node node) {
         if (head == null) {
             head = node;
@@ -146,19 +146,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode;
         if (index <= size / 2) {
             currentNode = head;
-            for (int i = 0; i <= index; i++) {
+            for (int i = 0; i != index; i++) {
                 currentNode = currentNode.next;
             }
-        }
-        currentNode = tail;
-        int newIndexFromTail = size - index - 1;
-        for (int i = 0; i <= newIndexFromTail; i++) {
-            if (i == newIndexFromTail) {
-                return currentNode;
-            } else {
+        } else {
+            currentNode = tail;
+            int newIndexFromTail = size - index - 1;
+            for (int i = 0; i != newIndexFromTail; i++) {
                 currentNode = currentNode.prev;
             }
         }
-        return null;
+        return currentNode;
     }
 }
