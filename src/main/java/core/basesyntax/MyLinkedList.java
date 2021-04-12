@@ -3,6 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final int HALF_OF_SIZE = 2;
     private int size;
     private Node<T> head;
     private Node<T> tail;
@@ -31,7 +32,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 addFirst(value);
             } else if (index == size) {
                 addLast(value);
-            } else if (index <= size / 2) {
+            } else if (index <= size / HALF_OF_SIZE) {
                 insert(getFromHead(index), value);
             } else {
                 insert(getFromTail(index), value);
@@ -52,7 +53,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         if (index < size && index >= 0) {
-            if (index <= size / 2) {
+            if (index <= size / HALF_OF_SIZE) {
                 return getFromHead(index).item;
             }
             return getFromTail(index).item;
@@ -64,7 +65,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         T previousValue;
         if (index < size && index >= 0) {
-            if (index <= size / 2) {
+            if (index <= size / HALF_OF_SIZE) {
                 previousValue = getFromHead(index).item;
                 getFromHead(index).item = value;
                 return previousValue;
@@ -88,7 +89,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 removedElement = tail.item;
                 removeLast();
                 return removedElement;
-            } else if (index <= size / 2) {
+            } else if (index <= size / HALF_OF_SIZE) {
                 return removeElement(getFromHead(index));
             }
             return removeElement(getFromTail(index));
