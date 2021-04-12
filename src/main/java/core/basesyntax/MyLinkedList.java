@@ -27,7 +27,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if ((index < 0 && index > size)) {
+        if (index < 0 && index > size) {
             throw new IndexOutOfBoundsException("Index beyond boundaries");
         }
         if (index == size) {
@@ -47,38 +47,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (checkBoundaries(index)) {
-            return getNode(index).item;
-        }
-        return null;
+        checkBoundaries(index);
+        return getNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        if (checkBoundaries(index)) {
-            T tempItem = getNode(index).item;
-            getNode(index).item = value;
-            return tempItem;
-        }
-        return null;
+        checkBoundaries(index);
+        T tempItem = getNode(index).item;
+        getNode(index).item = value;
+        return tempItem;
     }
 
     @Override
     public T remove(int index) {
-        if (checkBoundaries(index)) {
-            return unlink(getNode(index));
-        }
-        return null;
+        checkBoundaries(index);
+        return unlink(getNode(index));
     }
 
     @Override
     public boolean remove(T object) {
-
         for (Node<T> iterator = head; iterator != null; iterator = iterator.next) {
-            if (iterator.item == null && object == null) {
-                unlink(iterator);
-                return true;
-            } else if (iterator.item.equals(object)) {
+            if (iterator.item == object || object != null && iterator.item.equals(object)) {
                 unlink(iterator);
                 return true;
             }
@@ -96,11 +86,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private boolean checkBoundaries(int index) {
-        if (index >= 0 && index < size) {
-            return true;
+    private void checkBoundaries(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Index should be within existing boundaries");
         }
-        throw new ArrayIndexOutOfBoundsException("Index should be within existing boundaries");
     }
 
     private void linkBefore(T element, Node<T> successor) {
@@ -128,23 +117,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        if (checkBoundaries(index)) {
-            Node<T> search;
-            if (index < (size >> 1)) {
-                search = head;
-                for (int i = 0; i < index; i++) {
-                    search = search.next;
-                }
-            } else {
-                search = tail;
-                for (int i = size - 1; i > index; i--) {
-                    search = search.previous;
-                }
+        checkBoundaries(index);
+        Node<T> search;
+        if (index < (size >> 1)) {
+            search = head;
+            for (int i = 0; i < index; i++) {
+                search = search.next;
             }
-            return search;
+        } else {
+            search = tail;
+            for (int i = size - 1; i > index; i--) {
+                search = search.previous;
+            }
         }
-        return null;
+        return search;
     }
+
 
     private T unlink(Node<T> element) {
         final T value = element.item;
