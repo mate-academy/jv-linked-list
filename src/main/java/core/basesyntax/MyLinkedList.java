@@ -133,7 +133,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return search;
     }
 
-
     private T unlink(Node<T> element) {
         final T value = element.item;
         Node<T> next = element.next;
