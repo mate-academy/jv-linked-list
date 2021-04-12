@@ -7,38 +7,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    class Node<E> {
-        private E item;
-        private Node<E> next;
-        private Node<E> prev;
-
-        Node(Node<E> prevElement, E element, Node<E> nextElement) {
-            prev = prevElement;
-            item = element;
-            next = nextElement;
-        }
-    }
-
     public MyLinkedList() {
         this.size = 0;
     }
 
     @Override
     public boolean add(T value) {
-        addToEnd(value);
+        addToTheEnd(value);
         return true;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index >= 0 && index <= size) {
-            if (index == size) {
-                addToEnd(value);
-            } else {
-                addBefore(value, getNode(index));
-            }
+        checkStrictlyIndex(index);
+        if (index == size) {
+            addToTheEnd(value);
         } else {
-            throw new IndexOutOfBoundsException("Index " + index + " is out of bound");
+            addBefore(value, getNode(index));
         }
     }
 
@@ -56,36 +41,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index < size) {
-            Node<T> node = getNode(index);
-            return node.item;
-        } else {
-            throw new IndexOutOfBoundsException("This index " + index + " is out of bound");
-        }
+        checkGentlyIndex(index);
+        Node<T> node = getNode(index);
+        return node.item;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index >= 0 && index < size) {
-            Node<T> newSetNode = getNode(index);
-            T oldValue = newSetNode.item;
-            newSetNode.item = value;
-            return oldValue;
-        } else {
-            throw new IndexOutOfBoundsException("This index " + index + " is out of bound");
-        }
+        checkGentlyIndex(index);
+        Node<T> newSetNode = getNode(index);
+        T oldValue = newSetNode.item;
+        newSetNode.item = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= 0 && index < size) {
-            Node<T> nodeForRemove = getNode(index);
-            T removedNodeValue = nodeForRemove.item;
-            unlink(nodeForRemove);
-            return removedNodeValue;
-        } else {
-            throw new IndexOutOfBoundsException("This index " + index + " is out of bound");
-        }
+        checkGentlyIndex(index);
+        Node<T> nodeForRemove = getNode(index);
+        T removedNodeValue = nodeForRemove.item;
+        unlink(nodeForRemove);
+        return removedNodeValue;
     }
 
     @Override
@@ -120,7 +96,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    void addToEnd(T value) {
+    private static class Node<E> {
+        private E item;
+        private Node<E> next;
+        private Node<E> prev;
+
+        Node(Node<E> prevElement, E element, Node<E> nextElement) {
+            prev = prevElement;
+            item = element;
+            next = nextElement;
+        }
+    }
+
+    void addToTheEnd(T value) {
         Node<T> lastNode = tail;
         Node<T> newNode = new Node(lastNode, value, null);
         tail = newNode;
@@ -184,5 +172,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         nodeToRemove.item = null;
         size--;
         return element;
+    }
+
+    private void checkStrictlyIndex(int index) {
+        if (!(index >= 0 && index <= size)) {
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bound");
+        }
+    }
+
+    private void checkGentlyIndex(int index) {
+        if (!(index >= 0 && index < size)) {
+            throw new IndexOutOfBoundsException("This index " + index + " is out of bound");
+        }
     }
 }
