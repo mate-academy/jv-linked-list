@@ -71,32 +71,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> removed = getNodeByIndex(index);
-
-        if (removed.next == null) {
-            tail = removed.prev;
-        } else if (removed.prev == null) {
-            head = removed.next;
-        } else {
-            removed.prev.next = removed.next;
-            removed.next.prev = removed.prev;
-        }
-        size--;
-        return removed.value;
+        T returnValue = removed.value;
+        unlink(removed);
+        return returnValue;
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> current = head;
-        int index = 0;
-        do {
+
+        while (current != null) {
             if (object == current.value
                     || object != null && object.equals(current.value)) {
-                remove(index);
+                unlink(current);
                 return true;
             }
-            index++;
             current = current.next;
-        } while (current.next != null);
+        }
         return false;
     }
 
@@ -130,6 +121,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(MESSAGE);
         }
+    }
+
+    private void unlink(Node<T> node) {
+        Node<T> next = node.next;
+        Node<T> prev = node.prev;
+
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
+            node.prev = null;
+        }
+
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.prev = prev;
+            node.next = null;
+        }
+
+        node.value = null;
+        size--;
     }
 
     private static class Node<T> {
