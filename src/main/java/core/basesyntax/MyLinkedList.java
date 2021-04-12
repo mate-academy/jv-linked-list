@@ -12,10 +12,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        Node(T value) {
-            this.value = value;
-        }
-
         Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
             this.value = value;
@@ -43,20 +39,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        if (list != null && !list.isEmpty()) {
-            for (T val : list) {
-                add(val);
-            }
-            return true;
+        for (T val : list) {
+            add(val);
         }
-        return false;
+        return true;
     }
 
     @Override
     public T get(int index) {
         indexInRange(index);
-        Node<T> currentNode = getCurrentNode(index);
-        return currentNode.value;
+        return getCurrentNode(index).value;
     }
 
     @Override
@@ -99,11 +91,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size <= 0;
+        return size == 0;
     }
 
     private void addToTail(T value) {
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(null, value, null);
         newNode.prev = tail;
         tail = newNode;
         if (newNode.prev == null) {
