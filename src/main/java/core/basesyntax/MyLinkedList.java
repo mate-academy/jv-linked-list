@@ -27,13 +27,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Index out of Bound");
-        }
+        checkIndex(index, size);
         if (index == 0) {
             addToHead(value);
             return;
-        } else if (index == size) {
+        }
+        if (size == index) {
             addToTail(value);
             return;
         }
@@ -96,8 +95,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    public void checkIndex(int index) {
-        if (index > size - 1 || index < 0) {
+    private void checkIndex(int index, int maxSize) {
+        if (index > maxSize || index < 0) {
             throw new IndexOutOfBoundsException("Index out of Bound");
         }
     }
@@ -112,13 +111,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        checkIndex(index, size - 1);
         return findingElement(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
+        checkIndex(index, size - 1);
         Node<T> currentNode = findingElement(index);
         T valueForReturn = currentNode.item;
         currentNode.item = value;
@@ -127,7 +126,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
+        checkIndex(index, size - 1);
         Node<T> currentNode = findingElement(index);
         unlink(currentNode);
         return currentNode.item;
