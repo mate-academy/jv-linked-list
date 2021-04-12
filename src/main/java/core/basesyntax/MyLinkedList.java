@@ -19,9 +19,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public MyLinkedList() {
-    }
-
     @Override
     public boolean add(T value) {
         Node<T> newNode = new Node<>(last, value, null);
@@ -29,7 +26,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             last = newNode;
             first = newNode;
         } else {
-            newNode = new Node<>(last, value, null);
             last.next = newNode;
             last = newNode;
         }
