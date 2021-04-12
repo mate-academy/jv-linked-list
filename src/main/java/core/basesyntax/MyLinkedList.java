@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> firstNode;
     private Node<T> lastNode;
 
-    private class Node<T> {
-        private Node<T> previous;
-        private T value;
-        private Node<T> next;
-
-        private Node(Node<T> previous, T value, Node<T> next) {
-            this.previous = previous;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
     @Override
     public boolean add(T value) {
         if (size == 0) {
@@ -119,6 +107,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private class Node<T> {
+        private Node<T> previous;
+        private T value;
+        private Node<T> next;
+
+        private Node(Node<T> previous, T value, Node<T> next) {
+            this.previous = previous;
+            this.value = value;
+            this.next = next;
+        }
+    }
+
     private void checkBounds(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Index is out of bound!");
@@ -128,10 +128,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNode(int index) {
         Node<T> current;
         int counter = 0;
-        current = firstNode;
-        while (counter < index) {
-            current = current.next;
-            counter++;
+        if (index <= size / 2) {
+            current = firstNode;
+            while (counter < index) {
+                current = current.next;
+                counter++;
+            }
+        } else {
+            current = lastNode;
+            counter = size - 1;
+            while (counter > index) {
+                current = current.previous;
+                counter--;
+            }
         }
         return current;
     }
