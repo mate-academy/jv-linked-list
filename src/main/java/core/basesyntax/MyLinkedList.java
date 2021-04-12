@@ -5,7 +5,7 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
-    private int size = 0;
+    private int size;
 
     private static class Node<T> {
         private T item;
@@ -38,7 +38,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            Node<T> nodeUnderIndex = node(index);
+            Node<T> nodeUnderIndex = findNode(index);
             Node<T> newNode = new Node<>(nodeUnderIndex.prev, value, nodeUnderIndex);
             nodeUnderIndex.prev = newNode;
             if (newNode.prev == null) {
@@ -52,8 +52,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T value : list) {
+            add(value);
         }
         return true;
     }
@@ -61,13 +61,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index, size - 1);
-        return node(index).item;
+        return findNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index, size - 1);
-        Node<T> removeNode = node(index);
+        Node<T> removeNode = findNode(index);
         T removeValue = removeNode.item;
         removeNode.item = value;
         return removeValue;
@@ -76,7 +76,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index, size - 1);
-        Node<T> removeNode = node(index);
+        Node<T> removeNode = findNode(index);
         if (removeNode.prev == null && removeNode.next == null) {
             head = null;
             tail = null;
@@ -132,7 +132,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> node(int index) {
+    private Node<T> findNode(int index) {
         Node<T> currentNode = head;
         for (int i = 0; i <= index; i++) {
             if (i == index) {
