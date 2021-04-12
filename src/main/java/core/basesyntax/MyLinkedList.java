@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> head;
     private Node<T> tail;
 
@@ -54,9 +54,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        Object[] linkedList = list.toArray();
-        for (Object object : linkedList) {
-            addLast((T) object);
+        for (T object : (T[]) list.toArray()) {
+            addLast(object);
         }
         return true;
     }
