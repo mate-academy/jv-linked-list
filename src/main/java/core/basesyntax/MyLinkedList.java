@@ -130,7 +130,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Node<T> currentNode = findingElement(index);
         unlink(currentNode);
-        size--;
         return currentNode.item;
     }
 
@@ -141,7 +140,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (currentNode.item == object
                     || object != null && object.equals(currentNode.item)) {
                 unlink(currentNode);
-                size--;
                 return true;
             }
             currentNode = currentNode.next;
@@ -168,6 +166,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = null;
             tail = null;
         }
+        size--;
     }
 
     @Override
