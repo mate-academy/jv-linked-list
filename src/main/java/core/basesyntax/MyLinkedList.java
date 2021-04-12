@@ -6,7 +6,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String INVALID_INDEX_MESSAGE = "Index is invalid";
     private Node<T> first;
     private Node<T> last;
-    private int size = 0;
+    private int size;
 
     private static class Node<T> {
         private T value;
@@ -35,14 +35,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             linkLast(value);
         } else {
-            linkBefore(value, node(index));
+            linkBefore(value, findNode(index));
         }
     }
 
     @Override
     public boolean addAll(List<T> list) {
-        for (T type : list) {
-            add(type);
+        for (T item : list) {
+            add(item);
         }
         return true;
     }
@@ -50,13 +50,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index, size - 1);
-        return node(index).value;
+        return findNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index, size - 1);
-        Node<T> current = node(index);
+        Node<T> current = findNode(index);
         T oldValue = current.value;
         current.value = value;
         return oldValue;
@@ -65,13 +65,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index,size - 1);
-        return unlink(node(index));
+        return unlink(findNode(index));
     }
 
     @Override
     public boolean remove(T object) {
         for (Node<T> node = first; node != null; node = node.next) {
-            if (object == null && node.value == null
+            if (object == node.value
                     || object != null && object.equals(node.value)) {
                 unlink(node);
                 return true;
@@ -96,7 +96,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> node(int index) {
+    private Node<T> findNode(int index) {
         Node<T> x = index < (size >> 1) ? first : last;
         if (index < (size >> 1)) {
             for (int i = 0; i < index; i++) {
@@ -110,9 +110,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return x;
     }
 
-    private void linkLast(T type) {
+    private void linkLast(T item) {
         Node<T> l = last;
-        Node<T> newNode = new Node<>(l, type, null);
+        Node<T> newNode = new Node<>(l, item, null);
         last = newNode;
         if (l == null) {
             first = newNode;
