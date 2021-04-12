@@ -9,15 +9,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
+        Node<T> inputValue;
         if (size == 0) {
-            Node<T> inputValue = new Node<>(null, value, null);
+            inputValue = new Node<>(null, value, null);
             first = inputValue;
-            last = inputValue;
         } else {
-            Node<T> inputValue = new Node<>(last, value, null);
+            inputValue = new Node<>(last, value, null);
             last.next = inputValue;
-            last = inputValue;
         }
+        last = inputValue;
         size++;
         return true;
     }
