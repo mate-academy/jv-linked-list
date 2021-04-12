@@ -10,7 +10,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean add(T value) {
         Node<T> newNode;
-        if (size == 0){
+        if (size == 0) {
             newNode = new Node<>(null, value, null);
             head = newNode;
         } else {
@@ -24,12 +24,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index == size){
+        if (index == size) {
             add(value);
             return;
         }
         checkIndex(index);
-        if (index == 0){
+        if (index == 0) {
             Node<T> newNode = new Node<>(null, value, head);
             head.prev = newNode;
             head = newNode;
@@ -44,7 +44,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        for(T element : list){
+        for (T element : list) {
             add(element);
         }
         return true;
@@ -68,7 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> removableNode = getNode(index);
-        if (removableNode.prev == null){
+        if (removableNode.prev == null) {
             head = removableNode.next;
         } else if (removableNode.next == null) {
             tail = removableNode.prev;
@@ -82,8 +82,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        for (int i = 0; i < size; i++){
-            if (getNode(i).item == object || object != null && object.equals(getNode(i).item)){
+        for (int i = 0; i < size; i++) {
+            if (getNode(i).item == object || object != null && object.equals(getNode(i).item)) {
                 remove(i);
                 return true;
             }
@@ -112,24 +112,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.item = item;
         }
     }
-    private Node<T> getNode(int index){
+
+    private Node<T> getNode(int index) {
         Node<T> newNode;
         if (size / 2 >= index) {
             newNode = head;
-            for (int i = 0; i < index; i++){
+            for (int i = 0; i < index; i++) {
                 newNode = newNode.next;
             }
-        }else {
+        } else {
             newNode = tail;
-            for (int j = size - 1; j > index; j--){
+            for (int j = size - 1; j > index; j--) {
                 newNode = newNode.prev;
             }
         }
-      return newNode;
+        return newNode;
     }
 
-    private void checkIndex(int index){
-        if (index >= size || index < 0){
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Incorrect index");
         }
     }
