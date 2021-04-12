@@ -19,7 +19,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    Node<T> node(int index) {
+    private Node<T> node(int index) {
         Node<T> find;
         if (index < (size / 2)) {
             find = head;
@@ -55,18 +55,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         if (index == size) {
             add(value);
-        } else {
-            Node<T> actual = node(index);
-            Node<T> actualPrev = actual.prev;
-            Node<T> newNode = new Node<>(actualPrev, value, actual);
-            node(index).prev = newNode;
-            if (actualPrev == null) {
-                head = newNode;
-            } else {
-                actualPrev.next = newNode;
-            }
-            size++;
+            return;
         }
+        Node<T> actual = node(index);
+        Node<T> actualPrev = actual.prev;
+        Node<T> newNode = new Node<>(actualPrev, value, actual);
+        node(index).prev = newNode;
+        if (actualPrev == null) {
+            head = newNode;
+        } else {
+            actualPrev.next = newNode;
+        }
+        size++;
     }
 
     @Override
@@ -86,10 +86,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkPositionIndex(index);
-        Node<T> x = node(index);
-        T oldVal = x.item;
-        x.item = value;
-        return oldVal;
+        Node<T> current = node(index);
+        T oldValue = current.item;
+        current.item = value;
+        return oldValue;
     }
 
     @Override
@@ -131,26 +131,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private T unlink(Node<T> x) {
-        final T element = x.item;
-        final Node<T> next = x.next;
-        final Node<T> prev = x.prev;
+    private T unlink(Node<T> actual) {
+        final T element = actual.item;
+        final Node<T> next = actual.next;
+        final Node<T> prev = actual.prev;
 
         if (prev == null) {
             head = next;
         } else {
             prev.next = next;
-            x.prev = null;
+            actual.prev = null;
         }
 
         if (next == null) {
             tail = prev;
         } else {
             next.prev = prev;
-            x.next = null;
+            actual.next = null;
         }
 
-        x.item = null;
+        actual.item = null;
         size--;
         return element;
     }
