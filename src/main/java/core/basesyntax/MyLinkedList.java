@@ -51,23 +51,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> oldElement = getNodeByIndex(index);
-        if (size != 1) {
-            Node<T> beforeToElement = oldElement.prev;
-            Node<T> afterToElement = oldElement.next;
-            if (beforeToElement != null) {
-                beforeToElement.next = afterToElement;
-            } else {
-                this.head = afterToElement;
-                afterToElement.prev = null;
-            }
-            if (afterToElement != null) {
-                afterToElement.prev = beforeToElement;
-            } else {
-                this.tail = beforeToElement;
-                beforeToElement.next = null;
-            }
-        }
-        size--;
+        unlink(oldElement);
         return oldElement.item;
     }
 
@@ -76,7 +60,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> value = head;
         for (int i = 0; i < size; i++) {
             if (object == value.item || object != null && object.equals(value.item)) {
-                remove(i);
+               unlink(value);
                 return true;
             }
             value = value.next;
@@ -104,6 +88,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
             this.prev = prev;
         }
+    }
+
+    private void unlink(Node<T> value) {
+        if (size != 1) {
+            Node<T> beforeToElement = value.prev;
+            Node<T> afterToElement = value.next;
+            if (beforeToElement != null) {
+                beforeToElement.next = afterToElement;
+            } else {
+                this.head = afterToElement;
+                afterToElement.prev = null;
+            }
+            if (afterToElement != null) {
+                afterToElement.prev = beforeToElement;
+            } else {
+                this.tail = beforeToElement;
+                beforeToElement.next = null;
+            }
+        }
+        size--;
     }
 
     private boolean addNotFirstValue(T value) {
