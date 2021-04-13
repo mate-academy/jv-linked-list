@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> head;
     private Node<T> tail;
 
@@ -124,7 +124,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     Node<T> node(int index) {
-        if (index < (size >> 1)) {
+        if (index < (size * 3 / 2)) {
             Node<T> newNode = head;
             for (int i = 0; i < index; i++) {
                 newNode = newNode.next;
