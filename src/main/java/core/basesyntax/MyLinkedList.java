@@ -7,22 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tailNode;
     private int size;
 
-    public Node<T> getHeadNode() {
-        return headNode;
-    }
-
-    public void setHeadNode(Node<T> headNode) {
-        this.headNode = headNode;
-    }
-
-    public Node<T> getTailNode() {
-        return tailNode;
-    }
-
-    public void setTailNode(Node<T> tailNode) {
-        this.tailNode = tailNode;
-    }
-
     @Override
     public boolean add(T value) {
         Node<T> node = new Node<>(tailNode, value, null);
@@ -64,21 +48,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        acceptIndex(index);
+        checkIndex(index);
         return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        acceptIndex(index);
-        T oldValue = getNode(index).value;
-        getNode(index).value = value;
+        checkIndex(index);
+        Node<T> nodeByIndex = getNode(index);
+        T oldValue = nodeByIndex.value;
+        nodeByIndex.value = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        acceptIndex(index);
+        checkIndex(index);
         Node<T> removedNode = getNode(index);
         T value = removedNode.value;
         unlink(removedNode);
@@ -108,7 +93,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void acceptIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(
                     "Index out of bounds, please check input index");
@@ -116,7 +101,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        acceptIndex(index);
+        checkIndex(index);
         Node<T> currentNode;
         if (index < size / 2) {
             currentNode = headNode;
@@ -159,30 +144,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node(Node<T> prev, T value, Node<T> next) {
             this.next = next;
             this.value = value;
-            this.prev = prev;
-        }
-
-        public T getValue() {
-            return value;
-        }
-
-        public void setValue(T value) {
-            this.value = value;
-        }
-
-        public Node<T> getNext() {
-            return next;
-        }
-
-        public void setNext(Node<T> next) {
-            this.next = next;
-        }
-
-        public Node<T> getPrev() {
-            return prev;
-        }
-
-        public void setPrev(Node<T> prev) {
             this.prev = prev;
         }
     }
