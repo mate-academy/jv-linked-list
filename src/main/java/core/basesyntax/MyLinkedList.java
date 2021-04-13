@@ -121,26 +121,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void unlink(Node<T> node) {
-        Node<T> nextNode = node.next;
-        Node<T> prevNode = node.prev;
-        if (prevNode == null) {
-            firstNode = nextNode;
-        } else {
-            prevNode.next = nextNode;
-            node.prev = null;
-        }
-
-        if (nextNode == null) {
-            lastNode = prevNode;
-        } else {
-            nextNode.prev = prevNode;
-            node.next = null;
-        }
-        size--;
-
-    }
-
     private Node<T> findNode(int index) {
         Node<T> current;
         int count = 0;
