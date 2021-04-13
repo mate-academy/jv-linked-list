@@ -51,20 +51,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkRange(index);
-        Node<T> itemNode;
-        if (size / 2 <= index) {
-            itemNode = getNodeByIndexFromLast(index);
-            return itemNode.item;
-        } else {
-            itemNode = getNodeByIndexFromFirst(index);
-        }
+        Node<T> itemNode = getNode(index);
         return itemNode.item;
     }
 
     @Override
     public T set(T value, int index) {
         checkRange(index);
-        Node<T> current = getNodeByIndexFromFirst(index);
+        Node<T> current = getNode(index);
         T oldValue = current.item;
         current.item = value;
         return oldValue;
