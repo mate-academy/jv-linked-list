@@ -95,12 +95,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void setHead(T element) {
-        if (head == null) {
+        if (head != null) {
+            head = new Node<>(null, element, head);
+        } else {
             Node<T> newNode = new Node<>(null, element, null);
             head = newNode;
             tail = newNode;
-        } else {
-            head = new Node<>(null, element, head);
         }
     }
 
@@ -136,6 +136,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (unlinkNode.next != null) {
             unlinkNode.next.prev = unlinkNode.prev;
             unlinkNode.prev.next = unlinkNode.next;
+        } else {
+            tail = unlinkNode.prev;
+            unlinkNode.prev.next = null;
         }
         size--;
         return unlinkNode.value;
