@@ -95,11 +95,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        int i = getIndexByValue(object);
-        if (i == -1) {
-            return false;
-        }
-        remove(i);
+        Node<T> node = getNodeByValue(object);
+        unlink(node);
         return true;
     }
 
@@ -145,6 +142,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             i++;
         }
         return -1;
+    }
+
+    private Node<T> getNodeByValue(T object) {
+        int i = 0;
+        for (Node<T> element = first; element != null; element = element.next) {
+            if (element.item == object || element.item != null && element.item.equals(object)) {
+                return element;
+            }
+            i++;
+        }
+        throw new RuntimeException("Can't find this object " + object + " in the list");
     }
 
     private void checkIndex(int index) {
