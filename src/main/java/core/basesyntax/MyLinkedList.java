@@ -3,6 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final String EXCEPTION_MESSAGE = "Oh, no! Your <b>index</b> is out of bounds!";
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -10,30 +11,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean add(T item) {
         Node<T> add;
-        if (this.size != 0) {
-            add = new Node<>(item, this.tail, null);
-            this.tail.next = add;
+        if (size != 0) {
+            add = new Node<>(item, tail, null);
+            tail.next = add;
         } else {
             add = new Node<>(item, null, null);
-            this.head = add;
+            head = add;
         }
-        this.tail = add;
-
+        tail = add;
         size++;
         return true;
     }
 
     @Override
     public void add(T item, int index) {
-        if (index == this.size) {
+        if (index == size) {
             add(item);
             return;
         }
+
         Node<T> willNext = getNode(index);
         Node<T> prev = willNext.prev;
         Node<T> add = new Node<>(item, prev, willNext);
         if (prev == null) {
-            this.head = add;
+            head = add;
         } else {
             prev.next = add;
         }
@@ -66,9 +67,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Node<T> request = getNode(index);
         if (request.next == null) {
-            this.tail = request.prev;
+            tail = request.prev;
         } else if (request.prev == null) {
-            this.head = request.next;
+            head = request.next;
         } else {
             request.prev.next = request.next;
             request.next.prev = request.prev;
@@ -79,7 +80,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T item) {
-        for (int i = 0; i < this.size; i++) {
+        for (int i = 0; i < size; i++) {
             Node<T> request = getNode(i);
             if (request.item == item || request.item.equals(item) && request.item != null) {
                 remove(i);
@@ -91,12 +92,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return this.size == 0;
+        return size == 0;
     }
 
     private static class Node<T> {
@@ -113,7 +114,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         indexException(index);
-        if (index <= this.size / 2) {
+        if (index <= size / 2) {
             return searchFromHead(index);
         } else {
             return searchFromTail(index);
@@ -121,7 +122,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> searchFromHead(int index) {
-        Node<T> request = this.head;
+        Node<T> request = head;
         for (int i = 0; i < index; i++) {
             request = request.next;
         }
@@ -129,16 +130,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> searchFromTail(int index) {
-        Node<T> request = this.tail;
-        for (int i = this.size - 1; i > index; i--) {
+        Node<T> request = tail;
+        for (int i = size - 1; i > index; i--) {
             request = request.prev;
         }
         return request;
     }
 
     private void indexException(int index) {
-        if (index >= this.size || index < 0) {
-            throw new IndexOutOfBoundsException("Sir, your index is out of bounds");
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
         }
     }
 
