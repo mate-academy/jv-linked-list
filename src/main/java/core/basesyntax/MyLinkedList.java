@@ -55,8 +55,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         indexCheck(index);
         Node<T> currentNode = getNodeByIndex(index);
-        T returnValue;
-        returnValue = currentNode.item;
+        T returnValue = currentNode.item;
         currentNode.item = value;
         return returnValue;
     }
