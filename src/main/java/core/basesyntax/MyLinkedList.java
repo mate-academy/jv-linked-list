@@ -137,21 +137,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (head.next == null) {
             head = null;
             tail = null;
-            size--;
-            return current.item;
         } else if (current == head) {
             head = head.next;
             head.previous = null;
-            size--;
-            return current.item;
         } else if (current == tail) {
             tail = tail.previous;
             tail.next = null;
-            size--;
-            return current.item;
+        } else {
+            current.previous.next = current.next;
+            current.next.previous = current.previous;
         }
-        current.previous.next = current.next;
-        current.next.previous = current.previous;
         size--;
         return current.item;
     }
