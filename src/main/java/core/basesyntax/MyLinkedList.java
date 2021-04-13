@@ -60,7 +60,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> value = head;
         for (int i = 0; i < size; i++) {
             if (object == value.item || object != null && object.equals(value.item)) {
-               unlink(value);
+                unlink(value);
                 return true;
             }
             value = value.next;
