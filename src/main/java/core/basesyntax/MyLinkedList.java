@@ -141,7 +141,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 i--;
             }
         }
-        return null;
+        throw new RuntimeException("Can't find this node by index " + index);
     }
 
     private int getIndexByValue(T object) {
