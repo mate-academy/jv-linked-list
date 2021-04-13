@@ -32,10 +32,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 addFirst(value);
             } else if (index == size) {
                 addLast(value);
-            } else if (index <= size / HALF_OF_SIZE) {
-                insert(getFromHead(index), value);
             } else {
-                insert(getFromTail(index), value);
+                insert(getByIndex(index), value);
             }
         } else {
             throw new IndexOutOfBoundsException("Index is out of bounds");
@@ -53,10 +51,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         if (index < size && index >= 0) {
-            if (index <= size / HALF_OF_SIZE) {
-                return getFromHead(index).item;
-            }
-            return getFromTail(index).item;
+            return getByIndex(index).item;
         }
         throw new IndexOutOfBoundsException("Index is out of bounds");
     }
@@ -65,13 +60,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         T previousValue;
         if (index < size && index >= 0) {
-            if (index <= size / HALF_OF_SIZE) {
-                previousValue = getFromHead(index).item;
-                getFromHead(index).item = value;
-                return previousValue;
-            }
-            previousValue = getFromTail(index).item;
-            getFromTail(index).item = value;
+            previousValue = getByIndex(index).item;
+            getByIndex(index).item = value;
             return previousValue;
         }
         throw new IndexOutOfBoundsException("Index is out of bounds");
@@ -89,10 +79,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 removedElement = tail.item;
                 removeLast();
                 return removedElement;
-            } else if (index <= size / HALF_OF_SIZE) {
-                return removeElement(getFromHead(index));
             }
-            return removeElement(getFromTail(index));
+            return removeElement(getByIndex(index));
         }
         throw new IndexOutOfBoundsException("Index is out of bounds");
     }
@@ -159,15 +147,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private Node<T> getFromHead(int index) {
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+    private Node<T> getByIndex(int index) {
+        if (index <= size / HALF_OF_SIZE) {
+            Node<T> current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+            return current;
         }
-        return current;
-    }
-
-    private Node<T> getFromTail(int index) {
         Node<T> current = tail;
         for (int i = size - 1; i > index; i--) {
             current = current.previous;
