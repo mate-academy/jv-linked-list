@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -56,11 +57,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
+        if (index < size() / 2) {
+            return findNodeFromStart(index);
+        } else {
+            return findNodeFromEnd(index);
+        }
+    }
+
+    private Node<T> findNodeFromStart(int index) {
         int count = 0;
         Node<T> searchNode = head;
         while (count < index) {
             searchNode = searchNode.next;
             count++;
+        }
+
+        return searchNode;
+    }
+
+    private Node<T> findNodeFromEnd(int index) {
+        int count = size() - 1;
+        Node<T> searchNode = tail;
+        while (index < count) {
+            searchNode = searchNode.prev;
+            count--;
         }
 
         return searchNode;
@@ -111,20 +131,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIsIndexExist(index, size - 1, "Invalid index");
-        if (index == 0) {
-            return removeFirstElement();
-        }
-        if (index == size - 1) {
-            return removeLastElement();
-        }
-
-        return removeFromMiddle(findNodeByIndex(index));
+        return unlink(findNodeByIndex(index));
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> headNode = head;
-        if (head.item == object || head.item.equals(object)) {
+        if (Objects.equals(head.item, object)) {
             removeFirstElement();
             return true;
         }
@@ -140,9 +153,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return false;
     }
 
-    private T removeFirstElement() {
+    private void removeFirstElement() {
         Node<T> newHead = head.next;
-        T removeValue = head.item;
         if (newHead != null) {
             newHead.prev = null;
             head = newHead;
@@ -150,28 +162,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = null;
         }
         size--;
-
-        return removeValue;
     }
 
-    private T removeLastElement() {
-        Node<T> newTail = tail.prev;
-        newTail.next = null;
-        T removeValue = tail.item;
-        tail = newTail;
-        size--;
-
-        return removeValue;
-    }
-
-    private T removeFromMiddle(Node<T> nodeByIndex) {
+    private void removeFromMiddle(Node<T> nodeByIndex) {
         Node<T> previous = nodeByIndex.prev;
         Node<T> next = nodeByIndex.next;
         previous.next = next;
         next.prev = previous;
         size--;
-
-        return nodeByIndex.item;
     }
 
     @Override
@@ -182,6 +180,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private T unlink(Node<T> targetNode) {
+        final T element = targetNode.item;
+        Node<T> prev = targetNode.prev;
+        Node<T> next = targetNode.next;
+
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
+            targetNode.prev = null;
+        }
+
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.prev = prev;
+            targetNode.next = null;
+        }
+
+        size--;
+        return element;
     }
 
     private void checkIsIndexExist(int index, int size, String message) {
