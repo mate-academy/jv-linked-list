@@ -149,14 +149,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void addToMiddle(T value, int index) {
         Node<T> node = getNode(index);
-        Node<T> newNode = new Node<T>(node.prev, value, node);
+        Node<T> newNode = new Node<>(node.prev, value, node);
         node.prev.next = newNode;
         node.prev = newNode;
     }
 
     private Node<T> getNode(int index) {
         checkRange(index);
-        if (size / 2 < index) {
+        if (size / 2 <= index) {
             return getNodeByIndexFromLast(index);
         }
         return getNodeByIndexFromFirst(index);
