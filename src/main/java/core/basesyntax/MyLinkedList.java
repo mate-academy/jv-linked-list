@@ -68,18 +68,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         Node<T> removedNode = searchNode(index);
-        final Node<T> newNode = new Node<>(removedNode.prev, value, removedNode.next);
-        if (removedNode.next == null) {
-            last = newNode;
-        } else {
-            removedNode.next.prev = newNode;
-        }
-        if (removedNode.prev == null) {
-            first = newNode;
-        } else {
-            removedNode.prev.next = newNode;
-        }
-        return removedNode.item;
+        final T oldValue = removedNode.item;
+        removedNode.item = value;
+        return oldValue;
     }
 
     @Override
