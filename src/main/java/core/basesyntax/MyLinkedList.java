@@ -22,19 +22,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
+        Node<T> newNode = new Node<>(tail, value, null);
         if (head == null) {
-            head = new Node<>(null, value, null);
-            tail = new Node<>(null, value, null);
+            head = newNode;
         } else {
-            if (head.next == null) {
-                tail = new Node<>(head, value, null);
-                head.next = tail;
-            } else {
-                Node<T> newNode = new Node<>(tail, value, null);
-                tail.next = newNode;
-                tail = newNode;
-            }
+            tail.next = newNode;
+            tail = newNode;
         }
+
+        tail = newNode;
         size++;
 
         return true;
