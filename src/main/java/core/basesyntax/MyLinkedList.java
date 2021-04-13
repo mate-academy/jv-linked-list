@@ -17,10 +17,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.item = item;
             this.next = next;
         }
-
-        public void setItem(T item) {
-            this.item = item;
-        }
     }
 
     @Override
@@ -72,7 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         Node<T> node = searchNode(index);
         T oldItem = node.item;
-        node.setItem(value);
+        node.item = value;
         return oldItem;
     }
 
