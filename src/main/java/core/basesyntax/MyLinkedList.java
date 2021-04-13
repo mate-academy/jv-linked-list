@@ -46,8 +46,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             newNode.next = first;
             first.prev = newNode;
             first = newNode;
-        }
-         else {
+        } else {
             addToMiddle(value,index);
         }
         size++;
@@ -65,7 +64,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T get(int index) {
         checkRange(index);
         Node<T> itemNode;
-        if (size/2 <= index) {
+        if (size / 2 <= index) {
             itemNode = getNodeByIndexFromLast(index);
             return itemNode.item;
         } else {
@@ -145,7 +144,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = size - 1; i > index; i--) {
             itemByIndex = itemByIndex.prev;
         }
-        return  itemByIndex;
+        return itemByIndex;
     }
 
     private void addToMiddle(T value, int index) {
@@ -157,7 +156,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         checkRange(index);
-        if (size/2 < index) {
+        if (size / 2 < index) {
             return getNodeByIndexFromLast(index);
         }
         return getNodeByIndexFromFirst(index);
