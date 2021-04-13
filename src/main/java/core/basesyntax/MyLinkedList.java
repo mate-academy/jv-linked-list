@@ -7,14 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    public MyLinkedList() {
-    }
-
-    public MyLinkedList(List<T> list) {
-        this();
-        addAll(list);
-    }
-
     private static class Node<T> {
         private T value;
         private Node<T> prev;
@@ -54,7 +46,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        for (T object : (T[]) list.toArray()) {
+        for (T object : list) {
             addLast(object);
         }
         return true;
@@ -123,14 +115,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addLast(T value) {
-        Node<T> prevNode = tail;
-        Node<T> newNode = new Node<>(prevNode, value, null);
-        if (prevNode == null) {
+        Node<T> newNode = new Node<>(tail, value, null);
+        if (tail == null) {
             head = newNode;
         } else {
-            prevNode.next = newNode;
+            tail.next = newNode;
         }
-        tail = newNode;
+        this.tail = newNode;
         size++;
     }
 
