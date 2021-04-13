@@ -24,7 +24,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> node = new Node<>(last, value, null);
         if (first == null) {
             first = node;
-            last = node;
         } else {
             last.next = node;
         }
@@ -72,7 +71,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         Node<T> newNode = getNodeByIndex(index);
         return newNode.item;
     }
@@ -87,7 +85,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> node = getNodeByIndex(index);
         unlink(node);
         return node.item;
@@ -134,17 +131,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return element;
-    }
-
-    private int getIndexByValue(T object) {
-        int i = 0;
-        for (Node<T> element = first; element != null; element = element.next) {
-            if (element.item == object || element.item != null && element.item.equals(object)) {
-                return i;
-            }
-            i++;
-        }
-        return -1;
     }
 
     private Node<T> getNodeByValue(T object) {
