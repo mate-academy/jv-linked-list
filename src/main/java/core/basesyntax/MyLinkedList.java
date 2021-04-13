@@ -89,7 +89,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> headNode = head;
         while (headNode != null) {
-            if (headNode.item == null || headNode.item.equals(object)) {
+            if (object == headNode.item || object != null && object.equals(head.item)) {
                 unlink(headNode);
                 return true;
             }
