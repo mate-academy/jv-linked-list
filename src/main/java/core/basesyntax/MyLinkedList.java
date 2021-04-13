@@ -117,17 +117,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> search(int index) {
         checkIndex(index);
-        Node<T> current;
-        if (size / 2 > index) {
-            current = head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
+        if (size / 2 >= index) {
+            return searchFromHead(index);
         } else {
-            current = tail;
-            for (int i = size - 1; i > index; i--) {
-                current = current.previous;
-            }
+            return searchFromTail(index);
+        }
+    }
+
+    private Node<T> searchFromHead(int index) {
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        return current;
+    }
+
+    private Node<T> searchFromTail(int index) {
+        Node<T> current = tail;
+        for (int i = size - 1; i > index; i--) {
+            current = current.previous;
         }
         return current;
     }
