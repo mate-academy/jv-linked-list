@@ -24,11 +24,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (sizeOfList == 0) {
             nodeTail = new Node<>(null,value,null);
             nodeHead = nodeTail;
-        } else {
-            Node<T> newNode = new Node<>(nodeTail,value,null);
-            nodeTail.next = newNode;
-            nodeTail = newNode;
+            sizeOfList++;
+            return true;
         }
+        Node<T> newNode = new Node<>(nodeTail,value,null);
+        nodeTail.next = newNode;
+        nodeTail = newNode;
         sizeOfList++;
         return true;
     }
@@ -44,12 +45,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> currentNode = new Node<>(null,value,nodeHead);
             nodeHead.previous = currentNode;
             nodeHead = currentNode;
-        } else {
-            Node<T> currentNode = findNodeByIndex(index);
-            Node<T> newNode = new Node<>(currentNode.previous, value, currentNode);
-            currentNode.previous.next = newNode;
-            currentNode.previous = newNode;
+            sizeOfList++;
+            return;
         }
+        Node<T> currentNode = findNodeByIndex(index);
+        Node<T> newNode = new Node<>(currentNode.previous, value, currentNode);
+        currentNode.previous.next = newNode;
+        currentNode.previous = newNode;
         sizeOfList++;
     }
 
@@ -125,11 +127,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
             }
-        } else {
-            currentNode = nodeTail;
-            for (int i = sizeOfList - 1; i > index; i--) {
-                currentNode = currentNode.previous;
-            }
+            return currentNode;
+        }
+        currentNode = nodeTail;
+        for (int i = sizeOfList - 1; i > index; i--) {
+            currentNode = currentNode.previous;
         }
         return currentNode;
     }
