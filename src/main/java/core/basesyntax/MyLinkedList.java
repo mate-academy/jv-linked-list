@@ -68,19 +68,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkBounds(index);
         Node<T> removedElement = getNode(index);
-        final T result = removedElement.value;
-        if (removedElement.next == null) {
-            lastNode = removedElement.previous;
-        } else {
-            removedElement.next.previous = removedElement.previous;
-        }
-        if (removedElement.previous == null) {
-            firstNode = removedElement.next;
-        } else {
-            removedElement.previous.next = removedElement.next;
-        }
-        size--;
-        return result;
+        unlink(removedElement);
+        return removedElement.value;
     }
 
     @Override
@@ -89,12 +78,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < size; i++) {
             if (object == current.value
                     || object != null && object.equals(current.value)) {
-                remove(i);
+                unlink(current);
                 return true;
             }
             current = current.next;
         }
         return false;
+    }
+
+    private void unlink(Node<T> node) {
+        Node<T> nextNode = node.next;
+        Node<T> previousNode = node.previous;
+        if (previousNode == null && nextNode != null) {
+            firstNode = nextNode;
+            nextNode.previous = null;
+        }
+        if (nextNode == null && previousNode != null) {
+            lastNode = previousNode;
+            previousNode.next = null;
+        }
+        if (nextNode != null && previousNode != null) {
+            previousNode.next = nextNode;
+            nextNode.previous = previousNode;
+        }
+        if (nextNode == null && previousNode == null) {
+            firstNode = null;
+            lastNode = null;
+        }
+        size--;
     }
 
     @Override
@@ -126,21 +137,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        Node<T> current;
-        int counter = 0;
-        if (index <= size / 2) {
-            current = firstNode;
-            while (counter < index) {
-                current = current.next;
-                counter++;
-            }
+        if (size / 2 >= index) {
+            return getFromHead(index);
         } else {
-            current = lastNode;
-            counter = size - 1;
-            while (counter > index) {
-                current = current.previous;
-                counter--;
-            }
+            return getFromTail(index);
+        }
+    }
+
+    private Node<T> getFromHead(int index) {
+        Node<T> current = firstNode;
+        int localSize = 0;
+        while (localSize != index) {
+            current = current.next;
+            localSize++;
+        }
+        return current;
+    }
+
+    private Node<T> getFromTail(int index) {
+        Node<T> current = lastNode;
+        int localSize = (size - 1) - index;
+        while (localSize > 0) {
+            current = current.previous;
+            localSize--;
         }
         return current;
     }
