@@ -27,7 +27,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        Node<T> currentNode = nodeByIndex(index);
+        checkIndex(index);
+        Node<T> currentNode = node(index);
         Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
         Node<T> previousNode = currentNode.prev;
         if (previousNode == null) {
@@ -49,12 +50,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return nodeByIndex(index).item;
+        checkIndex(index);
+        return node(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        Node<T> nodeToChange = nodeByIndex(index);
+        checkIndex(index);
+        Node<T> nodeToChange = node(index);
         T oldItem = nodeToChange.item;
         nodeToChange.item = value;
         return oldItem;
@@ -62,7 +65,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node<T> oldNode = nodeByIndex(index);
+        checkIndex(index);
+        Node<T> oldNode = node(index);
         return unlink(oldNode);
     }
 
@@ -90,24 +94,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node<T> nodeByIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("No such index in data");
         }
-        return index <= size / 2 ? nodeFromHead(index) : nodeFromTail(index);
     }
 
-    private Node<T> nodeFromHead(int index) {
+    private Node<T> node(int index) {
         Node<T> currentNode;
-        currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
+        if (index <= size / 2) {
+            currentNode = head;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+            return currentNode;
         }
-        return currentNode;
-    }
-
-    private Node<T> nodeFromTail(int index) {
-        Node<T> currentNode;
         currentNode = tail;
         for (int i = size - 1; i > index; i--) {
             currentNode = currentNode.prev;
