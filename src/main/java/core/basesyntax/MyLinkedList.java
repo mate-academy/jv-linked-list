@@ -79,16 +79,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> removedNode = findNode(index);
-        final T removedValue = removedNode.value;
+        T removedValue = removedNode.value;
         unlink(removedNode);
         return removedValue;
     }
 
     @Override
     public boolean remove(T object) {
-        if (size == 0) {
-            return false;
-        }
         Node<T> currentNode = first;
         for (int index = 0; index < size; index++) {
             if (object == currentNode.value || object != null && object.equals(currentNode.value)) {
@@ -143,12 +140,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             last = prev;
         } else {
             next.prev = prev;
+            node.next = null;
         }
         if (prev == null) {
             first = next;
         } else {
             prev.next = next;
+            node.prev = null;
         }
+        node.value = null;
         size--;
     }
 }
