@@ -28,7 +28,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == 0) {
             linkFirst(value);
         } else {
-            Node<T> currentNode = getSpecificNode(index);
+            Node<T> currentNode = getNodeByIndex(index);
             Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
             currentNode.prev.next = newNode;
             currentNode.prev = newNode;
@@ -47,14 +47,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         indexCheck(index);
-        Node<T> currentNode = getSpecificNode(index);
+        Node<T> currentNode = getNodeByIndex(index);
         return currentNode.item;
     }
 
     @Override
     public T set(T value, int index) {
         indexCheck(index);
-        Node<T> currentNode = getSpecificNode(index);
+        Node<T> currentNode = getNodeByIndex(index);
         T returnValue;
         returnValue = currentNode.item;
         currentNode.item = value;
@@ -63,7 +63,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        return unlink(getSpecificNode(index), index);
+        indexCheck(index);
+        return unlink(getNodeByIndex(index));
     }
 
     @Override
@@ -112,7 +113,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         tail = newNode;
     }
 
-    private Node<T> getSpecificNode(int index) {
+    private Node<T> getNodeByIndex(int index) {
         Node<T> currentNode;
         if (index <= (size >> 1)) {
             currentNode = head;
@@ -128,15 +129,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    private T unlink(Node<T> nodeToBeRemoved, int index) {
-        indexCheck(index);
-        if (index == 0) {
+    private T unlink(Node<T> nodeToBeRemoved) {
+        if (head.equals(nodeToBeRemoved)) {
             if (size == 1) {
                 head = null;
                 tail = null;
-            } else {
-                head = nodeToBeRemoved.next;
             }
+            head = nodeToBeRemoved.next;
         } else if (nodeToBeRemoved.next != null) {
             nodeToBeRemoved.next.prev = nodeToBeRemoved.prev;
             nodeToBeRemoved.prev.next = nodeToBeRemoved.next;
