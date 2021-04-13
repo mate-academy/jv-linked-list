@@ -20,7 +20,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == index) {
             add(value);
         } else {
-            insertByIndex(value, giveNodeByIndex(index));
+            insertByIndex(value, getNodeByIndex(index));
         }
     }
 
@@ -35,14 +35,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return giveNodeByIndex(index).item;
+        return getNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        T oldValue = giveNodeByIndex(index).item;
-        Node<T> node = giveNodeByIndex(index);
+        Node<T> node = getNodeByIndex(index);
+        T oldValue = node.item;        
         node.item = value;
         return oldValue;
     }
@@ -50,7 +50,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> oldElement = giveNodeByIndex(index);
+        Node<T> oldElement = getNodeByIndex(index);
         if (size != 1) {
             Node<T> beforeToElement = oldElement.prev;
             Node<T> afterToElement = oldElement.next;
@@ -124,12 +124,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return true;
     }
 
-    private Node<T> giveNodeByIndex(int index) {
-        Node<T> value = head;
-        for (int i = 0; i < index; i++) {
-            value = value.next;
+    private Node<T> getNodeByIndex(int index) {
+        if (size / 2 > index) {
+            Node<T> value = head;
+            for (int i = 0; i < index; i++) {
+                value = value.next;
+            }
+            return value;
+        } else {
+            Node<T> value = tail;
+            for (int i = size - 1; i > index; i--) {
+                value = value.prev;
+            }
+            return value;
         }
-        return value;
     }
 
     private void insertByIndex(T value, Node<T> element) {
