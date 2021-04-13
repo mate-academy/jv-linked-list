@@ -16,10 +16,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index == size) {
-            add(value);
+            addTail(value);
             return;
         }
-        indexOutOfBoundsException(index);
+        checkIndex(index);
         addLast(value, index);
     }
 
@@ -33,13 +33,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexOutOfBoundsException(index);
+        checkIndex(index);
         return find(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        indexOutOfBoundsException(index);
+        checkIndex(index);
         Node<T> current = find(index);
         T oldValue = current.item;
         current.item = value;
@@ -48,7 +48,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexOutOfBoundsException(index);
+        checkIndex(index);
         Node<T> removed = find(index);
         final T result = removed.item;
         unlink(removed);
@@ -94,7 +94,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void indexOutOfBoundsException(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index is out of bounce");
         }
@@ -113,16 +113,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addLast(T value, int index) {
+        Node<T> current = find(index);
+        Node<T> newNode = new Node<>(current.prev, value, current);
         if (index == 0) {
-            Node<T> newNode = new Node<>(null, value, first);
-            first.prev = newNode;
             first = newNode;
         } else {
-            Node<T> current = find(index);
-            Node<T> addIndex = new Node<>(null, value, current);
-            current.prev.next = addIndex;
-            current.prev = addIndex;
+            current.prev.next = newNode;
         }
+        current.prev = newNode;
         size++;
     }
 
