@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public static class Node<T> {
-        private T item;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.item = value;
-            this.next = next;
-        }
-    }
-
     @Override
     public boolean add(T value) {
         if (head == null && tail == null) {
@@ -45,31 +33,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head.prev = newNode;
             head = newNode;
         } else {
-            Node<T> perAddNod = search(index);
-            Node<T> addNode = new Node<>(perAddNod.prev, value, perAddNod);
-            perAddNod.prev.next = addNode;
-            perAddNod.prev = addNode;
+            Node<T> searchNod = searchIndex(index);
+            Node<T> addNode = new Node<>(searchNod.prev, value, searchNod);
+            searchNod.prev.next = addNode;
+            searchNod.prev = addNode;
         }
         size++;
     }
 
     @Override
     public boolean addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T element : list) {
+            add(element);
         }
         return true;
     }
 
     @Override
     public T get(int index) {
-        Node<T> search = search(index);
+        Node<T> search = searchIndex(index);
         return search.item;
     }
 
     @Override
     public T set(T value, int index) {
-        Node<T> setNode = search(index);
+        Node<T> setNode = searchIndex(index);
         T returnValue = setNode.item;
         setNode.item = value;
         return returnValue;
@@ -77,7 +65,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node<T> removeNode = search(index);
+        Node<T> removeNode = searchIndex(index);
         if (index == 0) {
             if (size == 1) {
                 head = null;
@@ -123,7 +111,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> search(int index) {
+    private Node<T> searchIndex(int index) {
         chekIndex(index);
         int i = 0;
         Node<T> search = head;
@@ -135,5 +123,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             i++;
         }
         return null;
+    }
+
+    public static class Node<T> {
+        private T item;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.item = value;
+            this.next = next;
+        }
     }
 }
