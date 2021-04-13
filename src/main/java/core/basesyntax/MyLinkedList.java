@@ -121,7 +121,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             tail.next = newNode;
         }
-        this.tail = newNode;
+        tail = newNode;
         size++;
     }
 
