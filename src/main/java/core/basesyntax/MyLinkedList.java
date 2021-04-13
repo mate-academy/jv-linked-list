@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String EXCEPTION_TEXT = "Index out of bound exception.";
@@ -11,15 +10,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-        Node<T> first = new Node<>(null, value, null);
         Node<T> newNode = new Node<>(tail, value, null);
         if (size == 0) {
-            head = first;
-            tail = first;
+            head = newNode;
         } else {
             tail.next = newNode;
-            tail = newNode;
         }
+        tail = newNode;
         size++;
         return true;
     }
@@ -78,7 +75,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> currentNode = head;
         for (int i = 0; i < size; i++) {
-            if (object == currentNode.value || Objects.equals(object, currentNode.value)) {
+            if (currentNode.value == object || currentNode.value != null
+                    && currentNode.value.equals(object)) {
                 unlink(currentNode);
                 return true;
             }
