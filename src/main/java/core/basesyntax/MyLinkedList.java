@@ -88,20 +88,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void unlink(Node<T> node) {
         Node<T> nextNode = node.next;
         Node<T> previousNode = node.previous;
-        if (nextNode == null) {
-            if (previousNode == null) {
-                firstNode = null;
-                lastNode = null;
-            } else {
-                previousNode.next = null;
-                lastNode = node.previous;
-            }
-        } else if (previousNode == null) {
-            nextNode.previous = null;
+        if (previousNode == null) {
             firstNode = nextNode;
         } else {
             previousNode.next = nextNode;
+            node.previous = null;
+        }
+
+        if (nextNode == null) {
+            lastNode = previousNode;
+        } else {
             nextNode.previous = previousNode;
+            node.next = null;
         }
         size--;
     }
