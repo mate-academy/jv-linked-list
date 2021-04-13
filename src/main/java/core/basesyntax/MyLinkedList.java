@@ -152,8 +152,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getFromTail(int index) {
         Node<T> current = lastNode;
-        int localSize = (size - 1) - index;
-        while (localSize > 0) {
+        int localSize = size - 1;
+        while (localSize > index) {
             current = current.previous;
             localSize--;
         }
