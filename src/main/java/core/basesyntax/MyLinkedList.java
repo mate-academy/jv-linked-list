@@ -149,18 +149,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private boolean searchAndUnlinkNodeByItem(T item) {
         Node<T> node = first;
-        while (node != null && !equalsItems(node.item, item)) {
+        while (node != null) {
+            if (node.item == item || node.item != null && node.item.equals(item)) {
+                unlinkNode(node);
+                return true;
+            }
             node = node.next;
         }
-        if (node == null) {
-            return false;
-        }
-        unlinkNode(node);
-        return true;
-    }
-
-    private boolean equalsItems(T item1, T item2) {
-        return (item1 == item2 || item1 != null && item1.equals(item2));
+        return false;
     }
 
     private static class Node<T> {
