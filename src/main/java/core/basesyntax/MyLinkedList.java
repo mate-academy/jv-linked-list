@@ -40,17 +40,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
+        checkRange(index);
         if (index == 0) {
             newNode = new Node<>(null, value, first);
             newNode.next = first;
             first.prev = newNode;
             first = newNode;
-        } else {
-            checkRange(index);
-            Node<T> current = getNodeByIndex(index);
-            newNode = new Node<>(current.prev, value, current);
-            current.prev.next = newNode;
-            newNode.prev = newNode;
+        }
+         else {
+            addToMiddle(value,index);
         }
         size++;
     }
@@ -66,14 +64,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkRange(index);
-        Node<T> itemNode = getNodeByIndex(index);
+        Node<T> itemNode;
+        if (size/2 <= index) {
+            itemNode = getNodeByIndexFromLast(index);
+            return itemNode.item;
+        } else {
+            itemNode = getNodeByIndexFromFirst(index);
+        }
         return itemNode.item;
     }
 
     @Override
     public T set(T value, int index) {
         checkRange(index);
-        Node<T> current = getNodeByIndex(index);
+        Node<T> current = getNodeByIndexFromFirst(index);
         T oldValue = current.item;
         current.item = value;
         return oldValue;
@@ -96,7 +100,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             deletedItem = newNode.item;
             last = last.prev;
         } else {
-            newNode = getNodeByIndex(index);
+            newNode = getNodeByIndexFromFirst(index);
             deletedItem = newNode.item;
             newNode.prev.next = newNode.next;
             newNode.next.prev = newNode.prev;
@@ -126,14 +130,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node<T> getNodeByIndex(int index) {
+    private Node<T> getNodeByIndexFromFirst(int index) {
         checkRange(index);
-        Node<T> itemByIndex;
-        itemByIndex = first;
+        Node<T> itemByIndex = first;
         for (int i = 0; i < index; i++) {
             itemByIndex = itemByIndex.next;
         }
         return itemByIndex;
+    }
+
+    private Node<T> getNodeByIndexFromLast(int index) {
+        checkRange(index);
+        Node<T> itemByIndex = last;
+        for (int i = size - 1; i > index; i--) {
+            itemByIndex = itemByIndex.prev;
+        }
+        return  itemByIndex;
+    }
+
+    private void addToMiddle(T value, int index) {
+        Node<T> node = getNode(index);
+        Node<T> newNode = new Node<T>(node.prev, value, node);
+        node.prev.next = newNode;
+        node.prev = newNode;
+    }
+
+    private Node<T> getNode(int index) {
+        checkRange(index);
+        if (size/2 < index) {
+            return getNodeByIndexFromLast(index);
+        }
+        return getNodeByIndexFromFirst(index);
     }
 
     private void checkRange(int index) {
