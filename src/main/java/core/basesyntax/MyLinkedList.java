@@ -10,15 +10,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(last, value, null);
         if (size == 0) {
             first = newNode;
-            last = newNode;
         } else {
-            newNode.prev = last;
             last.next = newNode;
-            last = newNode;
         }
+        last = newNode;
         size++;
         return true;
     }
@@ -33,9 +31,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             Node<T> currentNode = searchNodeByIndex(index);
             Node<T> previousNode = currentNode.prev;
-            Node<T> newNode = new Node<>(value);
-            newNode.prev = previousNode;
-            newNode.next = currentNode;
+            Node<T> newNode = new Node<>(previousNode, value, currentNode);
             currentNode.prev = newNode;
             if (previousNode == null) {
                 first = newNode;
@@ -59,9 +55,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (first == null) {
-            throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
-        }
         return searchNodeByIndex(index).value;
     }
 
@@ -155,8 +148,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<E> next;
         private E value;
 
-        public Node(E value) {
+        public Node(Node<E> prev, E value, Node<E> next) {
+            this.prev = prev;
             this.value = value;
+            this.next = next;
         }
     }
 }
