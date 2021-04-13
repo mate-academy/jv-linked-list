@@ -75,19 +75,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T get(int index) {
         checkIndex(index);
         Node<T> newNode = getNodeByIndex(index);
-        if (newNode == null) {
-            throw new IndexOutOfBoundsException("Index is bigger, than list size");
-        }
         return newNode.item;
     }
 
     @Override
     public T set(T value, int index) {
         Node<T> newNode = getNodeByIndex(index);
-        if (newNode == null) {
-            throw new IndexOutOfBoundsException("Index was " + index + " and the size is "
-                    + size());
-        }
         T oldValue = newNode.item;
         newNode.item = value;
         return oldValue;
@@ -124,24 +117,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeByIndex(int index) {
         checkIndex(index);
+        Node<T> element;
         if (index <= size / 2) {
             int i = 0;
-            for (Node<T> element = first; element != null; element = element.next) {
+            for (element = first; element != null; element = element.next) {
                 if (i == index) {
-                    return element;
+                    break;
                 }
                 i++;
             }
         } else {
             int i = size - 1;
-            for (Node<T> element = last; element != null; element = element.prev) {
+            for (element = last; element != null; element = element.prev) {
                 if (i == index) {
-                    return element;
+                    break;
                 }
                 i--;
             }
         }
-        throw new RuntimeException("Can't find this node by index " + index);
+        return element;
     }
 
     private int getIndexByValue(T object) {
