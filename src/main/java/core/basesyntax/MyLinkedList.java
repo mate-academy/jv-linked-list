@@ -24,7 +24,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        indexCheck(index);
+        checkIndex(index);
         if (index == 0) {
             linkFirst(value);
         } else {
@@ -46,14 +46,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexCheck(index);
+        checkIndex(index);
         Node<T> currentNode = getNodeByIndex(index);
         return currentNode.item;
     }
 
     @Override
     public T set(T value, int index) {
-        indexCheck(index);
+        checkIndex(index);
         Node<T> currentNode = getNodeByIndex(index);
         T returnValue = currentNode.item;
         currentNode.item = value;
@@ -62,7 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexCheck(index);
+        checkIndex(index);
         return unlink(getNodeByIndex(index));
     }
 
@@ -90,7 +90,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void indexCheck(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("For index: " + index + " Size: " + size);
         }
