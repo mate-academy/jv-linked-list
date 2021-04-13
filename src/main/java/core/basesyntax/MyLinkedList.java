@@ -73,23 +73,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkRange(index);
-        T deletedItem;
-        Node<T> newNode;
-        if (index == size - 1) {
-            newNode = last;
-            deletedItem = newNode.item;
-            last = last.prev;
-        } else if (index == 0) {
-            newNode = first;
-            deletedItem = newNode.item;
-            first = first.next;
-        } else {
-            newNode = getNode(index);
-            deletedItem = newNode.item;
-            newNode.prev.next = newNode.next;
-            newNode.next.prev = newNode.prev;
-        }
-        size--;
+        Node<T> newNode = getNode(index);
+        T deletedItem = newNode.item;
+        unlinkNode(newNode);
         return deletedItem;
     }
 
