@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final String ERROR_MESSAGE = "Invalid index";
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -27,7 +28,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = newNode;
         } else {
             tail.next = newNode;
-            tail = newNode;
         }
 
         tail = newNode;
@@ -38,7 +38,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIsIndexExist(index, size, "Invalid index");
+        checkIsIndexExist(index, size);
 
         if (index == size) {
             add(value);
@@ -52,8 +52,65 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    @Override
+    public boolean addAll(List<T> list) {
+        for (T listItem: list) {
+            add(listItem);
+        }
+
+        return true;
+    }
+
+    @Override
+    public T get(int index) {
+        checkIsIndexExist(index, size - 1);
+
+        return findNodeByIndex(index).item;
+    }
+
+    @Override
+    public T set(T value, int index) {
+        checkIsIndexExist(index, size - 1);
+
+        Node<T> nodeByIndex = findNodeByIndex(index);
+        T valueBeforeSet = nodeByIndex.item;
+        nodeByIndex.item = value;
+
+        return valueBeforeSet;
+    }
+
+    @Override
+    public T remove(int index) {
+        checkIsIndexExist(index, size - 1);
+        return unlink(findNodeByIndex(index));
+    }
+
+    @Override
+    public boolean remove(T object) {
+        Node<T> headNode = head;
+        while (headNode != null) {
+            if (headNode.item == null || headNode.item.equals(object)) {
+                unlink(headNode);
+                return true;
+            }
+            headNode = headNode.next;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
     private Node<T> findNodeByIndex(int index) {
-        if (index < size() / 2) {
+        if (index < size / 2) {
             return findNodeFromStart(index);
         } else {
             return findNodeFromEnd(index);
@@ -72,7 +129,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeFromEnd(int index) {
-        int count = size() - 1;
+        int count = size - 1;
         Node<T> searchNode = tail;
         while (index < count) {
             searchNode = searchNode.prev;
@@ -97,87 +154,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    @Override
-    public boolean addAll(List<T> list) {
-        for (T listItem: list) {
-            add(listItem);
-        }
-
-        return true;
-    }
-
-    @Override
-    public T get(int index) {
-        checkIsIndexExist(index, size - 1, "Invalid index");
-
-        return findNodeByIndex(index).item;
-    }
-
-    @Override
-    public T set(T value, int index) {
-        checkIsIndexExist(index, size - 1, "Invalid index");
-
-        Node<T> nodeByIndex = findNodeByIndex(index);
-        T valueBeforeSet = nodeByIndex.item;
-        nodeByIndex.item = value;
-
-        return valueBeforeSet;
-    }
-
-    @Override
-    public T remove(int index) {
-        checkIsIndexExist(index, size - 1, "Invalid index");
-        return unlink(findNodeByIndex(index));
-    }
-
-    @Override
-    public boolean remove(T object) {
-        Node<T> headNode = head;
-        if (Objects.equals(head.item, object)) {
-            removeFirstElement();
-            return true;
-        }
-
-        while (headNode != null) {
-            if (headNode.item == null || headNode.item.equals(object)) {
-                removeFromMiddle(headNode);
-                return true;
-            }
-            headNode = headNode.next;
-        }
-
-        return false;
-    }
-
-    private void removeFirstElement() {
-        Node<T> newHead = head.next;
-        if (newHead != null) {
-            newHead.prev = null;
-            head = newHead;
-        } else {
-            head = null;
-        }
-        size--;
-    }
-
-    private void removeFromMiddle(Node<T> nodeByIndex) {
-        Node<T> previous = nodeByIndex.prev;
-        Node<T> next = nodeByIndex.next;
-        previous.next = next;
-        next.prev = previous;
-        size--;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
     private T unlink(Node<T> targetNode) {
         final T element = targetNode.item;
         Node<T> prev = targetNode.prev;
@@ -198,12 +174,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
         size--;
+        targetNode.item = null;
         return element;
     }
 
-    private void checkIsIndexExist(int index, int size, String message) {
+    private void checkIsIndexExist(int index, int size) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(message);
+            throw new IndexOutOfBoundsException(ERROR_MESSAGE);
         }
     }
 }
