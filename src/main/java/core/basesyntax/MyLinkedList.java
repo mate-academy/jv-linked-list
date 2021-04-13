@@ -21,14 +21,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
-        Node<T> currentNode = tail;
         Node<T> newNode = new Node<>(tail, value, null);
-        tail = newNode;
-        if (currentNode == null) {
+        if (tail == null) {
             head = newNode;
         } else {
-            currentNode.next = newNode;
+            tail.next = newNode;
         }
+        tail = newNode;
         size++;
         return true;
     }
@@ -37,18 +36,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         if (index == size) {
             add(value);
-        } else {
-            Node<T> tempNode = searchNode(index);
-            Node<T> newPrev = tempNode.prev;
-            Node<T> newNode = new Node<>(newPrev, value, tempNode);
-            tempNode.prev = newNode;
-            if (newPrev == null) {
-                head = newNode;
-            } else {
-                newPrev.next = newNode;
-            }
-            size++;
+            return;
         }
+        Node<T> tempNode = searchNode(index);
+        Node<T> newPrev = tempNode.prev;
+        Node<T> newNode = new Node<>(newPrev, value, tempNode);
+        tempNode.prev = newNode;
+        if (newPrev == null) {
+            head = newNode;
+        } else {
+            newPrev.next = newNode;
+        }
+        size++;
     }
 
     @Override
@@ -84,9 +83,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (tempNode.item == object || tempNode.item != null && tempNode.item.equals(object)) {
                 unlink(tempNode);
                 return true;
-            } else {
-                tempNode = tempNode.next;
             }
+            tempNode = tempNode.next;
         }
         return false;
     }
