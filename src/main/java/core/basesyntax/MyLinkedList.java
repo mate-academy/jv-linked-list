@@ -98,7 +98,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = first;
         for (int i = 0; i < size; i++) {
             if ((current.item == object || current.item != null && current.item.equals(object))) {
-                unlinkNode(getNode(i));
+                unlinkNode(current);
                 return true;
             }
             current = current.next;
