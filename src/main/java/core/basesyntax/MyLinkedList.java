@@ -89,15 +89,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        //Node <T> nodeToRemove = head;
+        current = head;
         for (int i = 0; i < size; i++) {
-            current = findByIndex(i);
             if (object == current.value || object != null
                     && object.equals(current.value)) {
                 unlink(current);
                 size--;
                 return true;
             }
+            current = current.next;
         }
         return false;
     }
