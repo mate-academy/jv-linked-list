@@ -131,19 +131,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> previous = temp.previous;
         Node<T> next = temp.next;
         T value = temp.value;
-        if (previous == null && next == null) {
-            head = null;
-            tail = null;
+
+        if (next == null) {
+            if (previous == null) {
+                head = null;
+                tail = null;
+            } else {
+                previous.next = null;
+                tail = temp.previous;
+            }
         } else if (previous == null) {
             next.previous = null;
             head = next;
-        } else if (next == null) {
-            previous.next = null;
-            tail = temp.previous;
         } else {
             previous.next = next;
             next.previous = previous;
         }
+        temp.value = null;
         size--;
         return value;
     }
