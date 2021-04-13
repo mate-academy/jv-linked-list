@@ -4,6 +4,7 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final int HALF_OF_SIZE = 2;
+    private static final String EXCEPTION_MASSAGE = "Index is out of bounds";
     private int size;
     private Node<T> head;
     private Node<T> tail;
@@ -36,7 +37,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 insert(getByIndex(index), value);
             }
         } else {
-            throw new IndexOutOfBoundsException("Index is out of bounds");
+            throw new IndexOutOfBoundsException(EXCEPTION_MASSAGE);
         }
     }
 
@@ -53,7 +54,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < size && index >= 0) {
             return getByIndex(index).item;
         }
-        throw new IndexOutOfBoundsException("Index is out of bounds");
+        throw new IndexOutOfBoundsException(EXCEPTION_MASSAGE);
     }
 
     @Override
@@ -64,25 +65,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             getByIndex(index).item = value;
             return previousValue;
         }
-        throw new IndexOutOfBoundsException("Index is out of bounds");
+        throw new IndexOutOfBoundsException(EXCEPTION_MASSAGE);
     }
 
     @Override
     public T remove(int index) {
         if (index < size && index >= 0) {
-            T removedElement;
-            if (index == 0) {
-                removedElement = head.item;
-                removeFirst();
-                return removedElement;
-            } else if (index == size - 1) {
-                removedElement = tail.item;
-                removeLast();
-                return removedElement;
-            }
             return removeElement(getByIndex(index));
         }
-        throw new IndexOutOfBoundsException("Index is out of bounds");
+        throw new IndexOutOfBoundsException(EXCEPTION_MASSAGE);
     }
 
     @Override
@@ -94,10 +85,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 return false;
             }
             current = current.next;
-        }
-        if (current == head) {
-            removeFirst();
-            return true;
         }
         removeElement(current);
         return true;
@@ -163,31 +150,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T removeElement(Node<T> current) {
+        if (head.next == null || tail.previous == null) {
+            head = null;
+            tail = null;
+            size--;
+            return current.item;
+        } else if (current == head) {
+            head = head.next;
+            head.previous = null;
+            size--;
+            return current.item;
+        } else if (current == tail) {
+            tail = tail.previous;
+            tail.next = null;
+            size--;
+            return current.item;
+        }
         current.previous.next = current.next;
         current.next.previous = current.previous;
         size--;
         return current.item;
-    }
-
-    private void removeFirst() {
-        if (head.next == null) {
-            head = null;
-            tail = null;
-        } else {
-            head = head.next;
-            head.previous = null;
-        }
-        size--;
-    }
-
-    private void removeLast() {
-        if (tail.previous == null) {
-            head = null;
-            tail = null;
-        } else {
-            tail = tail.previous;
-            tail.next = null;
-        }
-        size--;
     }
 }
