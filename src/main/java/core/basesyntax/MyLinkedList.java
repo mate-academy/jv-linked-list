@@ -12,9 +12,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<I> previous;
         private Node<I> next;
 
-        Node(Node<I> prev, I element, Node<I> next) {
+        Node(Node<I> previous, I element, Node<I> next) {
             this.next = next;
-            this.previous = prev;
+            this.previous = previous;
             this.element = element;
         }
     }
@@ -124,14 +124,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode;
         if (index <= sizeOfList / 2) {
             currentNode = nodeHead;
-            for (int i = 0; i < index; i++) {
+            int i = 0;
+            while (i < index) {
                 currentNode = currentNode.next;
+                i++;
             }
             return currentNode;
         }
         currentNode = nodeTail;
-        for (int i = sizeOfList - 1; i > index; i--) {
+        int i = sizeOfList - 1;
+        while (i > index) {
             currentNode = currentNode.previous;
+            i--;
         }
         return currentNode;
     }
