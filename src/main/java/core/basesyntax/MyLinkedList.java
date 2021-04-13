@@ -59,12 +59,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndexIsValid(index, size - 1, "Trying to remove at nonexistent or negative index");
-        if (index == 0) {
-            return unlink(head);
-        }
-        if (index == size - 1) {
-            return unlink(tail);
-        }
         return unlink(findNodeByIndex(index));
     }
 
