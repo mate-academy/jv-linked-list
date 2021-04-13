@@ -21,14 +21,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean add(T value) {
+        Node<T> newNode = new Node<>(tail, value, null);
         if (size == 0) {
-            tail = new Node<>(null,value,null);
-            head = tail;
+            head = newNode;
         } else {
-            Node<T> newNode = new Node<>(tail,value,null);
             tail.next = newNode;
-            tail = newNode;
         }
+        tail = newNode;
         size++;
         return true;
     }
@@ -45,7 +44,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head.prev = newNode;
             head = newNode;
         } else {
-            Node<T> currentNode = node(index);
+            Node<T> currentNode = getNode(index);
             Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
             currentNode.prev.next = newNode;
             currentNode.prev = newNode;
@@ -64,32 +63,35 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return node(index).value;
+        return getNode(index).value;
 
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        T returnedValue = node(index).value;
-        node(index).value = value;
+        T returnedValue = getNode(index).value;
+        getNode(index).value = value;
         return returnedValue;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> removedValue = node(index);
+        Node<T> removedValue = getNode(index);
         return unlink(removedValue);
     }
 
     @Override
     public boolean remove(T object) {
+        Node<T> current = head;
         for (int i = 0; i < size; i++) {
-            if (node(i).value == object || object != null && object.equals(node(i).value)) {
-                remove(i);
+            if (current.value == object || (object != null
+                    && object.equals(current.value))) {
+                unlink(current);
                 return true;
             }
+            current = current.next;
         }
         return false;
     }
@@ -101,21 +103,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        }
-        return false;
+        return size == 0;
     }
 
-    private boolean checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Index out of bound exception");
         }
-        return true;
     }
 
-    Node<T> node(int index) {
-        if (index < (size * 3 / 2)) {
+    private Node<T> getNode(int index) {
+        if (index <= (size * 2)) {
             Node<T> newNode = head;
             for (int i = 0; i < index; i++) {
                 newNode = newNode.next;
@@ -131,15 +129,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T unlink(Node<T> removedValue) {
-        if (removedValue.next == null) {
-            tail = removedValue.prev;
-        } else if (removedValue.prev == null) {
-            head = removedValue.next;
+        Node<T> nextNode = removedValue.next;
+        Node<T> prevNode = removedValue.prev;
+        if (nextNode == null) {
+            tail = prevNode;
         } else {
-            removedValue.prev.next = removedValue.next;
-            removedValue.next.prev = removedValue.prev;
+            nextNode.prev = prevNode;
+            removedValue.prev = null;
         }
+        if (prevNode == null) {
+            head = nextNode;
+        } else {
+            prevNode.next = nextNode;
+            removedValue.next = null;
+        }
+        T tempValue = removedValue.value;
+        removedValue.value = null;
         size--;
-        return removedValue.value;
+        return tempValue;
     }
 }
