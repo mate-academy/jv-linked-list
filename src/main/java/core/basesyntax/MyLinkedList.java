@@ -17,10 +17,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.value = value;
             this.next = next;
         }
-
-        public Node(T value) {
-            this.value = value;
-        }
     }
 
     @Override
