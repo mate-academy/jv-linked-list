@@ -70,8 +70,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        T returnedValue = getNode(index).value;
-        getNode(index).value = value;
+        Node<T> newNode = getNode(index);
+        T returnedValue = newNode.value;
+        newNode.value = value;
         return returnedValue;
     }
 
@@ -113,7 +114,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        if (index <= size ) {
+        if (index <= size) {
             Node<T> newNode = head;
             for (int i = 0; i < index; i++) {
                 newNode = newNode.next;
