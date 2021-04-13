@@ -38,16 +38,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkIndex(index);
         Node<T> currentNext = search(index);
         Node<T> currentPrevious = currentNext.previous;
-        Node<T> newTail = new Node<>(currentPrevious, value, currentNext);
+        Node<T> newNode = new Node<>(currentPrevious, value, currentNext);
         if (currentPrevious != null) {
-            currentPrevious.next = newTail;
+            currentPrevious.next = newNode;
         }
-        currentNext.previous = newTail;
+        currentNext.previous = newNode;
         if (index == 0) {
-            head = newTail;
+            head = newNode;
         }
         size++;
     }
@@ -67,7 +66,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> current = search(index);
         T currentOld = current.value;
         current.value = value;
@@ -76,11 +74,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> current = search(index);
-        Node<T> currentNext = current.next;
-        Node<T> currentPrevious = current.previous;
-        unlink(currentPrevious, currentNext, index);
+        unlink(current);
         return current.value;
     }
 
@@ -89,9 +84,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
         for (int i = 0; i < size; i++) {
             if (current.value == object || object != null && object.equals(current.value)) {
-                Node<T> currentNext = current.next;
-                Node<T> currentPrevious = current.previous;
-                unlink(currentPrevious, currentNext, i);
+                unlink(current);
                 return true;
             }
             current = current.next;
@@ -140,18 +133,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private void unlink(Node<T> currentPrevious, Node<T> currentNext, int index) {
-        if (index == 0) {
+    private void unlink(Node<T> current) {
+        Node<T> currentNext = current.next;
+        Node<T> currentPrevious = current.previous;
+        if (currentPrevious == null) {
             head = currentNext;
-        }
-        if (index == size - 1) {
-            tail = currentPrevious;
-        }
-        if (currentPrevious != null) {
+        } else {
             currentPrevious.next = currentNext;
+            current.previous = null;
         }
-        if (currentNext != null) {
+        if (currentNext == null) {
+            tail = currentPrevious;
+        } else {
             currentNext.previous = currentPrevious;
+            current.next = null;
         }
         size--;
     }
