@@ -132,10 +132,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> searchNodeByIndex(int index) {
         checkIndex(index);
         Node<T> currentNode;
-        int i;
+        int i = 0;
         if (index <= size / 2) {
             currentNode = first;
-            i = 0;
             while (i != index) {
                 currentNode = currentNode.next;
                 i++;
