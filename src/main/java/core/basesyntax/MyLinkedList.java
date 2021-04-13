@@ -16,7 +16,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        indexInBoundsStrict(index);
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE);
+        }
         if (index == size) {
             add(value);
         } else {
@@ -34,13 +36,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexInBoundsNotStrict(index);
+        checkIndex(index);
         return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        indexInBoundsStrict(index);
+        checkIndex(index);
         Node<T> node = getNodeByIndex(index);
         T previousValue = node.value;
         node.value = value;
@@ -49,7 +51,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexInBoundsNotStrict(index);
+        checkIndex(index);
         return unlink(getNodeByIndex(index));
     }
 
@@ -75,7 +77,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        indexInBoundsNotStrict(index);
         Node<T> node;
         if (index < (size / 2)) {
             node = first;
@@ -112,14 +113,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return removableNode;
     }
 
-    private void indexInBoundsNotStrict(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE);
-        }
-    }
-
-    private void indexInBoundsStrict(int index) {
-        if (index < 0 || index > size) {
+    private void checkIndex(int index) {
+        if (!(index >= 0 && index < size)) {
             throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE);
         }
     }
