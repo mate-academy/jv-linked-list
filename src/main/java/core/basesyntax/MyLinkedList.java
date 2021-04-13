@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String ERROR_MESSAGE = "Invalid index";
@@ -89,14 +88,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> headNode = head;
         while (headNode != null) {
-            if (object == headNode.item || object != null && object.equals(head.item)) {
+            if (object == headNode.item || object != null && object.equals(headNode.item)) {
                 unlink(headNode);
                 return true;
             }
             headNode = headNode.next;
         }
 
-        return true;
+        return false;
     }
 
     @Override
