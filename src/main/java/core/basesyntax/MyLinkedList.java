@@ -113,7 +113,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        if (index <= (size * 2)) {
+        if (index <= size ) {
             Node<T> newNode = head;
             for (int i = 0; i < index; i++) {
                 newNode = newNode.next;
@@ -135,13 +135,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = prevNode;
         } else {
             nextNode.prev = prevNode;
-            removedValue.prev = null;
+            removedValue.next = null;
         }
         if (prevNode == null) {
             head = nextNode;
         } else {
             prevNode.next = nextNode;
-            removedValue.next = null;
+            removedValue.prev = null;
         }
         T tempValue = removedValue.value;
         removedValue.value = null;
