@@ -8,18 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        public Node(Node<T> prev, T item, Node<T> next) {
-            this.item = item;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     @Override
     public boolean add(T value) {
         Node<T> newNode = new Node<>(tail, value, null);
@@ -106,6 +94,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(Node<T> prev, T item, Node<T> next) {
+            this.item = item;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 
     private Node<T> getNode(int index) {
