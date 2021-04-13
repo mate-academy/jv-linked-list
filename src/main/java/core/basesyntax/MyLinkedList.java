@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
 
-    private static class Node<T> {
-        private T item;
-        private Node<T> prev;
-        private Node<T> next;
-
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.prev = prev;
-            this.next = next;
-        }
-    }
-
     @Override
     public boolean add(T value) {
         Node<T> newNode = new Node<>(last, value, null);
@@ -54,8 +42,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        for (T elements : list) {
-            add(elements);
+        for (T element : list) {
+            add(element);
         }
         return true;
     }
@@ -87,17 +75,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkRange(index);
         T deletedItem;
         Node<T> newNode;
-        if (index == 0) {
-            newNode = first;
-            deletedItem = newNode.item;
-            first = first.next;
-            size--;
-            return deletedItem;
-        }
         if (index == size - 1) {
             newNode = last;
             deletedItem = newNode.item;
             last = last.prev;
+        } else if (index == 0) {
+            newNode = first;
+            deletedItem = newNode.item;
+            first = first.next;
         } else {
             newNode = getNodeByIndexFromFirst(index);
             deletedItem = newNode.item;
@@ -168,4 +153,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     + index + " out of bounds exception");
         }
     }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> prev;
+        private Node<T> next;
+
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.prev = prev;
+            this.next = next;
+        }
+    }
+
 }
