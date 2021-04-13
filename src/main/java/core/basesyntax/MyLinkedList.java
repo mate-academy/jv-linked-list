@@ -39,21 +39,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        for (T val : list) {
-            add(val);
+        for (T value : list) {
+            add(value);
         }
         return true;
     }
 
     @Override
     public T get(int index) {
-        indexInRange(index);
+        checkIndex(index);
         return getCurrentNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        indexInRange(index);
+        checkIndex(index);
         Node<T> currentNode = getCurrentNode(index);
         T prevValue = currentNode.value;
         currentNode.value = value;
@@ -62,7 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexInRange(index);
+        checkIndex(index);
         Node<T> currentNode = getCurrentNode(index);
         T deletedNode = currentNode.value;
         deleteNode(currentNode);
@@ -72,14 +72,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> currentNode = head;
-        int counter = 0;
-        while (counter < size) {
+        while (currentNode != null) {
             if (object != null && object.equals(currentNode.value) || object == currentNode.value) {
                 deleteNode(currentNode);
                 return true;
             }
             currentNode = currentNode.next;
-            counter++;
         }
         return false;
     }
@@ -95,14 +93,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addToTail(T value) {
-        Node<T> newNode = new Node<>(null, value, null);
-        newNode.prev = tail;
-        tail = newNode;
-        if (newNode.prev == null) {
+        Node<T> newNode = new Node<>(tail, value, null);
+        if (size == 0) {
             head = newNode;
         } else {
-            (newNode.prev).next = newNode;
+            tail.next = newNode;
         }
+        tail = newNode;
         size++;
     }
 
@@ -127,14 +124,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    private void indexInRange(int index) {
-        if (!checkIndex(index)) {
+    private void checkIndex(int index) {
+        if (!(index < size && index >= 0)) {
             throw new IndexOutOfBoundsException("Index out of range!");
         }
-    }
-
-    private boolean checkIndex(int index) {
-        return index < size && index >= 0;
     }
 
     private void addByIndex(T value, int index) {
