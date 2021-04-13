@@ -29,11 +29,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkPositionForAdd(index);
+        checkIndexForAdd(index);
         if (index == size) {
             addToTail(value);
         } else {
-            insertBefore(value, node(index));
+            insertBefore(value, getNodeByIndex(index));
         }
     }
 
@@ -47,42 +47,39 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkPositionForGetAndSet(index);
-        return node(index).elementValue;
+        checkIndexForGetAndSet(index);
+        return getNodeByIndex(index).elementValue;
     }
 
     @Override
     public T remove(int index) {
-        checkPositionForGetAndSet(index);
-        return unlinkNode(node(index));
+        checkIndexForGetAndSet(index);
+        return unlinkNode(getNodeByIndex(index));
     }
 
     @Override
     public boolean remove(T value) {
-        if (value == null) {
-            for (Node<T> nodeForRemove = head;
-                    nodeForRemove != null; nodeForRemove = nodeForRemove.next) {
-                if (nodeForRemove.elementValue == null) {
-                    unlinkNode(nodeForRemove);
-                    return true;
-                }
+        Node<T> nodeForRemove = head;
+        if (nodeForRemove.next == null) {
+            unlinkNode(nodeForRemove);
+            return true;
+        }
+        while (nodeForRemove.next != null) {
+            if (nodeForRemove.elementValue == null
+                    || (nodeForRemove.elementValue != null
+                    && nodeForRemove.elementValue.equals(value))) {
+                unlinkNode(nodeForRemove);
+                return true;
             }
-        } else {
-            for (Node<T> nodeForRemove = head;
-                    nodeForRemove != null; nodeForRemove = nodeForRemove.next) {
-                if (value.equals(nodeForRemove.elementValue)) {
-                    unlinkNode(nodeForRemove);
-                    return true;
-                }
-            }
+            nodeForRemove = nodeForRemove.next;
         }
         return false;
     }
 
     @Override
     public T set(T value, int index) {
-        checkPositionForGetAndSet(index);
-        Node<T> nodeForChangeValue = node(index);
+        checkIndexForGetAndSet(index);
+        Node<T> nodeForChangeValue = getNodeByIndex(index);
         T oldValue = nodeForChangeValue.elementValue;
         nodeForChangeValue.elementValue = value;
         return oldValue;
@@ -110,13 +107,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void checkPositionForGetAndSet(int index) {
+    private void checkIndexForGetAndSet(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(MESSAGE_INDEX_ERROR);
         }
     }
 
-    private void checkPositionForAdd(int index) {
+    private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException(MESSAGE_INDEX_ERROR);
         }
@@ -134,9 +131,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private Node<T> node(int index) {
+    private Node<T> getNodeByIndex(int index) {
         Node<T> searchNode;
-        if (index < (size / 2) + 1) {
+        if (index <= (size / 2)) {
             searchNode = head;
             for (int i = 0; i < index; i++) {
                 searchNode = searchNode.next;
