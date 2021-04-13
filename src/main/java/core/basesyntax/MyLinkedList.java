@@ -11,12 +11,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean add(T value) {
         Node<T> newNode = new Node<>(last, value, null);
         if (size == 0) {
-            last = newNode;
             first = newNode;
         } else {
             last.next = newNode;
-            last = newNode;
+
         }
+        last = newNode;
         size++;
         return true;
     }
@@ -84,7 +84,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             deletedItem = newNode.item;
             first = first.next;
         } else {
-            newNode = getNodeByIndexFromFirst(index);
+            newNode = getNode(index);
             deletedItem = newNode.item;
             newNode.prev.next = newNode.next;
             newNode.next.prev = newNode.prev;
@@ -95,11 +95,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
+        Node<T> current = first;
         for (int i = 0; i < size; i++) {
-            if ((get(i) == object || (get(i) != null && get(i).equals(object)))) {
-                remove(i);
+            if ((current.item == object || current.item != null && current.item.equals(object))) {
+                unlinkNode(getNode(i));
                 return true;
             }
+            current = current.next;
         }
         return false;
     }
@@ -145,6 +147,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return getNodeByIndexFromLast(index);
         }
         return getNodeByIndexFromFirst(index);
+    }
+
+    private Node<T> unlinkNode(Node<T> node) {
+        Node<T> previousNode = node.prev;
+        Node<T> nextNode = node.next;
+        if (previousNode != null) {
+            previousNode.next = nextNode;
+        } else {
+            first = nextNode;
+        }
+        if (nextNode != null) {
+            nextNode.prev = previousNode;
+
+        } else {
+            last = previousNode;
+        }
+        size--;
+        return node;
     }
 
     private void checkRange(int index) {
