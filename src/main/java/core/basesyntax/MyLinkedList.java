@@ -71,13 +71,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T item) {
+        Node<T> requestNode = head;
         for (int i = 0; i < size; i++) {
-            Node<T> requestNode = getNode(i);
             if (requestNode.item == item
                     || requestNode.item != null && requestNode.item.equals(item)) {
                 unlink(requestNode);
                 return true;
             }
+            requestNode = requestNode.next;
         }
         return false;
     }
