@@ -65,7 +65,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        return unlink(index);
+        Node<T> requestNode = getNode(index);
+        return unlink(requestNode);
     }
 
     @Override
@@ -74,7 +75,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> requestNode = getNode(i);
             if (requestNode.item == item
                     || requestNode.item != null && requestNode.item.equals(item)) {
-                unlink(i);
+                unlink(requestNode);
                 return true;
             }
         }
@@ -134,8 +135,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private T unlink(int index) {
-        Node<T> requestNode = getNode(index);
+    private T unlink(Node<T> requestNode) {
         if (requestNode.next == null) {
             tail = requestNode.prev;
         } else if (requestNode.prev == null) {
