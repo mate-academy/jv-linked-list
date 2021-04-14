@@ -2,6 +2,8 @@ package core.basesyntax;
 
 import java.util.List;
 
+import static java.lang.Math.pow;
+
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
@@ -55,8 +57,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (list.size() == 0) {
             return false;
         }
-        for (T node : list) {
-            add(node);
+        for (T value : list) {
+            add(value);
         }
         return true;
     }
