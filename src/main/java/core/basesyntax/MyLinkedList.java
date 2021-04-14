@@ -132,6 +132,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
         return node.item;
     }
+
     private void addElementByIndex(T value, int index) {
         Node<T> nodeIndex = findNodeByIndex(index);
         Node<T> newNode = new Node<>(nodeIndex.previous, value, nodeIndex);
