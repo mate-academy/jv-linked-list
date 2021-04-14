@@ -30,15 +30,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
 
-        Node<T> willNext = getNode(index);
-        Node<T> prev = willNext.prev;
-        Node<T> add = new Node<>(item, prev, willNext);
+        Node<T> nextNode = getNode(index);
+        Node<T> prev = nextNode.prev;
+        Node<T> add = new Node<>(item, prev, nextNode);
         if (prev == null) {
             head = add;
         } else {
             prev.next = add;
         }
-        willNext.prev = add;
+        nextNode.prev = add;
         size++;
     }
 
@@ -57,33 +57,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T set, int index) {
-        Node<T> request = getNode(index);
-        T item = request.item;
-        request.item = set;
+        Node<T> requestNode = getNode(index);
+        T item = requestNode.item;
+        requestNode.item = set;
         return item;
     }
 
     @Override
     public T remove(int index) {
-        Node<T> request = getNode(index);
-        if (request.next == null) {
-            tail = request.prev;
-        } else if (request.prev == null) {
-            head = request.next;
-        } else {
-            request.prev.next = request.next;
-            request.next.prev = request.prev;
-        }
-        size--;
-        return request.item;
+        return unlink(index);
     }
 
     @Override
     public boolean remove(T item) {
         for (int i = 0; i < size; i++) {
-            Node<T> request = getNode(i);
-            if (request.item == item || request.item.equals(item) && request.item != null) {
-                remove(i);
+            Node<T> requestNode = getNode(i);
+            if (requestNode.item == item
+                    || requestNode.item != null && requestNode.item.equals(item)) {
+                unlink(i);
                 return true;
             }
         }
@@ -122,25 +113,39 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> searchFromHead(int index) {
-        Node<T> request = head;
+        Node<T> requestNode = head;
         for (int i = 0; i < index; i++) {
-            request = request.next;
+            requestNode = requestNode.next;
         }
-        return request;
+        return requestNode;
     }
 
     private Node<T> searchFromTail(int index) {
-        Node<T> request = tail;
+        Node<T> requestNode = tail;
         for (int i = size - 1; i > index; i--) {
-            request = request.prev;
+            requestNode = requestNode.prev;
         }
-        return request;
+        return requestNode;
     }
 
     private void indexException(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
         }
+    }
+
+    private T unlink(int index) {
+        Node<T> requestNode = getNode(index);
+        if (requestNode.next == null) {
+            tail = requestNode.prev;
+        } else if (requestNode.prev == null) {
+            head = requestNode.next;
+        } else {
+            requestNode.prev.next = requestNode.next;
+            requestNode.next.prev = requestNode.prev;
+        }
+        size--;
+        return requestNode.item;
     }
 
 }
