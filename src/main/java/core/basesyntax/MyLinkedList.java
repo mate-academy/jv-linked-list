@@ -30,15 +30,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
 
-        Node<T> nextNode = getNode(index);
-        Node<T> prev = nextNode.prev;
-        Node<T> add = new Node<>(item, prev, nextNode);
+        Node<T> nextAfterAdd = getNode(index);
+        Node<T> prev = nextAfterAdd.prev;
+        Node<T> add = new Node<>(item, prev, nextAfterAdd);
         if (prev == null) {
             head = add;
         } else {
             prev.next = add;
         }
-        nextNode.prev = add;
+        nextAfterAdd.prev = add;
         size++;
     }
 
