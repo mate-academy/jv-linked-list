@@ -4,18 +4,15 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
-    public boolean add(T value) {
-        return false;
+    public void add(T value) {
     }
 
     @Override
     public void add(T value, int index) {
-
     }
 
     @Override
-    public boolean addAll(List<T> list) {
-        return false;
+    public void addAll(List<T> list) {
     }
 
     @Override
