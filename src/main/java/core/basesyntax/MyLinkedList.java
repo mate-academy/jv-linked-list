@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final String INDEX_OUT_OF_BOUND_MESSAGE = "Index is out of a range bound";
+    private static final String INDEX_OUT_OF_BOUND_MESSAGE = "Index is out of a range bound...";
     private Node<T> first;
     private Node<T> last;
     private int size;
