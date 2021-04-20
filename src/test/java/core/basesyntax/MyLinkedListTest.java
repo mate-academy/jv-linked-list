@@ -142,10 +142,10 @@ public class MyLinkedListTest {
         myLinkedList.addAll(DEFAULT_LIST);
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
-        String actualIndexFive = myLinkedList.get(DEFAULT_LIST.size() - 1);
+        String actualIndexFive = myLinkedList.get(5);
         int actualSize = myLinkedList.size();
 
-        String expectedIndexFive = DEFAULT_LIST.get(DEFAULT_LIST.size() - 3);
+        String expectedIndexFive = DEFAULT_LIST.get(3);
         int expectedSize = 8;
         Assert.assertEquals("Test failed! First element should be " + FIRST_ITEM,
                 FIRST_ITEM, actualFirst);
