@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class MyLinkedListTest {
-
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
@@ -41,7 +40,7 @@ public class MyLinkedListTest {
         myLinkedList.add(FIRST_ITEM);
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);
-        boolean actualResult = myLinkedList.add(NULL_ITEM);
+        myLinkedList.add(NULL_ITEM);
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
         String actualThird = myLinkedList.get(2);
@@ -53,7 +52,6 @@ public class MyLinkedListTest {
         Assert.assertEquals("Test failed! Third element should be " + THIRD_ITEM,
                 THIRD_ITEM, actualThird);
         Assert.assertNull("Test failed! Fourth element should be null", actualFourth);
-        Assert.assertTrue("Test failed! This method should return true ", actualResult);
     }
 
     @Test
@@ -64,7 +62,7 @@ public class MyLinkedListTest {
         }
         Assert.assertEquals("Expected size is incorrect", 1000, linkedList.size());
         for (int i = 0; i < 1000; i++) {
-            Assert.assertEquals("Test failed! Linked list can't add a lot of value correctly",
+            Assert.assertEquals("Test failed! Can't add multiple values correctly",
                     "String" + i, linkedList.get(i));
         }
     }
@@ -141,21 +139,20 @@ public class MyLinkedListTest {
     public void testAddAll() {
         myLinkedList.add(FIRST_ITEM);
         myLinkedList.add(SECOND_ITEM);
-        boolean isAddedAll = myLinkedList.addAll(DEFAULT_LIST);
+        myLinkedList.addAll(DEFAULT_LIST);
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
-        String actualLast = myLinkedList.get(DEFAULT_LIST.size() - 1);
+        String actualIndexFive = myLinkedList.get(5);
         int actualSize = myLinkedList.size();
 
-        String expectedLast = DEFAULT_LIST.get(DEFAULT_LIST.size() - 3);
+        String expectedIndexFive = DEFAULT_LIST.get(3);
         int expectedSize = 8;
-        Assert.assertTrue(isAddedAll);
         Assert.assertEquals("Test failed! First element should be " + FIRST_ITEM,
                 FIRST_ITEM, actualFirst);
         Assert.assertEquals("Test failed! Second element should be " + SECOND_ITEM,
                 SECOND_ITEM, actualSecond);
-        Assert.assertEquals("Test failed! Last element should be " + expectedLast,
-                expectedLast, actualLast);
+        Assert.assertEquals("Test failed! Element on index 5 should be " + expectedIndexFive,
+                expectedIndexFive, actualIndexFive);
         Assert.assertEquals("Test failed! Size should be  " + expectedSize,
                 expectedSize, actualSize);
     }
@@ -202,8 +199,8 @@ public class MyLinkedListTest {
         String oldSecondItem = myLinkedList.set(ANOTHER_NEW_ITEM, 1);
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
-        Assert.assertEquals(oldFirstItem, FIRST_ITEM);
-        Assert.assertEquals(oldSecondItem, SECOND_ITEM);
+        Assert.assertEquals(FIRST_ITEM, oldFirstItem);
+        Assert.assertEquals(SECOND_ITEM, oldSecondItem);
         Assert.assertEquals("Test failed! After setting expected element is " + NEW_ITEM,
                 NEW_ITEM, actualFirst);
         Assert.assertEquals("Test failed! After setting expected element is "
@@ -317,7 +314,6 @@ public class MyLinkedListTest {
         Assert.assertEquals("Test failed! After removing list should consist value  "
                 + THIRD_ITEM, THIRD_ITEM, actualThirdExist);
         Assert.assertEquals("Expected size is incorrect", 4, myLinkedList.size());
-
     }
 
     @Test
