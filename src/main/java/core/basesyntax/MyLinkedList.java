@@ -59,7 +59,6 @@ public class MyLinkedList<E> implements MyLinkedListInterface<E> {
 
     @Override
     public E set(E value, int index) {
-        checkIndex(index);
         Node<E> newNode = findNode(index);
         E result = newNode.value;
         newNode.value = value;
@@ -70,9 +69,7 @@ public class MyLinkedList<E> implements MyLinkedListInterface<E> {
     public E remove(int index) {
         checkIndex(index);
         Node<E> newNode = findNode(index);
-        E removeValue = newNode.value;
-        unlink(newNode);
-        return removeValue;
+        return unlink(newNode);
     }
 
     @Override
@@ -95,10 +92,7 @@ public class MyLinkedList<E> implements MyLinkedListInterface<E> {
 
     @Override
     public boolean isEmpty() {
-        if (size > 0) {
-            return false;
-        }
-        return true;
+        return size == 0;
     }
 
     private void checkIndex(int index) {
@@ -108,20 +102,20 @@ public class MyLinkedList<E> implements MyLinkedListInterface<E> {
     }
 
     private Node<E> findNode(int index) {
+        checkIndex(index);
         Node<E> newNode;
-        if (index < size) {
+        if (index < size / 2) {
             newNode = head;
             for (int i = 0; i < index; i++) {
                 newNode = newNode.next;
             }
-            return newNode;
         } else {
             newNode = tail;
             for (int i = size - 1; i > index; i--) {
                 newNode = newNode.prev;
             }
-            return newNode;
         }
+        return newNode;
     }
 
     private E unlink(Node<E> node) {
@@ -144,7 +138,7 @@ public class MyLinkedList<E> implements MyLinkedListInterface<E> {
         return result;
     }
 
-    class Node<T> {
+    private static class Node<T> {
         private Node<T> prev;
         private T value;
         private Node<T> next;
