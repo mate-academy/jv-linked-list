@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 public class Cat {
@@ -10,7 +12,7 @@ public class Cat {
         this.name = name;
         this.color = color;
     }
-
+    List<Integer> list = new LinkedList<>();
     public String getName() {
         return name;
     }
