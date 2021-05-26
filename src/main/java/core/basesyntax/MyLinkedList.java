@@ -4,7 +4,7 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size = 0;
-    private MyLinkedList.Node<T> head;
+    private Node<T> head;
     private MyLinkedList.Node<T> tail;
 
     @Override
