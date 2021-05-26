@@ -12,7 +12,6 @@ public class Cat {
         this.name = name;
         this.color = color;
     }
-    List<Integer> list = new LinkedList<>();
     public String getName() {
         return name;
     }
