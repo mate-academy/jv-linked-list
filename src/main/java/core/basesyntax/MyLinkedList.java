@@ -1,7 +1,5 @@
 package core.basesyntax;
 
-
-import java.util.LinkedList;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -14,19 +12,38 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> last = tail;
         final Node<T> newNode = new Node<>(last, value, null);
         tail = newNode;
-        if (last == null)
+        if (last == null) {
             head = newNode;
-        else
+        } else {
             last.next = newNode;
+        }
         size++;
     }
 
     @Override
     public void add(T value, int index) {
+        if (index == size) {
+            add(value);
+            return;
+        }
+        checkIndex(index);
+        MyLinkedList.Node<T> oldNode = findNodeByIndex(index);
+        MyLinkedList.Node<T> oldNodePrev = oldNode.prev;
+        MyLinkedList.Node<T> newNode = new MyLinkedList.Node<>(oldNode.prev, value, oldNode);
+        oldNode.prev = newNode;
+        if (oldNodePrev == null) {
+            head = newNode;
+        } else {
+            oldNodePrev.next = newNode;
+        }
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
+        for (T element : list) {
+            this.add(element);
+        }
     }
 
     @Override
@@ -37,7 +54,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        return null;
+        checkIndex(index);
+        MyLinkedList.Node<T> node = findNodeByIndex(index);
+        T oldVal = node.item;
+        node.item = value;
+        return oldVal;
     }
 
     @Override
@@ -49,12 +70,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> node = head;
-            while (node.next != null) {
-                if (object != null && object.equals(node.item)) {
-                    return unlink(node).equals(object);
-                }
-                node = node.next;
+        while (node != null) {
+            if (object == node.item
+                    || (object != null && object.equals(node.item))) {
+                T deletedItem = unlink(node);
+                boolean result = ((deletedItem == object)
+                        || (object.equals(deletedItem)));
+                return result;
             }
+            node = node.next;
+        }
         return false;
     }
 
@@ -68,11 +93,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-
     private T unlink(MyLinkedList.Node<T> node) {
-         T element = node.item;
-         MyLinkedList.Node<T> next = node.next;
-         MyLinkedList.Node<T> prev = node.prev;
+        final T element = node.item;
+        MyLinkedList.Node<T> next = node.next;
+        MyLinkedList.Node<T> prev = node.prev;
 
         if (prev == null) {
             head = next;
@@ -115,10 +139,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-     private static class Node<T> {
-        T item;
-        MyLinkedList.Node<T> next;
-        MyLinkedList.Node<T> prev;
+    private static class Node<T> {
+        private T item;
+        private MyLinkedList.Node<T> next;
+        private MyLinkedList.Node<T> prev;
 
         Node(MyLinkedList.Node<T> prev, T element, MyLinkedList.Node<T> next) {
             this.item = element;
