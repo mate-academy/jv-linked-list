@@ -42,7 +42,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         for (T element : list) {
-            this.add(element);
+            add(element);
         }
     }
 
