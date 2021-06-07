@@ -26,10 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         correctIndex(index);
         if (index > 0 && index < listLength) {
-            Node<T> tempNode = firstNode;
-            for (int i = 0; i < index; i++) {
-                tempNode = tempNode.next;
-            }
+            Node<T> tempNode = getNode(index);
             Node<T> newNode = new Node<>(tempNode.prev, value, tempNode);
             tempNode.prev.next = newNode;
             tempNode.prev = newNode;
