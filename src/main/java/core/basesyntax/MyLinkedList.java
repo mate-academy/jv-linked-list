@@ -55,11 +55,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         if (index >= 0 && index < listLength) {
-            Node<T> tempNode = firstNode;
-            for (int i = 0; i < index; i++) {
-                tempNode = tempNode.next;
-            }
-            return tempNode.item;
+            return getNode(index).item;
         }
         throw new IndexOutOfBoundsException("Index " + index + " is no correct!!!");
     }
@@ -67,10 +63,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         if (index >= 0 && index < listLength) {
-            Node<T> tempNode = firstNode;
-            for (int i = 0; i < index; i++) {
-                tempNode = tempNode.next;
-            }
+            Node<T> tempNode = getNode(index);
             T oldValue = tempNode.item;
             tempNode.item = value;
             return oldValue;
@@ -81,10 +74,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         if (index >= 0 && index < listLength) {
-            Node<T> tempNode = firstNode;
-            for (int i = 0; i < index; i++) {
-                tempNode = tempNode.next;
-            }
+            Node<T> tempNode = getNode(index);
             T oldValue = tempNode.item;
             if (tempNode.prev == null && tempNode.next == null) {
                 lastNode = null;
@@ -152,5 +142,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > listLength) {
             throw new IndexOutOfBoundsException("Index " + index + " is no correct!!!");
         }
+    }
+
+    private Node<T> getNode(int index) {
+        boolean beginOrEnd = index <= listLength / 2;
+        Node<T> tempNode = beginOrEnd ? firstNode : lastNode;
+        for (int i = 0; i < (beginOrEnd ? index : listLength - index - 1); i++) {
+            tempNode = beginOrEnd ? tempNode.next : tempNode.prev;
+        }
+        return tempNode;
     }
 }
