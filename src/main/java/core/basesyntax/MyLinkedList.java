@@ -24,12 +24,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         lastNode = new Node<>(lastNode, value, null);
         if (size == 0) {
             firstNode = lastNode;
-        }
-        if (size > 0) {
+        } else {
             lastNode.prev.next = lastNode;
-        }
-        if (size == 1) {
-            firstNode.next = lastNode;
         }
         size++;
     }
@@ -42,18 +38,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode;
         if (index == size) {
             add(value);
-        } else if (index == 0) {
+            return;
+        }
+        checkIndex(index);
+        if (index == 0) {
             newNode = new Node<>(null, value, firstNode);
             firstNode.prev = newNode;
             firstNode = newNode;
-            size++;
         } else {
-            Node<T> node = checkPosition(index);
+            Node<T> node = findNode(index);
             newNode = new Node<>(node.prev, value, node);
             node.prev.next = newNode;
             node.prev = newNode;
-            size++;
         }
+        size++;
     }
 
     @Override
@@ -66,14 +64,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        Node<T> node = checkPosition(index);
+        Node<T> node = findNode(index);
         return node.item;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> node = checkPosition(index);
+        Node<T> node = findNode(index);
         T oldItem = node.item;
         node.item = value;
         return oldItem;
@@ -82,8 +80,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> oldNode = checkPosition(index);
-        System.out.println(oldNode);
+        Node<T> oldNode = findNode(index);
         unlink(oldNode);
         return oldNode.item;
     }
@@ -95,9 +92,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (node.item == object || node.item != null && node.item.equals(object)) {
                 unlink(node);
                 return true;
-            } else {
-                node = node.next;
             }
+            node = node.next;
         }
         return false;
     }
@@ -130,11 +126,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> checkPosition(int index) {
+    private Node<T> findNode(int index) {
         Node<T> node = firstNode;
-        if (index == 0) {
-            return node;
-        }
         if (index < size / 2) {
             for (int i = 0; i < index; i++) {
                 node = node.next;
