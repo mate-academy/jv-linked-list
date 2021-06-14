@@ -87,14 +87,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void linkLast(T value) {
-        Node<T> currentTail = tail;
-        Node<T> newTail = new Node<>(currentTail, value, null);
-        tail = newTail;
-        if (currentTail == null) {
+        Node<T> newTail = new Node<>(tail, value, null);
+
+        if (tail == null) {
             head = newTail;
         } else {
-            currentTail.next = newTail;
+            tail.next = newTail;
         }
+        tail = newTail;
         size++;
     }
 
