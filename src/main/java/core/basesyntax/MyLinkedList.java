@@ -4,63 +4,55 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
-    private Node heap;
-    private Node tall;
+    private Node<T> head;
+    private Node<T> tail;
 
     @Override
     public void add(T value) {
+        Node<T> newNode = new Node<T>(null, value, null);
         if (size == 0) {
-            Node<T> newNode = new Node<T>(null, value, null);
-            heap = newNode;
-            tall = newNode;
+            head = newNode;
         } else {
-            Node<T> newNode = new Node<T>(tall, value, null);
-            tall.next = newNode;
-            tall = newNode;
+            newNode.prev = tail;
+            tail.next = newNode;
         }
+        tail = newNode;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index was failed ");
-        }
+        checkIndexToAdd(index);
+        Node<T> newNode = new Node<>(null, value, head);
         if (index == size) {
             add(value);
+            return;
         } else if (index == 0) {
-            Node<T> newNode = new Node<>(null, value, heap);
-            heap.prev = newNode;
-            heap = newNode;
-            size++;
+            head.prev = newNode;
+            head = newNode;
         } else {
-            Node<T> newNode = new Node<T>(getNode(index - 1), value, getNode(index));
+            newNode.prev = getNode(index - 1);
+            newNode.next = getNode(index);
             getNode(index).prev = newNode;
             getNode(index - 1).next = newNode;
-            size++;
         }
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T element : list) {
+            add(element);
         }
     }
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-        Node<T> result = heap;
-        for (int i = 0; i < index; i++) {
-            result = result.next;
-        }
-        return result.item;
+        return getNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         T result = getNode(index).item;
         getNode(index).item = value;
         return result;
@@ -68,32 +60,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size || size == 0) {
-            throw new IndexOutOfBoundsException("Index was failed ");
-        }
+        checkRemoveIndex(index);
         T result = getNode(index).item;
         Node<T> indexNode = getNode(index);
-        if (index == 0 && size > 1) {
-            heap = indexNode.next;
-            indexNode.next.prev = null;
-            size--;
-            return result;
-        } else if (index == 0) {
-            indexNode.item = null;
-            size--;
-            heap = null;
-            tall = null;
-            return result;
+        if (index == 0) {
+            removeFirsIndex(index);
         } else if (index == size - 1) {
-            tall = indexNode.prev;
-            indexNode.prev = new Node<>(indexNode.prev.prev, indexNode.prev.item, null);
-            size--;
-            return result;
+            removeLastIndex(index);
+        } else {
+            removeIndex(index);
         }
-        indexNode.prev.next = indexNode.next;
-        indexNode.next.prev = indexNode.prev;
         size--;
-        return indexNode.item;
+        return result;
     }
 
     @Override
@@ -123,13 +101,57 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private void checkIndexToAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index was failed ");
+        }
+    }
+
     private Node<T> getNode(int index) {
         checkIndex(index);
-        Node<T> result = heap;
-        for (int i = 0; i < index; i++) {
-            result = result.next;
+        Node<T> result;
+        if (index < size / 2) {
+            result = head;
+            for (int i = 0; i < index; i++) {
+                result = result.next;
+            }
+        } else {
+            result = tail;
+            for (int i = size - 1; i > index; i--) {
+                result = result.prev;
+            }
         }
         return result;
+    }
+
+    private void checkRemoveIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index was failed ");
+        }
+    }
+
+    public void removeFirsIndex(int index) {
+        Node<T> indexNode = getNode(index);
+        if (size > 1) {
+            head = indexNode.next;
+            indexNode.next.prev = null;
+            return;
+        }
+        indexNode.item = null;
+        head = null;
+        tail = null;
+    }
+
+    public void removeLastIndex(int index) {
+        Node<T> indexNode = getNode(index);
+        tail = indexNode.prev;
+        indexNode.prev = new Node<>(indexNode.prev.prev, indexNode.prev.item, null);
+    }
+
+    private void removeIndex(int index) {
+        Node<T> indexNode = getNode(index);
+        indexNode.prev.next = indexNode.next;
+        indexNode.next.prev = indexNode.prev;
     }
 
     private static class Node<E> {
