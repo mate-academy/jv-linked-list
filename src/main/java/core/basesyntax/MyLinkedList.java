@@ -6,8 +6,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
     private MyNode<T> head;
     private MyNode<T> tail;
-    private MyNode<T> prev;
-    private MyNode<T> next;
 
     @Override
     public void add(T value) {
@@ -21,13 +19,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index == size || (index == 0 && size == 0)) {
+        if (index == size) {
             add(value);
             return;
         }
 
-        if (index == 0 && head != null) {
-            MyNode<T> newNode = new MyNode<>(prev, value, head);
+        if (index == 0) {
+            MyNode<T> newNode = new MyNode<>(null, value, head);
             head.prev = newNode;
             head = newNode;
             size++;
@@ -48,8 +46,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T value : list) {
+            add(value);
         }
     }
 
@@ -77,17 +75,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         MyNode<T> removeNode = head;
-        if (removeNode.item == object || (object != null && object.equals(removeNode.item))) {
-            remove(0);
-            return true;
-        }
-        for (int i = 1; i < size; i++) {
-            removeNode = removeNode.next;
-
+        for (int i = 0; i < size; i++) {
             if (removeNode.item == object || (object != null && object.equals(removeNode.item))) {
                 remove(i);
                 return true;
             }
+            removeNode = removeNode.next;
         }
         return false;
     }
@@ -121,13 +114,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void createFirstNode(T value) {
-        MyNode<T> firstNode = new MyNode<>(prev, value, next);
+        MyNode<T> firstNode = new MyNode<>(null, value, null);
         tail = firstNode;
         head = firstNode;
     }
 
     private void createLastNode(T value) {
-        MyNode<T> lastNode = new MyNode<>(tail, value, next);
+        MyNode<T> lastNode = new MyNode<>(tail, value, null);
         if (head.next == null) {
             head.next = lastNode;
         } else {
