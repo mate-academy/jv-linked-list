@@ -12,10 +12,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0) {
             head = new Node<>(null, value, tail);
             tail = head;
-        } else if (size == 1) {
-            tail = new Node<>(head, value, null);
-            tail.prev = head;
-            head.next = tail;
         } else {
             Node<T> currentNode = new Node<>(tail, value, null);
             tail.next = currentNode;
@@ -118,7 +114,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T unlink(Node<T> currentNode) {
-
         if (size == 1) {
             size = 0;
             return currentNode.item;
