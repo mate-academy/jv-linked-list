@@ -51,23 +51,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void addFirst(T value) {
         if (size == 0) {
-            first = new Node<>(value,null,null);
-        } else {
-            Node<T> newNode = new Node<>(value,null,first);
-            first.prev = newNode;
-            first = newNode;
+            first = new Node<>(value, null, last);
+            return;
         }
+        Node<T> newNode = new Node<>(value, null, first);
+        first.prev = newNode;
+        first = newNode;
     }
 
     private void addLast(T value) {
-        if (size == 1) {
-            last = new Node<>(value,first,null);
-            first.next = last;
+        Node<T> newNode = new Node<>(value, null, null);
+        if (last == null) {
+            first.next = newNode;
+            newNode.prev = first;
         } else {
-            Node<T> newNode = new Node<>(value,last,null);
             last.next = newNode;
-            last = newNode;
+            newNode.prev = last;
         }
+        last = newNode;
     }
 
     private void addMiddle(Node<T> nodeBefore, T value) {
@@ -101,13 +102,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> nodeToRemove = getNodeByValue(object);
-        if (nodeToRemove == null) {
-            return false;
+        Node<T> pointer = first;
+        while (pointer != null) {
+            if (pointer.item == object
+                    || (object != null && object.equals(pointer.item))) {
+                unlink(pointer);
+                size--;
+                return true;
+            }
+            pointer = pointer.next;
         }
-        unlink(nodeToRemove);
-        size--;
-        return true;
+        return false;
     }
 
     private T unlink(Node<T> nodeToRemove) {
@@ -128,9 +133,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         T returnValue = first.item;
         if (size == 1) {
             first = null;
-        } else if (size == 2) {
-            first = last;
-            last = null;
         } else {
             first = first.next;
             first.prev = null;
@@ -140,13 +142,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private T removeLast() {
         T returnValue = last.item;
-        if (size == 2) {
-            first.next = null;
-            last = null;
-        } else {
-            last = last.prev;
-            last.next = null;
-        }
+        last = last.prev;
+        last.next = null;
         return returnValue;
     }
 
@@ -180,17 +177,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return pointer;
-    }
-
-    private Node<T> getNodeByValue(T value) {
-        Node<T> pointer = first;
-        while (pointer != null) {
-            if (pointer.item == value
-                    || (value != null && value.equals(pointer.item))) {
-                return pointer;
-            }
-            pointer = pointer.next;
-        }
-        return null;
     }
 }
