@@ -52,6 +52,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void addFirst(T value) {
         if (size == 0) {
             first = new Node<>(value, null, last);
+            last = first;
             return;
         }
         Node<T> newNode = new Node<>(value, null, first);
@@ -60,14 +61,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addLast(T value) {
-        Node<T> newNode = new Node<>(value, null, null);
-        if (last == null) {
-            first.next = newNode;
-            newNode.prev = first;
-        } else {
-            last.next = newNode;
-            newNode.prev = last;
-        }
+        Node<T> newNode = new Node<>(value, last, null);
+        last.next = newNode;
         last = newNode;
     }
 
@@ -95,22 +90,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T returnValue = unlink(getNodeByIndex(index));
-        size--;
-        return returnValue;
+        return unlink(getNodeByIndex(index));
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> pointer = first;
-        while (pointer != null) {
-            if (pointer.item == object
-                    || (object != null && object.equals(pointer.item))) {
-                unlink(pointer);
-                size--;
+        Node<T> nodeToRemove = first;
+        while (nodeToRemove != null) {
+            if (nodeToRemove.item == object
+                    || (object != null && object.equals(nodeToRemove.item))) {
+                unlink(nodeToRemove);
                 return true;
             }
-            pointer = pointer.next;
+            nodeToRemove = nodeToRemove.next;
         }
         return false;
     }
@@ -126,6 +118,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             nodeToRemove.prev.next = nodeToRemove.next;
             nodeToRemove.next.prev = nodeToRemove.prev;
         }
+        size--;
         return returnValue;
     }
 
