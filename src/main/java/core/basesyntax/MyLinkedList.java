@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> head;
     private Node<T> tail;
 
@@ -21,14 +21,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> last = tail;
-        Node<T> newNode = new Node<>(last, value, null);
-        tail = newNode;
-        if (last == null) {
+        Node<T> newNode = new Node<>(tail, value, null);
+        if (tail == null) {
             head = newNode;
         } else {
-            last.next = newNode;
+            tail.next = newNode;
         }
+        tail = newNode;
         size++;
     }
 
@@ -41,7 +40,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Node<T> oldNode = findNodeByIndex(index);
         Node<T> oldNodePrev = oldNode.prev;
-        Node<T> newNode = new Node<>(oldNode.prev, value, oldNode);
+        Node<T> newNode = new Node<>(oldNodePrev, value, oldNode);
         oldNode.prev = newNode;
         if (oldNodePrev == null) {
             head = newNode;
@@ -68,9 +67,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         checkIndex(index);
         Node<T> node = findNodeByIndex(index);
-        T oldVal = node.item;
+        T oldValue = node.item;
         node.item = value;
-        return oldVal;
+        return oldValue;
     }
 
     @Override
