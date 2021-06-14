@@ -3,19 +3,17 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> first;
     private Node<T> last;
 
     @Override
     public void add(T value) {
-        Node<T> oldValue = last;
-        Node<T> newValue = new Node<>(oldValue, value, null);
-        last = newValue;
-        if (oldValue == null) {
-            first = newValue;
+        last = new Node<>(last, value, null);
+        if (size == 0) {
+            first = last;
         } else {
-            oldValue.next = last;
+            last.prev.next = last;
         }
         size++;
     }
@@ -26,38 +24,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
             return;
-        } else {
-            Node<T> oldValue = node(index);
-            Node<T> oldValuePrev = oldValue.prev;
-            Node<T> newValue = new Node<>(oldValuePrev, value, oldValue);
-
-            if (oldValuePrev == null) {
-                first = newValue;
-            } else {
-                oldValuePrev.next = newValue;
-            }
-            oldValue.prev = newValue;
         }
+        Node<T> oldValue = getNode(index);
+        Node<T> oldValuePrev = oldValue.prev;
+        Node<T> newValue = new Node<>(oldValuePrev, value, oldValue);
+
+        if (oldValuePrev == null) {
+            first = newValue;
+        } else {
+            oldValuePrev.next = newValue;
+        }
+        oldValue.prev = newValue;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (T node : list) {
-            add(node);
+        for (T element : list) {
+            add(element);
         }
     }
 
     @Override
     public T get(int index) {
         checkIndexSet(index);
-        return node(index).item;
+        return getNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndexSet(index);
-        Node<T> oldValue = node(index);
+        Node<T> oldValue = getNode(index);
         T oldValueFromNode = oldValue.item;
         oldValue.item = value;
         return oldValueFromNode;
@@ -66,27 +63,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndexSet(index);
-        return unlink(node(index));
+        return unlink(getNode(index));
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> nodeToDelete;
-        if (object == null) {
-            for (int i = 0; i < size; i++) {
-                if (object == node(i).item) {
-                    nodeToDelete = node(i);
-                    unlink(nodeToDelete);
-                    return true;
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (object.equals(node(i).item)) {
-                    nodeToDelete = node(i);
-                    unlink(nodeToDelete);
-                    return true;
-                }
+        for (int i = 0; i < size; i++) {
+            if ((object == null && object == get(i)) || (object != null && object.equals(get(i)))) {
+                unlink(getNode(i));
+                return true;
             }
         }
         return false;
@@ -114,20 +99,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> node(int index) {
-        Node<T> oldValueAtIndex;
+    private Node<T> getNode(int index) {
+        Node<T> currentNode;
         if (index < size / 2) {
-            oldValueAtIndex = first;
+            currentNode = first;
             for (int i = 0; i < index; i++) {
-                oldValueAtIndex = oldValueAtIndex.next;
+                currentNode = currentNode.next;
             }
         } else {
-            oldValueAtIndex = last;
+            currentNode = last;
             for (int i = size - 1; i > index; i--) {
-                oldValueAtIndex = oldValueAtIndex.prev;
+                currentNode = currentNode.prev;
             }
         }
-        return oldValueAtIndex;
+        return currentNode;
     }
 
     private T unlink(Node<T> node) {
