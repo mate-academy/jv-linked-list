@@ -2,20 +2,20 @@ package core.basesyntax;
 
 import java.util.List;
 
-public interface MyLinkedListInterface<T> {
-    void add(T value);
+public interface MyLinkedListInterface<V> {
+    void add(V value);
 
-    void add(T value, int index);
+    void add(V value, int index);
 
-    void addAll(List<T> list);
+    void addAll(List<V> list);
 
-    T get(int index);
+    V get(int index);
 
-    T set(T value, int index);
+    V set(V value, int index);
 
-    T remove(int index);
+    V remove(int index);
 
-    boolean remove(T object);
+    boolean remove(V object);
 
     int size();
 
