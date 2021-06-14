@@ -16,36 +16,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.prev = prev;
             this.item = element;
             this.next = next;
-
         }
-    }
-
-    private Node<T> findNodeByIndex(int index) {
-        Node<T> node;
-        if (index < (size / 2)) {
-            node = head;
-            for (int i = 0; i < index; i++) {
-                node = node.next;
-            }
-        } else {
-            node = tail;
-            for (int i = size - 1; i > index; i--) {
-                node = node.prev;
-            }
-        }
-        return node;
     }
 
     @Override
     public void add(T value) {
-        Node<T> last = tail;
-        Node<T> newNode = new Node<>(last, value, null);
-        tail = newNode;
-        if (last == null) {
+        Node<T> newNode = new Node<>(tail, value, null);
+        if (tail == null) {
             head = newNode;
         } else {
-            last.next = newNode;
+            tail.next = newNode;
         }
+        tail = newNode;
         size++;
     }
 
@@ -58,7 +40,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Node<T> oldNode = findNodeByIndex(index);
         Node<T> oldNodePrev = oldNode.prev;
-        Node<T> newNode = new Node<>(oldNode.prev, value, oldNode);
+        Node<T> newNode = new Node<>(oldNodePrev, value, oldNode);
         oldNode.prev = newNode;
         if (oldNodePrev == null) {
             head = newNode;
@@ -147,5 +129,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         node.item = null;
         size--;
         return element;
+    }
+
+    private Node<T> findNodeByIndex(int index) {
+        Node<T> node;
+        if (index < (size / 2)) {
+            node = head;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+        } else {
+            node = tail;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
+        }
+        return node;
     }
 }
