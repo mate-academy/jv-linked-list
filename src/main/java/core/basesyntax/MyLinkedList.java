@@ -31,10 +31,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head.prev = newNode;
             head = newNode;
         } else {
-            newNode.prev = getNode(index - 1);
-            newNode.next = getNode(index);
-            getNode(index).prev = newNode;
-            getNode(index - 1).next = newNode;
+            Node<T> currentNode = getNode(index);
+            currentNode.prev.next = newNode;
+            newNode.prev = currentNode.prev;
+            newNode.next = currentNode;
+            currentNode.prev = newNode;
         }
         size++;
     }
@@ -61,8 +62,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkRemoveIndex(index);
-        T result = getNode(index).item;
         Node<T> indexNode = getNode(index);
+        T result = indexNode.item;
         if (index == 0) {
             removeFirsIndex(index);
         } else if (index == size - 1) {
@@ -145,7 +146,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void removeLastIndex(int index) {
         Node<T> indexNode = getNode(index);
         tail = indexNode.prev;
-        indexNode.prev = new Node<>(indexNode.prev.prev, indexNode.prev.item, null);
+        indexNode.prev.next = null;
     }
 
     private void removeIndex(int index) {
