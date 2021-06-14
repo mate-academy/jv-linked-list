@@ -32,9 +32,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Index is invalid, current size of list: " + size);
-        }
         Node<T> newNode;
         if (index == size) {
             add(value);
