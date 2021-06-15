@@ -21,13 +21,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(tail, value, null);
+        Node<T> currnetNode = new Node<>(tail, value, null);
         if (size == 0) {
-            head = newNode;
+            head = currnetNode;
         } else {
-            tail.next = newNode;
+            tail.next = currnetNode;
         }
-        tail = newNode;
+        tail = currnetNode;
         size++;
     }
 
