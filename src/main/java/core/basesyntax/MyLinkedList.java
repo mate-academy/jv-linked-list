@@ -143,13 +143,11 @@ public class MyLinkedList<V> implements MyLinkedListInterface<V> {
             return tail;
         }
         if (size % index == 0 || index < size / 2) {
-            Node next = head;
-            for (int t = 1; t <= index; t++) {
-                next = next.next;
-                if (t == index) {
-                    return next;
-                }
+            Node currentNode = head;
+            for (int t = 0; t < index; t++) {
+                currentNode = currentNode.next;
             }
+            return currentNode;
         } else {
             Node prev = tail;
             for (int t = size - 2; t >= index; size--) {
