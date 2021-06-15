@@ -10,21 +10,14 @@ public class MyLinkedList<V> implements MyLinkedListInterface<V> {
     @Override
     public void add(V value) {
         if (size == 0) {
-            head = new Node(null, tail, value);
+            head = new Node(null, null, value);
+            tail = head;
             size++;
             return;
         }
-        if (size == 1) {
-            tail = new Node(head, null, value);
-            head.next = tail;
-            size++;
-            return;
-        }
-        Node newNode = new Node(tail.prev, tail, tail.value);
-        (tail.prev).next = newNode;
-        tail.prev = newNode;
-        newNode.next = tail;
-        tail.value = value;
+        Node newNode = new Node(tail, null, value);
+        tail.next = newNode;
+        tail= newNode;
         size++;
     }
 
