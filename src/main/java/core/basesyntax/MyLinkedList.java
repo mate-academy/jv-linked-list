@@ -30,21 +30,19 @@ public class MyLinkedList<V> implements MyLinkedListInterface<V> {
             add(value);
             return;
         }
-        Node node = new Node(null, null, value);
         if (index == 0) {
-            node = new Node(null, head, value);
+            Node node = new Node(null, head, value);
             head.prev = node;
             head = node;
             size++;
             return;
         }
-        Node node2 = getByIndex(index);
-        node.next = node2;
-        node.prev = node2.prev;
-        node2.prev = node;
+        Node currentNode = getByIndex(index);
+        Node node = new Node(currentNode.prev, currentNode, value);
+        currentNode.prev = node;
         (node.prev).next = node;
         if (index == size - 1) {
-            tail = node2;
+            tail = currentNode;
         }
         size++;
     }
@@ -59,17 +57,14 @@ public class MyLinkedList<V> implements MyLinkedListInterface<V> {
     @Override
     public V get(int index) {
         checkIndex(index);
-        if (index == size - 1) {
-            return tail.value;
-        }
-        return getByIndex(index).value;
+        return (V) getByIndex(index).value;
     }
 
     @Override
     public V set(V value, int index) {
         checkIndex(index);
         Node node = getByIndex(index);
-        V currentValue = node.value;
+        V currentValue = (V)node.value;
         node.value = value;
         return currentValue;
     }
@@ -77,37 +72,14 @@ public class MyLinkedList<V> implements MyLinkedListInterface<V> {
     @Override
     public V remove(int index) {
         checkIndex(index);
-        V toReturn;
-        if (size == 1) {
-            size = 0;
-            return head.value;
-        }
-        if (index == 0) {
-            (head.next).prev = null;
-            toReturn = head.value;
-            head = head.next;
-            size--;
-            return toReturn;
-        }
-        if (index == size - 1) {
-            (tail.prev).next = null;
-            toReturn = tail.value;
-            tail = tail.prev;
-            size--;
-            return toReturn;
-        }
-        Node toRemove = getByIndex(index);
-        (toRemove.prev).next = toRemove.next;
-        (toRemove.next).prev = toRemove.prev;
-        size--;
-        return toRemove.value;
+        return unlink(getByIndex(index));
     }
 
     @Override
     public boolean remove(V object) {
-        int index = getIndex(object);
-        if (index >= 0) {
-            remove(index);
+        Node node = getNode(object);
+        if (node != null) {
+            unlink(node);
             return true;
         }
         return false;
@@ -139,17 +111,15 @@ public class MyLinkedList<V> implements MyLinkedListInterface<V> {
         }
     }
 
-    public int getIndex(V value) {
-        int counter = 0;
+    public Node getNode(V value) {
         Node runner = head;
         while (!(runner == null)) {
-            if (equalValue(value, runner.value)) {
-                return counter;
+            if (equalValue(value, (V)runner.value)) {
+                return runner;
             }
-            counter++;
             runner = runner.next;
         }
-        return -1;
+        return null;
     }
 
     private void checkIndex(int index) {
@@ -162,12 +132,36 @@ public class MyLinkedList<V> implements MyLinkedListInterface<V> {
         return ((value == value2) || (value != null && value.equals(value2)));
     }
 
-    private class Node {
+    private V unlink(Node toRemove) {
+        V toReturn = (V)toRemove.value;
+        if (size == 1) {
+            size = 0;
+            return toReturn;
+        }
+        if (toRemove.prev == null) {
+            (head.next).prev = null;
+            head = head.next;
+            size--;
+            return toReturn;
+        }
+        if (toRemove.next == null) {
+            (tail.prev).next = null;
+            tail = tail.prev;
+            size--;
+            return toReturn;
+        }
+        (toRemove.prev).next = toRemove.next;
+        (toRemove.next).prev = toRemove.prev;
+        size--;
+        return toReturn;
+    }
+
+    private static class Node<T> {
         private Node prev;
         private Node next;
-        private V value;
+        private T value;
 
-        private Node(Node prev, Node next, V value) {
+        private Node(Node prev, Node next, T value) {
             this.prev = prev;
             this.value = value;
             this.next = next;
