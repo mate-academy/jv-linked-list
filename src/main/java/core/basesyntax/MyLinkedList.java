@@ -4,7 +4,6 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final int START_HEAD_INDEX = 0;
-    private static final int NEXT_NODE_AFTER_HEAD_INDEX = 1;
     private int size;
     private Node<T> head;
     private Node<T> tail;
