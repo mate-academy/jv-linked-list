@@ -25,37 +25,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             addFirstElement(value);
             return;
         }
-        Node<T> newNode = new Node(last, value, null);
-        Node<T> currentNode = last;
-        newNode.prev = currentNode;
-        currentNode.next = newNode;
-        last = newNode;
-        size++;
+        addElementAtLastIndex(value);
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
         if (size == 0) {
-            addFirstElement(value);
-            return;
-        }
-        if (index == 0) {
-            addElementAtZeroIndex(value);
+            add(value);
             return;
         }
         if (index == size) {
             addElementAtLastIndex(value);
             return;
         }
-        Node<T> currentNode = first;
-        int counter = 0;
-        while (counter < index - 1) {
-            currentNode = currentNode.next;
-            counter++;
+        if (index == 0) {
+            addElementAtZeroIndex(value);
+            return;
         }
-        Node<T> prevNode = currentNode;
-        Node<T> nextNode = currentNode.next;
+        Node<T> nextNode = getNodeByIndex(index);
+        Node<T> prevNode = nextNode.prev;
         Node<T> newNode = new Node<>(prevNode, value, nextNode);
         prevNode.next = newNode;
         nextNode.prev = newNode;
@@ -64,55 +53,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T element : list) {
+            add(element);
         }
     }
 
     @Override
     public T get(int index) {
         checkIndex(index);
-        if (index <= size / 2 + 1) {
-            return scanFromBegin(index);
-        }
-        return scanFromEnd(index);
+        return getNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> currentNode = first;
-        int counter = 0;
-        while (counter < index) {
-            currentNode = currentNode.next;
-            counter++;
-        }
-        T oldValue = currentNode.item;
-        currentNode.item = value;
+        T oldValue = getNodeByIndex(index).item;
+        getNodeByIndex(index).item = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        if (size == 1) {
-            Node<T> oldElement = first;
-            removeSingleElement();
-            return oldElement.item;
-        }
-        if (index == 0) {
-            Node<T> oldElement = first;
-            removeFirstElement();
-            return oldElement.item;
-        }
-        if (index == size - 1) {
-            Node<T> oldElement = last;
-            removeLastElement();
-            return oldElement.item;
-        }
         Node<T> oldElement = getNodeByIndex(index);
-        unlinkAndRelink(oldElement);
-        return oldElement.item;
+        return unlink(oldElement, index).item;
     }
 
     @Override
@@ -120,24 +84,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode = first;
         int counter = 0;
         while (currentNode != null) {
-            if (size == 1) {
-                removeSingleElement();
-                return true;
-            }
             if ((currentNode.item == object || (currentNode.item != null
-                    && currentNode.item.equals(object))) && counter == 0) {
-                removeFirstElement();
-                return true;
-            }
-            if ((currentNode.item == object || (currentNode.item != null
-                    && currentNode.item.equals(object))) && counter == size - 1) {
-                removeLastElement();
-                return true;
-            }
-            if (currentNode.item == object || currentNode.item != null
-                    && currentNode.item.equals(object)) {
-                Node<T> oldElement = currentNode;
-                unlinkAndRelink(oldElement);
+                    && currentNode.item.equals(object)))) {
+                unlink(currentNode, counter);
                 return true;
             }
             currentNode = currentNode.next;
@@ -169,31 +118,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Node<T> currentNode = first;
-        int counter = 0;
-        while (counter < index) {
-            currentNode = currentNode.next;
-            counter++;
+        checkIndex(index);
+        if (index <= size / 2 + 1) {
+            return scanFromBegin(index);
         }
-        return currentNode;
+        return scanFromEnd(index);
     }
 
     private void addFirstElement(T value) {
-        Node<T> newNode = new Node(null, value, null);
+        Node<T> newNode = new Node<>(null, value, null);
         first = newNode;
         last = newNode;
         size++;
     }
 
     private void addElementAtZeroIndex(T value) {
-        Node<T> newNode = new Node(null, value, first);
+        Node<T> newNode = new Node<>(null, value, first);
         first.prev = newNode;
         first = newNode;
         size++;
     }
 
     private void addElementAtLastIndex(T value) {
-        Node<T> newNode = new Node(last, value, null);
+        Node<T> newNode = new Node<>(last, value, null);
         last.next = newNode;
         last = newNode;
         size++;
@@ -221,33 +168,50 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private T scanFromBegin(int index) {
+    private Node<T> scanFromBegin(int index) {
         Node<T> currentNode = first;
         int counter = 0;
         while (counter < index) {
             currentNode = currentNode.next;
             counter++;
         }
-        return currentNode.item;
+        return currentNode;
     }
 
-    private T scanFromEnd(int index) {
+    private Node<T> scanFromEnd(int index) {
         Node<T> currentNode = last;
         int counter = size - 1;
         while (counter > index) {
             currentNode = currentNode.prev;
             counter--;
         }
-        return currentNode.item;
+        return currentNode;
     }
 
-    private void unlinkAndRelink(Node<T> oldElement) {
-        Node<T> prevNode = oldElement.prev;
-        Node<T> nextNode = oldElement.next;
+    private Node<T> unlink(Node<T> nodeToRemove, int index) {
+        if (size == 1) {
+            Node<T> oldElement = first;
+            removeSingleElement();
+            return oldElement;
+        }
+        if (index == 0) {
+            Node<T> oldElement = first;
+            removeFirstElement();
+            return oldElement;
+        }
+        if (index == size - 1) {
+            Node<T> oldElement = last;
+            removeLastElement();
+            return oldElement;
+        }
+
+        Node<T> prevNode = nodeToRemove.prev;
+        Node<T> nextNode = nodeToRemove.next;
         prevNode.next = nextNode;
         nextNode.prev = prevNode;
-        oldElement.next = null;
-        oldElement.prev = null;
+        nodeToRemove.next = null;
+        nodeToRemove.prev = null;
         size--;
+        return nodeToRemove;
     }
 }
