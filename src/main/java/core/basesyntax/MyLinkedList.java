@@ -133,7 +133,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         afterAddingNode.prev = addingNode;
     }
 
-
     private void addBeforeHead(T value) {
         Node<T> addingNode = head;
         head = new Node<>(value, null, addingNode);
