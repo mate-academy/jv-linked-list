@@ -10,12 +10,12 @@ public class MyLinkedList<V> implements MyLinkedListInterface<V> {
     @Override
     public void add(V value) {
         if (size == 0) {
-            head = new Node(null, null, value);
+            head = new Node<V>(null, null, value);
             tail = head;
             size++;
             return;
         }
-        Node newNode = new Node(tail, null, value);
+        Node<V> newNode = new Node<>(tail, null, value);
         tail.next = newNode;
         tail = newNode;
         size++;
@@ -31,14 +31,14 @@ public class MyLinkedList<V> implements MyLinkedListInterface<V> {
             return;
         }
         if (index == 0) {
-            Node node = new Node(null, head, value);
+            Node<V> node = new Node<>(null, head, value);
             head.prev = node;
             head = node;
             size++;
             return;
         }
-        Node currentNode = getByIndex(index);
-        Node node = new Node(currentNode.prev, currentNode, value);
+        Node<V> currentNode = getByIndex(index);
+        Node<V> node = new Node<>(currentNode.prev, currentNode, value);
         currentNode.prev = node;
         (node.prev).next = node;
         if (index == size - 1) {
@@ -57,14 +57,14 @@ public class MyLinkedList<V> implements MyLinkedListInterface<V> {
     @Override
     public V get(int index) {
         checkIndex(index);
-        return (V) getByIndex(index).value;
+        return getByIndex(index).value;
     }
 
     @Override
     public V set(V value, int index) {
         checkIndex(index);
-        Node node = getByIndex(index);
-        V currentValue = (V)node.value;
+        Node<V> node = getByIndex(index);
+        V currentValue = node.value;
         node.value = value;
         return currentValue;
     }
@@ -77,7 +77,7 @@ public class MyLinkedList<V> implements MyLinkedListInterface<V> {
 
     @Override
     public boolean remove(V object) {
-        Node node = getNode(object);
+        Node<V> node = getNode(object);
         if (node != null) {
             unlink(node);
             return true;
@@ -95,15 +95,15 @@ public class MyLinkedList<V> implements MyLinkedListInterface<V> {
         return size == 0;
     }
 
-    public Node getByIndex(int index) {
+    public Node<V> getByIndex(int index) {
         if (index < size / 2) {
-            Node currentNode = head;
+            Node<V> currentNode = head;
             for (int t = 0; t < index; t++) {
                 currentNode = currentNode.next;
             }
             return currentNode;
         } else {
-            Node prev = tail;
+            Node<V> prev = tail;
             for (int t = size - 1; t > index; t--) {
                 prev = prev.prev;
             }
@@ -111,10 +111,10 @@ public class MyLinkedList<V> implements MyLinkedListInterface<V> {
         }
     }
 
-    public Node getNode(V value) {
-        Node runner = head;
+    public Node<V> getNode(V value) {
+        Node<V> runner = head;
         while (!(runner == null)) {
-            if (equalValue(value, (V)runner.value)) {
+            if (equalValue(value, runner.value)) {
                 return runner;
             }
             runner = runner.next;
@@ -132,8 +132,8 @@ public class MyLinkedList<V> implements MyLinkedListInterface<V> {
         return ((value == value2) || (value != null && value.equals(value2)));
     }
 
-    private V unlink(Node toRemove) {
-        V toReturn = (V)toRemove.value;
+    private V unlink(Node<V> toRemove) {
+        V toReturn = toRemove.value;
         if (size == 1) {
             size = 0;
             return toReturn;
