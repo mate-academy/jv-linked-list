@@ -10,7 +10,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> node;
-
         if (isEmpty()) {
             node = new Node<>(null, value, null);
             head = node;
@@ -32,7 +31,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> newNode = new Node<>(beforeNode, value, afterNode);
 
             linkNodes(beforeNode, newNode, afterNode);
-            checkHead(index, newNode);
+            head = index == 0 ? newNode : head;
             size++;
         }
     }
@@ -46,13 +45,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return findNode(index) == null ? null : findNode(index).value;
+        return findNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        T oldValue = findNode(index).value;
-        findNode(index).value = value;
+        Node<T> oldNode = findNode(index);
+        T oldValue = oldNode.value;
+        oldNode.value = value;
         return oldValue;
     }
 
@@ -121,10 +121,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void checkHead(int index, Node<T> newNode) {
-        head = index == 0 ? newNode : head;
-    }
-
     private void linkNodes(Node<T> beforeNode, Node<T> newNode, Node<T> afterNode) {
         if (beforeNode != null) {
             beforeNode.next = newNode;
@@ -134,16 +130,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> start(int index) {
-        return index > size / 2 ? tail : head;
-    }
-
     private Node<T> findNode(int index) {
         checkIndex(index);
         Node<T> current;
-
-        if (start(index) == head
-                || start(index) != null && start(index).equals(head)) {
+        if (index < size / 2) {
             current = head;
             for (int i = 0; i < index; i++) {
                 current = current.next;
