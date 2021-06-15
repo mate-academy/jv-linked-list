@@ -17,23 +17,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        if (index == START_HEAD_INDEX) {
-            if (isEmpty()) {
-                head = new Node<>(value, null, null);
-            } else {
-                addBeforeHead(value);
-            }
-            checkTail();
+        if (isEmpty()) {
+            head = new Node<>(value, null, null);
+            tail = head;
+        } else if (index == START_HEAD_INDEX) {
+            addBeforeHead(value);
+        } else if (index == size) {
+            addAfterTail(value);
         } else {
-            if (index == size) {
-                if (size == NEXT_NODE_AFTER_HEAD_INDEX) {
-                    addToSingleHead(value);
-                } else {
-                    addAfterTail(value);
-                }
-            } else {
-                addByIndexAndValue(index, value);
-            }
+            addByIndexAndValue(index, value);
         }
         size++;
     }
@@ -48,44 +40,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        Node<T> getNode = head;
-        for (int i = START_HEAD_INDEX; i < index; i++) {
-            getNode = getNode.next;
-        }
-        return getNode.value;
+        return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        if (index >= 0 && index < size) {
-            Node<T> setNode = checkHalfWayLoop(index);
-            T previousValue = setNode.value;
-            setNode.value = value;
-            return previousValue;
-        }
-        throw new IndexOutOfBoundsException("Can not find index : " + index);
+        Node<T> setNode = getNodeByIndex(index);
+        T previousValue = setNode.value;
+        setNode.value = value;
+        return previousValue;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T previousValue;
-        if (index == START_HEAD_INDEX) {
-            previousValue = head.value;
-            head = head.next;
-            size--;
-        } else {
-            if (index + 1 == size) {
-                previousValue = tail.value;
-                tail = tail.prev;
-                size--;
-            } else {
-                Node<T> removeNode = checkHalfWayLoop(index);
-                previousValue = unlinkNode(removeNode);
-            }
-        }
-        return previousValue;
+        Node<T> removeNode = getNodeByIndex(index);
+        return unlinkNode(removeNode);
     }
 
     @Override
@@ -137,15 +108,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void checkTail() {
-        Node<T> tailNode = head;
-        for (int i = NEXT_NODE_AFTER_HEAD_INDEX; i < size; i++) {
-            tailNode = tailNode.next;
-        }
-        tail = tailNode;
-    }
-
-    private Node<T> checkHalfWayLoop(int index) {
+    private Node<T> getNodeByIndex(int index) {
         Node<T> exitNode;
         if (index < (size >> 1)) {
             exitNode = head;
@@ -162,20 +125,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addByIndexAndValue(int index, T value) {
-        Node<T> addNode = checkHalfWayLoop(index);
+        Node<T> addNode = getNodeByIndex(index);
         Node<T> beforeAddingNode = addNode.prev;
         Node<T> afterAddingNode = beforeAddingNode.next;
         Node<T> addingNode = new Node<>(value, beforeAddingNode, afterAddingNode);
         beforeAddingNode.next = addingNode;
         afterAddingNode.prev = addingNode;
-        checkTail();
     }
 
-    private void addToSingleHead(T value) {
-        Node<T> addingNode = new Node<>(value, head, null);
-        head.next = addingNode;
-        tail = addingNode;
-    }
 
     private void addBeforeHead(T value) {
         Node<T> addingNode = head;
