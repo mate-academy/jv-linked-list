@@ -156,12 +156,12 @@ public class MyLinkedList<V> implements MyLinkedListInterface<V> {
         return toReturn;
     }
 
-    private static class Node<T> {
+    private static class Node<V> {
         private Node prev;
         private Node next;
-        private T value;
+        private V value;
 
-        private Node(Node prev, Node next, T value) {
+        private Node(Node prev, Node next, V value) {
             this.prev = prev;
             this.value = value;
             this.next = next;
