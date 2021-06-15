@@ -17,7 +17,7 @@ public class MyLinkedList<V> implements MyLinkedListInterface<V> {
         }
         Node newNode = new Node(tail, null, value);
         tail.next = newNode;
-        tail= newNode;
+        tail = newNode;
         size++;
     }
 
@@ -32,10 +32,9 @@ public class MyLinkedList<V> implements MyLinkedListInterface<V> {
         }
         Node node = new Node(null, null, value);
         if (index == 0) {
-            node = new Node(head, head.next, head.value);
-            (head.next).prev = node;
-            head.next = node;
-            head.value = value;
+            node = new Node(null, head, value);
+            head.prev = node;
+            head = node;
             size++;
             return;
         }
@@ -63,13 +62,7 @@ public class MyLinkedList<V> implements MyLinkedListInterface<V> {
         if (index == size - 1) {
             return tail.value;
         }
-        Node next = head;
-        int counter = 0;
-        while (counter < index) {
-            next = next.next;
-            counter++;
-        }
-        return next.value;
+        return getByIndex(index).value;
     }
 
     @Override
@@ -112,15 +105,10 @@ public class MyLinkedList<V> implements MyLinkedListInterface<V> {
 
     @Override
     public boolean remove(V object) {
-        Node go = head;
-        int counter = 0;
-        while (!(go == null)) {
-            if (go.value == object || (go.value != null && go.value.equals(object))) {
-                V object2 = remove(counter);
-                return (object2 == object || (object2 != null && object2.equals(object)));
-            }
-            counter++;
-            go = go.next;
+        int index = getIndex(object);
+        if (index >= 0) {
+            remove(index);
+            return true;
         }
         return false;
     }
@@ -135,14 +123,8 @@ public class MyLinkedList<V> implements MyLinkedListInterface<V> {
         return size == 0;
     }
 
-    private Node getByIndex(int index) {
-        if (index == 0) {
-            return head;
-        }
-        if (index == size - 1) {
-            return tail;
-        }
-        if (size % index == 0 || index < size / 2) {
+    public Node getByIndex(int index) {
+        if (index < size / 2) {
             Node currentNode = head;
             for (int t = 0; t < index; t++) {
                 currentNode = currentNode.next;
@@ -150,20 +132,34 @@ public class MyLinkedList<V> implements MyLinkedListInterface<V> {
             return currentNode;
         } else {
             Node prev = tail;
-            for (int t = size - 2; t >= index; size--) {
+            for (int t = size - 1; t > index; t--) {
                 prev = prev.prev;
-                if (t == index) {
-                    return prev;
-                }
             }
+            return prev;
         }
-        return null;
+    }
+
+    public int getIndex(V value) {
+        int counter = 0;
+        Node runner = head;
+        while (!(runner == null)) {
+            if (equalValue(value, runner.value)) {
+                return counter;
+            }
+            counter++;
+            runner = runner.next;
+        }
+        return -1;
     }
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
+    }
+
+    private boolean equalValue(V value, V value2) {
+        return ((value == value2) || (value != null && value.equals(value2)));
     }
 
     private class Node {
