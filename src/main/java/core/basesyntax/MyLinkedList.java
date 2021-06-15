@@ -12,8 +12,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> prev;
         private Node<T> next;
 
-        public Node(Node<T> perv, T element, Node<T> next) {
-            this.prev = perv;
+        public Node(Node<T> prev, T element, Node<T> next) {
+            this.prev = prev;
             this.element = element;
             this.next = next;
         }
@@ -36,8 +36,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T val : list) {
-            add(val);
+        for (T value : list) {
+            add(value);
         }
     }
 
@@ -64,11 +64,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         for (Node<T> x = head; x != null; x = x.next) {
-            if (object == null && x.element == null) {
-                unlink(x);
-                return true;
-            }
-            if (object != null && object.equals(x.element)) {
+            if (object == null && x.element == null || object != null && object.equals(x.element)) {
                 unlink(x);
                 return true;
             }
@@ -84,18 +80,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void linkFirst(T value) {
-        Node<T> first = head;
-        Node<T> newNode = new Node<>(null, value, first);
-        head = newNode;
-        if (first == null) {
-            tail = newNode;
-        } else {
-            first.prev = newNode;
-        }
-        size++;
     }
 
     private void linkLast(T value) {
