@@ -50,8 +50,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkPositionIndex(index);
-        T oldValue = getNode(index).element;
-        getNode(index).element = value;
+        Node<T> oldNode = getNode(index);
+        T oldValue = oldNode.element;
+        oldNode.element = value;
         return oldValue;
     }
 
