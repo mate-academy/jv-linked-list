@@ -11,8 +11,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value) {
         if (size == 0) {
             addFirst(value);
+        } else {
+            addLast(value);
         }
-        addLast(value);
         size++;
     }
 
@@ -78,29 +79,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addFirst(T object) {
-        if (size == 0) {
-            head = new Node<>(null, object, null);
-            return;
-        }
-        Node<T> firstNode = new Node<>(null, object, head);
-        head.prev = firstNode;
-        head = firstNode;
+        head = new Node<>(null, object, null);
+        tail = head;
     }
 
     private void addLast(T object) {
-        Node<T> last = tail;
-        Node<T> newNode = new Node<>(last, object, null);
+        Node<T> newNode = new Node<>(tail, object, null);
+        tail.next = newNode;
         tail = newNode;
-        if (last == null) {
-            head = newNode;
-            return;
-        }
-        last.next = newNode;
     }
 
     private void addBefore(T object, Node<T> prevNode) {
         Node<T> previous = prevNode.prev;
-        Node<T> newNode = new Node<>(prevNode.prev, object, prevNode);
+        Node<T> newNode = new Node<>(previous, object, prevNode);
         prevNode.prev = newNode;
         if (previous == null) {
             head = newNode;
@@ -113,7 +104,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         final T element = node.item;
         Node<T> next = node.next;
         Node<T> prev = node.prev;
-
         if (prev == null) {
             head = next;
         } else {
@@ -151,7 +141,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index '" + index + "' isn't within");
+            throw new IndexOutOfBoundsException("Index " + index + " isn't within the list bounds");
         }
     }
 
