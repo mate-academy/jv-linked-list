@@ -38,6 +38,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return result;
     }
 
+    private void removeNode(Node<T> node, int index) {
+        if (index == 0) {
+            if (size == 1) {
+                first = null;
+                last = null;
+            } else {
+                first = node.next;
+            }
+        } else if (index > 0 && index == size - 1) {
+            node.prev.next = null;
+            last = node.prev;
+        } else {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        }
+        size--;
+        node = null;
+    }
+
     @Override
     public void add(T value) {
         Node<T> current;
@@ -93,37 +112,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node<T> current;
-        if (index == 0) {
-            current = first;
-            if (size == 1) {
-                first = null;
-                last = null;
-            } else {
-                first = current.next;
-            }
-        } else if (index > 0 && index == size - 1) {
-            current = last;
-            current.prev.next = null;
-            last = current.prev;
-        } else {
-            current = getNode(index);
-            current.prev.next = current.next;
-            current.next.prev = current.prev;
-        }
+        Node<T> current = getNode(index);
         T oldValue = current.value;
-        size--;
-        current = null;
+        removeNode(current, index);
         return oldValue;
     }
 
     @Override
     public boolean remove(T object) {
+        Node<T> current = first;
         for (int i = 0; i < size; i++) {
-            if (get(i) != null && get(i).equals(object) || get(i) == null && object == null) {
-                remove(i);
+            if (current.value != null && current.value.equals(object)
+                    || current.value == null && object == null) {
+                removeNode(current, i);
                 return true;
             }
+            current = current.next;
         }
         return false;
     }
