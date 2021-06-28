@@ -44,6 +44,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 first = null;
                 last = null;
             } else {
+                node.next.prev = null;
                 first = node.next;
             }
         } else if (index > 0 && index == size - 1) {
