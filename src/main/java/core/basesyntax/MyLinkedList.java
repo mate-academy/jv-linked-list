@@ -39,7 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void removeNode(Node<T> node, int index) {
-        if (index == 0 ) {
+        if (index == 0) {
             if (size != 1) {
                 node.next.prev = null;
                 first = node.next;
