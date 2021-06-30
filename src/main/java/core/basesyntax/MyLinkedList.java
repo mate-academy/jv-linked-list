@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    private static class Node<T> {
-        private Node<T> prev;
-        private T item;
-        private Node<T> next;
-
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.prev = prev;
-            this.item = element;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(tail, value, null);
@@ -37,15 +25,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkIndex(index);
-        Node<T> node1 = findIndex(index);
-        Node<T> node2 = node1.prev;
-        Node<T> newNode = new Node<>(node2, value, node1);
-        node1.prev = newNode;
-        if (node2 == null) {
+
+        Node<T> oldNode = findNode(index);
+        Node<T> prevNode = oldNode.prev;
+        Node<T> newNode = new Node<>(prevNode, value, oldNode);
+        oldNode.prev = newNode;
+        if (prevNode == null) {
             head = newNode;
         } else {
-            node2.next = newNode;
+            prevNode.next = newNode;
         }
         size++;
 
@@ -60,14 +48,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-        return findIndex(index).item;
+        return findNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
-        Node<T> node = findIndex(index);
+        Node<T> node = findNode(index);
         T oldValue = node.item;
         node.item = value;
         return oldValue;
@@ -75,8 +61,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        return unlink(findIndex(index));
+        return unlink(findNode(index));
     }
 
     @Override
@@ -102,11 +87,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Invalid Index: " + index);
-        }
-    }
+
 
     private T unlink(Node<T> node) {
         final T element = node.item;
@@ -132,7 +113,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return element;
     }
 
-    private Node<T> findIndex(int index) {
+    private Node<T> findNode(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Invalid Index: " + index);
+        }
         Node<T> node;
         if (index < (size / 2)) {
             node = head;
@@ -146,5 +130,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return node;
+    }
+    private static class Node<T> {
+        private Node<T> prev;
+        private T item;
+        private Node<T> next;
+
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.prev = prev;
+            this.item = element;
+            this.next = next;
+        }
     }
 }
