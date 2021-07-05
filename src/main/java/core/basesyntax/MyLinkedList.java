@@ -3,45 +3,149 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private int size = 0;
+    private Node<T> head;
+    private Node<T> tail;
+
     @Override
     public void add(T value) {
+        Node<T> last = tail;
+        final Node<T> newNode = new Node<>(last, value, null);
+        tail = newNode;
+        if (last == null) {
+            head = newNode;
+        } else {
+            last.next = newNode;
+        }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
+        if (index == size) {
+            add(value);
+            return;
+        }
+        checkIndex(index);
+        Node<T> oldNode = findNodeByIndex(index);
+        Node<T> oldNodePrev = oldNode.prev;
+        Node<T> newNode = new Node<>(oldNode.prev, value, oldNode);
+        oldNode.prev = newNode;
+        if (oldNodePrev == null) {
+            head = newNode;
+        } else {
+            oldNodePrev.next = newNode;
+        }
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
+        for (T element : list) {
+            add(element);
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndex(index);
+        return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        return null;
+        checkIndex(index);
+        Node<T> node = findNodeByIndex(index);
+        T oldVal = node.item;
+        node.item = value;
+        return oldVal;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIndex(index);
+        return unlink(findNodeByIndex(index));
     }
 
     @Override
     public boolean remove(T object) {
+        Node<T> node = head;
+        while (node != null) {
+            if (object == node.item
+                    || (object != null && object.equals(node.item))) {
+                unlink(node);
+                return true;
+            }
+            node = node.next;
+        }
         return false;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private T unlink(Node<T> node) {
+        final T element = node.item;
+        Node<T> next = node.next;
+        Node<T> prev = node.prev;
+
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
+            node.prev = null;
+        }
+
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.prev = prev;
+            node.next = null;
+        }
+
+        node.item = null;
+        size--;
+        return element;
+    }
+
+    private Node<T> findNodeByIndex(int index) {
+        Node<T> node;
+        if (index < (size / 2)) {
+            node = head;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+        } else {
+            node = tail;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
+        }
+        return node;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Wrong Index");
+        }
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
