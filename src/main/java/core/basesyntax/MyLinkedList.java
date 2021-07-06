@@ -66,9 +66,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         Objects.checkIndex(index, size);
-        T oldValue = getNodeByIndex(index).element;
-        getNodeByIndex(index).element = value;
+        Node<T> newNode = getNodeByIndex(index);
+        T oldValue = newNode.element;
+        newNode.element = value;
         return oldValue;
+
     }
 
     @Override
@@ -120,10 +122,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Node<T> current = first;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        Objects.checkIndex(index, size);
+        if (index == size - 1) {
+            return last;
+        } else {
+            return nodeAt(index);
         }
-        return current;
+    }
+
+    private Node<T> nodeAt(int index) {
+        Node<T> currentNode = first;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
+        }
+        return currentNode;
     }
 }
