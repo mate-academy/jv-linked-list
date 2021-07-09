@@ -131,13 +131,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         boolean moveFromHead = needToMoveFromHead(index);
         Node<T> currentNode = (moveFromHead ? head : tail);
-        for (int i = (moveFromHead ? 0 : size - 1);
-             (moveFromHead ? i < index : i > index);
-             i += (moveFromHead ? 1 : -1)) {
-            if (currentNode == null) {
-                return null;
+        if (moveFromHead) {
+            for (int i = 0; i < index; i++) {
+                if (currentNode == null) {
+                    return null;
+                }
+                currentNode = currentNode.next;
             }
-            currentNode = (moveFromHead ? currentNode.next : currentNode.prev);
+        } else {
+            for (int i = size - 1; i > index; i--) {
+                if (currentNode == null) {
+                    return null;
+                }
+                currentNode = currentNode.prev;
+            }
         }
         return currentNode;
     }
