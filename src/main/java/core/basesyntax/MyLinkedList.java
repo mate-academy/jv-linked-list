@@ -58,21 +58,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     + index + ", last index = " + (size - 1));
         }
         Node<T> currentNode = getNode(index);
-        if (currentNode != null) {
-            return currentNode.value;
-        }
-        return null;
+        return currentNode.value;
     }
 
     @Override
     public T set(T value, int index) {
         Node<T> currentNode = getNode(index);
-        if (currentNode != null) {
-            T prevValue = currentNode.value;
-            currentNode.value = value;
-            return prevValue;
-        }
-        return null;
+        T prevValue = currentNode.value;
+        currentNode.value = value;
+        return prevValue;
     }
 
     @Override
@@ -133,9 +127,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode = (moveFromHead ? head : tail);
         if (moveFromHead) {
             for (int i = 0; i < index; i++) {
-                if (currentNode == null) {
-                    return null;
-                }
                 currentNode = currentNode.next;
             }
         } else {
