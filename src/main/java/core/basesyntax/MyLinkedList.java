@@ -39,10 +39,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkIndex(index);
-        final Node<T> last = node(index).perv;
-        final Node<T> newNode = new Node<>(last, value, node(index));
-        node(index).perv = newNode;
+        final Node<T> last = getNode(index).perv;
+        final Node<T> newNode = new Node<>(last, value, getNode(index));
+        getNode(index).perv = newNode;
         if (last == null) {
             head = newNode;
         } else {
@@ -60,14 +59,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-        return node(index).element;
+        return getNode(index).element;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
-        final Node<T> x = node(index);
+        final Node<T> x = getNode(index);
         T oldVal = x.element;
         x.element = value;
         return oldVal;
@@ -75,8 +72,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        return unlink(node(index));
+        return unlink(getNode(index));
     }
 
     @Override
@@ -109,14 +105,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkIndex(int index) {
+    private Node<T> getNode(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Index "
                     + index + " out of range array");
         }
-    }
-
-    Node<T> node(int index) {
         Node<T> x;
         if (index < (size >> 1)) {
             x = head;
@@ -132,7 +125,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return x;
     }
 
-    T unlink(Node<T> x) {
+    private T unlink(Node<T> x) {
         final T element = x.element;
         final Node<T> next = x.next;
         final Node<T> perv = x.perv;
