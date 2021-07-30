@@ -8,9 +8,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
 
     private static class Node<T> {
-        T value;
-        Node<T> prev;
-        Node<T> next;
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
 
         public Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
@@ -41,7 +41,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    void addBefore(T value, Node<T> nodeAfter) {;
+    void addBefore(T value, Node<T> nodeAfter) {
         Node<T> nodeBefore = nodeAfter.prev;
         Node<T> addedNode = new Node<>(nodeBefore, value, nodeAfter);
         nodeAfter.prev = addedNode;
@@ -130,9 +130,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> nodeToRemove = nodeByIndex(index);
-        T oldValue = nodeToRemove.value;
         Node<T> next = nodeToRemove.next;
         Node<T> prev = nodeToRemove.prev;
+        T oldValue = nodeToRemove.value;
 
         if (prev == null) {
             first = next;
