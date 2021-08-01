@@ -21,42 +21,40 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        linkLast(value);
+        final Node<T> last = tail;
+        final Node<T> newNode = new Node<>(last, value, null);
+        tail = newNode;
+        if (last == null) {
+            head = newNode;
+        } else {
+            last.nextNode = newNode;
+        }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
         if (index == size) {
-            linkLast(value);
+            add(value);
             return;
         }
-        if (index == 0) {
-            final Node<T> newNode = new Node<>(null, value, head);
-            head.prevNode = newNode;
-            head = newNode;
-            size++;
-            return;
-        }
-        checkIndex(index);
         insertBefore(value, findNode(index));
     }
 
     @Override
     public void addAll(List<T> list) {
         for (T value : list) {
-            linkLast(value);
+            add(value);
         }
     }
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         return findNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         final Node<T> replacedNode = findNode(index);
         T oldNodeValue = replacedNode.value;
         replacedNode.value = value;
@@ -65,25 +63,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         return unlinkNode(findNode(index));
     }
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> lookup = head; lookup != null; lookup = lookup.nextNode) {
-                if (lookup.value == null) {
-                    unlinkNode(lookup);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> lookup = head; lookup != null; lookup = lookup.nextNode) {
-                if (lookup.value.equals(object)) {
-                    unlinkNode(lookup);
-                    return true;
-                }
+        for (Node<T> lookup = head; lookup != null; lookup = lookup.nextNode) {
+            if (lookup.value == object || object != null && object.equals(lookup.value)) {
+                unlinkNode(lookup);
+                return true;
             }
         }
         return false;
@@ -99,19 +87,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void linkLast(T value) {
-        final Node<T> last = tail;
-        final Node<T> newNode = new Node<>(last, value, null);
-        tail = newNode;
-        if (last == null) {
-            head = newNode;
-        } else {
-            last.nextNode = newNode;
-        }
-        size++;
-    }
-
     private Node<T> findNode(int index) {
+        checkIndex(index);
         Node<T> reqNode;
         if (index < (size >> 1)) {
             reqNode = head;
