@@ -49,6 +49,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         listSize++;
     }
 
+    void unlink(Node<T> value) {
+        Node<T> next = value.next;
+        Node<T> prev = value.prev;
+
+        if (prev == null) {
+            first = next;
+        } else {
+            prev.next = next;
+            value.prev = null;
+        }
+
+        if (next == null) {
+            last = prev;
+        } else {
+            next.prev = prev;
+            value.next = null;
+        }
+        listSize--;
+    }
+
     @Override
     public void add(T value) {
         if ((value == null && listSize == 0) || (value != null && listSize == 0)) {
@@ -129,26 +149,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> nodeToRemove = nodeByIndex(index);
-        Node<T> next = nodeToRemove.next;
-        Node<T> prev = nodeToRemove.prev;
-        T oldValue = nodeToRemove.value;
+        T oldValue = nodeByIndex(index).value;
+        unlink(nodeByIndex(index));
 
-        if (prev == null) {
-            first = next;
-        } else {
-            prev.next = next;
-            nodeToRemove.prev = null;
-        }
-
-        if (next == null) {
-            last = prev;
-        } else {
-            next.prev = prev;
-            nodeToRemove.next = null;
-        }
-        nodeToRemove.value = null;
-        listSize--;
         return oldValue;
     }
 
@@ -158,7 +161,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             int index = 0;
             for (Node<T> x = first; x != null; x = x.next) {
                 if (x.value == null) {
-                    remove(index);
+                    unlink(nodeByIndex(index));
                     return true;
                 }
                 index++;
@@ -167,7 +170,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             int index = 0;
             for (Node<T> x = first; x != null; x = x.next) {
                 if (object.equals(x.value)) {
-                    remove(index);
+                    unlink(nodeByIndex(index));
                     return true;
                 }
                 index++;
