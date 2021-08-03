@@ -82,7 +82,7 @@ public class MyLinkedListTest {
         Assert.assertEquals(THIRD_ITEM, actualThird);
 
         exception.expect(IndexOutOfBoundsException.class);
-        myLinkedList.add(THIRD_ITEM, 4);
+        myLinkedList.add(THIRD_ITEM, 6);
     }
 
     @Test
