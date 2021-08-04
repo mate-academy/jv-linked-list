@@ -24,19 +24,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("No such index in the list");
         }
 
+        Node<T> newNode;
         if (index < (listSize >> 1)) {
-            Node<T> newNode = first;
+            newNode = first;
             for (int i = 0; i < index; i++) {
                 newNode = newNode.next;
             }
-            return newNode;
         } else {
-            Node<T> newNode = last;
+            newNode = last;
             for (int i = listSize - 1; i > index; i--) {
                 newNode = newNode.prev;
             }
-            return newNode;
         }
+        return newNode;
     }
 
     private void addBefore(T value, Node<T> nodeAfter) {
