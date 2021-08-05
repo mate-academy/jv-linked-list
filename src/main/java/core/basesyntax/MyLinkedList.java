@@ -19,7 +19,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public Node<T> nodeByIndex(int index) {
+    private Node<T> nodeByIndex(int index) {
         if (index < 0 || index > listSize - 1) {
             throw new IndexOutOfBoundsException("No such index in the list");
         }
@@ -47,7 +47,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         listSize++;
     }
 
-    void unlink(Node<T> value) {
+    private void unlink(Node<T> value) {
         Node<T> next = value.next;
         Node<T> prev = value.prev;
 
@@ -86,44 +86,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > listSize) {
-            throw new IndexOutOfBoundsException("No such index in the list");
+        if (index == listSize) {
+            add(value);
+            return;
         }
 
-        if (listSize == 0) {
-            Node<T> newNode = new Node<>(null, value, null);
+        Node<T> current = nodeByIndex(index);
+                Node<T> prev = current.prev;
+        Node<T> newNode = new Node<>(prev, value, current);
+
+        if (prev == null) {
             first = newNode;
-            last = newNode;
-            first.next = last;
-            last.prev = first;
-            listSize++;
-        } else if (index == 0) {
-            Node<T> firstCopy = first;
-            Node<T> newNode = new Node<>(null, value, first);
-            firstCopy.prev = newNode;
-            first = newNode;
-            listSize++;
-        } else if (index == listSize) {
-            Node<T> lastCopy = last;
-            Node<T> newNode = new Node<>(last, value, null);
-            lastCopy.next = newNode;
-            last = newNode;
-            listSize++;
         } else {
-            addBefore(value, nodeByIndex(index));
+            prev.next = newNode;
         }
+        current.prev = newNode;
+        listSize++;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void addAll(List<T> list) {
-        Object[] inputList = list.toArray();
-        int inputLength = inputList.length;
-
-        if (inputLength > 0) {
-            for (Object o : inputList) {
-                T value = (T) o;
-                add(value);
+        if (listSize > 0) {
+            for (T element : list) {
+                add(element);
             }
         }
     }
@@ -153,7 +138,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         int index = 0;
         for (Node<T> x = first; x != null; x = x.next) {
-            if (x.value == null || x.value.equals(object)) {
+            if (x.value == object || x.value != null && x.value.equals(object)) {
                 unlink(nodeByIndex(index));
                 return true;
             }
