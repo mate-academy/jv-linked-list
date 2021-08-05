@@ -92,7 +92,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
         Node<T> current = nodeByIndex(index);
-                Node<T> prev = current.prev;
+        Node<T> prev = current.prev;
         Node<T> newNode = new Node<>(prev, value, current);
 
         if (prev == null) {
