@@ -49,7 +49,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
 
-        checkIndex(index);
         Node<T> currentNode = getNode(index);
         Node<T> previous = currentNode.prev;
         Node<T> node = new Node<>(currentNode.prev, value, currentNode);
@@ -67,14 +66,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         Node<T> currentNode = getNode(index);
         return currentNode.item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> currentNode = getNode(index);
         T prevValue = currentNode.item;
         currentNode.item = value;
@@ -83,7 +80,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> currentNode = getNode(index);
         unlink(currentNode);
         T oldValue = currentNode.item;
@@ -124,11 +120,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        Node<T> node = head;
-        int i = 0;
-        while (i < index) {
-            node = node.next;
-            i++;
+        checkIndex(index);
+        int half = size / 2;
+
+        if (index <= half) {
+            Node<T> node = head;
+            int i = 0;
+            while (i < index) {
+                node = node.next;
+                i++;
+            }
+            return node;
+        }
+
+        Node<T> node = tail;
+        int i = size - 1;
+        while (i > index) {
+            node = node.prev;
+            i--;
         }
         return node;
     }
