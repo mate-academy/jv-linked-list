@@ -62,8 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        Node<T> neededNode = getNode(index);
-        return neededNode.value;
+        return getNode(index).value;
     }
 
     @Override
@@ -78,11 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> node = getNode(index);
-        T oldValue = node.value;
-        unlink(node);
-        size--;
-        return oldValue;
+        return unlink(getNode(index));
     }
 
     @Override
@@ -90,7 +85,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> node = getNode(object);
         if (node != null) {
             unlink(node);
-            size--;
             return true;
         }
         return false;
@@ -142,7 +136,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
-    private void unlink(Node<T> node) {
+    private T unlink(Node<T> node) {
         Node<T> nextNode = node.next;
         Node<T> prevNode = node.prev;
         if (prevNode == null) {
@@ -155,5 +149,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             nextNode.prev = prevNode;
         }
+        size--;
+        return node.value;
     }
 }
