@@ -1,10 +1,12 @@
 package core.basesyntax;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final int CONSTANT_FOR_ADD_FUNCTION = 1;
+    private static final int PREVIOUS = -1;
+    private static final int NEXT = 1;
+    private static final int GET_LAST_INDEX = -1;
     private int size = 0;
     private Node<T> first;
     private Node<T> last;
@@ -16,8 +18,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             last = first;
             size++;
         } else if (size > 0) {
-            last = new Node(getNodeByIndex(size - 1), value, null);
-            getNodeByIndex(size - 1).next = last;
+            last = new Node(getNodeByIndex(size + PREVIOUS), value, null);
+            getNodeByIndex(size + PREVIOUS).next = last;
             size++;
         }
     }
@@ -29,34 +31,35 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
         } else if (index == 0) {
             first = new Node(null, value, first);
-            getNodeByIndex(1).prev = first;
+            getNodeByIndex(NEXT).prev = first;
             size++;
         } else {
-            Node<T> newNode = new Node(getNodeByIndex(index).prev, value, getNodeByIndex(index - 1).next);
-            // try after test change getNodeByIndex(index - 1).next -->  (Node) getNodeByIndex(index).item
-            getNodeByIndex(index - 1).next = newNode;
-            getNodeByIndex(index + 1).prev = newNode;
+            Node<T> newNode = new Node(getNodeByIndex(index).prev,
+                    value,
+                    getNodeByIndex(index + PREVIOUS).next);
+            getNodeByIndex(index + PREVIOUS).next = newNode;
+            getNodeByIndex(index + NEXT).prev = newNode;
             size++;
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (T obj : list)  {
+        for (T obj : list) {
             add(obj);
         }
     }
 
     @Override
     public T get(int index) {
-        indexCheck(index + CONSTANT_FOR_ADD_FUNCTION); // перевірка чи не дорівнює розміру і чи не дорів нулю
+        indexCheckNotSize(index);
         indexCheck(index);
         return getNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        indexCheck(index + CONSTANT_FOR_ADD_FUNCTION);
+        indexCheckNotSize(index);
         indexCheck(index);
         T buffer = getNodeByIndex(index).item;
         getNodeByIndex(index).item = value;
@@ -65,20 +68,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexCheck(index + CONSTANT_FOR_ADD_FUNCTION);
+        indexCheckNotSize(index);
         indexCheck(index);
         T buffer = getNodeByIndex(index).item;
         if (size == 1) {
             first.item = null;
         } else if (index == 0) {
             first = getNodeByIndex(index + 1);
-            getNodeByIndex(index + 1).prev = null;
-        } else if (index == size - 1) {
-            getNodeByIndex(index - 1).next = null;
-            last = getNodeByIndex(index - 1);
+            getNodeByIndex(index + NEXT).prev = null;
+        } else if (index == size + GET_LAST_INDEX) {
+            getNodeByIndex(index + PREVIOUS).next = null;
+            last = getNodeByIndex(index + PREVIOUS);
         } else {
-            getNodeByIndex(index + 1).prev = getNodeByIndex(index).prev;
-            getNodeByIndex(index - 1).next = getNodeByIndex(index).next;
+            getNodeByIndex(index + NEXT).prev = getNodeByIndex(index).prev;
+            getNodeByIndex(index + PREVIOUS).next = getNodeByIndex(index).next;
         }
         size--;
         return buffer;
@@ -90,8 +93,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         int index = 0;
         if (object == null) {
             if (object == null && first.item == null) {
-                first = getNodeByIndex(index + 1);
-                getNodeByIndex(index + 1).prev = null;
+                first = getNodeByIndex(index + NEXT);
+                getNodeByIndex(index + NEXT).prev = null;
                 size--;
                 return true;
             }
@@ -99,7 +102,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 bufferNode = bufferNode.next;
                 index++;
             }
-            if (index == size - 1) {
+            if (index == size + GET_LAST_INDEX) {
                 return false;
             }
         } else {
@@ -124,7 +127,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             getNodeByIndex(index - 1).next = getNodeByIndex(index).next;
         }
         size--;
-        return  true;
+        return true;
     }
 
     @Override
@@ -146,14 +149,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<E> {
-        E item;
-        Node<E> next;
-        Node<E> prev;
+        private E item;
+        private Node<E> next;
+        private Node<E> prev;
 
         Node(Node<E> prev, E element, Node<E> next) {
             this.item = element;
             this.next = next;
             this.prev = prev;
+        }
+    }
+
+    private void indexCheckNotSize(int index) {
+        if (index == size) {
+            throw new IndexOutOfBoundsException("This index does not exist");
         }
     }
 
