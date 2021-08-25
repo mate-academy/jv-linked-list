@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -42,7 +41,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            Node<T> tempNode = findNode(index, head);
+            Node<T> tempNode = checkBounds(index);
             Node<T> newNode = new Node<>(null, value, tempNode);
             if (index == 0) {
                 head = newNode;
@@ -65,14 +64,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkBounds(index);
-        return findNode(index, head).value;
+        return checkBounds(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkBounds(index);
-        Node<T> tempNode = findNode(index, head);
+        Node<T> tempNode = checkBounds(index);
         T oldValue = tempNode.value;
         tempNode.value = value;
         return oldValue;
@@ -80,8 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkBounds(index);
-        Node<T> tempNode = findNode(index, head);
+        Node<T> tempNode = checkBounds(index);
         T oldValue = tempNode.value;
         if (size == 1) {
             head = null;
@@ -104,7 +100,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> tempNode = head;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(tempNode.value, object)) {
+            if (object == null && object == tempNode.value
+                    || object != null && object.equals(tempNode.value)) {
                 remove(i);
                 return true;
             }
@@ -123,15 +120,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return head == null;
     }
 
-    private void checkBounds(int index) {
+    private Node<T> checkBounds(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Out of Bounds");
         }
-    }
-
-    private Node<T> findNode(int index, Node<T> tempNode) {
-        for (int i = 0; i != index; i++) {
-            tempNode = tempNode.next;
+        Node<T> tempNode;
+        if (index <= size / 2) {
+            tempNode = head;
+            for (int i = 0; i != index; i++) {
+                tempNode = tempNode.next;
+            }
+        } else {
+            tempNode = tail;
+            for (int i = size - 1; i != index; i--) {
+                tempNode = tempNode.previous;
+            }
         }
         return tempNode;
     }
