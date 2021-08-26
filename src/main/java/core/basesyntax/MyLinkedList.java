@@ -85,12 +85,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return buffer;
     }
 
-
     @Override
     public boolean remove(T object) {
         Node<T> bufferNode = first;
         int index = 0;
-        while (!((bufferNode.item == object) || (object != null && object.equals(bufferNode.item)))) {
+        while (!((bufferNode.item == object)
+                || (object != null && object.equals(bufferNode.item)))) {
             if (bufferNode.next == null) {
                 return false;
             }
@@ -148,7 +148,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.prev = prev;
         }
     }
-
 
     private void indexCheck(int index) {
         if (index >= size || index < 0) {
