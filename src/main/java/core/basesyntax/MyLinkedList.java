@@ -45,9 +45,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = addedNode;
         } else {
             Node<T> currentNode = getNode(index);
-            Node<T> added = new Node<>(currentNode.prev, value, currentNode);
-            currentNode.prev.next = added;
-            currentNode.prev = added;
+            Node<T> addedNode = new Node<>(currentNode.prev, value, currentNode);
+            currentNode.prev.next = addedNode;
+            currentNode.prev = addedNode;
         }
         size++;
     }
@@ -141,6 +141,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 current = current.prev;
             }
         }
+
         return current;
     }
 }
