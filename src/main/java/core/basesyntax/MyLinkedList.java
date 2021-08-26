@@ -17,19 +17,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
             this.prev = prev;
         }
-
-        private Node() {
-        }
     }
 
     @Override
     public void add(T value) {
+        Node<T> insertNode;
         if (size == 0) {
             head = tail = new Node<>(null, value, null);
             size++;
             return;
         }
-        Node<T> insertNode = new Node<>(tail, value, null);
+        insertNode = new Node<>(tail, value, null);
         tail.next = insertNode;
         tail = insertNode;
         size++;
@@ -38,28 +36,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+            throw new IndexOutOfBoundsException("Index: " + index + "out of bounds, Size: " + size);
         }
+        if (isEmpty() || index == size) {
+            add(value);
+            return;
+        }
+        Node<T> insertNode;
+        Node<T> node = getNode(index);
         if (index == 0) {
-            if (isEmpty()) {
-                add(value);
-                return;
-            }
-            Node<T> insertNode = new Node<>(null, value, head);
+            insertNode = new Node<>(null, value, head);
             head = insertNode;
             head.prev = insertNode;
             size++;
             return;
         }
-        if (index == size) {
-            Node<T> insertNode = new Node<>(tail, value, null);
-            tail.next = insertNode;
-            tail = insertNode;
-            size++;
-            return;
-        }
-        Node<T> node = iterate(index);
-        Node<T> insertNode = new Node<>(node.prev, value, node);
+        insertNode = new Node<>(node.prev, value, node);
         node.prev.next = insertNode;
         node.prev = insertNode;
         size++;
@@ -74,19 +66,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-        Node<T> node = iterate(index);
-        return node.item;
+        indexException(index);
+        return getNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-        Node<T> node = iterate(index);
+        indexException(index);
+        Node<T> node = getNode(index);
         T changedItem = node.item;
         node.item = value;
         return changedItem;
@@ -94,12 +81,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-        Node<T> node = iterate(index);
-        node = unlink(node, index);
-        return node.item;
+        indexException(index);
+        Node<T> node = getNode(index);
+        return unlink(node);
     }
 
     @Override
@@ -107,7 +91,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> node = head;
         for (int i = 0; i < size; i++) {
             if (node.item == object || (node.item != null && node.item.equals(object))) {
-                unlink(node,i);
+                unlink(node);
                 return true;
             }
             node = node.next;
@@ -125,50 +109,53 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node<T> iterate(int index) {
+    private Node<T> getNode(int index) {
         Node<T> node;
-        int middleIndex = size / 2;
-        if (index > middleIndex) {
-            int counter = size - 1;
+        int counter;
+        if (index > size / 2) {
+            counter = size - 1;
             node = tail;
             while (index < counter) {
                 node = node.prev;
                 counter--;
             }
-            return node;
-        }
-        if (index <= middleIndex) {
-            int counter = 0;
+        } else {
+            counter = 0;
             node = head;
             while (counter < index) {
                 node = node.next;
                 counter++;
             }
-            return node;
         }
-        return null;
+        return node;
     }
 
-    private Node<T> unlink(Node<T> node, int index) {
-        if (index == 0) {
+    private T unlink(Node<T> node) {
+        if (node.prev == null) {
             if (size == 1) {
                 size--;
-                return new Node<>();
+                return node.item;
             }
             node.next.prev = null;
             head = node.next;
             size--;
-            return node;
+            return node.item;
         }
-        if (index == size - 1) {
+        if (node.next == null) {
             node.prev.next = null;
             tail = node.prev;
             size--;
-            return node;
+            return node.item;
         }
         node.prev.next = node.next;
         node.next.prev = node.prev;
         size--;
-        return node;
+        return node.item;
+    }
+
+    private void indexException(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Index: " + index + "out of bounds, Size: " + size);
+        }
     }
 }
