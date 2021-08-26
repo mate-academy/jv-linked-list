@@ -3,42 +3,42 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final int CONSTANT_FOR_ADD_FUNCTION = 1;
-    private static final int PREVIOUS = -1;
-    private static final int NEXT = 1;
-    private static final int GET_LAST_INDEX = -1;
     private int size = 0;
     private Node<T> first;
     private Node<T> last;
 
     @Override
     public void add(T value) {
+        Node<T> newNode = new Node(null, value, null);
         if (size == 0) {
-            first = new Node(null, value, null);
-            last = first;
-            size++;
-        } else if (size > 0) {
-            last = new Node(getNodeByIndex(size + PREVIOUS), value, null);
-            getNodeByIndex(size + PREVIOUS).next = last;
-            size++;
+            first = newNode;
+        } else {
+            last.next = newNode;
+            newNode.prev = last;
         }
+        last = newNode;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        indexCheck(index);
+        if (index > size || index < 0) {
+            throw new IndexOutOfBoundsException("This index does not exist");
+        }
         if (index == size) {
             add(value);
+            return;
         } else if (index == 0) {
-            first = new Node(null, value, first);
-            getNodeByIndex(NEXT).prev = first;
+            Node<T> newNode = new Node(null, value, first);
+            first.prev = newNode;
+            newNode.next = first;
+            first = newNode;
             size++;
         } else {
-            Node<T> newNode = new Node(getNodeByIndex(index).prev,
-                    value,
-                    getNodeByIndex(index + PREVIOUS).next);
-            getNodeByIndex(index + PREVIOUS).next = newNode;
-            getNodeByIndex(index + NEXT).prev = newNode;
+            Node<T> buffer = getNodeByIndex(index);
+            Node<T> newNode = new Node(buffer.prev, value, buffer);
+            buffer.prev.next = newNode;
+            buffer.prev = newNode;
             size++;
         }
     }
@@ -52,79 +52,62 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexCheckNotSize(index);
         indexCheck(index);
         return getNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        indexCheckNotSize(index);
         indexCheck(index);
-        T buffer = getNodeByIndex(index).item;
-        getNodeByIndex(index).item = value;
-        return buffer;
+        Node<T> node = getNodeByIndex(index);
+        T oldValue = node.item;
+        node.item = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        indexCheckNotSize(index);
         indexCheck(index);
         T buffer = getNodeByIndex(index).item;
         if (size == 1) {
             first.item = null;
         } else if (index == 0) {
-            first = getNodeByIndex(index + 1);
-            getNodeByIndex(index + NEXT).prev = null;
-        } else if (index == size + GET_LAST_INDEX) {
-            getNodeByIndex(index + PREVIOUS).next = null;
-            last = getNodeByIndex(index + PREVIOUS);
+            first = first.next;
+            first.prev = null;
+        } else if (index == size - 1) {
+            last.prev.next = null;
         } else {
-            getNodeByIndex(index + NEXT).prev = getNodeByIndex(index).prev;
-            getNodeByIndex(index + PREVIOUS).next = getNodeByIndex(index).next;
+            Node<T> deletedNode = getNodeByIndex(index);
+            deletedNode.next.prev = deletedNode.prev;
+            deletedNode.prev.next = deletedNode.next;
         }
         size--;
         return buffer;
     }
 
+
     @Override
     public boolean remove(T object) {
         Node<T> bufferNode = first;
         int index = 0;
-        if (object == null) {
-            if (object == null && first.item == null) {
-                first = getNodeByIndex(index + NEXT);
-                getNodeByIndex(index + NEXT).prev = null;
-                size--;
-                return true;
-            }
-            while (bufferNode.item != null && bufferNode != last) {
-                bufferNode = bufferNode.next;
-                index++;
-            }
-            if (index == size + GET_LAST_INDEX) {
+        while (!((bufferNode.item == object) || (object != null && object.equals(bufferNode.item)))) {
+            if (bufferNode.next == null) {
                 return false;
             }
-        } else {
-            while (!object.equals(bufferNode.item)) {
-                if (bufferNode.next == null) {
-                    return false;
-                }
-                bufferNode = bufferNode.next;
-                index++;
-            }
+            bufferNode = bufferNode.next;
+            index++;
         }
         if (size == 1) {
             first.item = null;
         } else if (index == 0) {
-            first = getNodeByIndex(index + 1);
-            getNodeByIndex(index + 1).prev = null;
+            first = first.next;
+            first.prev = null;
         } else if (index == size - 1) {
-            getNodeByIndex(index - 1).next = null;
-            last = getNodeByIndex(index - 1);
+            last.prev.next = null;
         } else {
-            getNodeByIndex(index + 1).prev = getNodeByIndex(index).prev;
-            getNodeByIndex(index - 1).next = getNodeByIndex(index).next;
+            Node<T> deletedNode = getNodeByIndex(index);
+            deletedNode.next.prev = deletedNode.prev;
+            deletedNode.prev.next = deletedNode.next;
         }
         size--;
         return true;
@@ -142,8 +125,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeByIndex(int index) {
         Node<T> bufferNode = first;
-        for (int i = 0; i < index; i++) {
-            bufferNode = bufferNode.next;
+        if (index <= size / 2) {
+            for (int i = 0; i < index; i++) {
+                bufferNode = bufferNode.next;
+            }
+        } else {
+            for (int j = size; j > size - index; j--) {
+                bufferNode = bufferNode.next;
+            }
         }
         return bufferNode;
     }
@@ -160,14 +149,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void indexCheckNotSize(int index) {
-        if (index == size) {
-            throw new IndexOutOfBoundsException("This index does not exist");
-        }
-    }
 
     private void indexCheck(int index) {
-        if (index > size || index < 0) {
+        if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("This index does not exist");
         }
     }
