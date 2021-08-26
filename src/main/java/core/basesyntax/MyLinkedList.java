@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
@@ -26,7 +27,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexForAdd(index);
+        if (!(index >= 0 && index <= size)) {
+            throw new IndexOutOfBoundsException("You used an incorrect index");
+        }
         if (index == size) {
             addLast(value);
         } else {
@@ -73,10 +76,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T value) {
         for (Node<T> node = first; node != null; node = node.next) {
-            if (node.item == null && value == null) {
-                unlink(node);
-                return true;
-            } else if (value != null && value.equals(node.item)) {
+            if ((Objects.equals(node.item, value)) || (value != null && value.equals(node.item))) {
                 unlink(node);
                 return true;
             }
@@ -102,12 +102,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = newNode;
         } else {
             previousListElement.next = newNode;
-        }
-    }
-
-    private void checkIndexForAdd(int index) {
-        if (!(index >= 0 && index <= size)) {
-            throw new IndexOutOfBoundsException("You used an incorrect index");
         }
     }
 
