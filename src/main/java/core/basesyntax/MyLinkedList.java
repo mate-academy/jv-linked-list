@@ -33,13 +33,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             addLast(value);
         } else {
-            Node<T> standStill = searchNode(index).prev;
-            Node<T> newNode = new Node<>(standStill, value, searchNode(index));
-            searchNode(index).prev = newNode;
-            if (standStill == null) {
+            Node<T> currentNode = searchNode(index);
+            Node<T> previousNode = currentNode.prev;
+            Node<T> newNode = new Node<>(previousNode, value, currentNode);
+            currentNode.prev = newNode;
+            if (previousNode == null) {
                 first = newNode;
             } else {
-                standStill.next = newNode;
+                previousNode.next = newNode;
             }
         }
         size++;
