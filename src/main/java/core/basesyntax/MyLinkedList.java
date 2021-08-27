@@ -4,7 +4,7 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String
-            INDEX_OF_BOUND_EXCEPTION_MESSAGE = "Index is more than size or less than 0.";
+            INDEX_OF_BOUND_EXCEPTION_MESSAGE = "Index is more than size or less than 0!";
     private static final String FROM_START_TYPE_OF_ITERATION = "fromStart";
     private static final String FROM_END_TYPE_OF_ITERATION = "fromEnd";
     private static final String COMMA = ",";
