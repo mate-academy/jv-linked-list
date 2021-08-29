@@ -1,18 +1,15 @@
 package core.basesyntax;
 
-import org.w3c.dom.Node;
-
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
-    private boolean listIsEmpty = true;
     private Node<T> head;
     private Node<T> tail;
 
     @Override
     public void add(T value) {
-        if (listIsEmpty) {
+        if (isEmpty()) {
             createFirstNode(value);
         } else {
             Node<T> nextNode = new Node<>(tail, value, null);
@@ -27,16 +24,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("index are not exist");
-        } else if (isEmpty()) {
-            createFirstNode(value);
+        } else if (isEmpty() || index == size()) {
+            add(value);
         } else if (index == 0) {
             Node<T> newNode = new Node<>(null, value, head);
             newNode.next.prev = newNode;
             head = newNode;
-        } else if (index == size) {
-            Node<T> newNode = new Node<>(tail, value, null);
-            newNode.prev.next = newNode;
-            tail = newNode;
         } else {
             while (count++ != index) {
                 current = current.next;
@@ -74,7 +67,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Node<T> current = getNode(index);
         T oldValue = current.element;
-        if (index == 0) {
+        if (index == 0 && size() == 1) {
+            head = null;
+            tail = null;
+        } else if (index == 0) {
             current.next.prev = null;
             head = current.next;
         } else if (index == (size() - 1)) {
@@ -91,9 +87,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         for (int i = 0; i < size(); i++) {
-            if ((getNode(i).element == null && object == null)
-                    || (getNode(i).element != null
-                    && getNode(i).element.equals(object))) {
+            T currentElement = getNode(i).element;
+            if ((currentElement == null && object == null)
+                    || (currentElement != null
+                    && currentElement.equals(object))) {
                 remove(i);
                 return true;
             }
@@ -111,20 +108,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size <= 0;
     }
 
-    private boolean indexIsValid(int index) {
-        return index >= 0 && index < size;
+    private void indexIsValid(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("index is not exist");
+        }
     }
 
     private Node<T> getNode(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("index is not exist");
-        }
+        indexIsValid(index);
         int count = 0;
         Node<T> current = head;
-        if (index >= 0 && index <= size) {
-            while (count++ != index) {
-                current = current.next;
-            }
+        while (count++ != index) {
+            current = current.next;
         }
         return current;
     }
@@ -133,13 +128,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> firstNode = new Node<>(null, value, null);
         head = firstNode;
         tail = firstNode;
-        listIsEmpty = false;
     }
 
     private class Node<T> {
-        T element;
-        Node<T> prev;
-        Node<T> next;
+        private T element;
+        private Node<T> prev;
+        private Node<T> next;
 
         public Node(Node<T> prev, T element, Node<T> next) {
             this.prev = prev;
