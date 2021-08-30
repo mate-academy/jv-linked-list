@@ -8,7 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
 
     public MyLinkedList() {
-        size = 0;
     }
 
     private class Node<T> {
@@ -31,12 +30,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index: " + index
+                    + " is bigger than Size: " + size);
         }
         if (index == size) {
             addLast(value);
         } else {
-            addInMiddle(value, node(index));
+            addInMiddle(value, findNode(index));
         }
     }
 
@@ -50,39 +50,32 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) node(index).value;
+        return findNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        T oldValue = (T) node(index).value;
-        node(index).value = value;
+        T oldValue = findNode(index).value;
+        findNode(index).value = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        return delete(node(index));
+        return delete(findNode(index));
     }
 
     @Override
-    public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> entity = head; entity != null; entity = entity.next) {
-                if (entity.value == null) {
-                    delete(entity);
-                    return true;
-                }
+    public boolean remove(T value) {
+        Node<T> entity = head;
+        while (entity != null) {
+            if ((value == null && entity.value == null) || (entity.value.equals(value))) {
+                delete(entity);
+                return true;
             }
-        } else {
-            for (Node<T> entity = head; entity != null; entity = entity.next) {
-                if (object.equals(entity.value)) {
-                    delete(entity);
-                    return true;
-                }
-            }
+            entity = entity.next;
         }
         return false;
     }
@@ -99,11 +92,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index: " + index + "Size: " + size);
+            throw new IndexOutOfBoundsException("Index: " + index
+                    + " is bigger than Size: " + size);
         }
     }
 
-    private Node<T> node(int index) {
+    private Node<T> findNode(int index) {
         Node<T> search;
         if (index < (size >> 1)) {
             search = head;
