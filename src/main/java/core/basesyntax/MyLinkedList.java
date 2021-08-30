@@ -8,6 +8,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String FROM_START_TYPE_OF_ITERATION = "fromStart";
     private static final String FROM_END_TYPE_OF_ITERATION = "fromEnd";
     private static final String COMMA = ",";
+    private static final String SPACE = " ";
     private static final String RIGHT_BRACKET = "]";
     private static final String LEFT_BRACKET = "[";
     private Node<T> head;
@@ -94,9 +95,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new IndexOutOfBoundsException(INDEX_OF_BOUND_EXCEPTION_MESSAGE);
-        }
+        checkIndex(index);
         Node<T> current = head;
         int counter = 0;
         int step = 1;
@@ -120,9 +119,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index > size - 1) {
-            throw new IndexOutOfBoundsException(INDEX_OF_BOUND_EXCEPTION_MESSAGE);
-        }
+        checkIndex(index);
         T oldValue = null;
         Node<T> current = head;
         int counter = 0;
@@ -162,39 +159,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(INDEX_OF_BOUND_EXCEPTION_MESSAGE);
-        }
-        T deletedValue;
-        if (size == 1) {
-            deletedValue = head.value;
-            removeLastElement();
-        } else if (index == 0) {
-            deletedValue = head.value;
-            removeElementFromBeginning();
-        } else if (index == size - 1) {
-            deletedValue = tail.value;
-            removeElementFromEnd();
-        } else {
-            deletedValue = removeFromMiddle(index);
-        }
+        checkIndex(index);
+        T deletedValue = removeFromMiddle(index);
         size--;
         return deletedValue;
-    }
-
-    private void removeElementFromEnd() {
-        tail = tail.prev;
-        tail.next = null;
-    }
-
-    private void removeElementFromBeginning() {
-        head = head.next;
-        head.prev = null;
-    }
-
-    private void removeLastElement() {
-        head = null;
-        tail = null;
     }
 
     private T removeFromMiddle(int index) {
@@ -224,8 +192,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (current != null) {
             Node<T> newNext = current.next;
             Node<T> newPrev = current.prev;
-            newNext.prev = newPrev;
-            newPrev.next = newNext;
+            if (newNext != null) {
+                newNext.prev = newPrev;
+            } else {
+                tail = tail.prev;
+            }
+            if (newPrev != null) {
+                newPrev.next = newNext;
+            } else {
+                head = head.next;
+            }
         }
     }
 
@@ -239,11 +215,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    public int indexOf(T o) {
+    private int indexOf(T value) {
         int counter = 0;
         Node<T> current = head;
         while (current != null) {
-            if (equals(current.value, o)) {
+            if (equals(current.value, value)) {
                 return counter;
             }
             counter++;
@@ -252,8 +228,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return -1;
     }
 
-    public boolean equals(T first, T second) {
+    private boolean equals(T first, T second) {
         return (first == null && second == null) || first.equals(second);
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(INDEX_OF_BOUND_EXCEPTION_MESSAGE);
+        }
     }
 
     @Override
@@ -265,7 +247,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (counter == size) {
                 res.append(get(i));
             } else {
-                res.append(get(i)).append(COMMA).append(System.lineSeparator());
+                res.append(get(i)).append(COMMA).append(SPACE);
             }
         }
         res.append(RIGHT_BRACKET);
