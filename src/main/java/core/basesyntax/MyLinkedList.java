@@ -24,19 +24,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkPositionIndex(index);
         if (index == size) {
             add(value);
-        } else {
-            Node<T> indexNode = getNode(index);
-            if (indexNode == head) {
-                Node<T> newNode = new Node<>(null, value, indexNode);
-                indexNode.prev = newNode;
-                head = newNode;
-            } else {
-                Node<T> newNode = new Node<>(indexNode.prev, value, indexNode);
-                indexNode.prev.next = newNode;
-                indexNode.prev = newNode;
-            }
-            size++;
+            return;
         }
+        Node<T> indexNode = getNode(index);
+        if (indexNode == head) {
+            Node<T> newNode = new Node<>(null, value, indexNode);
+            indexNode.prev = newNode;
+            head = newNode;
+        } else {
+            Node<T> newNode = new Node<>(indexNode.prev, value, indexNode);
+            indexNode.prev.next = newNode;
+            indexNode.prev = newNode;
+        }
+        size++;
     }
 
     @Override
