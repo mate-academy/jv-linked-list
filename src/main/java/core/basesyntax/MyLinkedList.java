@@ -19,46 +19,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private T unlink(Node<T> deletedNode) { // Для зміни зв'язків
-        Node<T> nextNode = deletedNode.next;
-        Node<T> prevNode = deletedNode.prev;
-        if (prevNode == null) {
-            first = nextNode;
-        } else {
-            prevNode.next = nextNode;
-        }
-
-        if (nextNode == null) {
-            last = prevNode;
-        } else {
-            nextNode.prev = prevNode;
-        }
-        size--;
-        return deletedNode.item;
-    }
-
-    private void checkPosition(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is invalid!");
-        }
-    }
-
-    private Node<T> findNode(int index) {
-        Node<T> findNode;
-        if (index < size / 2) {
-            findNode = first;
-            for (int i = 1; i <= index; i++) {
-                findNode = findNode.next;
-            }
-        } else {
-            findNode = last;
-            for (int i = size - 2; i >= index; i--) {
-                findNode = findNode.prev;
-            }
-        }
-        return findNode;
-    }
-
     @Override
     public void add(T value) {
         final Node<T> lastNode = last;
@@ -144,5 +104,45 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private T unlink(Node<T> deletedNode) { // Для зміни зв'язків
+        Node<T> nextNode = deletedNode.next;
+        Node<T> prevNode = deletedNode.prev;
+        if (prevNode == null) {
+            first = nextNode;
+        } else {
+            prevNode.next = nextNode;
+        }
+
+        if (nextNode == null) {
+            last = prevNode;
+        } else {
+            nextNode.prev = prevNode;
+        }
+        size--;
+        return deletedNode.item;
+    }
+
+    private void checkPosition(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index is invalid!");
+        }
+    }
+
+    private Node<T> findNode(int index) {
+        Node<T> findNode;
+        if (index < size / 2) {
+            findNode = first;
+            for (int i = 0; i < index; i++) {
+                findNode = findNode.next;
+            }
+        } else {
+            findNode = last;
+            for (int i = size - 1; i > index; i--) {
+                findNode = findNode.prev;
+            }
+        }
+        return findNode;
     }
 }
