@@ -65,20 +65,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkElementIndex(index);
         Node<T> indexNode = getNode(index);
+        size--;
         if (head == indexNode && tail == indexNode) {
             head = null;
             tail = null;
-        } else if (head == indexNode) {
+            return indexNode.item;
+        }
+        if (head == indexNode) {
             indexNode.next.prev = null;
             head = indexNode.next;
-        } else if (tail == indexNode) {
+            return indexNode.item;
+        }
+        if (tail == indexNode) {
             indexNode.prev.next = null;
             tail = indexNode.prev;
-        } else {
-            indexNode.prev.next = indexNode.next;
-            indexNode.next.prev = indexNode.prev;
+            return indexNode.item;
         }
-        size--;
+        indexNode.prev.next = indexNode.next;
+        indexNode.next.prev = indexNode.prev;
         return indexNode.item;
     }
 
