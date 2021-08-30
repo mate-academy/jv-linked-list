@@ -34,12 +34,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        //checkPosition(index - 1);
-        //Не розумію чому тут не спрацьовує метод вище?
-        //Я щось не так роблю чи це специфіка тесту?
-        if (index < 0 || index - 1 >= size) {
-            throw new IndexOutOfBoundsException("Index is invalid!");
-        }
+        checkPositionAdd(index - 1);
         if (index == size) {
             add(value);
         } else {
@@ -106,7 +101,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private T unlink(Node<T> deletedNode) { // Для зміни зв'язків
+    private T unlink(Node<T> deletedNode) {
         Node<T> nextNode = deletedNode.next;
         Node<T> prevNode = deletedNode.prev;
         if (prevNode == null) {
@@ -126,6 +121,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkPosition(int index) {
         if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index is invalid!");
+        }
+    }
+
+    private void checkPositionAdd(int index) {
+        if (index < -1 || index >= size) {
             throw new IndexOutOfBoundsException("Index is invalid!");
         }
     }
