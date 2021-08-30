@@ -20,24 +20,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        int count = 0;
-        Node<T> current = head;
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("index are not exist");
-        } else if (isEmpty() || index == size()) {
+        isValidIndexAdd(index);
+        if (index == size()) {
             add(value);
         } else if (index == 0) {
-            Node<T> newNode = new Node<>(null, value, head);
-            newNode.next.prev = newNode;
-            head = newNode;
+            addToTheBegin(value);
         } else {
-            while (count++ != index) {
-                current = current.next;
-            }
-            Node<T> newNode = new Node<>(current.prev, value, current);
-            newNode.prev.next = newNode;
-            newNode.next.prev = newNode;
+            addToTheMiddle(value, index);
         }
+    }
+
+    private void addToTheBegin(T value) {
+        Node<T> newNode = new Node<>(null, value, head);
+        newNode.next.prev = newNode;
+        head = newNode;
+    }
+
+    private void addToTheMiddle(T value, int index) {
+        Node<T> current = head;
+        int count = 0;
+        while (count++ != index) {
+            current = current.next;
+        }
+        Node<T> newNode = new Node<>(current.prev, value, current);
+        newNode.prev.next = newNode;
+        newNode.next.prev = newNode;
     }
 
     @Override
@@ -67,7 +74,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Node<T> current = getNode(index);
         T oldValue = current.element;
-        if (index == 0 && size() == 1) {
+        if (size() == 1) {
             head = null;
             tail = null;
         } else if (index == 0) {
@@ -106,6 +113,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size <= 0;
+    }
+
+    private void isValidIndexAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("index are npt exist");
+        }
     }
 
     private void indexIsValid(int index) {
