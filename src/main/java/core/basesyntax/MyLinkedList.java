@@ -10,7 +10,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public MyLinkedList() {
         entering = new Node<>(null, null, null);
         entering.next = entering.previous = entering;
-        size = 0;
     }
 
     @Override
