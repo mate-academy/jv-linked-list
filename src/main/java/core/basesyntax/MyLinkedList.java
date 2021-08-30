@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private Node<T> first;
     private Node<T> entering;
+    private Node<T> last;
     private int size;
 
     public MyLinkedList() {
@@ -48,12 +50,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> element = getNode(index);
-        element.previous.next = element.next;
-        element.next.previous = element.previous;
-        element.previous = element.next = null;
         T value = element.value;
         element.value = null;
-        size--;
+        unlink(element);
         return value;
     }
 
@@ -93,6 +92,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return element;
+    }
+
+    private void unlink(Node<T> node) {
+        if (node.previous == null) {
+            first = node.next;
+        } else {
+            node.previous.next = node.next;
+        }
+        if (node.next == null) {
+            last = node.previous;
+        } else {
+            node.next.previous = node.previous;
+        }
+        size--;
     }
 
     private static class Node<T> {
