@@ -9,13 +9,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> item = new Node<>(tail, value, null);
+        Node<T> newNode = new Node<>(tail, value, null);
         if (head == null) {
-            head = item;
+            head = newNode;
         } else {
-            tail.next = item;
+            tail.next = newNode;
         }
-        tail = item;
+        tail = newNode;
         size++;
     }
 
