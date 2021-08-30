@@ -13,7 +13,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> prev;
         private Node<T> next;
 
-        public Node(Node<T> prev, T element, Node<T> next) {
+        private Node(Node<T> prev, T element, Node<T> next) {
             this.prev = prev;
             this.element = element;
             this.next = next;
@@ -61,13 +61,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         return getNode(index).element;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> addedNode = getNode(index);
         T currentValue = addedNode.element;
         addedNode.element = value;
@@ -76,7 +74,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         return unlink(getNode(index));
     }
 
@@ -129,6 +126,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
+        checkIndex(index);
         Node<T> current = null;
         if (index < size / 2) {
             current = head;
