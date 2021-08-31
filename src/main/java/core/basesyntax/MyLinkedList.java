@@ -22,12 +22,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> nodeToAdd = new Node<>(null, value, null);
+        Node<T> nodeToAdd = new Node<>(last, value, null);
         if (size == 0) {
             first = nodeToAdd;
         } else {
-            nodeToAdd.prev = last;
-            nodeToAdd.prev.next = nodeToAdd;
+            last.next = nodeToAdd;
         }
         last = nodeToAdd;
         size++;
