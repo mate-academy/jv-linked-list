@@ -70,19 +70,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> current = getNode(index);
-        T oldValue = current.element;
-        if (current.next != null && current.prev != null) {
-            current.next.prev = current.prev;
-            current.prev.next = current.next;
-        } else if (current == head && current.next != null) {
-            current.next.prev = null;
-            head = current.next;
-        } else if (current == tail && current.prev != null) {
-            current.prev.next = null;
-            tail = current.prev;
+        Node<T> prev = current.prev;
+        Node<T> next = current.next;
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
+        }
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.prev = prev;
         }
         size--;
-        return oldValue;
+        return current.element;
     }
 
     @Override
