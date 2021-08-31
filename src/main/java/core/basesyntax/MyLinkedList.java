@@ -69,9 +69,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         checkPositionIndex(index);
         Node<T> currentNode = node(index);
-        T oldVal = currentNode.value;
+        T oldValue = currentNode.value;
         currentNode.value = value;
-        return oldVal;
+        return oldValue;
     }
 
     @Override
@@ -83,9 +83,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         if (object == null) {
-            for (Node<T> x = head; x != null; x = x.next) {
-                if (x.value == null) {
-                    unlink(x);
+            for (Node<T> node = head; node != null; node = node.next) {
+                if (node.value == null) {
+                    unlink(node);
                     return true;
                 }
             }
@@ -140,24 +140,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    T unlink(Node<T> x) {
-        final T element = x.value;
-        final Node<T> next = x.next;
-        final Node<T> prev = x.previous;
+    T unlink(Node<T> node) {
+        final T element = node.value;
+        final Node<T> next = node.next;
+        final Node<T> prev = node.previous;
 
         if (prev == null) {
             head = next;
         } else {
             prev.next = next;
-            x.previous = null;
+            node.previous = null;
         }
         if (next == null) {
             tail = prev;
         } else {
             next.previous = prev;
-            x.next = null;
+            node.next = null;
         }
-        x.value = null;
+        node.value = null;
         size--;
         return element;
     }
