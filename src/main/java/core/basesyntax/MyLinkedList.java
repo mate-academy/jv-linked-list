@@ -3,10 +3,10 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final String OUT_OF_BOUND_MESSAGE = "out of bounds for index ";
     private Node<T> head;
     private Node<T> tail;
     private int size;
-    private static final String OUT_OF_BOUND_MESSAGE = "out of bounds for index ";
 
     private class Node<T> {
         private Node<T> previous;
