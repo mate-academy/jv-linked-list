@@ -122,7 +122,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void linkLast(T value) {
         Node<T> lastNode = last;
-        final Node<T> newNode = new Node<>(lastNode, value, null);
+        Node<T> newNode = new Node<>(lastNode, value, null);
         last = newNode;
         if (lastNode == null) {
             first = newNode;
