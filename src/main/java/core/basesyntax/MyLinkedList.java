@@ -71,15 +71,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Node<T> current = getNode(index);
         T oldValue = current.element;
-        if (current.prev != null && current.next != null) {
-            current.prev.next = current.next;
+        if (current.next != null && current.prev != null) {
             current.next.prev = current.prev;
-        } else if (current == tail && current.prev != null) {
-            current.prev.next = null;
-            tail = current.prev;
+            current.prev.next = current.next;
         } else if (current == head && current.next != null) {
             current.next.prev = null;
             head = current.next;
+        } else if (current == tail && current.prev != null) {
+            current.prev.next = null;
+            tail = current.prev;
         }
         size--;
         return oldValue;
@@ -111,14 +111,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private boolean indexIsValidAdd(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("index are not exist");
+            throw new IndexOutOfBoundsException("index does not exist");
         }
         return true;
     }
 
     private boolean indexIsValid(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("index is not exist");
+            throw new IndexOutOfBoundsException("index does not exist");
         }
         return true;
     }
