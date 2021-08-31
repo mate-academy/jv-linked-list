@@ -3,10 +3,22 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node<T> first = null;
-    private Node<T> last = null;
+    private Node<T> first;
+    private Node<T> last;
     private int size;
 
+    private static class Node<T> {
+        private T item;
+        private Node<T> prev;
+        private Node<T> next;
+
+        Node(Node<T> prev, T item, Node<T> next) {
+            this.item = item;
+            this.prev = prev;
+            this.next = next;
+        }
+    }
+    
     @Override
     public void add(T value) {
         linkLast(value);
@@ -48,9 +60,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        Node<T> nodeByIndex = findByIndex(index);
-        return unlink(nodeByIndex);
+        checkIndex(index); 
+        return unlink(findByIndex(index));
     }
 
     @Override
@@ -151,17 +162,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         nodeToUnlink.item = null;
         size--;
         return value;
-    }
-
-    private class Node<T> {
-        private T item;
-        private Node<T> prev;
-        private Node<T> next;
-
-        Node(Node<T> prev, T item, Node<T> next) {
-            this.item = item;
-            this.prev = prev;
-            this.next = next;
-        }
     }
 }
