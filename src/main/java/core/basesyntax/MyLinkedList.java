@@ -71,7 +71,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T value) {
         Node<T> entity = head;
         while (entity != null) {
-            if ((value == null && entity.value == null) || (entity.value.equals(value))) {
+            if ((value == entity.value) || (entity.value.equals(value))) {
                 delete(entity);
                 return true;
             }
