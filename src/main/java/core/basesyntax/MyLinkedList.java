@@ -9,7 +9,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> first;
     private Node<T> last;
-    private int size
+    private int size;
 
     @Override
     public void add(T value) {
