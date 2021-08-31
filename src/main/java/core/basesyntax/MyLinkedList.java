@@ -5,13 +5,12 @@ import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
-    private Node<T> entering;
     private Node<T> last;
     private int size;
 
     public MyLinkedList() {
-        entering = new Node<>(null, null, null);
-        entering.next = entering.previous = entering;
+        last = new Node<>(null, null, null);
+        last.next = last.previous = last;
     }
 
     @Override
@@ -21,7 +20,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Node<T> tail = index == size ? entering : getNode(index);
+        Node<T> tail = index == size ? last : getNode(index);
         Node<T> element = new Node<>(value, tail, tail.previous);
         element.previous.next = element.next.previous = element;
         size++;
@@ -58,7 +57,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T t) {
-        Node<T> element = entering.next;
+        Node<T> element = last.next;
         for (int i = 0; i < size; i++) {
             if (t == element.value || t != null && t.equals(element.value)) {
                 remove(i);
@@ -81,7 +80,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         Objects.checkIndex(index, size);
-        Node<T> element = entering;
+        Node<T> element = last;
         if (index < (size >> 1)) {
             for (int i = 0; i <= index; i++) {
                 element = element.next;
