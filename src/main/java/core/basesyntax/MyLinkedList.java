@@ -26,24 +26,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index >= 0 && index <= size) {
-            if (index == size) {
-                link(value);
-            } else {
-                Node<T> node = findNode(index);
-                Node<T> prevNode = node.prev;
-                Node<T> newNode = new Node<>(prevNode, value, node);
-                node.prev = newNode;
-                if (prevNode == null) {
-                    first = newNode;
-                } else {
-                    prevNode.next = newNode;
-                }
-            }
-            size++;
-        } else {
-            throw new IndexOutOfBoundsException("Input index is wrong!");
-        }
+        checkAddIndex(index);
+        addIndex(value,index);
+        size++;
     }
 
     @Override
@@ -96,10 +81,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndex(int index) {
-        if (index >= 0 && index < size) {
-            return;
+        if (!(index >= 0 && index < size)) {
+            throw new IndexOutOfBoundsException("Input index is wrong!");
         }
-        throw new IndexOutOfBoundsException("Input index is wrong!");
+    }
+
+    private void checkAddIndex(int index) {
+        if (!(index >= 0 && index <= size)) {
+            throw new IndexOutOfBoundsException("Input index is wrong!");
+        }
+    }
+
+    private void addIndex(T value, int index) {
+        if (index == size) {
+            link(value);
+        } else {
+            Node<T> node = findNode(index);
+            Node<T> prevNode = node.prev;
+            Node<T> newNode = new Node<>(prevNode, value, node);
+            node.prev = newNode;
+            if (prevNode == null) {
+                first = newNode;
+            } else {
+                prevNode.next = newNode;
+            }
+        }
     }
 
     private void link(T value) {
@@ -114,19 +120,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNode(int index) {
+        Node<T> node;
         if (index > (size / 2)) {
-            Node<T> node = last;
+            node = last;
             for (int i = size - 1; i > index; i--) {
                 node = node.prev;
             }
-            return node;
         } else {
-            Node<T> node = first;
+            node = first;
             for (int i = 0; i < index; i++) {
                 node = node.next;
             }
-            return node;
         }
+        return node;
     }
 
     private T unLink(Node<T> findNode) {
