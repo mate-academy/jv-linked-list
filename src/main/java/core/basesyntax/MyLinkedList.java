@@ -22,17 +22,32 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        linkNode(value);
+        Node<T> newNode = new Node<>(tail, value, null);
+        if (size == 0) {
+            head = newNode;
+        } else {
+            tail.next = newNode;
+        }
+        tail = newNode;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
         if (index == size) {
-            linkNode(value);
-        } else {
-            linkNode(value, getNode(index));
+            add(value);
+            return;
         }
+        Node<T> node = getNode(index);
+        Node<T> newNode = new Node<>(node.prev, value, node);
+        if (node.prev == null) {
+            head = newNode;
+        } else {
+            node.prev.next = newNode;
+        }
+        node.prev = newNode;
+        size++;
     }
 
     @Override
@@ -79,28 +94,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void linkNode(T value) {
-        Node<T> newNode = new Node<>(tail, value, null);
-        if (size == 0) {
-            head = newNode;
-        } else {
-            tail.next = newNode;
-        }
-        tail = newNode;
-        size++;
-    }
-
-    private void linkNode(T value, Node<T> node) {
-        Node<T> newNode = new Node<>(node.prev, value, node);
-        if (node.prev == null) {
-            head = newNode;
-        } else {
-            node.prev.next = newNode;
-        }
-        node.prev = newNode;
-        size++;
     }
 
     private void checkIndexForAdd(int index) {
