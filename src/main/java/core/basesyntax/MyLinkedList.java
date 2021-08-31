@@ -3,8 +3,11 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private int size;
+    private Node<T> head;
+    private Node<T> tail;
 
-    static class Node<T> {
+    private static class Node<T> {
         private T item;
         private Node<T> next;
         private Node<T> prev;
@@ -15,10 +18,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
         }
     }
-
-    private int size;
-    private Node<T> head;
-    private Node<T> tail;
 
     @Override
     public void add(T value) {
@@ -34,11 +33,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        checkIndexAdd(index);
         if (index == size) {
             add(value);
             return;
         }
-        checkIndex(index);
         if (index == 0) {
             Node<T> newNode = new Node<>(null, value, head);
             newNode.next = head;
@@ -121,7 +120,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return element;
     }
 
-    public Node<T> getNodeByIndex(int index) {
+    private Node<T> getNodeByIndex(int index) {
         checkIndex(index);
         Node<T> current = head;
         if (index < (size / 2)) {
@@ -138,17 +137,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByValue(T value) {
+        Node<T> current = head;
         for (int i = 0; i < size; i++) {
-            if ((getNodeByIndex(i).item == value)
-                    || (value != null && value.equals(getNodeByIndex(i).item))) {
-                return getNodeByIndex(i);
+            if ((current.item == value)
+                    || (value != null && value.equals(current.item))) {
+                return current;
             }
+            current = current.next;
         }
         return null;
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index is invalid");
+        }
+    }
+
+    private void checkIndexAdd(int index) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index is invalid");
         }
     }
