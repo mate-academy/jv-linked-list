@@ -79,7 +79,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         chekIndex(index);
-        return unlink(index);
+        return unlink(getNodeByIndex(index));
     }
 
     @Override
@@ -88,7 +88,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (object == getNodeByIndex(i).item
                     || (object != null
                     && object.equals(getNodeByIndex(i).item))) {
-                unlink(i);
+                unlink(getNodeByIndex(i));
                 return true;
             }
         }
@@ -111,12 +111,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private int getFirstHalfOfSize(int size) {
-        return size >> 1;
-    }
-
     private Node<T> getNodeByIndex(int index) {
-        if (index < getFirstHalfOfSize(size)) {
+        if (index < (size >> 1)) {
             Node<T> currentNode = head;
             for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
@@ -131,10 +127,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private T unlink(int index) {
-        Node<T> currentNode = getNodeByIndex(index);
-        Node<T> next = currentNode.next;
-        Node<T> prev = currentNode.prev;
+    private T unlink(Node<T> node) {
+        Node<T> next = node.next;
+        Node<T> prev = node.prev;
         if (prev == null) {
             head = next;
         } else {
@@ -146,7 +141,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             next.prev = prev;
         }
         size--;
-        return currentNode.item;
+        return node.item;
     }
 
 }
