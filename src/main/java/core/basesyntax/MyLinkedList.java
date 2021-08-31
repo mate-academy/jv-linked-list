@@ -34,7 +34,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkPositionAdd(index - 1);
+        checkPositionAdd(index);
         if (index == size) {
             add(value);
         } else {
@@ -126,7 +126,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkPositionAdd(int index) {
-        if (index < -1 || index >= size) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index is invalid!");
         }
     }
