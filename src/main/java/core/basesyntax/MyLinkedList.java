@@ -48,11 +48,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
+        checkIndex(index);
         Node<T> element = getNode(index);
-        T value = element.value;
-        element.value = null;
         unlink(element);
-        return value;
+        return element.value;
     }
 
     @Override
@@ -105,6 +104,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.next.previous = node.previous;
         }
         size--;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Incorrect index...");
+        }
     }
 
     private static class Node<T> {
