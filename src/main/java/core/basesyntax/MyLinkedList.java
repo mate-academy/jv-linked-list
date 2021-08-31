@@ -6,10 +6,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
     private Node<T> first;
     private Node<T> last;
-    private Node<T> header;
-    private Node<T> currentNode;
     private Node<T> newNode;
-    private int indexCount;
     private Node<T> temporaryNode;
 
     private static class Node<T> {
@@ -27,37 +24,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public MyLinkedList() {
         first = new Node<>(null, null, null);
         last = new Node<>(null, null, null);
-        //header = new Node<>(first, null, last);
-        //currentNode = new Node<>(first, null, last);
-        //first = currentNode;
-        //last = currentNode;
-//        head = null;
-//        tail = null;
     }
 
     @Override
     public void add(T value) {
         if (size == 0) {
-            currentNode = new Node<>(first, value, last);
-            first = currentNode;
-            last = currentNode;
+            temporaryNode = new Node<>(first, value, last);
+            first = temporaryNode;
+            last = temporaryNode;
             size++;
             return;
         }
-        newNode = new Node<>(currentNode, value, null);
-        currentNode.next = newNode;
-        currentNode = newNode;
-        last = currentNode;
+        newNode = new Node<>(temporaryNode, value, null);
+        temporaryNode.next = newNode;
+        temporaryNode = newNode;
+        last = temporaryNode;
         size++;
-//        if (size == 0) {
-//            Node<T> node = new Node<>(null, value, null);
-//            first = node;
-//            last = node;
-//        }
-//        if (size > 0) {
-//            Node<T> node = new Node<>(null, value, null);
-//        }
-//        size++;
     }
 
     @Override
@@ -90,19 +72,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-//        temporaryNode = first;
-//        T out = temporaryNode.element;
-//        for (int i = 0; i < index; i++) {
-//            temporaryNode = temporaryNode.next;
-//            out = temporaryNode.element;
-//        }
-//        return out;
         return indexToNode(index).element;
     }
 
     @Override
     public T set(T value, int index) {
-//        indexToNode(index).element = value;
         temporaryNode = indexToNode(index);
         T oldRecord = temporaryNode.element;
         temporaryNode.element = value;
@@ -111,28 +85,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        temporaryNode = indexToNode(index);
-        if (index == 0) {
-            first = temporaryNode.next;
-            //temporaryNode.next.prev = temporaryNode.prev;
-            first.prev = null;
-            size--;
-            return temporaryNode.element;
-        }
-        if (index == size - 1) {
-            last = temporaryNode.prev;
-            //temporaryNode.next.prev = temporaryNode.prev;
-            last.next = null;
-            size--;
-            return temporaryNode.element;
-        }
-        Node<T> previous = temporaryNode.prev;
-        (temporaryNode.prev).next = temporaryNode.next;
-        (temporaryNode.next).prev = temporaryNode.prev;
-//        temporaryNode.next = null;
-//        temporaryNode.prev = null;
-        size--;
-        return temporaryNode.element;
+        return unLink(index);
     }
 
     @Override
@@ -159,8 +112,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void createLink(T value) {
-
+    private T unLink(int index) {
+        temporaryNode = indexToNode(index);
+        if (index == 0) {
+            first = temporaryNode.next;
+            first.prev = null;
+            size--;
+            return temporaryNode.element;
+        }
+        if (index == size - 1) {
+            last = temporaryNode.prev;
+            last.next = null;
+            size--;
+            return temporaryNode.element;
+        }
+        (temporaryNode.prev).next = temporaryNode.next;
+        (temporaryNode.next).prev = temporaryNode.prev;
+        size--;
+        return temporaryNode.element;
     }
 
     private Node<T> indexToNode(int index) {
