@@ -35,49 +35,43 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         rangeCheckForAdd(index);
-        Node<T> nodeToAdd = new Node<>(null, value, null);
-        Node<T> nodeToShift = nodeOf(index);
         if (index == size) {
             add(value);
             return;
         }
+        Node<T> nodeToShift = getNode(index);
+        Node<T> nodeToAdd = new Node<>(nodeToShift.prev, value, nodeToShift);
         if (index == 0) {
-            first.prev = nodeToAdd;
-            nodeToAdd.next = first;
             first = nodeToAdd;
+        } else {
+            nodeToShift.prev.next = nodeToAdd;
         }
-        nodeToShift.prev.next = nodeToAdd;
-        nodeToAdd.prev = nodeToShift.prev;
-        nodeToAdd.next = nodeToShift;
         nodeToShift.prev = nodeToAdd;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T element : list) {
+            add(element);
         }
     }
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-        return nodeOf(index).item;
+        return getNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
-        T oldValue = nodeOf(index).item;
-        nodeOf(index).item = value;
+        T oldValue = getNode(index).item;
+        getNode(index).item = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        return unlink(nodeOf(index));
+        return unlink(getNode(index));
     }
 
     @Override
@@ -86,7 +80,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode = first;
         while (currentNode != null) {
             if (currentNode.item == object || object != null && object.equals(currentNode.item)) {
-                unlink(nodeOf(index));
+                unlink(getNode(index));
                 return true;
             }
             currentNode = currentNode.next;
@@ -117,7 +111,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> nodeOf(int index) {
+    private Node<T> getNode(int index) {
+        checkIndex(index);
         Node<T> currentNode;
         if (index < size >> 1) {
             currentNode = first;
