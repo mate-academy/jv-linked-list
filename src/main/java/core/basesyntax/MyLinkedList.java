@@ -21,13 +21,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> insertNode;
+        Node<T> insertNode = new Node<>(tail, value, null);
         if (size == 0) {
-            head = tail = new Node<>(null, value, null);
+            head = tail = insertNode;
             size++;
             return;
         }
-        insertNode = new Node<>(tail, value, null);
         tail.next = insertNode;
         tail = insertNode;
         size++;
@@ -42,16 +41,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        Node<T> insertNode;
         Node<T> node = getNode(index);
+        Node<T> insertNode = new Node<>(node.prev, value, node);
         if (index == 0) {
-            insertNode = new Node<>(null, value, head);
             head = insertNode;
-            head.prev = insertNode;
             size++;
             return;
         }
-        insertNode = new Node<>(node.prev, value, node);
         node.prev.next = insertNode;
         node.prev = insertNode;
         size++;
@@ -66,13 +62,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexException(index);
         return getNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        indexException(index);
         Node<T> node = getNode(index);
         T changedItem = node.item;
         node.item = value;
@@ -81,7 +75,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexException(index);
         Node<T> node = getNode(index);
         return unlink(node);
     }
@@ -110,6 +103,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
+        checkIndex(index);
         Node<T> node;
         int counter;
         if (index > size / 2) {
@@ -153,7 +147,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node.item;
     }
 
-    private void indexException(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Index: " + index + "out of bounds, Size: " + size);
         }
