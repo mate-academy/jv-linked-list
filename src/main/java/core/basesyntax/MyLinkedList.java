@@ -4,6 +4,7 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String INDEX_EXCEPTION = "Index is invalid";
+    private static final int SIZE_DEGREE = 2;
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -11,10 +12,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(tail, value, null);
-        if (size > 0) {
-            tail.next = newNode;
-        } else {
+        if (isEmpty()) {
             head = newNode;
+
+        } else {
+            tail.next = newNode;
         }
         tail = newNode;
         size++;
@@ -59,9 +61,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         checkIndex(index);
         Node<T> currentNode = getNodeByIndex(index);
-        T previousNode = currentNode.element;
+        T previousValue = currentNode.element;
         currentNode.element = value;
-        return previousNode;
+        return previousValue;
     }
 
     @Override
@@ -95,8 +97,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        Node(Node<T> prev, T item, Node<T> next) {
-            this.element = item;
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.element = element;
             this.next = next;
             this.prev = prev;
         }
@@ -127,7 +129,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeByIndex(int index) {
         Node<T> currentNode = head;
-        if (index >= size / 2) {
+        if (index >= size * SIZE_DEGREE) {
             currentNode = tail;
             for (int i = index; i < size - 1; i++) {
                 currentNode = currentNode.prev;
