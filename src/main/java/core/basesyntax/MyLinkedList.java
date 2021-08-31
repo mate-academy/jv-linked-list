@@ -61,7 +61,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        return null;
+        if(index == size){
+            throw new IndexOutOfBoundsException("index out of reach");
+        }
+        checkIndex(index);
+       return elementFinder(index).item = value;
     }
 
     @Override
