@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> first;
     private Node<T> last;
 
@@ -27,7 +27,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         if (index == size) {
             add(value);
-            return;
         } else if (index == 0) {
             Node<T> newNode = new Node(null, value, first);
             first.prev = newNode;
@@ -69,19 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         indexCheck(index);
         T buffer = getNodeByIndex(index).item;
-        if (size == 1) {
-            first.item = null;
-        } else if (index == 0) {
-            first = first.next;
-            first.prev = null;
-        } else if (index == size - 1) {
-            last.prev.next = null;
-        } else {
-            Node<T> deletedNode = getNodeByIndex(index);
-            deletedNode.next.prev = deletedNode.prev;
-            deletedNode.prev.next = deletedNode.next;
-        }
-        size--;
+        unlink(getNodeByIndex(index));
         return buffer;
     }
 
@@ -97,19 +84,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             bufferNode = bufferNode.next;
             index++;
         }
-        if (size == 1) {
-            first.item = null;
-        } else if (index == 0) {
-            first = first.next;
-            first.prev = null;
-        } else if (index == size - 1) {
-            last.prev.next = null;
-        } else {
-            Node<T> deletedNode = getNodeByIndex(index);
-            deletedNode.next.prev = deletedNode.prev;
-            deletedNode.prev.next = deletedNode.next;
-        }
-        size--;
+        unlink(getNodeByIndex(index));
         return true;
     }
 
@@ -142,7 +117,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<E> next;
         private Node<E> prev;
 
-        Node(Node<E> prev, E element, Node<E> next) {
+        private Node(Node<E> prev, E element, Node<E> next) {
             this.item = element;
             this.next = next;
             this.prev = prev;
@@ -153,5 +128,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("This index does not exist");
         }
+    }
+
+    private void unlink(Node<T> node) {
+        final Node<T> nextNode = node.next;
+        final Node<T> prevNode = node.prev;
+        if ((nextNode == null) && (prevNode == null)) {
+            node.item = null;
+        } else if (nextNode == null) {
+            prevNode.next = null;
+            last = prevNode;
+        } else if (prevNode == null) {
+            nextNode.prev = null;
+            first = nextNode;
+        } else {
+            prevNode.next = nextNode;
+            nextNode.prev = prevNode;
+        }
+        size--;
     }
 }
