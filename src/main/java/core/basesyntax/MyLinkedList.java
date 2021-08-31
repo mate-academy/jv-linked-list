@@ -4,6 +4,7 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final int ARRAYS_ZERO_BORDER = 0;
+    private static final String INDEX_OUT_OF_BOUNDS = "Index out of bounds array size";
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -24,7 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < ARRAYS_ZERO_BORDER) {
-            throw new IndexOutOfBoundsException("Index out of bounds array size");
+            throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS);
         }
         if (!addFirstNode(value)) {
             Node<T> currentNode = findCurrentNode(index);
@@ -93,7 +94,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if ((index >= size && index != ARRAYS_ZERO_BORDER) || index < ARRAYS_ZERO_BORDER) {
-            throw new IndexOutOfBoundsException("Index out of bounds array size");
+            throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS);
         }
     }
 
