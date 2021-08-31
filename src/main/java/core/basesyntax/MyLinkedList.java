@@ -20,9 +20,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public MyLinkedList() {
-        this.size = 0;
-    }
 
     @Override
     public void add(T value) {
