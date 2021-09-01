@@ -64,7 +64,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> nodeToRemove = getNodeByIndex(index);
-        removeNodeByNode(nodeToRemove);
+        unlink(nodeToRemove);
         size--;
         return nodeToRemove.item;
     }
@@ -75,7 +75,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (nodeToRemove == null) {
             return false;
         }
-        removeNodeByNode(nodeToRemove);
+        unlink(nodeToRemove);
         size--;
         return true;
     }
@@ -90,7 +90,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void removeNodeByNode(Node<T> nodeToRemove) {
+    private void unlink(Node<T> nodeToRemove) {
         if (nodeToRemove.equals(first)) {
             first = first.next;
             if (first == null) {
