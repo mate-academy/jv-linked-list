@@ -35,6 +35,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+       if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Wrong Index.");
+        }
         if (index == size) {
             add(value);
             return;
@@ -54,9 +57,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = addNode;
             size++;
             return;
-        }
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Wrong Index.");
         }
     }
 
