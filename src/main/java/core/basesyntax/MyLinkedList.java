@@ -22,14 +22,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
+        Node<T> newNode = new Node<>(tail, value, null);
         if (size == 0) {
-            Node<T> newNode = new Node<>(null, value, null);
-            head = tail = newNode;
+            head = newNode;
         } else {
-            Node<T> newNode = new Node<>(tail, value, null);
             tail.next = newNode;
-            tail = newNode;
         }
+        tail = newNode;
         size++;
     }
 
@@ -42,22 +41,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        if (index != 0 && index != size) {
-            Node<T> currentNode = findNode(index);
-            Node<T> addNode = new Node<>(null, value, currentNode);
-            addNode.previous = currentNode.previous;
+        Node<T> currentNode = findNode(index);
+        Node<T> addNode = new Node<>(currentNode.previous, value, currentNode);
+        if (index != 0) {
             currentNode.previous.next = addNode;
-            currentNode.previous = addNode;
-            size++;
-            return;
-        }
-        if (index == 0) {
-            Node<T> addNode = new Node<>(null, value, head);
-            head.previous = addNode;
+        } else {
             head = addNode;
-            size++;
-            return;
         }
+        currentNode.previous = addNode;
+        size++;
+        return;
     }
 
     @Override
@@ -112,32 +105,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlinkNode(Node node) {
-        if (node.previous == null && node.next != null) {
-            node.next.previous = null;
+        if (node.previous == null) {
             head = node.next;
-            node.next = null;
-            node.previous = null;
-            size--;
-            return;
+        } else {
+            node.previous.next = node.next;
         }
-        if (node.next == null && node.previous != null) {
-            node.previous.next = null;
+        if (node.next == null) {
             tail = node.previous;
-            node.next = null;
-            node.previous = null;
-            size--;
-            return;
+        } else {
+            node.next.previous = node.previous;
         }
-        if (node.previous == null && node.next == null) {
-            node.next = null;
-            node.previous = null;
-            head = null;
-            tail = null;
-            size = 0;
-            return;
-        }
-        node.previous.next = node.next;
-        node.next.previous = node.previous;
         node.next = null;
         node.previous = null;
         size--;
@@ -145,7 +122,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNode(int index) {
         checkIndexValidity(index);
-        if ((index <= size / 2) && head != null) {
+        if (index <= size / 2) {
             Node<T> currentNode = head;
             int i = 0;
             while (currentNode != null) {
@@ -156,7 +133,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 i++;
             }
         }
-        if ((index > size / 2) && head != null) {
+        if (index > size / 2) {
             Node<T> currentNode = tail;
             int i = size - 1;
             while (currentNode != null) {
