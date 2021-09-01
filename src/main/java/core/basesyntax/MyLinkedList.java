@@ -25,8 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0) {
             addFirst(value);
         } else {
-            tail.next = new Node<>(tail, value, null);;
-            tail = tail.next;
+            addLast(value);
         }
         size++;
     }
@@ -42,8 +41,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = new Node<>(null, value, head);
             head.next.previous = head;
         } else if (index == size) {
-            tail.next = new Node<>(tail, value, null);
-            tail = tail.next;
+            addLast(value);
         } else {
             Node<T> indexNode = getNode(index);
             indexNode.previous.next = new Node<>(indexNode.previous, value, indexNode);
@@ -55,6 +53,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void addFirst(T value) {
         head = new Node<>(null, value, null);
         tail = head;
+    }
+
+    private void addLast(T value) {
+        tail.next = new Node<>(tail, value, null);
+        tail = tail.next;
     }
 
     private Node<T> getNode(int index) {
