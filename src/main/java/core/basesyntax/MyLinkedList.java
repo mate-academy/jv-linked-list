@@ -21,24 +21,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public MyLinkedList() {
-        first = new Node<>(null, null, null);
-        last = new Node<>(null, null, null);
-    }
-
     @Override
     public void add(T value) {
         if (size == 0) {
+            first = new Node<>(null, null, null);
+            last = new Node<>(null, null, null);
             temporaryNode = new Node<>(first, value, last);
             first = temporaryNode;
             last = temporaryNode;
             size++;
             return;
         }
-        newNode = new Node<>(temporaryNode, value, null);
-        temporaryNode.next = newNode;
-        temporaryNode = newNode;
-        last = temporaryNode;
+        newNode = new Node<>(last, value, null);
+        last.next = newNode;
+        last = newNode;
         size++;
     }
 
@@ -48,25 +44,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        if (index >= 0 && index < size) {
-            temporaryNode = indexToNode(index);
-            newNode = new Node<>(temporaryNode.prev, value, temporaryNode);
-            size++;
-            if (index == 0) {
-                first = newNode;
-                return;
-            }
-            temporaryNode.prev.next = newNode;
-            temporaryNode.prev = newNode;
-            return;
-        }
-        throw new IndexOutOfBoundsException("It is not next index!");
+        checkIndexIfInBound(value, index);
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T t : list) {
+            add(t);
         }
     }
 
@@ -85,7 +69,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        return unLink(index);
+        temporaryNode = indexToNode(index);
+        unLink(temporaryNode, index);
+        return temporaryNode.element;
     }
 
     @Override
@@ -112,24 +98,39 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private T unLink(int index) {
-        temporaryNode = indexToNode(index);
+    private void checkIndexIfInBound(T value, int index) {
+        if (index >= 0 && index < size) {
+            temporaryNode = indexToNode(index);
+            newNode = new Node<>(temporaryNode.prev, value, temporaryNode);
+            size++;
+            if (index == 0) {
+                first = newNode;
+                return;
+            }
+            temporaryNode.prev.next = newNode;
+            temporaryNode.prev = newNode;
+            return;
+        }
+        throw new IndexOutOfBoundsException("It is not valid index!");
+    }
+
+    private void unLink(Node<T> node, int index) {
+
         if (index == 0) {
-            first = temporaryNode.next;
+            first = node.next;
             first.prev = null;
             size--;
-            return temporaryNode.element;
+            return;
         }
         if (index == size - 1) {
-            last = temporaryNode.prev;
+            last = node.prev;
             last.next = null;
             size--;
-            return temporaryNode.element;
+            return;
         }
-        (temporaryNode.prev).next = temporaryNode.next;
-        (temporaryNode.next).prev = temporaryNode.prev;
+        (node.prev).next = node.next;
+        (node.next).prev = node.prev;
         size--;
-        return temporaryNode.element;
     }
 
     private Node<T> indexToNode(int index) {
