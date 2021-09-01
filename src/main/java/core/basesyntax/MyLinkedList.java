@@ -11,15 +11,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static class Node<T> {
         private T value;
         private Node<T> next;
+        private Node<T> prev;
 
-        public Node(T value) {
+        public Node(Node<T> prev,T value, Node<T> next) {
+            
+            this.prev = prev;
             this.value = value;
+            this.next = next;
+
         }
     }
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(last, value, null);
         if (first == null) {
             first = last = newNode;
         } else {
@@ -32,9 +37,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         Objects.checkIndex(index, size + 1);
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(null, value, first);
         if (first == null) {
             first = last = newNode;
+        } else if (size == 0) {
+            add(value);
         } else if (index == 0) {
             newNode.next = first;
             first = newNode;
@@ -42,18 +49,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             last.next = newNode;
             last = newNode;
         } else {
-            Node<T> prev = getNodeByIndex(index - 1);
-            newNode.next = prev.next;
-            prev.next = newNode;
+            Node<T> current = getNodeByIndex(index);
+            current = new Node<>(current.prev, value, current);
+            current.prev.next = current;
+            current.next.prev = current;
         }
         size++;
     }
 
-    private Node<T> getNodeByIndex(int index) {
+    Node<T> getNodeByIndex(int index) {
         Objects.checkIndex(index, size);
-        Node<T> current = first;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        Node<T> current;
+
+        if (index <= size / 2) {
+            current = first;
+
+            for (int i = 1; i <= index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = last;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+
+            }
         }
         return current;
     }
