@@ -95,8 +95,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findByIndex(int index) {
-        int middleOfList = (size - 1) / 2;
-        if (index > middleOfList) {
+        if (index > size / 2) {
             return findElementInLastHalf(index);
         } else {
             return findElementInFirstHalf(index);
