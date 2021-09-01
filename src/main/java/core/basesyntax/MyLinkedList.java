@@ -17,30 +17,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
             this.prev = prev;
         }
-
-        public E getItem() {
-            return item;
-        }
-
-        public void setItem(E item) {
-            this.item = item;
-        }
-
-        public Node<E> getNext() {
-            return next;
-        }
-
-        public void setNext(Node<E> next) {
-            this.next = next;
-        }
-
-        public Node<E> getPrev() {
-            return prev;
-        }
-
-        public void setPrev(Node<E> prev) {
-            this.prev = prev;
-        }
     }
 
     @Override
@@ -51,7 +27,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (tail == null) {
             first = newNode;
         } else {
-            tail.setNext(newNode);
+            tail.next = newNode;
         }
         size++;
     }
@@ -66,13 +42,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        Node<T> prevNode = getNodeByIndex(index).getPrev();
+        Node<T> prevNode = getNodeByIndex(index).prev;
         Node<T> newNode = new Node<>(prevNode, value, getNodeByIndex(index));
-        getNodeByIndex(index).setPrev(newNode);
+        getNodeByIndex(index).prev = newNode;
         if (prevNode == null) {
             first = newNode;
         } else {
-            prevNode.setNext(newNode);
+            prevNode.next = newNode;
         }
         size++;
     }
@@ -87,14 +63,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndexForRemoveGetSetMethods(index);
-        return getNodeByIndex(index).getItem();
+        return getNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndexForRemoveGetSetMethods(index);
-        T oldValue = getNodeByIndex(index).getItem();
-        getNodeByIndex(index).setItem(value);
+        T oldValue = getNodeByIndex(index).item;
+        getNodeByIndex(index).item = value;
         return oldValue;
     }
 
@@ -108,12 +84,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> currentNode = first;
         for (int i = 0; i < size; i++) {
-            if (currentNode.getItem() == object
-                    || (currentNode.getItem() != null && currentNode.getItem().equals(object))) {
+            if (currentNode.item == object
+                    || (currentNode.item != null && currentNode.item.equals(object))) {
                 remove(i);
                 return true;
             }
-            currentNode = currentNode.getNext();
+            currentNode = currentNode.next;
         }
         return false;
     }
@@ -140,34 +116,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < (size >> 1)) {
             currentNode = first;
             for (int i = 0; i < index; i++) {
-                currentNode = currentNode.getNext();
+                currentNode = currentNode.next;
             }
         } else {
             currentNode = last;
             for (int i = size - 1; i > index; i--) {
-                currentNode = currentNode.getPrev();
+                currentNode = currentNode.prev;
             }
         }
         return currentNode;
     }
 
     private T unlink(Node<T> nodeToUnlink) {
-        final T element = nodeToUnlink.getItem();
-        Node<T> next = nodeToUnlink.getNext();
-        Node<T> prev = nodeToUnlink.getPrev();
+        final T element = nodeToUnlink.item;
+        Node<T> next = nodeToUnlink.next;
+        Node<T> prev = nodeToUnlink.prev;
         if (prev == null) {
             first = next;
         } else {
-            prev.setNext(next);
-            nodeToUnlink.setPrev(null);
+            prev.next = next;
+            nodeToUnlink.prev = null;
         }
         if (next == null) {
             last = prev;
         } else {
-            next.setPrev(prev);
-            nodeToUnlink.setNext(null);
+            next.prev = prev;
+            nodeToUnlink.next = null;
         }
-        nodeToUnlink.setItem(null);
+        nodeToUnlink.item = null;
         size--;
         return element;
     }
