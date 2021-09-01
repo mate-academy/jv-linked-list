@@ -3,80 +3,83 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final String EXCEPTION_MESSAGE = "Not valid index";
     private Node<T> head;
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private T value;
-        private Node<T> preview;
+    private class Node<T> {
+        private T element;
+        private Node<T> prev;
         private Node<T> next;
 
-        Node(Node<T> preview, T value, Node<T> next) {
-            this.value = value;
-            this.preview = preview;
+        public Node(Node<T> prev, T element, Node<T> next) {
+            this.prev = prev;
+            this.element = element;
             this.next = next;
+            size++;
         }
     }
 
     @Override
     public void add(T value) {
-        addInEnd(value);
+        if (head == null) {
+            Node<T> firstNode = new Node<>(null, value, null);
+            head = firstNode;
+            tail = firstNode;
+        } else {
+            Node<T> nextNode = new Node<>(tail, value, null);
+            tail.next = nextNode;
+            tail = nextNode;
+        }
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
-        if (index == 0) {
+        indexIsValidAdd(index);
+        if (index == size()) {
+            add(value);
+        } else if (index == 0) {
             Node<T> newNode = new Node<>(null, value, head);
-            head.preview = newNode;
+            head.prev = newNode;
             head = newNode;
-        } else if (size == index) {
-            addInEnd(value);
         } else {
-            Node<T> currentNode = findNode(index);
-            Node<T> prevNode = currentNode.preview;
-            Node<T> newNode = new Node<>(prevNode, value, currentNode);
-            currentNode.preview = newNode;
-            prevNode.next = newNode;
+            addToTheMiddle(value, index);
         }
-        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T node : list) {
+            add(node);
         }
     }
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-        return findNode(index).value;
+        return getNode(index).element;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
-        Node<T> currentNode = findNode(index);
-        T oldValue = currentNode.value;
-        currentNode.value = value;
+        Node<T> node = getNode(index);
+        T oldValue = node.element;
+        node.element = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        return unlink(findNode(index));
+        return unlink(getNode(index));
     }
 
     @Override
     public boolean remove(T object) {
-        for (int i = 0; i < size; i++) {
-            if ((object == null && findNode(i).value == null)
-                    || object != null && object.equals(findNode(i).value)) {
-                unlink(findNode(i));
+        for (int i = 0; i < size(); i++) {
+            T currentElement = getNode(i).element;
+            if ((currentElement == object)
+                    || (currentElement != null && currentElement.equals(object))) {
+                remove(i);
                 return true;
             }
         }
@@ -93,28 +96,36 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void addInEnd(T value) {
-        Node<T> newNode = new Node<>(tail,value,null);
-        if (size > 0) {
-            tail.next = newNode;
-        } else {
-            head = newNode;
+    private boolean indexIsValid(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
         }
-        tail = newNode;
-        size++;
+        return true;
     }
 
-    private Node<T> findNode (int index) {
+    private void addToTheMiddle(T value, int index) {
         Node<T> current = head;
-        for (int i = 0; i < index - 1; i++) {
+        int count = 0;
+        while (count++ != index) {
+            current = current.next;
+        }
+        Node<T> newNode = new Node<>(current.prev, value, current);
+        newNode.prev.next = newNode;
+        newNode.next.prev = newNode;
+    }
+
+    private Node<T> getNode(int index) {
+        indexIsValid(index);
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
             current = current.next;
         }
         return current;
     }
 
-    private T unlink (Node<T> someNode) {
+    private T unlink(Node<T> someNode) {
         Node<T> nextNode = someNode.next;
-        Node<T> prevNode = someNode.preview;
+        Node<T> prevNode = someNode.prev;
         if (prevNode == null) {
             head = nextNode;
         } else {
@@ -123,17 +134,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (nextNode == null) {
             tail = prevNode;
         } else {
-            nextNode.preview = prevNode;
+            nextNode.prev = prevNode;
         }
         size--;
-        return someNode.value;
+        return someNode.element;
     }
 
-    private void checkIndex(int index) {
-        if (index < 0 && index >= size) {
-            throw new IndexOutOfBoundsException("Not valid index");
+    private boolean indexIsValidAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
         }
+        return true;
     }
-
-
 }
