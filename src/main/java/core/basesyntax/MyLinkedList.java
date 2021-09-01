@@ -37,7 +37,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         indexIsValidAdd(index);
-        if (index == size()) {
+        if (index == size) {
             add(value);
         } else if (index == 0) {
             Node<T> newNode = new Node<>(null, value, head);
@@ -75,8 +75,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        for (int i = 0; i < size(); i++) {
-            T currentElement = getNode(i).element;
+        T currentElement;
+        for (int i = 0; i < size; i++) {
+            currentElement = getNode(i).element;
             if ((currentElement == object)
                     || (currentElement != null && currentElement.equals(object))) {
                 remove(i);
