@@ -90,9 +90,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 }
             }
         } else {
-            for (Node<T> x = head; x != null; x = x.next) {
-                if (object.equals(x.value)) {
-                    unlink(x);
+            for (Node<T> currentNode = head; currentNode != null; currentNode = currentNode.next) {
+                if (object.equals(currentNode.value)) {
+                    unlink(currentNode);
                     return true;
                 }
             }
@@ -124,37 +124,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    Node<T> node(int index) {
+    private Node<T> node(int index) {
         if (index < (size >> 1)) {
-            Node<T> x = head;
+            Node<T> currentNode = head;
             for (int i = 0; i < index; i++) {
-                x = x.next;
+                currentNode = currentNode.next;
             }
-            return x;
+            return currentNode;
         } else {
-            Node<T> x = tail;
+            Node<T> currentNode = tail;
             for (int i = size - 1; i > index; i--) {
-                x = x.previous;
+                currentNode = currentNode.previous;
             }
-            return x;
+            return currentNode;
         }
     }
 
-    T unlink(Node<T> node) {
+    private T unlink(Node<T> node) {
         final T element = node.value;
-        final Node<T> next = node.next;
-        final Node<T> prev = node.previous;
+        final Node<T> nextNode = node.next;
+        final Node<T> prevNode = node.previous;
 
-        if (prev == null) {
-            head = next;
+        if (prevNode == null) {
+            head = nextNode;
         } else {
-            prev.next = next;
+            prevNode.next = nextNode;
             node.previous = null;
         }
-        if (next == null) {
-            tail = prev;
+        if (nextNode == null) {
+            tail = prevNode;
         } else {
-            next.previous = prev;
+            nextNode.previous = prevNode;
             node.next = null;
         }
         node.value = null;
