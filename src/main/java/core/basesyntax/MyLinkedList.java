@@ -22,7 +22,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        indexIsValidAdd(index);
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index does not exist");
+        }
         if (index == size()) {
             add(value);
         } else if (index == 0) {
@@ -110,13 +112,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size <= 0;
-    }
-
-    private boolean indexIsValidAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index does not exist");
-        }
-        return true;
     }
 
     private Node<T> getNode(int index) {
