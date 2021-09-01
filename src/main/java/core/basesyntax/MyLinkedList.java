@@ -38,10 +38,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         Objects.checkIndex(index, size + 1);
         Node<T> newNode = new Node<>(null, value, first);
-        if (first == null) {
-            first = last = newNode;
-        } else if (size == 0) {
+        if (size == 0) {
             add(value);
+            return;
         } else if (index == 0) {
             newNode.next = first;
             first = newNode;
@@ -57,7 +56,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    Node<T> getNodeByIndex(int index) {
+    private Node<T> getNodeByIndex(int index) {
         Objects.checkIndex(index, size);
         Node<T> current;
 
