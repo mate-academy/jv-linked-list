@@ -6,8 +6,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
     private Node<T> first;
     private Node<T> last;
-    private Node<T> newNode;
-    private Node<T> temporaryNode;
 
     private static class Node<T> {
         protected T element;
@@ -23,18 +21,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        if (size == 0) {
-            first = new Node<>(null, null, null);
-            last = new Node<>(null, null, null);
-            temporaryNode = new Node<>(first, value, last);
-            first = temporaryNode;
-            last = temporaryNode;
-            size++;
-            return;
+        if (size > 0) {
+            Node<T> newNode = new Node<>(last, value, null);
+            last.next = newNode;
+            last = newNode;
+        } else {
+            first = new Node<>(null, value, null);
+            last = new Node<>(null, value, null);
+            Node<T> newNode = new Node<>(last, value, first);
+            first = newNode;
+            last = newNode;
         }
-        newNode = new Node<>(last, value, null);
-        last.next = newNode;
-        last = newNode;
         size++;
     }
 
@@ -44,7 +41,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkIndexIfInBound(value, index);
+        checkIndexIfInBound(index);
+        Node<T> temporaryNode = findNodeByIndex(index);
+        Node<T> newNode = new Node<>(temporaryNode.prev, value, temporaryNode);
+        size++;
+        if (index > 0) {
+            temporaryNode.prev.next = newNode;
+            temporaryNode.prev = newNode;
+            return;
+        }
+        first = newNode;
     }
 
     @Override
@@ -56,12 +62,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return indexToNode(index).element;
+        checkIndexIfInBound(index);
+        return findNodeByIndex(index).element;
     }
 
     @Override
     public T set(T value, int index) {
-        temporaryNode = indexToNode(index);
+        checkIndexIfInBound(index);
+        Node<T> temporaryNode = findNodeByIndex(index);
         T oldRecord = temporaryNode.element;
         temporaryNode.element = value;
         return oldRecord;
@@ -69,14 +77,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        temporaryNode = indexToNode(index);
+        checkIndexIfInBound(index);
+        Node<T> temporaryNode = findNodeByIndex(index);
         unLink(temporaryNode, index);
         return temporaryNode.element;
     }
 
     @Override
     public boolean remove(T object) {
-        temporaryNode = first;
+        Node<T> temporaryNode = first;
         for (int i = 0; i < size; i++) {
             if (temporaryNode.element == object || (temporaryNode.element != null
                     && temporaryNode.element.equals(object))) {
@@ -98,51 +107,39 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkIndexIfInBound(T value, int index) {
+    private void checkIndexIfInBound(int index) {
         if (index >= 0 && index < size) {
-            temporaryNode = indexToNode(index);
-            newNode = new Node<>(temporaryNode.prev, value, temporaryNode);
-            size++;
-            if (index == 0) {
-                first = newNode;
-                return;
-            }
-            temporaryNode.prev.next = newNode;
-            temporaryNode.prev = newNode;
             return;
         }
         throw new IndexOutOfBoundsException("It is not valid index!");
     }
 
     private void unLink(Node<T> node, int index) {
-
+        size--;
         if (index == 0) {
             first = node.next;
             first.prev = null;
-            size--;
             return;
         }
-        if (index == size - 1) {
+        if (index == size) {
             last = node.prev;
             last.next = null;
-            size--;
             return;
         }
-        (node.prev).next = node.next;
-        (node.next).prev = node.prev;
-        size--;
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
     }
 
-    private Node<T> indexToNode(int index) {
+    private Node<T> findNodeByIndex(int index) {
         if (index >= (size / 2) && index < size) {
-            temporaryNode = last;
+            Node<T> temporaryNode = last;
             for (int i = size - 1; i > index; i--) {
                 temporaryNode = temporaryNode.prev;
             }
             return temporaryNode;
         }
         if (index < (size / 2) && index >= 0) {
-            temporaryNode = first;
+            Node<T> temporaryNode = first;
             for (int i = 0; i < index; i++) {
                 temporaryNode = temporaryNode.next;
             }
