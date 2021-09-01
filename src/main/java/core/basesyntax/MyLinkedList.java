@@ -10,7 +10,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (isEmpty()) {
-            createFirstNode(value);
+            Node<T> firstNode = new Node<>(null, value, null);
+            head = firstNode;
+            tail = firstNode;
         } else {
             Node<T> nextNode = new Node<>(tail, value, null);
             tail.next = nextNode;
@@ -117,27 +119,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return true;
     }
 
-    private boolean indexIsValid(int index) {
+    private Node<T> getNode(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index does not exist");
         }
-        return true;
-    }
-
-    private Node<T> getNode(int index) {
-        indexIsValid(index);
         int count = 0;
         Node<T> current = head;
         while (count++ != index) {
             current = current.next;
         }
         return current;
-    }
-
-    private void createFirstNode(T value) {
-        Node<T> firstNode = new Node<>(null, value, null);
-        head = firstNode;
-        tail = firstNode;
     }
 
     private class Node<T> {
