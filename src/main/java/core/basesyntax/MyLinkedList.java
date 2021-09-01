@@ -77,7 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndexIfInBound(index);
         Node<T> temporaryNode = findNodeByIndex(index);
-        unLink(temporaryNode, index);
+        unLink(temporaryNode);
         return temporaryNode.element;
     }
 
@@ -112,25 +112,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     }
 
-    private void unLink(Node<T> node, int index) {
-        size--;
-        if (size == 0) {
-            first = null;
-            last = null;
-            return;
-        }
-        if (index == 0) {
+    private void unLink(Node<T> node) {
+        Node<T> prev = node.prev;
+        if (prev == null) {
             first = node.next;
-            first.prev = null;
-            return;
+        } else {
+            prev.next = node.next;
         }
-        if (index == size) {
+        Node<T> next = node.next;
+        if (next == null) {
             last = node.prev;
-            last.next = null;
-            return;
+        } else {
+            next.prev = node.prev;
         }
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
+        size--;
     }
 
     private Node<T> findNodeByIndex(int index) {
