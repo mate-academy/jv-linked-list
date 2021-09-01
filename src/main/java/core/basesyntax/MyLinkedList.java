@@ -76,9 +76,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         isIndexExist(index);
         Node<T> currentNode = findNode(index);
-        T oldItem = currentNode.item;
+        T previousItem = currentNode.item;
         currentNode.item = value;
-        return oldItem;
+        return previousItem;
     }
 
     @Override
