@@ -7,7 +7,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private class Node<T> {
+    private static class Node<T> {
         private T element;
         private Node<T> previous;
         private Node<T> next;
@@ -38,27 +38,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         Node<T> newNode = new Node<>(null, value, null);
         if (head == null) {
-            head = newNode;
-            tail = newNode;
+            head = tail = newNode;
         } else if (index == 0) {
-            head.previous = newNode;
-            newNode.next = head;
-            head = newNode;
-            newNode.previous = null;
+            addToTheBeginning(newNode);
         } else if (index == size) {
-            tail.next = newNode;
-            newNode.previous = tail;
-            tail = newNode;
-            tail.next = null;
+            addToTheEnd(newNode);
         } else {
-            Node<T> nodeCurrent = head;
-            for (int i = 1; i < index; i++) {
-                nodeCurrent = nodeCurrent.next;
-            }
-            newNode.next = nodeCurrent.next;
-            nodeCurrent.next = newNode;
-            newNode.previous = nodeCurrent;
-            newNode.next.previous = newNode;
+            addToInside(newNode, index);
         }
         size++;
     }
@@ -93,10 +79,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> node = getNode(object);
-        if (node != null) {
-            unlink(node);
-            return true;
+        Node<T> node = head;
+        while (node != null) {
+            if ((object == node.element)
+                    || (node.element.equals(object))) {
+                unlink(node);
+                return true;
+            }
+            node = node.next;
         }
         return false;
     }
@@ -111,20 +101,42 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return head == null;
     }
 
-    private Node<T> getNode(T value) {
-        for (int i = 0; i < size; i++) {
-            if ((getNodeByIndex(i).element == value)
-                    || (value != null && value.equals(getNodeByIndex(i).element))) {
-                return getNodeByIndex(i);
-            }
+    private void addToTheBeginning(Node<T> newNode) {
+        head.previous = newNode;
+        newNode.next = head;
+        head = newNode;
+    }
+
+    private void addToTheEnd(Node<T> newNode) {
+        tail.next = newNode;
+        newNode.previous = tail;
+        tail = newNode;
+    }
+
+    private void addToInside(Node<T> newNode, int index) {
+        Node<T> nodeCurrent = head;
+        for (int i = 1; i < index; i++) {
+            nodeCurrent = nodeCurrent.next;
         }
-        return null;
+        newNode.next = nodeCurrent.next;
+        nodeCurrent.next = newNode;
+        newNode.previous = nodeCurrent;
+        newNode.next.previous = newNode;
     }
 
     private Node<T> getNodeByIndex(int index) {
         Node<T> node = head;
-        for (int i = 1; i <= index; i++) {
-            node = node.next;
+        if (index >= size / 2) {
+            node = tail;
+            while (index < size - 1) {
+                node = node.previous;
+                index++;
+            }
+        } else {
+            while (index > 0) {
+                node = node.next;
+                index--;
+            }
         }
         return node;
     }
