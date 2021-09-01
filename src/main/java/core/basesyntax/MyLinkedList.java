@@ -79,10 +79,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> node = getNode(object);
-        if (node != null) {
-            unlink(node);
-            return true;
+        Node<T> current = head;
+        for (int i = 0; i < size; i++) {
+            if (object == current.value || object != null && object.equals(current.value)) {
+                unlink(current);
+                return true;
+            }
+            current = current.next;
         }
         return false;
     }
@@ -105,27 +108,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeByIndex(int index) {
         indexCheck(index);
-        Node<T> bufferNode = head;
+        Node<T> bufferNode;
         if (index <= size / 2) {
+            bufferNode = head;
             for (int i = 0; i < index; i++) {
                 bufferNode = bufferNode.next;
             }
         } else {
-            for (int j = size; j > size - index; j--) {
-                bufferNode = bufferNode.next;
+            bufferNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                bufferNode = bufferNode.prev;
             }
         }
         return bufferNode;
-    }
-
-    private Node<T> getNode(T value) {
-        for (int i = 0; i < size; i++) {
-            if ((getNodeByIndex(i).value == value)
-                    || (value != null && value.equals(getNodeByIndex(i).value))) {
-                return getNodeByIndex(i);
-            }
-        }
-        return null;
     }
 
     private T unlink(Node<T> node) {
