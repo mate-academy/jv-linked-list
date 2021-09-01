@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final String EXCEPTION_MESSAGE = "Not valid index";
+    private static final String EXCEPTION_MESSAGE = "Index out of bound";
     private Node<T> head;
     private Node<T> tail;
     private int size;
