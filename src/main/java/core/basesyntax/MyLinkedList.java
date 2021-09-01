@@ -32,7 +32,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> newNode = new Node<>(null, value, head);
             head.prev = newNode;
             head = newNode;
-
         } else {
             checkIndex(index);
             Node<T> currentNode = getNodeByIndex(index);
