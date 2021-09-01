@@ -11,15 +11,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
+        Node<T> newNode;
         if (isEmpty()) {
-            Node<T> newNode = new Node<>(null, value, null);
-            head = tail = newNode;
-
+            newNode = new Node<>(null, value, null);
+            head = newNode;
         } else {
-            Node<T> newNode = new Node<>(tail, value, null);
+            newNode = new Node<>(tail, value, null);
             tail.next = newNode;
-            tail = newNode;
         }
+        tail = newNode;
     }
 
     @Override
@@ -73,10 +73,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> thisNode = getNodeByValue(object);
-        if (thisNode != null) {
-            unlink(thisNode);
-            return true;
+        Node<T> thisNode = head;
+        for (int i = 0; i < size; i++) {
+            if (thisNode.element == object
+                    || object != null && object.equals(thisNode.element)) {
+                unlink(thisNode);
+                return true;
+            }
+            thisNode = thisNode.next;
         }
         return false;
     }
@@ -140,15 +144,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return currentNode;
-    }
-
-    private Node<T> getNodeByValue(T value) {
-        for (int i = 0; i < size; i++) {
-            if (getNodeByIndex(i).element == value
-                    || value != null && value.equals(getNodeByIndex(i).element)) {
-                return getNodeByIndex(i);
-            }
-        }
-        return null;
     }
 }
