@@ -128,16 +128,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> next = node.next;
         Node<T> prev = node.previous;
         if (prev == null) {
-           head = next;
+            head = next;
         } else {
-           prev.next = next;
+            prev.next = next;
         }
         if (next == null) {
             tail = prev;
         } else {
             next.previous = prev;
         }
-        size --;
+        size--;
         return node.item;
     }
 
