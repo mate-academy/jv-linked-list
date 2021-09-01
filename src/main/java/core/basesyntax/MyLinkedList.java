@@ -28,7 +28,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         checkAddIndex(index);
         addIndex(value, index);
-        size++;
     }
 
     @Override
@@ -106,6 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 prevNode.next = newNode;
             }
         }
+        size++;
     }
 
     private void link(T value) {
