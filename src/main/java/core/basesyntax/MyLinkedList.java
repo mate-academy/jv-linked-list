@@ -21,14 +21,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> addNode = new Node<>(tail, value, null);
-        if (size == 0) {
-            head = tail = addNode;
-            size++;
-            return;
+        Node<T> newNode = new Node<>(tail, value, null);
+        if (size != 0) {
+            tail.next = newNode;
+        } else {
+            head = newNode;
         }
-        tail.next = addNode;
-        tail = addNode;
+        tail = newNode;
         size++;
     }
 
@@ -42,14 +41,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         Node<T> node = getNode(index);
-        Node<T> addNode = new Node<>(node.prev, value, node);
+        Node<T> newNode = new Node<>(node.prev, value, node);
         if (index == 0) {
-            head = addNode;
+            head = newNode;
             size++;
             return;
         }
-        node.prev.next = addNode;
-        node.prev = addNode;
+        node.prev.next = newNode;
+        node.prev = newNode;
         size++;
     }
 
@@ -78,8 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> node = getNode(index);
-        return unlink(node);
+        return unlink(getNode(index));
     }
 
     @Override
@@ -134,25 +132,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T unlink(Node<T> node) {
+        size--;
         if (node.prev == null) {
-            if (size == 1) {
-                size--;
+            if (size == 0) {
                 return node.element;
             }
             node.next.prev = null;
             head = node.next;
-            size--;
             return node.element;
         }
         if (node.next == null) {
             node.prev.next = null;
             tail = node.prev;
-            size--;
             return node.element;
         }
         node.prev.next = node.next;
         node.next.prev = node.prev;
-        size--;
         return node.element;
     }
 }
