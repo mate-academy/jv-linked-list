@@ -31,13 +31,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 valueToAdd = new Node<>(tail, value, null);
                 valueToAdd.prev.next = valueToAdd;
                 tail = valueToAdd;
-            } else if (nodeInIndex.prev == null && size > 0) {
-                valueToAdd = new Node<>(null, value, nodeInIndex);
-                nodeInIndex.prev = valueToAdd;
-                head = valueToAdd;
             } else {
-                valueToAdd = new Node<>(findNodeByIndex(index).prev, value, findNodeByIndex(index));
-                valueToAdd.prev.next = valueToAdd;
+                valueToAdd = new Node<>(nodeInIndex.prev, value, nodeInIndex);
+                if (nodeInIndex.prev == null && size > 0) {
+                    head = valueToAdd;
+                } else {
+                    valueToAdd.prev.next = valueToAdd;
+                }
                 valueToAdd.next.prev = valueToAdd;
             }
             size++;
