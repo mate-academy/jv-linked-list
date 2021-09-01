@@ -27,7 +27,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        Node<T> current = nodePosition(index);
+        Node<T> current = getNode(index);
         if (current == head) {
             Node<T> newNode = new Node<T>(null, value, current);
             current.prev = newNode;
@@ -50,13 +50,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkElementIndex(index);
-        return nodePosition(index).element;
+        return getNode(index).element;
     }
 
     @Override
     public T set(T value, int index) {
         checkElementIndex(index);
-        Node<T> current = nodePosition(index);
+        Node<T> current = getNode(index);
         T initial = current.element;
         current.element = value;
         return initial;
@@ -65,7 +65,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkElementIndex(index);
-        return unlink(nodePosition(index));
+        return unlink(getNode(index));
     }
 
     @Override
@@ -74,7 +74,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < size; i++) {
             if (current.element == object
                     || (current.element != null && current.element.equals(object))) {
-                unlink(nodePosition(i));
+                unlink(getNode(i));
                 return true;
             }
             current = current.next;
@@ -125,15 +125,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> nodePosition(int index) {
+    private Node<T> getNode(int index) {
         Node<T> position;
         if (index < size >> 1) {
             position = head;
-
             for (int i = 0; i < index; i++) {
                 position = position.next;
             }
-
         } else {
             position = tail;
             for (int i = size - 1; i > index; i--) {
