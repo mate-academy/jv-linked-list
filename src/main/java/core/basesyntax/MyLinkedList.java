@@ -26,9 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             last.next = newNode;
             last = newNode;
         } else {
-            first = new Node<>(null, value, null);
-            last = new Node<>(null, value, null);
-            Node<T> newNode = new Node<>(last, value, first);
+            Node<T> newNode = new Node<>(null,value, null);
             first = newNode;
             last = newNode;
         }
@@ -108,14 +106,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndexIfInBound(int index) {
-        if (index >= 0 && index < size) {
-            return;
+        if (index < 0 && index >= size) {
+            throw new IndexOutOfBoundsException("It is not valid index!");
         }
-        throw new IndexOutOfBoundsException("It is not valid index!");
+
     }
 
     private void unLink(Node<T> node, int index) {
         size--;
+        if (size == 0) {
+            first = null;
+            last = null;
+            return;
+        }
         if (index == 0) {
             first = node.next;
             first.prev = null;
