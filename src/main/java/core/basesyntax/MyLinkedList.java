@@ -9,17 +9,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public MyLinkedList() {
-        head = new Node<>(null, null, null);
-        tail = new Node<>(null, null, null);
-    }
-
     @Override
     public void add(T value) {
-        if (!addFirstNode(value)) {
-            tail.prev = tail.prev.next = new Node<>(tail.prev, value, tail);
-            size++;
+        Node<T> newNode = new Node<>(tail, value, null);
+        if (size == 0) {
+            head = newNode;
+        } else {
+            tail.next = newNode;
         }
+        tail = newNode;
+        size++;
     }
 
     @Override
@@ -27,7 +26,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index > size || index < ARRAYS_ZERO_BORDER) {
             throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS);
         }
-        if (!addFirstNode(value)) {
+        if (size == 0 || index == size) {
+            add(value);
+        } else if (index == 0) {
+            head = new Node<>(null, value, head);
+            size++;
+        } else {
             Node<T> currentNode = findCurrentNode(index);
             currentNode.prev.next = currentNode.prev
                     = new Node<>(currentNode.prev, value, currentNode);
@@ -61,25 +65,33 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> currentNode = findCurrentNode(index);
-        currentNode.prev.next = currentNode.next;
-        currentNode.next.prev = currentNode.prev;
-        currentNode.prev = currentNode.next = null;
+        if (size == 1) {
+            currentNode.value = null;
+        } else if (currentNode == head || currentNode != null && currentNode.equals(head)) {
+            currentNode.next.prev = null;
+            head = currentNode.next;
+        } else if (currentNode == tail || currentNode != null && currentNode.equals(tail)) {
+            currentNode.prev.next = null;
+            tail = currentNode.prev;
+        } else {
+            currentNode.prev.next = currentNode.next;
+            currentNode.next.prev = currentNode.prev;
+            currentNode.prev = currentNode.next = null;
+        }
         size--;
         return currentNode.value;
     }
 
     @Override
     public boolean remove(T object) {
-        int countIndex = 0;
-        Node<T> currentNode = head.next;
-        T nodeValue = currentNode.value;
-        while (nodeValue != null && !nodeValue.equals(object)) {
-            nodeValue = currentNode.next.value;
-            currentNode = currentNode.next;
-            countIndex++;
+        for (int i = 0; i < size; i++) {
+            if ((findCurrentNode(i).value == object)
+                    || (object != null && object.equals(findCurrentNode(i).value))) {
+                remove(i);
+                return true;
+            }
         }
-        return countIndex < size && ((object != null && object.equals(remove(countIndex))
-                || object == remove(countIndex)));
+        return false;
     }
 
     @Override
@@ -102,28 +114,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode;
         if (index < size / 2) {
             currentNode = head;
-            for (int i = 0; i <= index; i++) {
+            for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
             }
         } else {
             currentNode = tail;
-            for (int i = size - 1; i >= index; i--) {
+            for (int i = size - 1; i > index; i--) {
                 currentNode = currentNode.prev;
             }
         }
         return currentNode;
     }
 
-    private boolean addFirstNode(T value) {
-        if (head.next == null && tail.prev == null) {
-            head.next = tail.prev = new Node<>(head, value, tail);
-            size++;
-            return true;
-        }
-        return false;
-    }
-
-    static class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node<T> prev;
         private Node<T> next;
