@@ -7,12 +7,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    class Node<T> {
+    private static class Node<T> {
         private T item;
         private Node<T> prev;
         private Node<T> next;
 
-        public Node(Node<T> prev, T item, Node<T> next) {
+        private Node(Node<T> prev, T item, Node<T> next) {
             this.prev = prev;
             this.item = item;
             this.next = next;
