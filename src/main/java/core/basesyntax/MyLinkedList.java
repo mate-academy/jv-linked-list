@@ -22,25 +22,40 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(tail, value, null);
-        if (size == 0) {
-            head = newNode;
-        }else{
-            newNode.prev = tail;
-        }
-        tail = newNode;
-        size++;
+       add(value, size);
     }
 
     @Override
     public void add(T value, int index) {
         checkPositionIndex(index);
+        Node<T> node;
         if(size == 0){
-            Node<T> node = new Node<>(tail, value, null);
+            node = new Node<>(tail, value, null);
             head = node;
             tail = node;
+            size++;
+            return;
         }
-        linkBefore(value, nodeForIndex(index));
+        if(index == 0){
+            Node<T>nodeSecond = head;
+            node = new Node<>(null,value, nodeSecond);
+            nodeSecond.prev = node;
+            head = node;
+            size++;
+            return;
+        }
+        Node<T>firstNode = nodeForIndex(index -1);
+        Node<T>secondNode = null;
+        if(size > index) {
+            secondNode = nodeForIndex(index);
+        }
+        Node<T> addedNode = new Node<>(firstNode, value, secondNode);
+        firstNode.next = addedNode;
+        if (size == index){
+            tail = addedNode;
+        }
+            size++;
+
     }
 
     @Override
@@ -60,7 +75,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        checkPositionIndex(index);
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException();
+        }
+
         Node<T> firstNode = nodeForIndex(index);
         Node<T> valueNode = new Node<>(firstNode.prev, value, firstNode.next);
         firstNode = null;
