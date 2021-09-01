@@ -56,17 +56,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         checkIndex(index);
         Node<T> indexNode = getNode(index);
-        if (index == 0) {
-            head = new Node<>(null, value, indexNode.next);
-            indexNode.next.previous = head;
-        } else if (index == size - 1) {
-            tail = new Node<>(indexNode.previous, value, null);
-            indexNode.previous.next = tail;
-        } else {
-            indexNode.previous.next = new Node<>(indexNode.previous, value, indexNode.next);
-            indexNode.next.previous = indexNode.previous.next;
-        }
-        return indexNode.value;
+        T oldValue = indexNode.value;
+        indexNode.value = value;
+        return oldValue;
     }
 
     @Override
