@@ -42,14 +42,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         Node<T> node = getNode(index);
         Node<T> newNode = new Node<>(node.prev, value, node);
+        size++;
         if (index == 0) {
             head = newNode;
-            size++;
             return;
         }
         node.prev.next = newNode;
         node.prev = newNode;
-        size++;
     }
 
     @Override
