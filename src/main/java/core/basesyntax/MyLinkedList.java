@@ -39,14 +39,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(null, value, null);
         if (head == null) {
             head = tail = newNode;
+            size++;
         } else if (index == 0) {
             addToTheBeginning(newNode);
         } else if (index == size) {
-            addToTheEnd(newNode);
+            add(value);
         } else {
-            addToInside(newNode, index);
+            addToInside(value, index);
         }
-        size++;
     }
 
     @Override
@@ -105,23 +105,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         head.previous = newNode;
         newNode.next = head;
         head = newNode;
+        size++;
     }
 
-    private void addToTheEnd(Node<T> newNode) {
-        tail.next = newNode;
-        newNode.previous = tail;
-        tail = newNode;
-    }
-
-    private void addToInside(Node<T> newNode, int index) {
-        Node<T> nodeCurrent = head;
-        for (int i = 1; i < index; i++) {
-            nodeCurrent = nodeCurrent.next;
-        }
-        newNode.next = nodeCurrent.next;
-        nodeCurrent.next = newNode;
-        newNode.previous = nodeCurrent;
-        newNode.next.previous = newNode;
+    private void addToInside(T value, int index) {
+        Node<T> currentNode = getNodeByIndex(index);
+        Node<T> previousNode = currentNode.previous;
+        Node<T> newNode = new Node<>(previousNode, value, currentNode);
+        currentNode.previous = newNode;
+        previousNode.next = newNode;
+        size++;
     }
 
     private Node<T> getNodeByIndex(int index) {
