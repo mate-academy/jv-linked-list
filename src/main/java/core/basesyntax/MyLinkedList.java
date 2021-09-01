@@ -92,25 +92,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T unlink(Node<T> node) {
+        T removedValue = node.element;
+        Node<T> prev = node.prev;
+        Node<T> next = node.next;
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
+            node.prev = null;
+        }
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.prev = prev;
+            node.next = null;
+        }
+        node.element = null;
         size--;
-        if (head == node && tail == node) {
-            head = null;
-            tail = null;
-            return node.element;
-        }
-        if (head == node) {
-            node.next.prev = null;
-            head = node.next;
-            return node.element;
-        }
-        if (tail == node) {
-            node.prev.next = null;
-            tail = node.prev;
-            return node.element;
-        }
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
-        return node.element;
+        return removedValue;
     }
 
     private void checkElementIndex(int index) {
