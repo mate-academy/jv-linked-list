@@ -3,6 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final String NO_INDEX_MESSAGE = "Index does not exist: ";
     private int size;
     private Node<T> first;
     private Node<T> last;
@@ -42,9 +43,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(node.prev, value, node);
         if (index == 0) {
             first = newNode;
-        } else {
-            node.prev.next = newNode;
+            size++;
+            return;
         }
+        node.prev.next = newNode;
         node.prev = newNode;
         size++;
     }
@@ -58,7 +60,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         return getNode(index).item;
     }
 
@@ -71,8 +72,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node<T> node = getNode(index);
-        return unlink(node);
+        return unlink(getNode(index));
     }
 
     @Override
@@ -98,31 +98,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index does not exist: " + index);
+            throw new IndexOutOfBoundsException(NO_INDEX_MESSAGE + index);
         }
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index does not exist: " + index);
+            throw new IndexOutOfBoundsException(NO_INDEX_MESSAGE + index);
         }
     }
 
     private Node<T> getNode(int index) {
         checkIndex(index);
-        if (index > (size >> 1)) {
-            Node<T> tempNode = first;
+        Node<T> tempNode;
+        if (index < size / 2) {
+            tempNode = first;
             for (int i = 0; i < index; i++) {
                 tempNode = tempNode.next;
             }
-            return tempNode;
         } else {
-            Node<T> tempNode = last;
+            tempNode = last;
             for (int i = size - 1; i > index; i--) {
                 tempNode = tempNode.prev;
             }
-            return tempNode;
         }
+        return tempNode;
     }
 
     private T unlink(Node<T> node) {
