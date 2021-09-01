@@ -120,6 +120,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return unlink(getNode(index));
     }
 
+    @Override
+    public boolean remove(T object) {
+        boolean isDeleted = false;
+        for (int i = 0; i < size; i++) {
+            Node<T> indexNode = getNode(i);
+            if (object == null ? indexNode.value == null : object.equals(indexNode.value)) {
+                unlink(indexNode);
+                isDeleted = true;
+                break;
+            }
+        }
+        return isDeleted;
+    }
+
     private T unlink(Node<T> node) {
         T removedValue = null;
         if (head == tail) {
@@ -141,20 +155,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         size--;
         return removedValue;
-    }
-
-    @Override
-    public boolean remove(T object) {
-        boolean isDeleted = false;
-        for (int i = 0; i < size; i++) {
-            Node<T> indexNode = getNode(i);
-            if (object == null ? indexNode.value == null : object.equals(indexNode.value)) {
-                unlink(indexNode);
-                isDeleted = true;
-                break;
-            }
-        }
-        return isDeleted;
     }
 
     @Override
