@@ -18,7 +18,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.value = value;
             this.next = next;
         }
-
     }
 
     @Override
@@ -39,7 +38,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-
         if (index == 0) {
             Node<T> newNode = new Node<>(null, value, head);
             head.prev = newNode;
