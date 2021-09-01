@@ -81,15 +81,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 }
             }
             return false;
-        } else {
-            for (Node<T> i = head; i != null; i = i.next) {
-                if (object.equals(i.item)) {
-                    unlink(i);
-                    return true;
-                }
-            }
-            return false;
         }
+        for (Node<T> i = head; i != null; i = i.next) {
+            if (object.equals(i.item)) {
+                unlink(i);
+                return true;
+            }
+        }
+        return false;
     }
 
     private T unlink(Node<T> nodeToUnlink) {
@@ -143,13 +142,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 placeFinder = placeFinder.next;
             }
             return placeFinder;
-        } else {
-            placeFinder = tail;
-            for (int i = size - 1; i > index; i--) {
-                placeFinder = placeFinder.prev;
-            }
-            return placeFinder;
         }
+        placeFinder = tail;
+        for (int i = size - 1; i > index; i--) {
+            placeFinder = placeFinder.prev;
+        }
+        return placeFinder;
     }
 
     private static class Node<T> {
