@@ -67,11 +67,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        T result;
+        T replacedElement;
         Node<T> current = searchIndex(index);
-        result = current.item;
+        replacedElement = current.item;
         current.item = value;
-        return result;
+        return replacedElement;
     }
 
     @Override
