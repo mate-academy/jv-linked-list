@@ -12,7 +12,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        public Node(Node<T> prev, T item, Node<T> next) {
+        private Node(Node<T> prev, T item, Node<T> next) {
             this.prev = prev;
             this.item = item;
             this.next = next;
@@ -24,8 +24,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size > 0) {
             addNodeToEnd(value);
         } else {
-            addFirst(value);
+            last = addFirst(value);
         }
+        size++;
     }
 
     @Override
@@ -36,8 +37,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T obj : list) {
-            add(obj);
+        for (T element : list) {
+            add(element);
         }
     }
 
@@ -62,15 +63,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == 0) {
             removedItem = first.item;
             first = first.next;
-            if (first != null) {
-                first.prev = null;
-            }
             size--;
             return removedItem;
         } else if (index == (size - 1)) {
             removedItem = last.item;
             last = last.prev;
-            last.next = null;
             size--;
             return removedItem;
         }
@@ -103,38 +100,33 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void addFirst(T value) {
-        first = new Node<>(null, value, null);
-        last = first;
-        size++;
+    private Node<T> addFirst(T value) {
+        Node<T> firstNode = new Node<>(null, value, null);
+        first = firstNode;
+        return firstNode;
     }
 
     private void addNodeToEnd(T value) {
         Node<T> nextNode = new Node<>(last, value, null);
         last.next = nextNode;
         last = nextNode;
-        size++;
     }
 
     private void addWithIndex(T value, int index) {
-        if (index == 0 && size > 0) {
-            Node<T> newFirstNode = new Node<>(null,value,first);
+        if (index == size) {
+            add(value);
+            return;
+        } else if (index == 0) {
+            Node<T> newFirstNode = new Node<>(null, value, first);
             first.prev = newFirstNode;
             first = newFirstNode;
-            size++;
-        } else if (index == 0 && size == 0) {
-            addFirst(value);
-        } else if (index == size) {
-            addNodeToEnd(value);
         } else {
-            Node<T> prevNode = getNode(index - 1);
             Node<T> currentNode = getNode(index);
-            Node<T> nextNode = getNode(index + 1);
-            Node<T> node = new Node<>(prevNode, value, currentNode);
-            prevNode.next = node;
-            nextNode.prev = node;
-            size++;
+            Node<T> node = new Node<>(currentNode.prev, value, currentNode);
+            currentNode.prev.next = node;
+            currentNode.prev = node;
         }
+        size++;
     }
 
     private Node<T> getNode(int index) {
