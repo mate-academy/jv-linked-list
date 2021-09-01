@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -11,12 +10,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static class Node<T> {
         private T item;
         private Node<T> next;
-        private Node<T> previously;
+        private Node<T> previous;
 
         public Node(Node<T> previously, T element, Node<T> next) {
             this.item = element;
             this.next = next;
-            this.previously = previously;
+            this.previous = previously;
         }
     }
 
@@ -43,14 +42,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         Node<T> node = getNode(index);
-        Node<T> insertNode = new Node<>(node.previously, value, node);
+        Node<T> insertNode = new Node<>(node.previous, value, node);
         if (index == 0) {
             head = insertNode;
             size++;
             return;
         }
-        node.previously.next = insertNode;
-        node.previously = insertNode;
+        node.previous.next = insertNode;
+        node.previous = insertNode;
         size++;
     }
 
@@ -84,7 +83,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> node = head;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(node.item, object)) {
+            if (node.item == object || (node.item != null && node.item.equals(object))) {
                 removingLink(node);
                 return true;
             }
@@ -111,7 +110,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             counter = size - 1;
             node = tail;
             while (index < counter) {
-                node = node.previously;
+                node = node.previous;
                 counter--;
             }
         } else {
@@ -126,24 +125,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T removingLink(Node<T> node) {
-        if (node.previously == null) {
+        if (node.previous == null) {
             if (size == 1) {
                 size--;
                 return node.item;
             }
-            node.next.previously = null;
+            node.next.previous = null;
             head = node.next;
             size--;
             return node.item;
         }
         if (node.next == null) {
-            node.previously.next = null;
-            tail = node.previously;
+            node.previous.next = null;
+            tail = node.previous;
             size--;
             return node.item;
         }
-        node.previously.next = node.next;
-        node.next.previously = node.previously;
+        node.previous.next = node.next;
+        node.next.previous = node.previous;
         size--;
         return node.item;
     }
