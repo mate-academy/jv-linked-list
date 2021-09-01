@@ -6,7 +6,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String INDEX_OUT_OF_BOUNDS_MESSAGE
             = "Index %d out of bounds for length %d";
     private static final int ZERO_INDEX = 0;
-
     private Node<T> first;
     private Node<T> last;
     private int size;
@@ -65,7 +64,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Node<T> nodeToRemove = getNodeByIndex(index);
         unlink(nodeToRemove);
-        size--;
+        /*size--;*/
         return nodeToRemove.item;
     }
 
@@ -76,7 +75,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return false;
         }
         unlink(nodeToRemove);
-        size--;
         return true;
     }
 
@@ -109,6 +107,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             nodeToRemove.prev.next = nodeToRemove.next;
             nodeToRemove.next.prev = nodeToRemove.prev;
         }
+        size--;
     }
 
     private Node<T> getNodeByValue(T value) {
