@@ -153,7 +153,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return removedValue;
     }
 
-
     private class Node<T> {
         private Node<T> previous;
         private Node<T> next;
