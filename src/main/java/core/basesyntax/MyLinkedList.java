@@ -10,15 +10,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public static class Node<T> {
         private T value;
         private Node<T> next;
+        private Node<T> previous;
 
-        public Node(T value) {
+        public Node(Node<T> previous, T value, Node<T> next) {
             this.value = value;
+            this.previous = previous;
+            this.next = next;
         }
     }
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(tail, value, null);
         if (head == null) {
             head = this.tail = newNode;
         } else {
@@ -33,7 +36,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index is invalid: " + index);
         }
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(tail, value, null);
         if (head == null) {
             head = tail = newNode;
         } else if (index == 0) {
