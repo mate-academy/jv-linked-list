@@ -21,9 +21,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (size < index || index < 0) {
-            throw new IndexOutOfBoundsException("The index is not correct!");
-        }
+        checkIndexForAdd(index);
         if (index == size) {
             add(value);
             return;
@@ -100,6 +98,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("The index is not correct!");
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (size < index || index < 0) {
             throw new IndexOutOfBoundsException("The index is not correct!");
         }
     }
