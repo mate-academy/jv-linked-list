@@ -66,7 +66,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        isIndexExist(index);
         Node<T> currentNode = findNode(index);
         T previousItem = currentNode.item;
         currentNode.item = value;
@@ -112,6 +111,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNode(int index) {
+        isIndexExist(index);
         Node<T> currentNode;
         if (size / 2 >= index) {
             Node<T> previous = null;
