@@ -12,7 +12,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        if (first == null) {
+        if (size == 0) {
             first = last = new Node<>(null, value, null);
         } else {
             last.next = new Node<>(last, value, null);
@@ -23,15 +23,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (first == null) {
-            indexValidation(index);
+        if (size == index) {
             add(value);
         } else if (index == ZERO_INDEX) {
             first.prev = new Node<>(null, value, first);
             first = first.prev;
             size++;
-        } else if (index == size) {
-            add(value);
         } else {
             Node<T> movedNode = getNodeByIndex(index);
             movedNode.prev.next = new Node<>(movedNode.prev, value, movedNode);
@@ -64,7 +61,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Node<T> nodeToRemove = getNodeByIndex(index);
         unlink(nodeToRemove);
-        /*size--;*/
         return nodeToRemove.item;
     }
 
@@ -89,23 +85,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> nodeToRemove) {
-        if (nodeToRemove.equals(first)) {
-            first = first.next;
-            if (first == null) {
-                last = null;
-            } else {
-                first.prev = null;
-            }
-        } else if (nodeToRemove.equals(last)) {
-            last = last.prev;
-            if (last == null) {
-                first = null;
-            } else {
-                last.next = null;
-            }
+        Node<T> nextNode = nodeToRemove.next;
+        Node<T> previousNode = nodeToRemove.prev;
+        if (previousNode == null) {
+            first = nextNode;
         } else {
-            nodeToRemove.prev.next = nodeToRemove.next;
-            nodeToRemove.next.prev = nodeToRemove.prev;
+            previousNode.next = nextNode;
+            nodeToRemove.prev = null;
+        }
+        if (nextNode == null) {
+            last = previousNode;
+        } else {
+            nextNode.prev = previousNode;
+            nodeToRemove.next = null;
         }
         size--;
     }
@@ -115,7 +107,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return null;
         }
         Node<T> currentNode = first;
-        for (int i = 1; i < size + 1; i++) {
+        for (int i = 0; i < size; i++) {
             if ((currentNode.item == value)
                     || (currentNode.item != null && currentNode.item.equals(value))) {
                 return currentNode;
@@ -126,7 +118,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        indexValidation(index);
+        validateIndex(index);
         int iterator;
         Node<T> currentElement;
         if (index < size / 2) {
@@ -147,10 +139,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentElement;
     }
 
-    private int indexValidation(int index) {
-        if (ZERO_INDEX < index && index < size || index == 0) {
-            return index;
-        } else {
+    private void validateIndex(int index) {
+        if (index >= size || index < ZERO_INDEX) {
             throw new IndexOutOfBoundsException(String
                     .format(INDEX_OUT_OF_BOUNDS_MESSAGE, index, size));
         }
