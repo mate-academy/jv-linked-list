@@ -130,7 +130,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void throwException (int index) {
+    private void throwException(int index) {
         throw new IndexOutOfBoundsException("Index: " + index
                 + " is out of LinkedList bounds.");
     }
