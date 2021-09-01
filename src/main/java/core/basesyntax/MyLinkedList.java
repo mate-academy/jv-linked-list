@@ -65,18 +65,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> currentNode = findCurrentNode(index);
-        if (size == 1) {
-            currentNode.value = null;
-        } else if (currentNode == head || currentNode != null && currentNode.equals(head)) {
-            currentNode.next.prev = null;
+        if (currentNode.prev == null) {
             head = currentNode.next;
-        } else if (currentNode == tail || currentNode != null && currentNode.equals(tail)) {
-            currentNode.prev.next = null;
+        } else if (currentNode.next == null) {
             tail = currentNode.prev;
         } else {
             currentNode.prev.next = currentNode.next;
             currentNode.next.prev = currentNode.prev;
-            currentNode.prev = currentNode.next = null;
         }
         size--;
         return currentNode.value;
