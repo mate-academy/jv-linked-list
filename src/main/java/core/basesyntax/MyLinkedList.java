@@ -27,10 +27,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkPositionIndex(index);
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException();
+        }
         Node<T> node;
         if(size == 0){
-            node = new Node<>(tail, value, null);
+            node = new Node<>(null, value, null);
             head = node;
             tail = node;
             size++;
@@ -62,9 +64,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void addAll(List<T> list) {
         Node<T> currentNode = tail;
         Object[] objects = list.toArray();
-        ;
-
-
+        for (Object object : objects) {
+            add((T) object);
+        }
     }
 
     @Override
@@ -75,16 +77,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkPositionIndex(index);
 
         Node<T> firstNode = nodeForIndex(index);
-        Node<T> valueNode = new Node<>(firstNode.prev, value, firstNode.next);
-        firstNode = null;
-
-        return valueNode.value;
+        T oldValue = firstNode.value;
+        firstNode.value = value;
+        return oldValue;
     }
+
 
     @Override
     public T remove(int index) {
@@ -98,7 +98,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> result = head;
         for(int i = 0; i < size;i++){
-            if(result.value.equals(object)){
+            if(result.value == object || result.value.equals(object)){
+                size--;
                 unlink(result);
                 return true;
             }
@@ -118,7 +119,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkPositionIndex(int index) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
     }
@@ -148,6 +149,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> firstNode = node.prev;
         Node<T> secondNode = node.next;
         node = new Node<>(null, node.value, null);
+        if(firstNode ==null &&secondNode == null){
+            return node.value;
+        }
+        if(firstNode ==null){
+            secondNode.prev = firstNode;
+            head = secondNode;
+            return node.value;
+        }
+        if(secondNode == null){
+            firstNode.next = secondNode;
+            return node.value;
+        }
         firstNode.next = secondNode;
         secondNode.prev = firstNode;
         return node.value;
