@@ -31,24 +31,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        if (index == 0 && size > 0) {
-            Node<T> newFirstNode = new Node<>(null,value,first);
-            first.prev = newFirstNode;
-            first = newFirstNode;
-            size++;
-        } else if (index == 0 && size == 0) {
-            addFirst(value);
-        } else if (index == size) {
-            addNodeToEnd(value);
-        } else {
-            Node<T> prevNode = getNode(index - 1);
-            Node<T> currentNode = getNode(index);
-            Node<T> nextNode = getNode(index + 1);
-            Node<T> node = new Node<>(prevNode, value, currentNode);
-            prevNode.next = node;
-            nextNode.prev = node;
-            size++;
-        }
+        addWithIndex(value,index);
     }
 
     @Override
@@ -131,6 +114,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         last.next = nextNode;
         last = nextNode;
         size++;
+    }
+
+    private void addWithIndex(T value, int index) {
+        if (index == 0 && size > 0) {
+            Node<T> newFirstNode = new Node<>(null,value,first);
+            first.prev = newFirstNode;
+            first = newFirstNode;
+            size++;
+        } else if (index == 0 && size == 0) {
+            addFirst(value);
+        } else if (index == size) {
+            addNodeToEnd(value);
+        } else {
+            Node<T> prevNode = getNode(index - 1);
+            Node<T> currentNode = getNode(index);
+            Node<T> nextNode = getNode(index + 1);
+            Node<T> node = new Node<>(prevNode, value, currentNode);
+            prevNode.next = node;
+            nextNode.prev = node;
+            size++;
+        }
     }
 
     private Node<T> getNode(int index) {
