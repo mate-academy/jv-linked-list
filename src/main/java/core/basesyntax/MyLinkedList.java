@@ -11,7 +11,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private class Node<T> {
         private Node<T> previous;
         private Node<T> next;
-        private final T value;
+        private T value;
 
         private Node(Node<T> previous, T value, Node<T> next) {
             this.previous = previous;
@@ -135,24 +135,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T unlink(Node<T> node) {
-        T removedValue = null;
-        if (head == tail) {
-            removedValue = head.value;
-            head = null;
-            tail = null;
-        } else if (node.previous == null) {
-            removedValue = head.value;
-            head = head.next;
-            head.previous = null;
-        } else if (node.next == null) {
-            removedValue = tail.value;
-            tail = tail.previous;
-            tail.next = null;
+        T removedValue = node.value;
+        Node<T> prev = node.previous;
+        Node<T> next = node.next;
+        if (prev == null) {
+            head = next;
         } else {
-            removedValue = node.value;
-            node.previous.next = node.next;
-            node.next.previous = node.previous;
+            prev.next = next;
+            node.previous = null;
         }
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.previous = prev;
+            node.next = null;
+        }
+        node.value = null;
         size--;
         return removedValue;
     }
