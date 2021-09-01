@@ -23,7 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value) {
         Node<T> newNode = new Node(tail, value, null);
         if (head == null) {
-            head = tail = newNode;
+            head = newNode;
         } else {
             tail.next = newNode;
         }
