@@ -26,7 +26,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (isEmpty()) {
             first = newNode;
         } else {
-            newNode.next = null;
             newNode.prev = last;
             last.next = newNode;
         }
