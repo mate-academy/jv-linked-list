@@ -65,7 +65,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = first.next;
             size--;
             return removedItem;
-        } else if (index == (size - 1)) {
+        }
+        if (index == (size - 1)) {
             removedItem = last.item;
             last = last.prev;
             size--;
@@ -116,7 +117,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
             return;
-        } else if (index == 0) {
+        }
+        if (index == 0) {
             Node<T> newFirstNode = new Node<>(null, value, first);
             first.prev = newFirstNode;
             first = newFirstNode;
