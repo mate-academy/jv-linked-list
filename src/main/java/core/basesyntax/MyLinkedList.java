@@ -24,8 +24,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(tail, value, null);
         if (size == 0) {
             head = newNode;
-        }
-        if (size > 0) {
+        } else {
             tail.next = newNode;
         }
         tail = newNode;
@@ -143,5 +142,4 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
         return node.item;
     }
-
 }
