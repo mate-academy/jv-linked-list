@@ -45,11 +45,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> tail = getLast();
+        Node<T> tail = last;
         Node<T> newNode = new Node<>(tail, value, null);
-        setLast(newNode);
+        last = newNode;
         if (tail == null) {
-            setFirst(newNode);
+            first = newNode;
         } else {
             tail.setNext(newNode);
         }
@@ -70,7 +70,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(prevNode, value, getNodeByIndex(index));
         getNodeByIndex(index).setPrev(newNode);
         if (prevNode == null) {
-            setFirst(newNode);
+            first = newNode;
         } else {
             prevNode.setNext(newNode);
         }
@@ -106,7 +106,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> currentNode = getFirst();
+        Node<T> currentNode = first;
         for (int i = 0; i < size; i++) {
             if (currentNode.getItem() == object
                     || (currentNode.getItem() != null && currentNode.getItem().equals(object))) {
@@ -128,22 +128,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    public Node<T> getFirst() {
-        return first;
-    }
-
-    public void setFirst(Node<T> first) {
-        this.first = first;
-    }
-
-    public Node<T> getLast() {
-        return last;
-    }
-
-    public void setLast(Node<T> last) {
-        this.last = last;
-    }
-
     private void checkIndexForRemoveGetSetMethods(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index out of bonds exception for index "
@@ -154,12 +138,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNodeByIndex(int index) {
         Node<T> currentNode;
         if (index < (size >> 1)) {
-            currentNode = getFirst();
+            currentNode = first;
             for (int i = 0; i < index; i++) {
                 currentNode = currentNode.getNext();
             }
         } else {
-            currentNode = getLast();
+            currentNode = last;
             for (int i = size - 1; i > index; i--) {
                 currentNode = currentNode.getPrev();
             }
@@ -172,13 +156,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> next = nodeToUnlink.getNext();
         Node<T> prev = nodeToUnlink.getPrev();
         if (prev == null) {
-            setFirst(next);
+            first = next;
         } else {
             prev.setNext(next);
             nodeToUnlink.setPrev(null);
         }
         if (next == null) {
-            setLast(prev);
+            last = prev;
         } else {
             next.setPrev(prev);
             nodeToUnlink.setNext(null);
