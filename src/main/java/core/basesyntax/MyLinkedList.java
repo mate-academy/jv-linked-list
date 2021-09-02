@@ -3,6 +3,19 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+
+    public static class Node<E> {
+        private E item;
+        private Node<E> prev;
+        private Node<E> next;
+
+        public Node(Node<E> prev,E item, Node<E> next) {
+            this.prev = prev;
+            this.item = item;
+            this.next = next;
+        }
+    }
+
     private Node<T> tail;
     private Node<T> head;
     private int size;
@@ -24,7 +37,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexAdd(index);
+        checkIndexForAddMethod(index);
         if (index == 0) {
             if (size == 0) {
                 Node<T> firstNode = new Node<>(null, value,null);
@@ -39,7 +52,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size++;
         }
         if (index > 0 && index < size) {
-            Node<T> current = searchIndex(index);
+            Node<T> current = searchNodeByIndex(index);
             Node<T> newNode = new Node<>(current.prev, value, current);
             current.prev.next = newNode;
             current.prev = newNode;
@@ -60,7 +73,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        Node<T> current = searchIndex(index);
+        Node<T> current = searchNodeByIndex(index);
         return current.item;
     }
 
@@ -68,7 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         checkIndex(index);
         T replacedElement;
-        Node<T> current = searchIndex(index);
+        Node<T> current = searchNodeByIndex(index);
         replacedElement = current.item;
         current.item = value;
         return replacedElement;
@@ -77,7 +90,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> current = searchIndex(index);
+        Node<T> current = searchNodeByIndex(index);
         if (size == 1 && index == 0) {
             size--;
         } else if (index == 0) {
@@ -119,7 +132,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    public void checkIndexAdd(int index) {
+    public void checkIndexForAddMethod(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("IndexOutOfBoundsException");
         }
@@ -131,23 +144,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public Node<T> searchIndex(int index) {
+    public Node<T> searchNodeByIndex(int index) {
         Node<T> current = head;
         for (int i = 0; i < index; i++) {
             current = current.next;
         }
         return current;
-    }
-
-    public static class Node<E> {
-        private E item;
-        private Node<E> prev;
-        private Node<E> next;
-
-        public Node(Node<E> prev,E item, Node<E> next) {
-            this.prev = prev;
-            this.item = item;
-            this.next = next;
-        }
     }
 }
