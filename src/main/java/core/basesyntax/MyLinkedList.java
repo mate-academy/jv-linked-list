@@ -61,23 +61,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Node<T> currentNode = tail;
-        Object[] objects = list.toArray();
-        for (Object object : objects) {
-            add((T) object);
+        for (T nodeValue : list) {
+            add(nodeValue);
         }
     }
 
     @Override
     public T get(int index) {
-        checkPositionIndex(index);
         return nodeForIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkPositionIndex(index);
-
         Node<T> firstNode = nodeForIndex(index);
         T oldValue = firstNode.value;
         firstNode.value = value;
@@ -86,7 +81,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkPositionIndex(index);
         Node<T> removedNode = nodeForIndex(index);
         size--;
         return unlink(removedNode);
@@ -123,7 +117,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> nodeForIndex(int index) {
-
+        checkPositionIndex(index);
         Node<T> newNode = head;
         for (int i = 0; i < index; i++) {
             newNode = newNode.next;
