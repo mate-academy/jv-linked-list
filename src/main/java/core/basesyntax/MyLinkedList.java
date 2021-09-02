@@ -34,23 +34,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void addToTheBegining(T value) {
-        Node<T> newNode = new Node<>(null, value, head);
-        head.prev = newNode;
-        head = newNode;
-    }
-
-    private void addToTheMiddle(T value, int index) {
-        Node<T> current = head;
-        int count = 0;
-        while (count++ != index) {
-            current = current.next;
-        }
-        Node<T> newNode = new Node<>(current.prev, value, current);
-        newNode.prev.next = newNode;
-        newNode.next.prev = newNode;
-    }
-
     @Override
     public void addAll(List<T> list) {
         for (T node : list) {
@@ -112,6 +95,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size <= 0;
+    }
+
+    private void addToTheBegining(T value) {
+        Node<T> newNode = new Node<>(null, value, head);
+        head.prev = newNode;
+        head = newNode;
+    }
+
+    private void addToTheMiddle(T value, int index) {
+        Node<T> current = getNode(index);
+        Node<T> newNode = new Node<>(current.prev, value, current);
+        newNode.prev.next = newNode;
+        newNode.next.prev = newNode;
     }
 
     private Node<T> getNode(int index) {
