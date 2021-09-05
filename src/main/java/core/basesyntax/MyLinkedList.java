@@ -38,8 +38,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 Node<T> currentNode = new Node<>(null, value, null);
                 toLink(indexNode.prev, currentNode);
                 toLink(currentNode, indexNode);
-            } else {
-                throw new RuntimeException("Wrong index: " + index + " for size: " + size);
             }
         }
         add(value);
