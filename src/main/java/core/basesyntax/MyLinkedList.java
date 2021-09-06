@@ -54,9 +54,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> node = getNode(index);
-        T oldValue = node.value;
-        node.value = value;
+        Node<T> indexNode = getNode(index);
+        T oldValue = indexNode.value;
+        indexNode.value = value;
         return oldValue;
     }
 
@@ -129,7 +129,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNode(T value) {
         Node<T> currentNode = head;
         while (currentNode.next != null) {
-            if (Objects.equals(currentNode.value, value)) {
+            if (currentNode.value == null ? value == null : currentNode.value.equals(value)) {
                 return currentNode;
             }
             currentNode = currentNode.next;
