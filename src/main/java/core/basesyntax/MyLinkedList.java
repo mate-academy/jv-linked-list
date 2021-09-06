@@ -4,14 +4,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final int INIT_SIZE = 0;
     private Node<T> head;
     private Node<T> tail;
     private int size;
-
-    MyLinkedList() {
-        size = INIT_SIZE;
-    }
 
     @Override
     public void add(T value) {
@@ -31,13 +26,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             checkIndex(index);
             if (index == 0) {
                 Node<T> newHead = new Node<>(null, value, head);
-                toLink(newHead, head);
+                linkNodes(newHead, head);
                 head = newHead;
             } else if (index > 0 && index < size) {
                 Node<T> indexNode = getNode(index);
                 Node<T> currentNode = new Node<>(null, value, null);
-                toLink(indexNode.prev, currentNode);
-                toLink(currentNode, indexNode);
+                linkNodes(indexNode.prev, currentNode);
+                linkNodes(currentNode, indexNode);
             }
         }
         add(value);
@@ -70,7 +65,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Node<T> indexNode = getNode(index);
         if (indexNode != null) {
-            toLink(indexNode.prev, indexNode.next);
+            linkNodes(indexNode.prev, indexNode.next);
             size--;
             return indexNode.value;
         }
@@ -81,7 +76,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> node = getNode(object);
         if (node != null) {
-            toLink(node.prev, node.next);
+            linkNodes(node.prev, node.next);
             size--;
             return true;
         }
@@ -142,7 +137,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode.value.equals(value) ? currentNode : null;
     }
 
-    private void toLink(Node<T> current, Node<T> next) {
+    private void linkNodes(Node<T> current, Node<T> next) {
         if (current != null) {
             current.next = next;
         } else {
