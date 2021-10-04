@@ -63,21 +63,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index > size - 1 || index < 0) {
-            throw new IndexOutOfBoundsException("Wrong index to get value!");
-        }
-        Node<T> curNode;
-        if (index < size / 2) {
-            curNode = head;
-            for (int i = 0; i < index; i++) {
-                curNode = curNode.next;
-            }
-        } else {
-            curNode = tail;
-            for (int i = 0; i < size - 1 - index; i++) {
-                curNode = curNode.prev;
-            }
-        }
+        Node<T> curNode = getNode(index);
         return curNode.item;
     }
 
