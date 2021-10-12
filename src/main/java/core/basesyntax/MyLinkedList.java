@@ -24,18 +24,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(null, value, null);
         if (size == 0) {
             head = newNode;
-            tail = newNode;
         } else {
             newNode.prev = tail;
             tail.next = newNode;
-            tail = newNode;
         }
+        tail = newNode;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
+        checkIndexOutOfBound(index);
         Node<T> newNode = new Node<>(null, value, null);
         if (size == 0 || size == index) {
             add(value);
@@ -62,15 +61,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-        checkIndexEqualSize(index);
+        checkIndexOutOfBoundAndEqualSize(index);
         return findOnIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
-        checkIndexEqualSize(index);
+        checkIndexOutOfBoundAndEqualSize(index);
         Node<T> currentNode = head;
         for (int i = 0; i < index; i++) {
             currentNode = currentNode.next;
@@ -82,8 +79,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        checkIndexEqualSize(index);
+        checkIndexOutOfBoundAndEqualSize(index);
         return unlink(findOnIndex(index));
     }
 
@@ -110,14 +106,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkIndex(int index) {
+    private void checkIndexOutOfBound(int index) {
         if (index < 0 || index > size) {
             throw new ArrayIndexOutOfBoundsException();
         }
     }
 
-    private void checkIndexEqualSize(int index) {
-        if (index == size) {
+    private void checkIndexOutOfBoundAndEqualSize(int index) {
+        if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
     }
