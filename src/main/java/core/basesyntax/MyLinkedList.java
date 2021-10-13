@@ -43,7 +43,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             Node<T> node = new Node<>(null, value, null);
             Node<T> booferNode = getNodeByIndex(index);
-            Node<T> prevNode = booferNode.prev;
             if (index == 0) {
                 head.prev = node;
                 node.next = head;
@@ -51,8 +50,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             } else {
                 node.prev = booferNode.prev;
                 node.next = booferNode;
+                booferNode.prev.next = node;
                 booferNode.prev = node;
-                prevNode.next = node;
+
             }
             size++;
         }
