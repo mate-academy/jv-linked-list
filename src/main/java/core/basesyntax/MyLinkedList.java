@@ -60,17 +60,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Can't GET element by that index");
-        }
+        checkIndex(index, "get");
         return findNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Can't SET element by that index");
-        }
+        checkIndex(index, "set");
         Node<T> nodeToSet = findNodeByIndex(index);
         T oldValue = nodeToSet.value;
         nodeToSet.value = value;
@@ -79,9 +75,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Can't REMOVE element by that index");
-        }
+        checkIndex(index, "remove");
         if (isEmpty()) {
             return null;
         }
@@ -152,5 +146,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return soughtNode;
+    }
+
+    private void checkIndex(int index, String operationType) throws IndexOutOfBoundsException {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Can't " + operationType
+                    + " element by that index");
+        }
     }
 }
