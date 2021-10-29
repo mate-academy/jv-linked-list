@@ -42,9 +42,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == 0) {
             size++;
             first = new Node<>(null, value, first);
-        } else if (isIndexValid(index)) {
+        } else {
             size++;
-            Node<T> newNextNode = findNodeNyIndex(index + 1);
+            Node<T> newNextNode = findNodeByIndex(index + 1);
             Node<T> newPrevNode = newNextNode.prev;
             Node<T> newNode = new Node<>(newPrevNode, value, newNextNode);
             newNextNode.prev = newNode;
@@ -61,18 +61,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index == size || !isIndexValid(index)) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-        return findNodeNyIndex(index).item;
+        return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index == size || !isIndexValid(index)) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-        Node<T> currentNode = findNodeNyIndex(index);
+        Node<T> currentNode = findNodeByIndex(index);
         T oldValue = currentNode.item;
         currentNode.item = value;
         return oldValue;
@@ -80,10 +74,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index == size || !isIndexValid(index)) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-        return unlink(findNodeNyIndex(index));
+        return unlink(findNodeByIndex(index));
     }
 
     @Override
@@ -115,8 +106,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return true;
     }
 
-    private Node<T> findNodeNyIndex(int index) {
-        if (!isIndexValid(index)) {
+    private Node<T> findNodeByIndex(int index) {
+        if (index == size || !isIndexValid(index)) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
         Node<T> currentNode;
