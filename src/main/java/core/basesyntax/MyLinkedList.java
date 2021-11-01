@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    private static class Node<T> {
-        private T value;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         if (isEmpty()) {
@@ -43,10 +31,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = newNode;
             size++;
         } else {
-            Node<T> newNode = new Node<>(getNodeByIndex(index).prev, value, getNodeByIndex(index));
-            getNodeByIndex(index).prev.next = newNode;
-            getNodeByIndex(index).prev = newNode;
+            Node<T> indexNode = getNodeByIndex(index);
+            Node<T> newNode = new Node<>(indexNode.prev, value, indexNode);
+            indexNode.prev.next = newNode;
+            indexNode.prev = newNode;
             size++;
+
         }
     }
 
@@ -75,19 +65,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index, size);
-        if (isEmpty()) {
-            return null;
-        }
         Node<T> deletedNode = getNodeByIndex(index);
-        unLink(getNodeByIndex(index));
+        unLink(deletedNode);
         return deletedNode.value;
     }
 
     @Override
     public boolean remove(T object) {
-        if (isEmpty()) {
-            return false;
-        }
         Node<T> deletedNode;
         for (deletedNode = head; deletedNode != null; deletedNode = deletedNode.next) {
             if (object == deletedNode.value
@@ -145,7 +129,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index, int size) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " out of list length " + size);
+            throw new IndexOutOfBoundsException("Index " + index + " out off list length " + size);
+        }
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
         }
     }
 }
