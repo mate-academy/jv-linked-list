@@ -23,16 +23,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    public void addIfZeroSize(T value) {
+        Node node = new Node(null, value, null);
+        head = node;
+        tail = node;
+    }
+
+    public void addToTail(T value) {
+        Node node = new Node(tail, value, null);
+        tail.next = node;
+        tail = node;
+    }
+
     @Override
     public void add(T value) {
-        if (head == null) {
-            Node node = new Node(null, value, null);
-            head = node;
-            tail = head;
+        if (size == 0) {
+            addIfZeroSize(value);
         } else {
-            Node node = new Node(tail, value, null);
-            tail.next = node;
-            tail = node;
+            addToTail(value);
         }
         size++;
     }
@@ -41,17 +49,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         checkIndexIfAdd(index);
         if (size == 0 && index == 0) {
-            Node node = new Node(null, value, null);
-            tail = node;
-            head = node;
+            addIfZeroSize(value);
         } else if (size > 0 && index == 0) {
             Node node = new Node(null, value, head);
             head.prev = node;
             head = node;
         } else if (size > 0 && index == size) {
-            Node node = new Node(tail, value, null);
-            tail.next = node;
-            tail = node;
+            addToTail(value);
         } else {
             Node currentNode = indexIterator(index);
             Node node = new Node(currentNode.prev, value, currentNode);
@@ -124,7 +128,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (currentNode.next != null && equalityCheck(currentNode, object)) {
                 unlinkNode(currentNode);
                 return true;
-            } else if (currentNode == null && equalityCheck(currentNode, object)) {
+            } else if (currentNode.next == null && equalityCheck(currentNode, object)) {
                 unlinkNodeFromTail(currentNode);
                 return true;
             }
