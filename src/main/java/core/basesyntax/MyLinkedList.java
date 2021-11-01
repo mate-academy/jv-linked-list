@@ -12,9 +12,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> prev;
         private Node<T> next;
 
-        Node(Node<T> prev, T x, Node<T> next) {
+        Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
-            value = x;
+            this.value = value;
             this.next = next;
         }
     }
@@ -53,8 +53,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T addedNode : list) {
+            add(addedNode);
         }
     }
 
@@ -80,7 +80,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return null;
         }
         Node<T> nodeToRemove = findNodeByIndex(index);
-        unLink(findNodeByIndex(index));
+        unLink(nodeToRemove);
         return nodeToRemove.value;
     }
 
