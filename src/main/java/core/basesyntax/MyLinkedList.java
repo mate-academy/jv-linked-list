@@ -23,13 +23,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public void addIfZeroSize(T value) {
+    private void addIfZeroSize(T value) {
         Node node = new Node(null, value, null);
         head = node;
         tail = node;
     }
 
-    public void addToTail(T value) {
+    private void addToTail(T value) {
         Node node = new Node(tail, value, null);
         tail.next = node;
         tail = node;
