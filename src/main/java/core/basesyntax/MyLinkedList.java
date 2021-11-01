@@ -32,13 +32,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("This index isn't valid");
-        }
         if (index == size) {
             add(value);
             return;
         }
+        checkIndex(index);
         if (index == 0) {
             Node<T> addNode = new Node<T>(null, value, head);
             head = addNode;
@@ -107,23 +105,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private T unlink(Node<T> node) {
         Node<T> previous;
         Node<T> next;
-        if (node.next == null && node.prev == null) {
-            size--;
-        } else if (node.next == null) {
+        if (node.next == null) {
             tail = node.prev;
             tail.next = null;
-            size--;
         } else if (node.prev == null) {
             head = node.next;
             head.prev = null;
-            size--;
         } else {
             previous = node.prev;
             next = node.next;
             previous.next = next;
             next.prev = previous;
-            size--;
         }
+        size--;
         return node.value;
     }
 
