@@ -154,13 +154,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkValidIndexForGet(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Can't get element by index.");
+            throw new IndexOutOfBoundsException(
+                    String.format("Can't get element. Index: %d. Size: %d.", index, size));
         }
     }
 
     private void checkValidIndexForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Can't add element by index.");
+            throw new IndexOutOfBoundsException(
+                    String.format("Can't add element. Index: %d. Size: %d.", index, size));
         }
     }
 
