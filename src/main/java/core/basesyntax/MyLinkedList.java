@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size = 0;
@@ -70,9 +69,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> node = getNodeByIndex(index);
-        T value = node.item;
+        T oldValue = node.item;
         unlink(node);
-        return value;
+        return oldValue;
     }
 
     @Override
@@ -98,12 +97,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private static class Node<T> {
+    private class Node<T> {
         private T item;
         private Node<T> next;
         private Node<T> prev;
 
-        Node(MyLinkedList.Node<T> prev, T element, MyLinkedList.Node<T> next) {
+        Node(Node<T> prev, T element, Node<T> next) {
             this.item = element;
             this.next = next;
             this.prev = prev;
@@ -129,9 +128,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException();
-        }
+        indexCheck(index);
         if (index == 0) {
             return firstNode;
         }
@@ -158,11 +155,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean isItemEquals(T firstItem, T secondItem) {
-        return Objects.equals(firstItem, secondItem);
+        return (firstItem == secondItem) || (firstItem != null && firstItem.equals(secondItem));
     }
 
     private void indexOutOfBoundCheck(int index) {
         if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException();
+        }
+    }
+
+    private void indexCheck(int index) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
     }
