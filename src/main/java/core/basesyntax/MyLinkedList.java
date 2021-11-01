@@ -7,7 +7,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    private class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node<T> prev;
         private Node<T> next;
@@ -126,6 +126,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unLink(Node<T> node) {
+        Node<T> nextNode = node.next;
+        Node<T> prevNode = node.prev;
         if (size == 1) {
             tail = head = null;
         } else if (node.next == null) {
@@ -135,8 +137,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head.next.prev = null;
             head = head.next;
         } else {
-            node.prev.next = node.next;
-            node.next.prev = node.prev;
+            prevNode.next = nextNode;
+            nextNode.prev = prevNode;
         }
         size--;
     }
