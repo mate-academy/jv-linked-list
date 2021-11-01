@@ -129,7 +129,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index, int size) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " out off list length " + size);
+            throw new IndexOutOfBoundsException("Index " + index + " out of list length " + size);
         }
     }
 
