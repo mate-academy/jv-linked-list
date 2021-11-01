@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
@@ -67,7 +66,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> currentNode = first;
         while (currentNode != null) {
-            if (Objects.equals(currentNode.value, object)) {
+            if (currentNode.value == object
+                    || currentNode.value != null
+                    && currentNode.value.equals(object)) {
                 unlink(currentNode);
                 return true;
             }
