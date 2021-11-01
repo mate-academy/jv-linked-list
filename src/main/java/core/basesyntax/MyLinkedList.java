@@ -3,18 +3,16 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> firstNode;
     private Node<T> lastNode;
 
     @Override
     public void add(T value) {
-        Node<T> node;
+        Node<T> node = new Node<>(null, value, null);
         if (size == 0) {
-            node = new Node<>(null, value, null);
             firstNode = node;
         } else {
-            node = new Node<>(null, value, null);
             lastNode.next = node;
             node.prev = lastNode;
         }
