@@ -3,8 +3,8 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node<T> head;
-    private Node<T> tail;
+    private Node head;
+    private Node tail;
     private int size;
 
     {
@@ -13,10 +13,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private static class Node<T> {
         private T item;
-        private Node<T> next;
-        private Node<T> prev;
+        private Node next;
+        private Node prev;
 
-        Node(Node<T> prev, T element, Node<T> next) {
+        Node(Node prev, T element, Node next) {
             this.item = element;
             this.next = next;
             this.prev = prev;
@@ -26,11 +26,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (head == null) {
-            Node node = new Node<>(null, value, null);
+            Node node = new Node(null, value, null);
             head = node;
             tail = head;
         } else {
-            Node node = new Node<>(tail, value, null);
+            Node node = new Node(tail, value, null);
             tail.next = node;
             tail = node;
         }
@@ -145,13 +145,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node indexIterator(int index) {
         if (index < size / 2) {
-            Node<T> currentNode = head;
+            Node currentNode = head;
             for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
             }
             return currentNode;
         }
-        Node<T> currentNode = tail;
+        Node currentNode = tail;
         for (int i = size - 1; i > index; i--) {
             currentNode = currentNode.prev;
         }
