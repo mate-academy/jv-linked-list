@@ -12,7 +12,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> prev;
         private Node<T> next;
 
-        public Node(Node<T> prev, T value, Node<T> next) {
+        private Node(Node<T> prev, T value, Node<T> next) {
             this.value = value;
             this.prev = prev;
             this.next = next;
@@ -34,20 +34,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("This index isn't valid");
-        } else if (index == size) {
+        }
+        if (index == size) {
             add(value);
-        } else if (index == 0) {
+            return;
+        }
+        if (index == 0) {
             Node<T> addNode = new Node<T>(null, value, head);
             head = addNode;
-            size++;
         } else {
             Node<T> prevNode = searchByIndex(index).prev;
             Node<T> nextNode = prevNode.next;
             Node<T> addNode = new Node<>(prevNode, value, nextNode);
             nextNode.prev = addNode;
             prevNode.next = addNode;
-            size++;
         }
+        size++;
     }
 
     @Override
@@ -75,8 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> nodeToRemove = searchByIndex(index);
-        return unlink(nodeToRemove);
+       return unlink(searchByIndex(index));
     }
 
     @Override
@@ -103,7 +104,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    public T unlink(Node<T> node) {
+    private T unlink(Node<T> node) {
         Node<T> previous;
         Node<T> next;
         if (node.next == null && node.prev == null) {
@@ -132,8 +133,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public Node<T> searchByIndex(int index) {
-        checkIndex(index);
+    private Node<T> searchByIndex(int index) {
         Node<T> searchNode;
         int count;
         if (index > size / 2) {
