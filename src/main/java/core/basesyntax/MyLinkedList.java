@@ -59,50 +59,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> currentNode = getElementByIndex(index);
-        Node<T> nextNode = currentNode.next;
-        Node<T> previousNode = currentNode.previous;
-        if (previousNode == null) {
-            first = nextNode;
-        } else {
-            previousNode.next = nextNode;
-            currentNode.previous = null;
-        }
-        if (nextNode == null) {
-            last = previousNode;
-        } else {
-            nextNode.previous = previousNode;
-            currentNode.next = null;
-        }
-        T result = currentNode.value;
-        size--;
-        return result;
+        unlink(currentNode);
+        return currentNode.value;
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> thisNode = first;
-        while (thisNode != null) {
-            if (Objects.equals(thisNode.value, object)) {
-                Node<T> currentNode = thisNode;
-                Node<T> nextNode = currentNode.next;
-                Node<T> previousNode = currentNode.previous;
-                if (previousNode == null) {
-                    first = nextNode;
-                } else {
-                    previousNode.next = nextNode;
-                    currentNode.previous = null;
-                }
-                if (nextNode == null) {
-                    last = previousNode;
-                } else {
-                    nextNode.previous = previousNode;
-                    currentNode.next = null;
-                }
-                T result = currentNode.value;
-                size--;
+        Node<T> currentNode = first;
+        while (currentNode != null) {
+            if (Objects.equals(currentNode.value, object)) {
+                unlink(currentNode);
                 return true;
             }
-            thisNode = thisNode.next;
+            currentNode = currentNode.next;
         }
         return false;
     }
@@ -171,5 +140,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         nextNode.previous = newNode;
         previousNode.next = newNode;
         size++;
+    }
+
+    private void unlink(Node<T> node) {
+        if (size == 1) {
+            first = null;
+            last = null;
+        } else {
+            if (node.equals(first)) {
+                node.next.previous = null;
+                first = node.next;
+            } else if (node.equals(last)) {
+                node.previous.next = null;
+                last = node.previous;
+            } else {
+                node.previous.next = node.next;
+                node.next.previous = node.previous;
+            }
+        }
+        size--;
     }
 }
