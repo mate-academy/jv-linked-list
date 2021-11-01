@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    class Node<E> {
-        private E value;
-        private Node<E> prev;
-        private Node<E> next;
-
-        public Node(E value, Node<E> prev, Node<E> next) {
-            this.value = value;
-            this.prev = prev;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         addLast(value);
@@ -173,6 +161,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void checkValidIndexForAdd(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Can't add element by index.");
+        }
+    }
+
+    private static class Node<E> {
+        private E value;
+        private Node<E> prev;
+        private Node<E> next;
+
+        public Node(E value, Node<E> prev, Node<E> next) {
+            this.value = value;
+            this.prev = prev;
+            this.next = next;
         }
     }
 }
