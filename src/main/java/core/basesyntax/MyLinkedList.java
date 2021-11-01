@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> head;
     private Node<T> tail;
 
@@ -34,8 +34,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Can't ADD element by that index");
-        } else if (index == size) {
+            throw new IndexOutOfBoundsException("Can't ADD element by index " + index);
+        }
+        if (index == size) {
             add(value);
         } else if (index == 0) {
             Node<T> addingNode = new Node<T>(null, value, head);
@@ -76,9 +77,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index, "remove");
-        if (isEmpty()) {
-            return null;
-        }
         Node<T> nodeToRemove = findNodeByIndex(index);
         unLink(nodeToRemove);
         return nodeToRemove.value;
@@ -86,9 +84,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (isEmpty()) {
-            return false;
-        }
         Node<T> nodeToRemove;
         for (nodeToRemove = head; nodeToRemove != null; nodeToRemove = nodeToRemove.next) {
             if (object == nodeToRemove.value
@@ -114,22 +109,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> previousNode;
         Node<T> nextNode;
         if (node.prev == null && node.next == null) {
-            size--;
-        } else if (node.prev == null) {
+        }
+        else if (node.prev == null) {
             head = node.next;
             head.prev = null;
-            size--;
         } else if (node.next == null) {
             tail = node.prev;
             tail.next = null;
-            size--;
         } else {
             previousNode = node.prev;
             nextNode = node.next;
             previousNode.next = nextNode;
             nextNode.prev = previousNode;
-            size--;
         }
+        size--;
     }
 
     private Node<T> findNodeByIndex(int index) {
@@ -151,7 +144,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void checkIndex(int index, String operationType) throws IndexOutOfBoundsException {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Can't " + operationType
-                    + " element by that index");
+                    + " element index " + index);
         }
     }
 }
