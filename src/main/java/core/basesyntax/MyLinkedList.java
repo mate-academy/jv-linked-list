@@ -111,7 +111,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (node.prev == null && node.next == null) {
             size--;
             return;
-        } else if (node.prev == null) {
+        }
+        if (node.prev == null) {
             head = node.next;
             head.prev = null;
         } else if (node.next == null) {
