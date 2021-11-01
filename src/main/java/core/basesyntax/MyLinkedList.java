@@ -77,7 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-       return unlink(searchByIndex(index));
+        return unlink(searchByIndex(index));
     }
 
     @Override
