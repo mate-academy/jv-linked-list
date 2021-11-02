@@ -37,13 +37,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
 
-        Node<T> node = new Node<T>(tail, value, null);
-        chekForTrueIndex(index);
-        if(index == size - 1) {
-            createNewNode(value);
-        } else {
-            getNodefromIndex(index);
-        }
         }
 
     @Override
