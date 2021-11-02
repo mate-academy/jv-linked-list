@@ -53,30 +53,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         checkElementIndex(index);
         Node<T> nodeOnIndex = searchNode(index);
-        T previousItem = nodeOnIndex.item;
+        T deletedItem = nodeOnIndex.item;
         nodeOnIndex.item = value;
-        return previousItem;
+        return deletedItem;
     }
 
     @Override
     public T remove(int index) {
         checkElementIndex(index);
         Node<T> targetNode = searchNode(index);
-        T previousItem = targetNode.item;
+        T deletedItem = targetNode.item;
         unlink(targetNode);
-        return previousItem;
+        return deletedItem;
     }
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> i = head; i != null; i = i.next) {
-                if (i.item == null) {
-                    unlink(i);
-                    return true;
-                }
-            }
-        }
         for (Node<T> i = head; i != null; i = i.next) {
             if (i.item == object || i.item != null && i.item.equals(object)) {
                 unlink(i);
