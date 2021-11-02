@@ -3,36 +3,20 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node head;
-    private Node tail;
+    private Node<T> head;
+    private Node<T> tail;
     private int size;
-
-    {
-        size = 0;
-    }
 
     private static class Node<T> {
         private T item;
-        private Node next;
-        private Node prev;
+        private Node<T> next;
+        private Node<T> prev;
 
-        Node(Node prev, T element, Node next) {
+        Node(Node<T> prev, T element, Node<T> next) {
             this.item = element;
             this.next = next;
             this.prev = prev;
         }
-    }
-
-    private void addIfZeroSize(T value) {
-        Node node = new Node(null, value, null);
-        head = node;
-        tail = node;
-    }
-
-    private void addToTail(T value) {
-        Node node = new Node(tail, value, null);
-        tail.next = node;
-        tail = node;
     }
 
     @Override
@@ -48,17 +32,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndexIfAdd(index);
-        if (size == 0 && index == 0) {
+        if (size == 0) {
             addIfZeroSize(value);
-        } else if (size > 0 && index == 0) {
-            Node node = new Node(null, value, head);
+        } else if (index == 0) {
+            Node<T> node = new Node<>(null, value, head);
             head.prev = node;
             head = node;
-        } else if (size > 0 && index == size) {
+        } else if (index == size) {
             addToTail(value);
         } else {
-            Node currentNode = indexIterator(index);
-            Node node = new Node(currentNode.prev, value, currentNode);
+            Node<T> currentNode = getNodeByIndex(index);
+            Node<T> node = new Node<>(currentNode.prev, value, currentNode);
             currentNode.prev.next = node;
             currentNode.prev = node;
         }
@@ -75,13 +59,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) indexIterator(index).item;
+        return (T) getNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node currentNode = indexIterator(index);
+        Node<T> currentNode = getNodeByIndex(index);
         T tempValue = (T) currentNode.item;
         currentNode.item = value;
         return tempValue;
@@ -90,42 +74,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        if (size == 1) {
-            Node currentNode = head;
-            unlinkNode(currentNode, "zero_only");
-            return (T) currentNode.item;
-        }
-        if (size > 1 && index == 0) {
-            Node currentNode = head;
-            unlinkNode(currentNode, "head");
-            return (T) currentNode.item;
-        } else if (size > 1 && index == size - 1) {
-            Node currentNode = tail;
-            unlinkNode(currentNode, "tail");
-            return (T) currentNode.item;
-        }
-        Node currentNode = indexIterator(index);
-        unlinkNode(currentNode, "middle");
+        Node<T> currentNode = getNodeByIndex(index);
+        unlinkNode(currentNode);
         return (T) currentNode.item;
     }
 
     @Override
     public boolean remove(T object) {
-        Node currentNode = head;
-        if (size == 1 && equalityCheck(currentNode, object)) {
-            unlinkNode(currentNode, "zero_only");
-            return true;
-        }
-        if (size > 1 && equalityCheck(currentNode, object)) {
-            unlinkNode(currentNode, "head");
-            return true;
-        }
+        Node<T> currentNode = head;
         while (currentNode != null) {
-            if (currentNode.next != null && equalityCheck(currentNode, object)) {
-                unlinkNode(currentNode, "middle");
-                return true;
-            } else if (currentNode.next == null && equalityCheck(currentNode, object)) {
-                unlinkNode(currentNode, "tail");
+            if (equalityCheck(currentNode, object)) {
+                unlinkNode(currentNode);
                 return true;
             }
             currentNode = currentNode.next;
@@ -143,15 +102,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return (size == 0);
     }
 
-    private Node indexIterator(int index) {
+    private Node<T> getNodeByIndex(int index) {
         if (index < size / 2) {
-            Node currentNode = head;
+            Node<T> currentNode = head;
             for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
             }
             return currentNode;
         }
-        Node currentNode = tail;
+        Node<T> currentNode = tail;
         for (int i = size - 1; i > index; i--) {
             currentNode = currentNode.prev;
         }
@@ -170,30 +129,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void unlinkNode(Node node, String nodePlace) {
-        switch (nodePlace) {
-            case "zero_only" :
-                tail = null;
-                head = null;
-                break;
-            case "head" :
-                node.next.prev = null;
-                head = node.next;
-                break;
-            case "tail" :
-                node.prev.next = null;
-                tail = node.prev;
-                break;
-            case "middle" :
-            default :
-                node.prev.next = node.next;
-                node.next.prev = node.prev;
+    private void unlinkNode(Node<T> node) {
+        if (node.prev == null && node.next == null) {
+            tail = null;
+            head = null;
+        } else if (node.prev == null) {
+            node.next.prev = null;
+            head = node.next;
+        } else if (node.next == null) {
+            node.prev.next = null;
+            tail = node.prev;
+        } else {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
         }
         size--;
     }
 
-    private boolean equalityCheck(Node node, T object) {
+    private boolean equalityCheck(Node<T> node, T object) {
         return (node.item == object
                 || object != null && node.item.equals(object));
+    }
+
+    private void addIfZeroSize(T value) {
+        Node<T> node = new Node<>(null, value, null);
+        head = node;
+        tail = node;
+    }
+
+    private void addToTail(T value) {
+        Node<T> node = new Node<>(tail, value, null);
+        tail.next = node;
+        tail = node;
     }
 }
