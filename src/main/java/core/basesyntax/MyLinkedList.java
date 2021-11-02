@@ -3,21 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node<T> head;
-    private Node<T> tail;
     private int size;
-
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
+    private Node<T> tail;
+    private Node<T> head;
 
     @Override
     public void add(T value) {
@@ -57,7 +45,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         for (T value : list) {
-            System.out.println(value.toString());
             add(value);
         }
     }
@@ -165,6 +152,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void indexCheck(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
+        }
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
         }
     }
 }
