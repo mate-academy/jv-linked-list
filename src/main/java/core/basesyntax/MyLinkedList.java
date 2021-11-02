@@ -76,22 +76,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> current = search(index);
-        Node<T> currentNext = current.next;
-        Node<T> currentPrev = current.prev;
-        unlink(currentPrev, currentNext, index);
-        return current.value;
+        return unlink(search(index));
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> current = head;
         for (int i = 0; i < size; i++) {
-            if (current.value == object || object != null
+            if (object == current.value || object != null
                     && object.equals(current.value)) {
-                Node<T> currentNext = current.next;
-                Node<T> currentPrev = current.prev;
-                unlink(currentPrev, currentNext, i);
+                unlink(current);
                 return true;
             }
             current = current.next;
@@ -110,7 +104,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndex(int index) {
-        if (index >= size && size != 0 || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Index: " + index + " out of bounds");
         }
     }
@@ -132,19 +126,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private void unlink(Node<T> currentPrev, Node<T> currentNext, int index) {
-        if (index == 0) {
-            head = currentNext;
-        }
-        if (index == size - 1) {
-            tail = currentPrev;
-        }
+    private T unlink(Node<T> current) {
+        Node<T> currentNext = current.next;
+        Node<T> currentPrev = current.prev;
         if (currentPrev != null) {
             currentPrev.next = currentNext;
+            current.prev = null;
+        } else {
+            head = currentNext;
         }
         if (currentNext != null) {
             currentNext.prev = currentPrev;
+            current.next = null;
+        } else {
+            tail = currentPrev;
         }
         size--;
+        return current.value;
     }
 }
