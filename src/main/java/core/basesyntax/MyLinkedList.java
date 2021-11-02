@@ -8,26 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
 
-    private static class Node<E> {
-        private E item;
-        private Node<E> next;
-        private Node<E> prev;
-
-        Node(Node<E> prev, E element, Node<E> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-
-        public E getItem() {
-            return item;
-        }
-
-        public void setItem(E value) {
-            item = value;
-        }
-    }
-
     @Override
     public void add(T value) {
         if (size == 0) {
@@ -78,7 +58,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             searchElement = searchElement.next;
         }
-        return searchElement.getItem();
+        return searchElement.item;
     }
 
     @Override
@@ -88,7 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         Node<T> searchNode = getNodeByIndex(index);
         T oldValue = searchNode.item;
-        searchNode.setItem(value);
+        searchNode.item = value;
         return oldValue;
     }
 
@@ -96,17 +76,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> nodeByIndex = getNodeByIndex(index);
-        removeNode(nodeByIndex);
-        return nodeByIndex.getItem();
+        unlink(nodeByIndex);
+        return nodeByIndex.item;
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> searchNode = first;
         while (searchNode != null) {
-            T item = searchNode.getItem();
+            T item = searchNode.item;
             if (Objects.equals(item, object)) {
-                removeNode(searchNode);
+                unlink(searchNode);
                 return true;
             }
             searchNode = searchNode.next;
