@@ -120,9 +120,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeByValue(T value) {
         for (Node<T> currentNode = head; currentNode != null; currentNode = currentNode.next) {
-            if (currentNode != null
-                    && currentNode.value == value
-                    || currentNode.value.equals(value)) {
+            if (currentNode.value == value
+                    || currentNode != null && currentNode.value.equals(value)) {
                 return currentNode;
             }
         }
