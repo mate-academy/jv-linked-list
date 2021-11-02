@@ -45,7 +45,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkValidIndexForGet(index);
-        checkValidIndexForGet(index);
         Node<T> currentNode = getNodeByIndex(index);
         T oldValue = currentNode.value;
         currentNode.value = value;
@@ -120,17 +119,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByValue(T value) {
-        if (value == null) {
-            for (Node<T> currentNode = head; currentNode != null; currentNode = currentNode.next) {
-                if (currentNode.value == null) {
-                    return currentNode;
-                }
-            }
-        } else {
-            for (Node<T> currentNode = head; currentNode != null; currentNode = currentNode.next) {
-                if (currentNode.value.equals(value)) {
-                    return currentNode;
-                }
+        for (Node<T> currentNode = head; currentNode != null; currentNode = currentNode.next) {
+            if (currentNode != null
+                    && currentNode.value == value
+                    || currentNode.value.equals(value)) {
+                return currentNode;
             }
         }
         return null;
