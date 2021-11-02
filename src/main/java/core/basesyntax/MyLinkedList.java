@@ -49,13 +49,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkPositionIndex(index);
         return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkPositionIndex(index);
         Node<T> rewrite = findNodeByIndex(index);
         T oldValue = rewrite.item;
         rewrite.item = value;
@@ -64,7 +62,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkPositionIndex(index);
         return removeByObject(findNodeByIndex(index));
     }
 
@@ -90,6 +87,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
+        if (!(index >= 0 && index < size)) {
+            throw new IndexOutOfBoundsException("Invalid index");
+        }
         if (index < (size >> 1)) {
             Node<T> nodeByIndex = first;
             for (int i = 0; i < index; i++) {
@@ -102,12 +102,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 nodeByIndex = nodeByIndex.prev;
             }
             return nodeByIndex;
-        }
-    }
-
-    private void checkPositionIndex(int index) {
-        if (!(index >= 0 && index < size)) {
-            throw new IndexOutOfBoundsException("Invalid index");
         }
     }
 
