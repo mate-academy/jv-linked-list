@@ -131,7 +131,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T unlink(Node<T> node) {
-        T element = node.item;
+        final T element = node.item;
         Node<T> next = node.next;
         MyLinkedList.Node<T> prev = node.prev;
         if (prev == null) {
