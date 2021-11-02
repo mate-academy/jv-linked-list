@@ -104,6 +104,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private static class Node<E> {
+        private E item;
+        private Node<E> next;
+        private Node<E> prev;
+
+        Node(Node<E> prev, E element, Node<E> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+
     private Node<T> getNodeByIndex(int index) {
         checkIndex(index);
         Node searchNode = first;
@@ -117,7 +129,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     }
 
-    private void removeNode(Node<T> node) {
+    private void unlink(Node<T> node) {
         if (node.prev != null) {
             node.prev.next = node.next;
         } else {
