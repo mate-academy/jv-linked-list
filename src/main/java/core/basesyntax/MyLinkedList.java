@@ -92,14 +92,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addFirst(T value) {
-        if (first == null && last == null) {
-            first = new Node<>(value, null, null);
-            last = first;
-        } else {
             Node<T> newElement = new Node<>(value, null, first);
             first.previous = newElement;
             first = newElement;
-        }
         size++;
     }
 
