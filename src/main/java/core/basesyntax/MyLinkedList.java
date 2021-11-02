@@ -72,9 +72,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is incorrect");
-        }
+        exception(index);
         if (index == 0) {
             return first.value;
         }
@@ -83,9 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index has not been found");
-        }
+        exception(index);
         if (index == 0) {
             T headValue = first.value;
             Node<T> newNode = new Node<>(null, value, first.next);
@@ -105,23 +101,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("U cant get element by this " + index);
-        }
+        exception(index);
         Node<T> remove;
         if (size == 1) {
             remove = first;
             first = last = null;
-            size--;
-            return remove.value;
-        } else if (index == 0) {
-            remove = first;
-            first = first.next;
-            size--;
-            return remove.value;
-        } else if (index == size - 1) {
-            remove = last;
-            last = last.prev;
             size--;
             return remove.value;
         }
@@ -159,6 +143,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void exception(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("U cant get element by this " + index);
+        }
     }
 
     private void unlink(Node<T> node) {
