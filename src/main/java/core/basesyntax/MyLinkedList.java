@@ -63,9 +63,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Index " + index + " out off list length " + size);
-        }
+        checkIndex(index);
         Node<T> searchNode = getNodeByIndex(index);
         T oldValue = searchNode.item;
         searchNode.item = value;
