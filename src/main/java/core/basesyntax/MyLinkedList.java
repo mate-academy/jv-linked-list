@@ -65,7 +65,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        inSizeWithSize(index);
         return findNodeByIndex(index).item;
     }
 
