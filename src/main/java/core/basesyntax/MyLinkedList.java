@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
@@ -10,9 +9,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        if (size == 0) {
+        if (isEmpty()) {
             first = last = new Node<>(null, value, null);
-
         } else {
             Node<T> newNode = new Node<>(last, value, null);
             last.next = newNode;
@@ -83,7 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> searchNode = first;
         while (searchNode != null) {
             T item = searchNode.item;
-            if (Objects.equals(item, object)) {
+            if (object == item || item != null && item.equals(object)) {
                 unlink(searchNode);
                 return true;
             }
