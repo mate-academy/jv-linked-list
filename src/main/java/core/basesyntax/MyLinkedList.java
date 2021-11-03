@@ -55,9 +55,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         checkIndex(index);
         Node<T> currentNode = findNodeByIndex(index);
-        T oldvalue = currentNode.value;
+        T oldValue = currentNode.value;
         currentNode.value = value;
-        return oldvalue;
+        return oldValue;
     }
 
     @Override
@@ -95,7 +95,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index > size - 1) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("IndexOutOfBoundsException on index " + index);
         }
     }
 
