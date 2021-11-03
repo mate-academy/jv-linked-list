@@ -65,25 +65,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return getNodePerIndex(index).value;
     }
 
-    private Node<T> getNodePerIndex(int index) {
-        Node<T> resylt;
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Not valide index");
-        }
-        if (index < size / 2) {
-            resylt = first;
-            for (int i = 0; i < index; i++) {
-                resylt = resylt.next;
-            }
-        } else {
-            resylt = last;
-            for (int i = size - 1; i > index; i--) {
-                resylt = resylt.prev;
-            }
-        }
-        return resylt;
-    }
-
     @Override
     public T set(T value, int index) {
         if (index < 0 || index >= size) {
@@ -161,5 +142,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.next.prev = node.prev;
         }
         size--;
+    }
+
+    private Node<T> getNodePerIndex(int index) {
+        Node<T> resylt;
+        if (index > size || index < 0) {
+            throw new IndexOutOfBoundsException("Not valide index");
+        }
+        if (index < size / 2) {
+            resylt = first;
+            for (int i = 0; i < index; i++) {
+                resylt = resylt.next;
+            }
+        } else {
+            resylt = last;
+            for (int i = size - 1; i > index; i--) {
+                resylt = resylt.prev;
+            }
+        }
+        return resylt;
     }
 }
