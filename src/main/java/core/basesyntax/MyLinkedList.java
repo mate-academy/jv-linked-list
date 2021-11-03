@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    public static class Node<T> {
+    private static class Node<T> {
         private T item;
         private Node<T> next;
         private Node<T> previous;
@@ -150,15 +150,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = next;
         } else {
             prev.next = next;
-            object.previous = null;
         }
         if (next == null) {
             tail = prev;
         } else {
             next.previous = prev;
-            object.next = null;
         }
-        object.item = null;
         size--;
         return element;
     }
