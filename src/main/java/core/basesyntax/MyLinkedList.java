@@ -38,7 +38,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             linkLast(value);
         } else {
-            linkBefore(value, node(index));
+            linkBefore(value, nodeByIndex(index));
         }
     }
 
@@ -54,10 +54,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void linkBefore(T value, MyLinkedList.Node<T> succ) {
-        Node<T> pred = succ.prev;
-        Node<T> newNode = new Node<>(pred, value, succ);
-        succ.prev = newNode;
+    private void linkBefore(T value, Node<T> node) {
+        Node<T> pred = node.prev;
+        Node<T> newNode = new Node<>(pred, value, node);
+        node.prev = newNode;
         if (pred == null) {
             first = newNode;
         } else {
@@ -66,7 +66,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private Node<T> node(int index) {
+    private Node<T> nodeByIndex(int index) {
         if (index < (size >> 1)) {
             Node<T> current = first;
             for (int i = 0; i < index; i++) {
@@ -74,7 +74,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             return current;
         }
-
         Node<T> current = last;
         for (int i = index; i < size - 1; i++) {
             current = current.prev;
@@ -92,13 +91,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkElementIndex(index);
-        return node(index).item;
+        return nodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         checkElementIndex(index);
-        Node<T> node = node(index);
+        Node<T> node = nodeByIndex(index);
         T oldVal = node.item;
         node.item = value;
         return oldVal;
@@ -107,7 +106,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkElementIndex(index);
-        return unlink(node(index));
+        return unlink(nodeByIndex(index));
     }
 
     @Override
@@ -147,7 +146,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             next.prev = prev;
             node.next = null;
         }
-
         node.item = null;
         size--;
         return element;
