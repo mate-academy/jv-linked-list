@@ -126,7 +126,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public Node<T> searchElementByIndex(int index) {
         checkException(index);
         Node<T> node = head;
-        if (index < (size >> 1) || index == 0) {
+        if (index < (size >> 1)) {
             for (int i = 0; i < index; i++) {
                 node = node.next;
             }
