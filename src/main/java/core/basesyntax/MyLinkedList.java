@@ -7,9 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public MyLinkedList() {
-    }
-
     @Override
     public void add(T value) {
         Node<T> node = new Node<>(tail, value, null);
@@ -68,9 +65,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> node = getNode(index);
-        if (node == null) {
-            throw new NullPointerException();
-        }
         unlink(node);
         size--;
         return node.value;
@@ -109,7 +103,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public int getIndex(T value) {
+    private int getIndex(T value) {
         Node<T> node = head;
         int i = 0;
         do {
