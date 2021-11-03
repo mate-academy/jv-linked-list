@@ -3,9 +3,21 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        private Node(Node<T> prev, T value, Node<T> next) {
+            this.value = value;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+
     private int size;
-    private Node<T> head;
-    private Node<T> tail;
+    private Node head;
+    private Node tail;
 
     public MyLinkedList() {
         size = 0;
@@ -14,11 +26,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (size == 0) {
-            head = new Node<T>(null, value, null);
+            head = new Node(null, value, null);
             tail = head;
         } else {
-            Node<T> newNode = new Node<>(tail, value, null);
-            tail.setNext(newNode);
+            Node newNode = new Node(tail, value, null);
+            tail.next = newNode;
             tail = newNode;
         }
         size = size + 1;
@@ -30,13 +42,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
         } else {
             Node<T> oldNode = getNode(index);
-            Node<T> newNode = new Node<>(oldNode.getPrev(), value, oldNode);
+            Node<T> newNode = new Node<>(oldNode.prev, value, oldNode);
             if (index != 0) {
-                oldNode.getPrev().setNext(newNode);
+                oldNode.prev.next = newNode;
             } else {
                 head = newNode;
             }
-            oldNode.setPrev(newNode);
+            oldNode.prev = newNode;
             size = size + 1;
         }
     }
@@ -50,24 +62,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
-        return getNode(index).getValue();
+        return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         Node<T> node = getNode(index);
-        T returnValue = node.getValue();
-        node.setValue(value);
+        T returnValue = node.value;
+        node.value = value;
         return returnValue;
     }
 
     @Override
     public T remove(int index) {
         Node<T> node = getNode(index);
-        T returnValue = node.getValue();
+        T returnValue = node.value;
         unlink(node);
         size = size - 1;
         return returnValue;
@@ -96,14 +105,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void unlink(Node<T> node) {
         if (node != head) {
-            node.getPrev().setNext(node.getNext());
+            node.prev.next = node.next;
         } else {
-            head = node.getNext();
+            head = node.next;
         }
         if (node != tail) {
-            node.getNext().setPrev(node.getPrev());
+            node.next.prev = node.prev;
         } else {
-            tail = node.getPrev();
+            tail = node.prev;
         }
     }
 
@@ -113,7 +122,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         Node<T> node = head;
         for (int i = 0; i < index; i++) {
-            node = node.getNext();
+            node = node.next;
         }
         return node;
     }
@@ -121,13 +130,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNode(T value) {
         Node<T> node = head;
         for (int i = 0; i < size; i++) {
-            if (node.getValue() == value) {
+            if (node.value == value) {
                 return node;
             }
-            if (value != null && value.equals(node.getValue())) {
+            if (value != null && value.equals(node.value)) {
                 return node;
             }
-            node = node.getNext();
+            node = node.next;
         }
         return null;
     }
