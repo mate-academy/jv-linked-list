@@ -68,9 +68,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        for (Node<T> i = head; i != null; i = i.next) {
-            if (i.item == object || i.item != null && i.item.equals(object)) {
-                unlink(i);
+        for (Node<T> node = head; node != null; node = node.next) {
+            if (node.item == object || node.item != null && node.item.equals(object)) {
+                unlink(node);
                 return true;
             }
         }
@@ -88,8 +88,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void linkLast(T value) {
-        final MyLinkedList.Node<T> tailNode = tail;
-        final MyLinkedList.Node<T> newNode = new MyLinkedList.Node<>(tailNode, value, null);
+        Node<T> tailNode = tail;
+        Node<T> newNode = new MyLinkedList.Node<>(tailNode, value, null);
         tail = newNode;
         if (tailNode == null) {
             head = newNode;
@@ -100,8 +100,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void linkBefore(T value, Node<T> node) {
-        final Node<T> previous = node.prev;
-        final Node<T> newNode = new Node<>(previous, value, node);
+        Node<T> previous = node.prev;
+        Node<T> newNode = new Node<>(previous, value, node);
         node.prev = newNode;
         if (previous == null) {
             head = newNode;
@@ -112,8 +112,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> value) {
-        final Node<T> next = value.next;
-        final Node<T> prev = value.prev;
+        Node<T> next = value.next;
+        Node<T> prev = value.prev;
         if (prev == null) {
             head = next;
         } else {
@@ -154,7 +154,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkPositionIndex(int index) {
-        if (!(index >= 0 && index <= size)) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Wrong index " + index
                     + " for size " + size + " of LinkedList");
         }
