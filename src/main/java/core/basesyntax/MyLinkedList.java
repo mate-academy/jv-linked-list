@@ -10,7 +10,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        if (head == null) {
+        if (size == 0) {
             head = new Node<T>(null, value, null);
             tail = head;
         } else {
@@ -29,15 +29,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        Node<T> nodeNext = searchElementByIndex(index);
-        Node<T> nodePrev = nodeNext.prev;
-        Node<T> newTail = new Node<>(nodePrev, value, nodeNext);
+        Node<T> nodeByIndex = searchElementByIndex(index);
+        Node<T> nodePrev = nodeByIndex.prev;
+        Node<T> newNode = new Node<>(nodePrev, value, nodeByIndex);
         if (nodePrev != null) {
-            nodePrev.next = newTail;
+            nodePrev.next = newNode;
         }
-        nodeNext.prev = newTail;
+        nodeByIndex.prev = newNode;
         if (index == 0) {
-            head = newTail;
+            head = newNode;
         }
         size++;
     }
@@ -51,17 +51,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (size <= index || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        checkException(index);
         return searchElementByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        if (size <= index || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        checkException(index);
         Node<T> node = searchElementByIndex(index);
         T nodeFirst = node.item;
         node.item = value;
@@ -70,9 +66,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (size <= index || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        checkException(index);
         return unlink(searchElementByIndex(index));
     }
 
@@ -131,9 +125,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public Node<T> searchElementByIndex(int index) {
-        if (size < index || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        checkException(index);
         Node<T> node = head;
         if (index < (size >> 1) || index == 0) {
             for (int i = 0; i < index; i++) {
@@ -147,5 +139,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return node;
     }
-}
 
+    public void checkException(int index) {
+        if (size <= index || index < 0) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+}
