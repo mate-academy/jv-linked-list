@@ -20,8 +20,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
     
     void linkLast(T value) {
-        final Node<T> lastNode = last;
-        final Node<T> newNode = new Node<>(lastNode, value, null);
+        Node<T> lastNode = last;
+        Node<T> newNode = new Node<>(lastNode, value, null);
         last = newNode;
         if (lastNode == null) {
             first = newNode;
@@ -32,8 +32,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
     
     void linkBefore(T value, Node<T> succ) {
-        final Node<T> pred = succ.prev;
-        final Node<T> newNode = new Node<>(pred, value, succ);
+        Node<T> pred = succ.prev;
+        Node<T> newNode = new Node<>(pred, value, succ);
         succ.prev = newNode;
         if (pred == null) {
             first = newNode;
@@ -117,9 +117,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
     
     T unlink(Node<T> node) {
-        final T element = node.item;
-        final Node<T> next = node.next;
-        final Node<T> prev = node.prev;
+        T element = node.item;
+        Node<T> next = node.next;
+        Node<T> prev = node.prev;
         if (prev == null) {
             first = next;
         } else {
