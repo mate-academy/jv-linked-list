@@ -64,7 +64,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> nodeToRemove = findNodeByIndex(index);
-        unLink(nodeToRemove);
+        unlink(nodeToRemove);
         return nodeToRemove.value;
     }
 
@@ -75,7 +75,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (currentNode.value == object
                     || currentNode.value != null
                     && currentNode.value.equals(object)) {
-                unLink(currentNode);
+                unlink(currentNode);
                 return true;
             }
             currentNode = currentNode.next;
@@ -117,7 +117,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void unLink(Node<T> node) {
+    private void unlink(Node<T> node) {
         Node<T> prevNode = node.prev;
         Node<T> nextNode = node.next;
         if (prevNode == null) {
