@@ -8,9 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
 
     MyLinkedList() {
-        this.size = 0;
-        this.first = null;
-        this.last = null;
     }
 
     @Override
@@ -27,8 +24,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index != 0 && !indexCheck(index - 1)) {
-            throw new IndexOutOfBoundsException("Index is invalid!");
+        if (index != 0) {
+            indexCheck(index - 1);
         }
         if (index == size) {
             add(value);
@@ -55,17 +52,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (!indexCheck(index)) {
-            throw new IndexOutOfBoundsException("Index is invalid!");
-        }
+        indexCheck(index);
         return getByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        if (!indexCheck(index)) {
-            throw new IndexOutOfBoundsException("Index is invalid!");
-        }
+        indexCheck(index);
         Node<T> current = getByIndex(index);
         T deletingValue = current.item;
         current.item = value;
@@ -74,9 +67,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (!indexCheck(index)) {
-            throw new IndexOutOfBoundsException("Index is invalid!");
-        }
+        indexCheck(index);
         Node<T> current = getByIndex(index);
         if (size == 1) {
             removeLast();
@@ -114,7 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void addFirst(T element) {
         Node<T> current = first;
-        if (size == 0) {
+        if (isEmpty()) {
             Node<T> newNode = new Node<>(null, element, null);
             first = newNode;
             last = newNode;
@@ -170,8 +161,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private boolean indexCheck(int index) {
-        return index < 0 || index >= size ? false : true;
+    private void indexCheck(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index is invalid!");
+        }
     }
 
     private static class Node<T> {
