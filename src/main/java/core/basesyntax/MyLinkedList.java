@@ -36,7 +36,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("exception");
+            throw new IndexOutOfBoundsException("Can't execute this operation with index" + index);
         }
         if (size > 0 && index < (size - 1) && index > 0) {
             Node<T> node = new Node<>(head, value, tail);
@@ -79,13 +79,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return node(index).item;
+        return getNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> setNode = node(index);
+        Node<T> setNode = getNodeByIndex(index);
         T oldValue = get(index);
         setNode.item = value;
         return oldValue;
@@ -94,9 +94,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        final T removedValue = get(index);
-        unLink(node(index));
-        return removedValue;
+        Node<T> removedValue = getNodeByIndex(index);
+        unLink(removedValue);
+        return removedValue.item;
     }
 
     @Override
@@ -122,7 +122,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node<T> node(int index) {
+    private Node<T> getNodeByIndex(int index) {
         Node<T> currentNode;
         if (index < size << 1) {
             currentNode = head;
@@ -140,7 +140,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     public void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Can't do this operation with index" + index);
+            throw new IndexOutOfBoundsException("Can't execute this operation with index" + index);
         }
     }
 
