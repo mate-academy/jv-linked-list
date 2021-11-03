@@ -33,22 +33,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index == size) {
+            add(value);
+            return;
+        }
         if (index > size || index < 0) {
             throw new IndexOutOfBoundsException("Can't add element on index " + index);
         }
-        if (index == size) {
-            add(value);
+        Node<T> addedNode = findElementByIndex(index);
+        Node<T> node = new Node<>(addedNode.prev, value, addedNode);
+        if (addedNode.prev == null) {
+            head = node;
         } else {
-            Node<T> addedNode = findElementByIndex(index);
-            Node<T> node = new Node<>(addedNode.prev, value, addedNode);
-            if (addedNode.prev == null) {
-                head = node;
-            } else {
-                addedNode.prev.next = node;
-            }
-            addedNode.prev = node;
-            size++;
+            addedNode.prev.next = node;
         }
+        addedNode.prev = node;
+        size++;
     }
 
     @Override
@@ -87,16 +87,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return false;
         }
         Node<T> elementByValue = head;
-        while (!(elementByValue == tail) && !(elementByValue.value == object
-                || elementByValue.value != null
-                && elementByValue.value.equals(object))) {
+        while (elementByValue != null) {
+            if (elementByValue.value == object
+                    || elementByValue.value != null
+                    && elementByValue.value.equals(object)) {
+                unlink(elementByValue);
+                return true;
+            }
             elementByValue = elementByValue.next;
-        }
-        if (elementByValue.value == object
-                || elementByValue.value != null
-                && elementByValue.value.equals(object)) {
-            unlink(elementByValue);
-            return true;
         }
         return false;
     }
