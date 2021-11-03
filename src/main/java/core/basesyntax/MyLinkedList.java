@@ -130,7 +130,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (node.equals(head)) {
             node.next.prev = null;
             head = node.next;
-        }else if (node.equals(tail)) {
+        } else if (node.equals(tail)) {
             node.prev.next = null;
             tail = node.prev;
         } else {
