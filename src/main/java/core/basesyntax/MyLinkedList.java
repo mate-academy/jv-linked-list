@@ -45,8 +45,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkElementIndex(index);
-        Node<T> targetNode = searchNode(index);
-        return targetNode.item;
+        return searchNode(index).item;
     }
 
     @Override
