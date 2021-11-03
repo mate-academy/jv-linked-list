@@ -14,10 +14,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     
     @Override
     public void add(T value, int index) {
-        if (!indexCheckAdd(index)) {
-            throw new IndexOutOfBoundsException("Out of bounds exception for"
-                        + " add(value, index) method");
-        }
+        indexCheckAdd(index);
         if (index == size) {
             linkLast(value);
         } else {
@@ -34,19 +31,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (!indexCheckSetGetRemove(index)) {
-            throw new IndexOutOfBoundsException("Out of bounds exception for"
-                    + " get(index) method");
-        }
+        indexCheckSetGetRemove(index);
         return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        if (!indexCheckSetGetRemove(index)) {
-            throw new IndexOutOfBoundsException("Out of bounds exception for"
-                    + " set(value, index) method");
-        }
+        indexCheckSetGetRemove(index);
         Node<T> node = findNodeByIndex(index);
         T oldValue = node.item;
         node.item = value;
@@ -55,10 +46,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (!indexCheckSetGetRemove(index)) {
-            throw new IndexOutOfBoundsException("Out of bounds exception for"
-                    + " remove(index) method");
-        }
+        indexCheckSetGetRemove(index);
         return unlink(findNodeByIndex(index));
     }
 
@@ -118,12 +106,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
     
-    private boolean indexCheckAdd(int index) {
-        return index >= 0 && index <= size;
+    private void indexCheckAdd(int index) {
+        if (!(index >= 0 && index <= size)) {
+            throw new IndexOutOfBoundsException("Out of bounds exception for index " + index
+            + " and size " + size);
+        }
     }
     
-    private boolean indexCheckSetGetRemove(int index) {
-        return index >= 0 && index < size;
+    private void indexCheckSetGetRemove(int index) {
+        if (!(index >= 0 && index < size)) {
+            throw new IndexOutOfBoundsException("Out of bounds exception for index " + index
+            + " and size " + size);
+        }
     }
     
     private Node<T> findNodeByIndex(int index) {
