@@ -98,7 +98,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (isEmpty()) {
             first = null;
             last = null;
-            size = 0;
         } else if (current.equals(first)) {
             nextNode.prev = null;
             first = nextNode;
