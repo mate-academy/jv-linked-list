@@ -22,7 +22,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkPositionIndex(index);
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Incorrect index");
+        }
         if (index == size) {
             add(value);
         } else {
@@ -61,16 +63,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         for (Node<T> node = first; node != null; node = node.next) {
-            if (object == null) {
-                if (node.item == null) {
-                    unlink(node);
-                    return true;
-                }
-            } else {
-                if (object.equals(node.item)) {
-                    unlink(node);
-                    return true;
-                }
+            if (object == node.item || (node.item != null && node.item.equals(object))) {
+                unlink(node);
+                return true;
             }
         }
         return false;
@@ -92,16 +87,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void checkPositionIndex(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Incorrect index");
-        }
-    }
-
     private T unlink(Node<T> node) {
         final T element = node.item;
         Node<T> next = node.next;
-        MyLinkedList.Node<T> prev = node.prev;
+        Node<T> prev = node.prev;
         if (prev == null) {
             first = next;
         } else {
@@ -136,13 +125,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void linkBefore(T value, Node<T> node) {
-        Node<T> pred = node.prev;
-        Node<T> newNode = new Node<>(pred, value, node);
+        Node<T> prev = node.prev;
+        Node<T> newNode = new Node<>(prev, value, node);
         node.prev = newNode;
-        if (pred == null) {
+        if (prev == null) {
             first = newNode;
         } else {
-            pred.next = newNode;
+            prev.next = newNode;
         }
         size++;
     }
