@@ -60,10 +60,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> node = getNodefromIndex(index);
-        if (node.prev != null) {
+        if (isTail(node)) {
+            node.prev.next = null;
+            tail = node.prev;
+        } else {
             node.prev.next = node.next;
         }
-        if (node.next != null) {
+        if (isHead(node)) {
+            node.next.prev = null;
+            head = node.next;
+        } else {
             node.next.prev = node.prev;
         }
         size--;
@@ -139,5 +145,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return null;
+    }
+
+    private boolean isTail(Node<T> node) {
+        return node == tail;
+    }
+
+    private boolean isHead(Node<T> node) {
+        return node == head;
     }
 }
