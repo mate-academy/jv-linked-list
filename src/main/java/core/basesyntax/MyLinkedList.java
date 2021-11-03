@@ -10,12 +10,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (isEmpty()) {
-            addFirst(value);
-            return;
+            Node<T> newNode = new Node<>(null, value, null);
+            first = newNode;
+            last = newNode;
+        } else {
+            Node<T> newNode = new Node<>(last, value, null);
+            last.next = newNode;
+            last = newNode;
         }
-        Node<T> newNode = new Node<>(last, value, null);
-        last.next = newNode;
-        last = newNode;
         size++;
     }
 
@@ -24,17 +26,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
             return;
+        } else if (index == 0) {
+            Node<T> current = getNodeByIndex(index);
+            Node<T> newNode = new Node<>(null, value, current);
+            first = newNode;
+            current.prev = newNode;
+        } else {
+            checkIndex(index);
+            Node<T> current = getNodeByIndex(index);
+            Node<T> prevNode = current.prev;
+            Node<T> newNode = new Node<>(prevNode, value, current);
+            prevNode.next = newNode;
+            current.prev = newNode;
         }
-        if (index == 0) {
-            addFirst(value);
-            return;
-        }
-        checkIndex(index - 1);
-        Node<T> current = getNodeByIndex(index);
-        Node<T> prevNode = current.prev;
-        Node<T> newNode = new Node<>(prevNode, value, current);
-        prevNode.next = newNode;
-        current.prev = newNode;
         size++;
     }
 
@@ -64,23 +68,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> current = getNodeByIndex(index);
-        if (size == 1) {
-            removeLast();
-            return current.item;
-        }
         return unlink(current);
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> current = first;
-        while (current != null
-                && !(current.item == object
-                   || current.item != null && current.item.equals(object))) {
+        for (int i = 0; i < size; i++) {
+            if (current.item == object || current.item != null && current.item.equals(object)) {
+                unlink(current);
+                return true;
+            }
             current = current.next;
         }
-        return current != null
-                && (object == unlink(current) || object != null && object.equals(current.item));
+        return false;
     }
 
     @Override
@@ -93,30 +94,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void addFirst(T element) {
-        Node<T> current = first;
-        if (isEmpty()) {
-            Node<T> newNode = new Node<>(null, element, null);
-            first = newNode;
-            last = newNode;
-        } else {
-            first = new Node<>(null, element, current);
-        }
-        size++;
-    }
-
-    private void removeLast() {
-        first = null;
-        last = null;
-        size = 0;
-    }
-
     private T unlink(Node<T> current) {
         Node<T> nextNode = current.next;
         Node<T> prevNode = current.prev;
         size--;
-        if (size == 0) {
-            removeLast();
+        if (isEmpty()) {
+            first = null;
+            last = null;
+            size = 0;
         } else if (current.equals(first)) {
             nextNode.prev = null;
             first = nextNode;
