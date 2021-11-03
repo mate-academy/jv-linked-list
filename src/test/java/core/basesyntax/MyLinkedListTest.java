@@ -25,8 +25,7 @@ public class MyLinkedListTest {
     private static final Cat THIRD_CAT = new Cat("Tom", "white");
     private static final Cat THE_SAME_SECOND_CAT = new Cat("Barsik", "black");
 
-    private static final List<String> DEFAULT_LIST = new LinkedList<>(
-            Arrays.asList("First", "Second", "Third", "Fourth", "Fifth", "Sixth"));
+    private static final List<String> DEFAULT_LIST = new LinkedList<>(Arrays.asList("First", "Second", "Third", "Fourth", "Fifth", "Sixth"));
 
     private static MyLinkedListInterface<String> myLinkedList;
 
