@@ -9,14 +9,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
+        Node<T> newNode = new Node<>(tail, value, null);
         if (isEmpty()) {
-            head = new Node<>(null, value, null);
-            tail = head;
+            head = newNode;
         } else {
-            Node<T> newNode = new Node<>(tail, value, null);
             tail.next = newNode;
-            tail = newNode;
         }
+        tail = newNode;
         size++;
     }
 
@@ -46,13 +45,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        validIndex(index);
+        checkIndex(index);
         return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        validIndex(index);
+        checkIndex(index);
         T setNode = findNodeByIndex(index).item;
         findNodeByIndex(index).item = value;
         return setNode;
@@ -60,7 +59,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        validIndex(index);
+        checkIndex(index);
         T removeNode = findNodeByIndex(index).item;
         unlink(findNodeByIndex(index));
         return removeNode;
@@ -99,7 +98,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void validIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index " + index + " out off list length " + size);
         }
@@ -128,17 +127,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         T element = node.item;
         if (size == 1) {
             head = null;
+        } else if (node.equals(head)) {
+            node.next.prev = null;
+            head = node.next;
+        }else if (node.equals(tail)) {
+            node.prev.next = null;
+            tail = node.prev;
         } else {
-            if (node.equals(head)) {
-                node.next.prev = null;
-                head = node.next;
-            } else if (node.equals(tail)) {
-                node.prev.next = null;
-                tail = node.prev;
-            } else {
-                node.prev.next = node.next;
-                node.next.prev = node.prev;
-            }
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
         }
         size--;
         return element;
