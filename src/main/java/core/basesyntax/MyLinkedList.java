@@ -12,7 +12,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        Node(MyLinkedList.Node<T> prev, T element, Node<T> next) {
+        Node(Node<T> prev, T element, Node<T> next) {
             this.item = element;
             this.next = next;
             this.prev = prev;
@@ -111,15 +111,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 indexLinked++;
             }
             return current;
-        } else {
-            int indexLinked = size - 1;
-            Node<T> current = tail;
-            while (indexLinked != index) {
-                current = current.prev;
-                indexLinked--;
-            }
-            return current;
         }
+        int indexLinked = size - 1;
+        Node<T> current = tail;
+        while (indexLinked != index) {
+            current = current.prev;
+            indexLinked--;
+        }
+        return current;
+
     }
 
     private void inSizeWithSize(int index) {
