@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -44,8 +43,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T getElementList : list) {
-            add(getElementList);
+        for (T element : list) {
+            add(element);
         }
     }
 
@@ -74,7 +73,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> node = head;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(object, node.item)) {
+            if (object == node.item || object != null && object.equals(node.item)) {
                 unlink(node);
                 return true;
             }
@@ -105,7 +104,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public T unlink(Node<T> node) {
+    private T unlink(Node<T> node) {
         Node<T> nodeNext = node.next;
         Node<T> nodePrev = node.prev;
         if (nodePrev != null) {
