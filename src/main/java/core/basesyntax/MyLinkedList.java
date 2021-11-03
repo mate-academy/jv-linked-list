@@ -7,6 +7,82 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private Node<T> first;
     
+    @Override
+    public void add(T value) {
+        linkLast(value);
+    }
+    
+    @Override
+    public void add(T value, int index) {
+        if (!indexCheckAdd(index)) {
+            throw new IndexOutOfBoundsException("Out of bounds exception for"
+                        + " add(value, index) method");
+        }
+        if (index == size) {
+            linkLast(value);
+        } else {
+            linkBefore(value, findNodeByIndex(index));
+        }        
+    }
+
+    @Override
+    public void addAll(List<T> list) {
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
+    }
+
+    @Override
+    public T get(int index) {
+        if (!indexCheckSetGetRemove(index)) {
+            throw new IndexOutOfBoundsException("Out of bounds exception for"
+                    + " get(index) method");
+        }
+        return findNodeByIndex(index).item;
+    }
+
+    @Override
+    public T set(T value, int index) {
+        if (!indexCheckSetGetRemove(index)) {
+            throw new IndexOutOfBoundsException("Out of bounds exception for"
+                    + " set(value, index) method");
+        }
+        Node<T> node = findNodeByIndex(index);
+        T oldValue = node.item;
+        node.item = value;
+        return oldValue;
+    }
+
+    @Override
+    public T remove(int index) {
+        if (!indexCheckSetGetRemove(index)) {
+            throw new IndexOutOfBoundsException("Out of bounds exception for"
+                    + " remove(index) method");
+        }
+        return unlink(findNodeByIndex(index));
+    }
+
+    @Override
+    public boolean remove(T object) {
+        for (Node<T> node = first; node != null; node = node.next) {
+            if (node.item == null || node.item != null && node.item.equals(object)) {
+                unlink(node);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+    
     private static class Node<E> {
         private E item;
         private Node<E> next;
@@ -19,47 +95,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
     
-    void linkLast(T value) {
-        Node<T> lastNode = last;
-        Node<T> newNode = new Node<>(lastNode, value, null);
+    private void linkLast(T value) {
+        Node<T> newNode = new Node<>(last, value, null);
+        if (last == null) {
+            first = newNode;
+        } else {
+            last.next = newNode;
+        }
         last = newNode;
-        if (lastNode == null) {
-            first = newNode;
-        } else {
-            lastNode.next = newNode;
-        }
         size++;
     }
     
-    void linkBefore(T value, Node<T> succ) {
-        Node<T> pred = succ.prev;
-        Node<T> newNode = new Node<>(pred, value, succ);
-        succ.prev = newNode;
-        if (pred == null) {
+    private void linkBefore(T value, Node<T> next) {
+        Node<T> prev = next.prev;
+        Node<T> newNode = new Node<>(prev, value, next);
+        next.prev = newNode;
+        if (prev == null) {
             first = newNode;
         } else {
-            pred.next = newNode;
+            prev.next = newNode;
         }
         size++;
-    }
-    
-    @Override
-    public void add(T value) {
-        linkLast(value);
-    }
-    
-    @Override
-    public void add(T value, int index) {
-        if (indexCheckAdd(index)) {
-            if (index == size) {
-                linkLast(value);
-            } else {
-                linkBefore(value, findNodeByIndex(index));
-            }
-        } else {
-            throw new IndexOutOfBoundsException("Out of bounds exception for"
-                        + " add(value, index) method");
-        }
     }
     
     private boolean indexCheckAdd(int index) {
@@ -70,7 +126,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return index >= 0 && index < size;
     }
     
-    Node<T> findNodeByIndex(int index) {
+    private Node<T> findNodeByIndex(int index) {
         if (index < size / 2) {
             Node<T> foundNode = first;
             for (int i = 0; i < index; i++) {
@@ -85,38 +141,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return foundNode;
         }
     }
-
-    @Override
-    public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
-        }
-    }
-
-    @Override
-    public T get(int index) {
-        if (indexCheckSetGetRemove(index)) {
-            return findNodeByIndex(index).item;
-        } else {
-            throw new IndexOutOfBoundsException("Out of bounds exception for"
-                    + " get(index) method");
-        }
-    }
-
-    @Override
-    public T set(T value, int index) {
-        if (indexCheckSetGetRemove(index)) {
-            Node<T> node = findNodeByIndex(index);
-            T oldValue = node.item;
-            node.item = value;
-            return oldValue;
-        } else {
-            throw new IndexOutOfBoundsException("Out of bounds exception for"
-                    + " set(value, index) method");
-        }
-    }
     
-    T unlink(Node<T> node) {
+    private T unlink(Node<T> node) {
         Node<T> next = node.next;
         Node<T> prev = node.prev;
         if (prev == null) {
@@ -135,45 +161,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         node.item = null;
         size--;
         return element;
-    }
-
-    @Override
-    public T remove(int index) {
-        if (indexCheckSetGetRemove(index)) {
-            return unlink(findNodeByIndex(index));
-        } else {
-            throw new IndexOutOfBoundsException("Out of bounds exception for"
-                    + " remove(index) method");
-        }
-    }
-
-    @Override
-    public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> node = first; node != null; node = node.next) {
-                if (node.item == null) {
-                    unlink(node);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> node = first; node != null; node = node.next) {
-                if (object.equals(node.item)) {
-                    unlink(node);
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
     }
 }
