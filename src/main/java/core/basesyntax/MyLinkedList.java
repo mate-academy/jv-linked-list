@@ -55,12 +55,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> findNodeByIndex(int index) {
-        Node<T> currentNode = first;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
+    Node<T> findNodeByIndex(int index) {
+        if (index < (size >> 1)) {
+            Node<T> head = first;
+            for (int i = 0; i < index; i++) {
+                head = head.next;
+            }
+            return head;
+        } else {
+            Node<T> tail = last;
+            for (int i = size - 1; i > index; i--) {
+                tail = tail.prev;
+            }
+            return tail;
         }
-        return currentNode;
     }
 
     @Override
