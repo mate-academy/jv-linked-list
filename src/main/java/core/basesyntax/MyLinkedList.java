@@ -84,7 +84,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         if (indexIsValid(index)) {
-            return unlink(getNode(index));
+            Node<T> node = getNode(index);
+            T value = node.item;
+            unlink(node);
+            return value;
         } else {
             throw new IndexOutOfBoundsException(" ");
         }
@@ -142,7 +145,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return 0 <= index && index < size;
     }
 
-    private T unlink(Node<T> object) {
+    private void unlink(Node<T> object) {
         final T element = object.item;
         final Node<T> next = object.next;
         final Node<T> prev = object.previous;
@@ -157,7 +160,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             next.previous = prev;
         }
         size--;
-        return element;
     }
 
     private Node<T> removeHelper(T objects) {
