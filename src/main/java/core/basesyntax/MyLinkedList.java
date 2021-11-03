@@ -7,12 +7,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node tail;
     private int size;
 
-    class Node<E> {
+    private class Node<E> {
         private E value;
         private Node<E> next;
         private Node<E> prev;
 
-        public Node(Node prev, E value, Node next) {
+        public Node(Node<E> prev, E value, Node<E> next) {
             this.prev = prev;
             this.value = value;
             this.next = next;
@@ -21,7 +21,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node node = new Node(tail, value, null);
+        Node<T> node = new Node<>(tail, value, null);
         if (head == null) {
             head = node;
             tail = node;
@@ -35,11 +35,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Can't add element with value " + value
-                    + " on index " + index);
+            throw new IndexOutOfBoundsException("Can't add element on index " + index);
         }
         if (size == 0 && index == 0) {
-            Node node = new Node(tail, value, null);
+            Node<T> node = new Node<>(tail, value, null);
             if (head == null) {
                 head = node;
                 tail = node;
@@ -51,14 +50,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         if (size != 0 && index == 0) {
-            Node node = new Node<>(null, value, head);
+            Node<T> node = new Node<>(null, value, head);
             head.prev = node;
             head = node;
             size++;
             return;
         }
         if (size != 0 && index == size) {
-            Node node = new Node<>(tail, value, null);
+            Node<T> node = new Node<>(tail, value, null);
             tail.next = node;
             tail = node;
             size++;
@@ -73,16 +72,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list != null) {
-            for (int i = 0; i < list.size(); i++) {
-                add(list.get(i));
-            }
+        for (T addedElement : list) {
+            add(addedElement);
         }
     }
 
     @Override
     public T get(int index) {
-        if (size == 0 || index >= size || index < 0) {
+        if (checkElementByIndex(index)) {
             throw new IndexOutOfBoundsException("Element with index " + index + " does not exist");
         }
         return findElementByIndex(index).value;
@@ -90,9 +87,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Can't set element with value " + value
-                    + " on index " + index);
+        if (checkElementByIndex(index)) {
+            throw new IndexOutOfBoundsException("Can't set element on index " + index);
         }
         Node<T> replacedNode = findElementByIndex(index);
         T valueReturned = replacedNode.value;
@@ -102,7 +98,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
+        if (checkElementByIndex(index)) {
             throw new IndexOutOfBoundsException("Element with index " + index + " does not exist");
         }
         Node<T> removedNode = findElementByIndex(index);
@@ -174,5 +170,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = node.next;
         }
         size--;
+    }
+
+    private boolean checkElementByIndex(int index) {
+        return index >= size || index < 0;
     }
 }
