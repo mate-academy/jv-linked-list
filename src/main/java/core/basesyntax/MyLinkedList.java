@@ -23,7 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (size < index || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: "+ size);
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
         if (index == size) {
             add(value);
@@ -52,7 +52,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         if (size <= index || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: "+ size);
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
         return searchElementByIndex(index).item;
     }
@@ -60,7 +60,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         if (size <= index || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: "+ size);
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
         Node<T> node = searchElementByIndex(index);
         T nodeFirst = node.item;
@@ -71,7 +71,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         if (size <= index || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: "+ size);
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
         return unlink(searchElementByIndex(index));
     }
@@ -132,7 +132,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     public Node<T> searchElementByIndex(int index) {
         if (size < index || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: "+ size);
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
         Node<T> node = head;
         if (index < (size >> 1) || index == 0) {
