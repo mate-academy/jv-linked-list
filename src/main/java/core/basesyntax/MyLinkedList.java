@@ -23,7 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> node = new Node<T>(tail, value, null);
+        Node<T> node = new Node<>(tail, value, null);
         if (tail != null) {
             tail.next = node;
         }
@@ -36,7 +36,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-
+        Node<T> node = getNodefromIndex(index);
+        Node<T> newNode = new Node<>(node.prev, value, node);
+        node.prev.next = newNode;
+        node.next.prev = newNode;
         }
 
     @Override
@@ -56,11 +59,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        return null;
+        Node<T> node = getNodefromIndex(index);
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        }
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        }
+        size--;
+        return node.item;
     }
 
     @Override
     public boolean remove(T object) {
+        Node<T> node = head;
+        for (int i = 0; i < size - 1; i++) {
+            if (node.item == object|| node.item != null && node.item.equals(object)) {
+                remove(i);
+                return true;
+            }
+            if (node.next != null) {
+                node = node.next;
+            } else {
+                return false;
+            }
+        }
         return false;
     }
 
@@ -93,12 +116,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodefromIndex(int index) {
-        Node<T> nodeFromIndex;
+        Node<T> nodeFromIndex = head;
         for (int i = 0; i <= index; i++) {
-            nodeFromIndex = head.next;
             if (i == index) {
                 return nodeFromIndex;
             }
+            nodeFromIndex = head.next;
         }
         return null;
     }
