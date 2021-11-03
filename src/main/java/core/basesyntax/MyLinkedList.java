@@ -3,45 +3,146 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private int size = 0;
+    private Node<T> first;
+    private Node<T> last;
+
     @Override
     public void add(T value) {
+        if (isEmpty()) {
+            addFirst(value);
+        } else {
+            addLast(value);
+        }
     }
 
     @Override
     public void add(T value, int index) {
+        checkIndex(index, size);
+        if (isEmpty()) {
+            addFirst(value);
+        } else if (index == size) {
+            addLast(value);
+        } else if (index != size) {
+            addByIndex(value, index);
+        }
+    }
+
+    private void checkIndex(int index, int limit) {
+        if (index > limit || index < 0) {
+            throw new IndexOutOfBoundsException("Incorrect index");
+        }
+    }
+
+    private void addByIndex(T value, int index) {
+        Node<T> newNode = new Node<>(null, value, null);
+        Node<T> tempNode = findNodeByIndex(index);
+        if (tempNode.equals(first)) {
+            first = newNode;
+        } else {
+            tempNode.prev.next = newNode;
+        }
+        newNode.next = tempNode;
+        newNode.prev = tempNode.prev;
+        tempNode.prev = newNode;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
+    }
+
+    private void addFirst(T value) {
+        first = new Node(null, value, null);
+        last = first;
+        size++;
+    }
+
+    private void addLast(T value) {
+        Node<T> tempNode = new Node<T>(last, value, null);
+        last.next = tempNode;
+        last = tempNode;
+        size++;
     }
 
     @Override
     public T get(int index) {
-        return null;
+        return findNodeByIndex(index).value;
+    }
+
+    private Node<T> findNodeByIndex(int index) {
+        checkIndex(index, size - 1);
+        Node<T> result = first;
+        for (int i = 0; i < index; i++) {
+            result = result.next;
+        }
+        return result;
     }
 
     @Override
     public T set(T value, int index) {
-        return null;
+        checkIndex(index, size - 1);
+        Node<T> tempNode = findNodeByIndex(index);
+        T res = tempNode.value;
+        tempNode.value = value;
+        return res;
+    }
+
+    private void removeNode(Node<T> node) {
+        if (!node.equals(first)) {
+            node.prev.next = node.next;
+        } else if (node.equals(first)) {
+            first = first.next;
+        }
+        if (!node.equals(last)) {
+            node.next.prev = node.prev;
+        } else if (node.equals(last)) {
+            last = last.prev;
+        }
+        size--;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIndex(index, size);
+        Node<T> tempNode = findNodeByIndex(index);
+        T res = tempNode.value;
+        removeNode(tempNode);
+        return res;
     }
 
     @Override
     public boolean remove(T object) {
-        return false;
+        Node<T> tempNode = findEqualObj(object);
+        if (tempNode == null) {
+            return false;
+        }
+        removeNode(tempNode);
+        return true;
+    }
+
+    private Node<T> findEqualObj(T object) {
+        Node<T> tempNode = first;
+        for (int i = 0; i < size; i++) {
+            if (object == tempNode.value || (object != null && object.equals(tempNode.value))) {
+                return tempNode;
+            }
+            tempNode = tempNode.next;
+        }
+        return null;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
+
 }
