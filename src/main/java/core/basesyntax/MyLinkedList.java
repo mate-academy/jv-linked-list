@@ -53,17 +53,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         validIndex(index);
-        T t = findNodeByIndex(index).item;
+        T setNode = findNodeByIndex(index).item;
         findNodeByIndex(index).item = value;
-        return t;
+        return setNode;
     }
 
     @Override
     public T remove(int index) {
         validIndex(index);
-        T t = findNodeByIndex(index).item;
+        T removeNode = findNodeByIndex(index).item;
         unlink(findNodeByIndex(index));
-        return t;
+        return removeNode;
     }
 
     @Override
