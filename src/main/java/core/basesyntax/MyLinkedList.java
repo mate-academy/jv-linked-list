@@ -7,7 +7,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size;
 
-    static class Node<T> {
+    private static class Node<T> {
         private Node<T> prev;
         private T value;
         private Node<T> next;
@@ -57,20 +57,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T listToArray : list) {
-            add(listToArray);
+        for (T value : list) {
+            add(value);
         }
     }
 
     @Override
     public T get(int index) {
-        checkException(index);
+        checkIndex(index);
         return findNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkException(index);
+        checkIndex(index);
         Node<T> nodeByIndex = findNodeByIndex(index);
         T valueBefore = nodeByIndex.value;
         nodeByIndex.value = value;
@@ -79,9 +79,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkException(index);
-        Node<T> remove;
-        remove = findNodeByIndex(index);
+        checkIndex(index);
+        Node<T> remove = findNodeByIndex(index);
         unlink(remove);
         size--;
         return remove.value;
@@ -111,7 +110,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkException(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("U cant get element by this " + index);
         }
@@ -135,10 +134,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
-        Node<T> currentNode = first;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
+        if (index < (size >> 1)) {
+            Node<T> head = first;
+            for (int i = 0; i < index; i++) {
+                head = head.next;
+            }
+            return head;
+        } else {
+            Node<T> tail = last;
+            for (int i = size - 1; i > index; i--) {
+                tail = tail.prev;
+            }
+            return tail;
         }
-        return currentNode;
     }
 }
