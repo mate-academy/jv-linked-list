@@ -34,24 +34,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index == size) {
+            add(value);
+            return;
+        }
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index does not exist");
         }
-        Node<T> newNode = new Node<>(null, value, null);
-        if (index == size) {
-            add(value);
-        } else if (index == 0) {
-            newNode.next = first;
-            first.prev = newNode;
-            first = newNode;
-            size++;
-        } else {
-            Node<T> nodeByIndex = searchNode(index);
-            newNode = new Node<>(nodeByIndex.prev, value, nodeByIndex);
-            nodeByIndex.prev.next = newNode;
-            nodeByIndex.prev = newNode;
-            size++;
-        }
+            Node<T> newNode = new Node<>(null, value, null);
+            if (index == 0) {
+                newNode.next = first;
+                first.prev = newNode;
+                first = newNode;
+            } else {
+                Node<T> nodeByIndex = searchNode(index);
+                newNode = new Node<>(nodeByIndex.prev, value, nodeByIndex);
+                nodeByIndex.prev.next = newNode;
+                nodeByIndex.prev = newNode;
+            }
+        size++;
     }
 
     @Override
@@ -70,9 +71,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkElementIndex(index);
-        Node<T> nodeOnIndex = searchNode(index);
-        T deletedItem = nodeOnIndex.item;
-        nodeOnIndex.item = value;
+        Node<T> nodeByIndex  = searchNode(index);
+        T deletedItem = nodeByIndex .item;
+        nodeByIndex .item = value;
         return deletedItem;
     }
 
@@ -126,21 +127,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> searchNode(int index) {
+        Node<T> node;
         if (index < (size >> 1)) {
-            Node<T> node = first;
+            node = first;
             for (int i = 0; i < index; i++) {
                 node = node.next;
             }
-            return node;
-
         } else {
-            Node<T> node = last;
+            node = last;
             for (int i = size - 1; i > index; i--) {
                 node = node.prev;
             }
-            return node;
         }
-    }
+        return node;
+        }
 
     private void checkElementIndex(int index) {
         if (!(index >= 0 && index < size)) {
