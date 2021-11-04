@@ -102,18 +102,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             for (int i = 0; i <= index; i++) {
                 if (i == index) {
                     break;
-                } else {
-                    node = node.next;
                 }
+                node = node.next;
             }
         } else {
             node = tail;
             for (int j = size - 1; j > 0; j--) {
                 if (j == index) {
                     break;
-                } else {
-                    node = node.prev;
                 }
+                node = node.prev;
             }
         }
         return node;
