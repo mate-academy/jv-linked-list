@@ -49,9 +49,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean checkIndex(int index) {
         if (0 <= index && index < size) {
             return true;
-        } else {
-            throw new IndexOutOfBoundsException(" ");
         }
+        throw new IndexOutOfBoundsException(" ");
     }
 
     @Override
