@@ -41,17 +41,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index does not exist");
         }
-            Node<T> newNode = new Node<>(null, value, null);
-            if (index == 0) {
-                newNode.next = first;
-                first.prev = newNode;
-                first = newNode;
-            } else {
-                Node<T> nodeByIndex = searchNode(index);
-                newNode = new Node<>(nodeByIndex.prev, value, nodeByIndex);
-                nodeByIndex.prev.next = newNode;
-                nodeByIndex.prev = newNode;
-            }
+        Node<T> newNode = new Node<>(null, value, null);
+        if (index == 0) {
+            newNode.next = first;
+            first.prev = newNode;
+            first = newNode;
+        } else {
+            Node<T> nodeByIndex = searchNode(index);
+            newNode = new Node<>(nodeByIndex.prev, value, nodeByIndex);
+            nodeByIndex.prev.next = newNode;
+            nodeByIndex.prev = newNode;
+        }
         size++;
     }
 
@@ -71,9 +71,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkElementIndex(index);
-        Node<T> nodeByIndex  = searchNode(index);
-        T deletedItem = nodeByIndex .item;
-        nodeByIndex .item = value;
+        Node<T> nodeByIndex = searchNode(index);
+        T deletedItem = nodeByIndex.item;
+        nodeByIndex.item = value;
         return deletedItem;
     }
 
@@ -140,7 +140,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return node;
-        }
+    }
 
     private void checkElementIndex(int index) {
         if (!(index >= 0 && index < size)) {
