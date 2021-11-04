@@ -146,7 +146,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = tail.prev;
         } else {
             nodeForRemove.next.prev = nodeForRemove.prev;
-            nodeForRemove .prev.next = nodeForRemove.next;
+            nodeForRemove.prev.next = nodeForRemove.next;
         }
     }
 
