@@ -99,18 +99,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> node;
         if (index <= size / 2) {
             node = head;
-            for (int i = 0; i <= index; i++) {
-                if (i == index) {
-                    break;
-                }
+            for (int i = 0; i < index; i++) {
                 node = node.next;
             }
         } else {
             node = tail;
-            for (int j = size - 1; j > 0; j--) {
-                if (j == index) {
-                    break;
-                }
+            for (int j = size - 1; j > index; j--) {
                 node = node.prev;
             }
         }
