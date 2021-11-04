@@ -46,7 +46,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = newNode;
             size++;
         } else {
-            Node<T> nodeByIndex = findNodeByIndex(index);
+            Node<T> nodeByIndex = searchNode(index);
             newNode = new Node<>(nodeByIndex.prev, value, nodeByIndex);
             nodeByIndex.prev.next = newNode;
             nodeByIndex.prev = newNode;
@@ -146,13 +146,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (!(index >= 0 && index < size)) {
             throw new IndexOutOfBoundsException("There is no such index");
         }
-    }
-
-    private Node<T> findNodeByIndex(int index) {
-        Node<T> currentNode = first;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
-        return currentNode;
     }
 }
