@@ -123,7 +123,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node.item;
     }
 
-    public Node<T> searchElementByIndex(int index) {
+    private Node<T> searchElementByIndex(int index) {
         checkException(index);
         Node<T> node = head;
         if (index < (size >> 1)) {
@@ -139,7 +139,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    public void checkException(int index) {
+    private void checkException(int index) {
         if (size <= index || index < 0) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
