@@ -24,16 +24,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index " + index + " is invalid");
         }
-        if (!isEmpty() && index == 0) {
+        if (index == size) {
+            add(value);
+        } else if (index == 0) {
             Node<T> newNode = new Node<>(null, value, first);
             first.prev = newNode;
             first = newNode;
             size++;
-        } else if (index == size) {
-            add(value);
         } else {
-            Node<T> prevNode = findNodeByIndex(index).prev;
             Node<T> nextNode = findNodeByIndex(index);
+            Node<T> prevNode = nextNode.prev;
             Node<T> newNode = new Node<>(prevNode, value, nextNode);
             prevNode.next = newNode;
             nextNode.prev = newNode;
@@ -43,8 +43,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T node : list) {
-            add(node);
+        for (T element : list) {
+            add(element);
         }
     }
 
@@ -55,9 +55,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        T result = findNodeByIndex(index).item;
-        findNodeByIndex(index).item = value;
-        return result;
+        Node<T> processedNode = findNodeByIndex(index);
+        T oldItem = processedNode.item;
+        processedNode.item = value;
+        return oldItem;
     }
 
     @Override
@@ -102,16 +103,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 node = node.next;
             }
             return node;
-        } else {
-            node = last;
-            for (int i = size - 1; i > index; i--) {
-                node = node.prev;
-            }
-            return node;
         }
+        node = last;
+        for (int i = size - 1; i > index; i--) {
+            node = node.prev;
+        }
+        return node;
     }
 
-    T unlink(Node<T> node) {
+    private T unlink(Node<T> node) {
         final T value = node.item;
         final Node<T> next = node.next;
         final Node<T> prev = node.prev;
