@@ -33,7 +33,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = newNode;
             size++;
         } else {
-            Node<T> nodeByIndex = getNodesIndex(index);
+            Node<T> nodeByIndex = getNodeByIndex(index);
             Node<T> newNode = new Node<>(nodeByIndex.prev, value, nodeByIndex);
             nodeByIndex.prev.next = newNode;
             nodeByIndex.prev = newNode;
@@ -50,12 +50,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return getNodesIndex(index).item;
+        return getNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        Node<T> actualNode = getNodesIndex(index);
+        Node<T> actualNode = getNodeByIndex(index);
         T oldValue = actualNode.item;
         actualNode.item = value;
         return oldValue;
@@ -63,7 +63,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        return unlink(getNodesIndex(index));
+        return unlink(getNodeByIndex(index));
     }
 
     @Override
@@ -92,7 +92,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return index <= size && index >= 0;
     }
 
-    private Node<T> getNodesIndex(int index) {
+    private Node<T> getNodeByIndex(int index) {
         if (index == size || !isIndexValid(index)) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
