@@ -24,7 +24,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index has not been found");
-        } else if (index == size) {
+        }
+        if (index == size) {
             add(value);
         } else if (index == 0) {
             Node<T> newNode = new Node<>(null, value, first);
@@ -103,13 +104,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 actualNode = actualNode.next;
             }
             return actualNode;
-        } else {
-            actualNode = last;
-            for (i = size - 1; i > index; --i) {
-                actualNode = actualNode.prev;
-            }
-            return actualNode;
         }
+        actualNode = last;
+        for (i = size - 1; i > index; --i) {
+            actualNode = actualNode.prev;
+        }
+        return actualNode;
     }
 
     private T unlink(Node<T> actualNode) {
