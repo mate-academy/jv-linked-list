@@ -20,18 +20,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public String toString() {
-        Node<T> node = head;
-        System.out.print("[");
-        do {
-            System.out.print(node.element + " ");
-            node = node.next;
-        } while (node != tail);
-        System.out.println(tail.element + "]");
-        return null;
-    }
-
-    @Override
     public void add(T value) {
         if (isEmpty()) {
             head = new Node<>(null, value, null);
@@ -46,7 +34,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         Node<T> newNode;
-        Node<T> oldNode;
         if ((index > size) || (index < 0)) {
             throw new IndexOutOfBoundsException("Can't add element - index bigger than size");
         }
@@ -59,22 +46,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head.prev = newNode;
             head = newNode;
             size++;
+            return;
         }
         if (index == size - 1) {
-            newNode = new Node<>(tail.prev, value, tail);
-            tail.prev.next = newNode;
-            tail.prev = newNode;
+            addNode(tail.prev, value);
             size++;
+            return;
         }
-        if ((index > size / 2)) {
-            oldNode = iterateFromTail(size - index);
-            addLink(oldNode, value);
-            size++;
-        } else if ((index < size / 2) && (index > 0)) {
-            oldNode = iterateFromHead(index).prev;
-            addLink(oldNode, value);
-            size++;
-        }
+        Node<T> oldNode;
+        oldNode = getNode(index);
+        addNode(oldNode, value);
+        size++;
     }
 
     @Override
@@ -95,10 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size - 1) {
             return tail.element;
         }
-        if ((index > size / 2) && (index < size - 1)) {
-            return iterateFromTail(size - index).next.element;
-        }
-        return iterateFromHead(index).element;
+        return getNode(index).next.element;
     }
 
     @Override
@@ -117,19 +96,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail.element = value;
             return element;
         }
-        if ((index > size / 2) && (index < size - 1)) {
-            element = iterateFromTail(size - index).next.element;
-            iterateFromTail(size - index).next.element = value;
-            return element;
-        }
-        element = iterateFromHead(index).element;
-        iterateFromHead(index).element = value;
+        Node<T> node;
+        node = getNode(index).next;
+        element = node.element;
+        node.element = value;
         return element;
     }
 
     @Override
     public T remove(int index) {
-        Node<T> oldNode;
         T element;
         if ((index >= size) || (index < 0)) {
             throw new IndexOutOfBoundsException("Can't remove element - index bigger than size");
@@ -154,16 +129,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size--;
             return element;
         }
-        if (index > size / 2) {
-            oldNode = iterateFromTail(size - index).next;
-            element = oldNode.element;
-            removeLink(oldNode);
-            size--;
-            return element;
-        }
-        oldNode = iterateFromHead(index);
+        Node<T> oldNode;
+        oldNode = getNode(index).next;
         element = oldNode.element;
-        removeLink(oldNode);
+        unLink(oldNode);
         size--;
         return element;
     }
@@ -188,7 +157,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node = node.next;
             equal = (node.element == null) ? (object == null) : (node.element.equals(object));
             if (equal) {
-                removeLink(node);
+                unLink(node);
                 size--;
                 return true;
             }
@@ -206,29 +175,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return (size == 0);
     }
 
-    private Node<T> iterateFromHead(int index) {
-        Node<T> node = head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
-        }
-        return node;
-    }
-
-    private Node<T> iterateFromTail(int index) {
-        Node<T> node = tail;
-        for (int i = 0; i < index; i++) {
-            node = node.prev;
-        }
-        return node;
-    }
-
-    private void addLink(Node<T> oldNode, T value) {
-        Node<T> newNode = new Node<>(oldNode, value, oldNode.next);
-        oldNode.next = newNode;
-        newNode.next.prev = newNode;
-    }
-
-    private void removeLink(Node<T> oldNode) {
+    private void unLink(Node<T> oldNode) {
         if (oldNode.next == null) { // oldNode == tail
             oldNode.prev.next = null;
             tail = oldNode.prev;
@@ -241,5 +188,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = null;
             tail = null;
         }
+    }
+
+    private Node<T> getNode(int index) {
+        Node<T> node;
+        if (index > size / 2) {
+            node = tail;
+            for (int i = 0; i < size - index; i++) {
+                node = node.prev;
+            }
+            return node;
+        } else {
+            node = head;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+            return node.prev;
+        }
+    }
+
+    private void addNode(Node<T> oldNode, T value) {
+        Node<T> newNode = new Node<>(oldNode, value, oldNode.next);
+        oldNode.next = newNode;
+        newNode.next.prev = newNode;
     }
 }
