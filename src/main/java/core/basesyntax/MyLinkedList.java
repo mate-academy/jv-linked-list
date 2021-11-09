@@ -37,14 +37,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException();
         }
-
-        if (size == 0 || size == index) {
+        if (size == index) {
             add(value);
         } else {
-            Node<T> current = head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
+            Node<T> current = (Node<T>) getNodeByIndex(index);
             Node<T> newNode = new Node<>(current.prev, value, current);
             if (index == 0) {
                 head = newNode;
@@ -69,10 +65,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException();
         }
         if (index < (size / 2)) {
-            Node<T> current = head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
+            Node<T> current = (Node<T>) getNodeByIndex(index);
             return current.item;
         } else {
             Node<T> current = tail;
@@ -88,10 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
-        Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
+        Node<T> currentNode = (Node<T>) getNodeByIndex(index);
         T result = currentNode.item;
         currentNode.item = value;
         return result;
@@ -102,11 +92,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
-        return unlink(current);
+        return unlink((Node<T>) getNodeByIndex(index));
     }
 
     @Override
