@@ -23,7 +23,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value) {
         Node<T> newNode = new Node<>(null, value, null);
         if (head == null) {
-            head = this.tail = newNode;
+            head = newNode;
+            tail = head;
         } else {
             tail.next = newNode;
             newNode.prev = tail;
@@ -36,15 +37,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         indexCheck(index, size + 1);
         Node<T> newNode = new Node<>(null, value, null);
-        if (head == null && index == 0) {
-            head = this.tail = newNode;
+        if (index == size) {
+            add(value);
+            size--;
         } else if (index == 0) {
             newNode.next = head;
             head.prev = newNode;
             head = newNode;
-        } else if (index == size) {
-            add(value);
-            size--;
         } else {
             Node<T> current = getNodeByIndex(index);
             newNode.next = current;
@@ -56,9 +55,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        Node<T> current;
+        if (index < size / 2) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
         return current;
     }
@@ -88,18 +95,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         indexCheck(index, size);
-        T removeElement;
-        if (index == 0) {
-            removeElement = head.value;
-            unlink(head);
-        } else if (index == size - 1) {
-            removeElement = tail.value;
-            unlink(tail);
-        } else {
-            Node<T> current = getNodeByIndex(index);
-            removeElement = current.value;
-            unlink(current);
-        }
+        Node<T> current = getNodeByIndex(index);
+        T removeElement = current.value;
+        unlink(current);
         size--;
         return removeElement;
     }
@@ -108,25 +106,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         for (int i = 0; i < size; i++) {
-            if (i == 0 && size == 1 && (object != null && object.equals(current.value))) {
-                unlink(head);
-                size--;
-                return true;
-            } else if (i == 0 && (object != null && object.equals(current.value))) {
-                unlink(head);
-                size--;
-                return true;
-            } else if (i == size - 1 && (object != null && object.equals(current.value))) {
-                tail = current.prev;
-                unlink(tail);
-                size--;
-                return true;
-            } else if (object == null && current.value == null) {
-                current.prev.next = current.next;
-                current.next.prev = current.prev;
-                size--;
-                return true;
-            } else if (object != null && object.equals(current.value)) {
+            if ((object == null && current.value == null)
+                    || (object != null && object.equals(current.value))) {
+                current = getNodeByIndex(i);
                 unlink(current);
                 size--;
                 return true;
@@ -136,7 +118,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return false;
     }
 
-    private void unlink(Node nodeForRemove) {
+    private void unlink(Node<T> nodeForRemove) {
         if (nodeForRemove == head) {
             head = head.next;
             if (head == null) {
