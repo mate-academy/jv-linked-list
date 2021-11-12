@@ -21,11 +21,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
+        tail = new Node<>(tail, value, null);
         if (isEmpty()) {
-            head = new Node<>(null, value, null);
-            tail = head;
+            head = tail;
         } else {
-            tail = new Node<>(tail, value, null);
             tail.prev.next = tail;
         }
         size++;
@@ -34,13 +33,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         Node<T> newNode;
-        if ((index > size) || (index < 0)) {
-            throw new IndexOutOfBoundsException("Can't add element - index bigger than size");
-        }
         if (index == size) {
             add(value);
             return;
         }
+        validateIndex(index);
         Node<T> next = getNode(index);
         Node<T> prev = next.prev;
         newNode = new Node<>(prev, value, next);
@@ -62,17 +59,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if ((index >= size) || (index < 0)) {
-            throw new IndexOutOfBoundsException("Can't get element - index bigger than size");
-        }
+        validateIndex(index);
         return getNode(index).element;
     }
 
     @Override
     public T set(T value, int index) {
-        if ((index >= size) || (index < 0)) {
-            throw new IndexOutOfBoundsException("Can't set element - index bigger than size");
-        }
+        validateIndex(index);
         Node<T> node = getNode(index);
         T element = node.element;
         node.element = value;
@@ -82,9 +75,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         T element;
-        if ((index >= size) || (index < 0)) {
-            throw new IndexOutOfBoundsException("Can't remove element - index bigger than size");
-        }
+        validateIndex(index);
         Node<T> oldNode = getNode(index);
         element = oldNode.element;
         unLink(oldNode);
@@ -157,6 +148,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 node = node.next;
             }
             return node;
+        }
+    }
+
+    void validateIndex(int index) {
+        if ((index >= size) || (index < 0)) {
+            throw new IndexOutOfBoundsException("Can't process element - index bigger than size");
         }
     }
 }
