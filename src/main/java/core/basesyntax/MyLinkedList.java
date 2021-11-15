@@ -168,23 +168,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    Node<T> node(int index) {
-        if (index < (size >> 1)) {
-            Node<T> x = first;
-            for (int i = 0; i < index; i++) {
-                x = x.next;
-            }
-            return x;
-        } else {
-            Node<T> x = last;
-            for (int i = size - 1; i > index; i--) {
-                x = x.prev;
-            }
-            return x;
-        }
-    }
-
-    T unlink(Node<T> x) {
+    private T unlink(Node<T> x) {
         final T element = x.item;
         final Node<T> next = x.next;
         final Node<T> prev = x.prev;
@@ -206,6 +190,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         x.item = null;
         size--;
         return element;
+    }
+
+    private Node<T> node(int index) {
+        if (index < (size >> 1)) {
+            Node<T> x = first;
+            for (int i = 0; i < index; i++) {
+                x = x.next;
+            }
+            return x;
+        } else {
+            Node<T> x = last;
+            for (int i = size - 1; i > index; i--) {
+                x = x.prev;
+            }
+            return x;
+        }
     }
 
     private boolean isPositionIndex(int index) {
