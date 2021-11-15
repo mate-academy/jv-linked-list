@@ -9,8 +9,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
 
-    private int modCount = 0;
-
     public int getSize() {
         return size;
     }
@@ -113,9 +111,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             pred.next = succ;
             succ.prev = pred;
         }
-
         size += numNew;
-        modCount++;
     }
 
     @Override
@@ -185,7 +181,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             l.next = newNode;
         }
         size++;
-        modCount++;
     }
 
     void linkBefore(T e, Node<T> succ) {
@@ -198,7 +193,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             pred.next = newNode;
         }
         size++;
-        modCount++;
     }
 
     Node<T> node(int index) {
@@ -238,7 +232,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         x.item = null;
         size--;
-        modCount++;
         return element;
     }
 
