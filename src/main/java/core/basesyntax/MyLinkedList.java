@@ -144,7 +144,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    void linkLast(T e) {
+    private void linkLast(T e) {
         final Node<T> l = last;
         final Node<T> newNode = new Node<>(l, e, null);
         last = newNode;
@@ -156,7 +156,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    void linkBefore(T e, Node<T> succ) {
+    private void linkBefore(T e, Node<T> succ) {
         final Node<T> pred = succ.prev;
         final Node<T> newNode = new Node<>(pred, e, succ);
         succ.prev = newNode;
