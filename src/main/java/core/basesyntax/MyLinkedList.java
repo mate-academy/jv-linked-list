@@ -213,13 +213,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkElementIndex(int index) {
-        if (!isElementIndex(index)) {
+        if (!(index >= 0 && index < size)) {
             throw new IndexOutOfBoundsException("IndexOutOfBoundsException: " + index);
         }
-    }
-
-    private boolean isElementIndex(int index) {
-        return index >= 0 && index < size;
     }
 
 }
