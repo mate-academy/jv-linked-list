@@ -13,10 +13,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size;
     }
 
-    public void setSize(int size) {
-        this.size = size;
-    }
-
     private static class Node<T> {
 
         private Node<T> next;
