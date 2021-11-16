@@ -40,43 +40,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int index = size;
-        checkPositionIndex(index);
-
-        Object[] a = list.toArray();
-        int numNew = a.length;
-        if (numNew == 0) {
-            return;
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-
-        Node<T> pred;
-        Node<T> succ;
-        if (index == size) {
-            succ = null;
-            pred = last;
-        } else {
-            succ = node(index);
-            pred = succ.prev;
-        }
-
-        for (Object o : a) {
-            @SuppressWarnings("unchecked") T e = (T) o;
-            Node<T> newNode = new Node<>(pred, e, null);
-            if (pred == null) {
-                first = newNode;
-            } else {
-                pred.next = newNode;
-            }
-            pred = newNode;
-        }
-
-        if (succ == null) {
-            last = pred;
-        } else {
-            pred.next = succ;
-            succ.prev = pred;
-        }
-        size += numNew;
     }
 
     @Override
