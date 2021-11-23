@@ -1,11 +1,6 @@
 package core.basesyntax;
 
-import org.w3c.dom.Node;
-
 import java.util.List;
-
-
-
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
@@ -33,10 +28,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         } else if (index == 0) {
-            Node<T> initialNode = first.next;
             Node<T> newNode = new Node<>(null, value, first);
             first = newNode;
-            initialNode.prev = newNode;
+            newNode.prev = null;
         } else {
             checkIndex(index);
             Node<T> next = getByIndex(index);
@@ -79,11 +73,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> node = first;
         for (int i = 0; i < size; i++) {
-            if (node.value == object || object != null && node.value.equals(object)) {
+            if (node.value == object || node.value.equals(object)) {
                 linkChanging(node);
                 return true;
-            }
-            else {
+            } else {
                 node = node.next;
             }
         }
@@ -91,11 +84,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getByIndex(int index) {
-            Node<T> current;
+        Node<T> current;
         if (index < size / 2) {
             current = first;
             for (int i = 0; i != index; i++) {
-               current = current.next;
+                current = current.next;
             }
         } else {
             current = last;
@@ -130,9 +123,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        Node<T> prev;
-        T value;
-        Node<T> next;
+        private Node<T> prev;
+        private T value;
+        private Node<T> next;
 
         public Node(Node<T> prev, T value, Node<T> next) {
             this.value = value;
@@ -144,7 +137,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private T linkChanging(Node<T> node) {
         Node<T> previous = node.prev;
         Node<T> next = node.next;
-
         if (previous == null) {
             first = next;
         } else {
@@ -155,9 +147,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             next.prev = previous;
         }
-
         size--;
         return node.value;
     }
-
 }
