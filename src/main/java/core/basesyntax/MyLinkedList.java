@@ -36,9 +36,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() == 0) {
-            System.out.println("list is empty");
-        }
         for (T t : list) {
             add(t);
         }
@@ -95,7 +92,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    public static class Node<T> {
+    private static class Node<T> {
         private T item;
         private Node<T> next;
         private Node<T> prev;
@@ -123,7 +120,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    public void linkFirst(T e) {
+    private void linkFirst(T e) {
         final Node<T> f = first;
         final Node<T> newNode = new Node<>(null, e, f);
         first = newNode;
@@ -135,7 +132,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    public void linkLast(T e) {
+    private void linkLast(T e) {
         final Node<T> l = last;
         final Node<T> newNode = new Node<>(l, e, null);
         last = newNode;
@@ -147,7 +144,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    public void linkBefore(T e, Node<T> existNode) {
+    private void linkBefore(T e, Node<T> existNode) {
         final Node<T> preExistNode = existNode.prev;
         final Node<T> newNode = new Node<>(preExistNode, e, existNode);
         existNode.prev = newNode;
@@ -159,26 +156,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    public T unlink(Node<T> x) {
-        final T element = x.item;
-        final Node<T> next = x.next;
-        final Node<T> prev = x.prev;
+    private T unlink(Node<T> node) {
+        final T element = node.item;
+        final Node<T> next = node.next;
+        final Node<T> prev = node.prev;
 
         if (prev == null) {
             first = next;
         } else {
             prev.next = next;
-            x.prev = null;
+            node.prev = null;
         }
 
         if (next == null) {
             last = prev;
         } else {
             next.prev = prev;
-            x.next = null;
+            node.next = null;
         }
-
-        x.item = null;
+        node.item = null;
         size--;
         return element;
     }
