@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    public static final String MESSAGE = "Index does not exist";
+    private static final String MESSAGE = "Index does not exist";
     private ListNode<T> head;
     private ListNode<T> tail;
     private int size = 0;
@@ -14,11 +14,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         ListNode<T> newNode = new ListNode<>(tail, value, null);
         if (head == null) {
             head = newNode;
-            tail = newNode;
         } else {
             tail.next = newNode;
-            tail = newNode;
         }
+        tail = newNode;
         size++;
     }
 
@@ -147,24 +146,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
         }
 
-        public T getValue() {
-            return value;
-        }
-
         public void setValue(T value) {
             this.value = value;
         }
 
-        public ListNode<T> getPrev() {
-            return prev;
-        }
-
         public void setPrev(ListNode<T> prev) {
             this.prev = prev;
-        }
-
-        public ListNode<T> getNext() {
-            return next;
         }
 
         public void setNext(ListNode<T> next) {
