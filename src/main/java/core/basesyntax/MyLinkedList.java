@@ -39,9 +39,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            final Node<T> beforeNewNode = findNodeOnIndex(index).prev;
-            final Node<T> newNode = new Node<>(beforeNewNode,value, findNodeOnIndex(index));
-            findNodeOnIndex(index).prev = newNode;
+            final Node<T> nodeOnIndex = findNodeOnIndex(index);
+            final Node<T> beforeNewNode = nodeOnIndex.prev;
+            final Node<T> newNode = new Node<>(beforeNewNode,value, nodeOnIndex);
+            nodeOnIndex.prev = newNode;
             if (beforeNewNode == null) {
                 head = newNode;
             } else {
@@ -53,20 +54,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] objects = list.toArray();
-        for (Object o: objects) {
-            add((T) o);
+        for (T element: list) {
+            add(element);
         }
     }
 
     @Override
     public T get(int index) {
         checkIndexForSettingAndRemoving(index);
-        Node<T> value = head;
-        for (int i = 0; i < index; i++) {
-            value = value.next;
-        }
-        return (T)value.element;
+        return findNodeOnIndex(index).element;
     }
 
     @Override
@@ -86,19 +82,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> x = head; x != null; x = x.next) {
+        for (Node<T> x = head; x != null; x = x.next) {
+            if (object == null) {
                 if (x.element == null) {
                     unlink(x);
                     return true;
                 }
             }
-        } else {
-            for (Node<T> x = head; x != null; x = x.next) {
-                if (object.equals(x.element)) {
-                    unlink(x);
-                    return true;
-                }
+            if (object != null && object.equals(x.element)) {
+                unlink(x);
+                return true;
             }
         }
         return false;
