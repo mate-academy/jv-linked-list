@@ -22,28 +22,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (tail == null) {
             tail = node;
             head = tail;
-            return;
+        } else {
+            tail.next = node;
+            node.prev = tail;
+            tail = node;
         }
-        tail.next = node;
-        node.prev = tail;
-        tail = node;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkOutOfBounds(index, true);
-        if (head == null || index == size) {
+        if (index == size) {
             add(value);
             return;
         }
+        checkOutOfBounds(index);
         Node node = new Node(value);
         Node nextNode = getNode(index);
         node.prev = nextNode.prev;
-        node.next = nextNode;
-        if (index == 0) {
+        if (node.prev != null) {
+            node.prev.next = node;
+        } else {
             head = node;
         }
+        node.next = nextNode;
+        nextNode.prev = node;
         size++;
     }
 
@@ -98,7 +101,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node getNode(int index) {
-        checkOutOfBounds(index, false);
+        checkOutOfBounds(index);
         boolean reverse = index > (size / 2);
         int currIndex = reverse ? size - 1 : 0;
         Node node = reverse ? tail : head;
@@ -130,9 +133,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private void checkOutOfBounds(int index, boolean add) {
-        int upperBound = size - (add ? 0 : 1);
-        if ((index < 0) || (index >= upperBound)) {
+    private void checkOutOfBounds(int index) {
+        if ((index < 0) || (index >= size)) {
             throw new IndexOutOfBoundsException();
         }
     }
