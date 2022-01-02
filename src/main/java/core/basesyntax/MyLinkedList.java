@@ -8,9 +8,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size = 0;
 
     private class Node {
-        T value;
-        Node prev;
-        Node next;
+        private T value;
+        private Node prev;
+        private Node next;
+
         Node(T value) {
             this.value = value;
         }
@@ -73,7 +74,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node node = getNode(index);
-        removeHelper(node);
+        unlink(node);
         return node.value;
     }
 
@@ -82,7 +83,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node node = head;
         while (node != null) {
             if (valueEquals(node, object)) {
-                removeHelper(node);
+                unlink(node);
                 return true;
             }
             node = node.next;
@@ -119,7 +120,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    private void removeHelper(Node node) {
+    private void unlink(Node node) {
         if (node.prev != null) {
             node.prev.next = node.next;
         } else {
