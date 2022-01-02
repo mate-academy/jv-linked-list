@@ -12,21 +12,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node prev;
         private Node next;
 
-        Node(T value) {
+        Node(Node prev, T value, Node next) {
+            this.prev = prev;
             this.value = value;
+            this.next = next;
         }
     }
 
     @Override
     public void add(T value) {
-        Node node = new Node(value);
         if (tail == null) {
-            tail = node;
+            tail = new Node(null, value, null);
             head = tail;
         } else {
-            tail.next = node;
-            node.prev = tail;
-            tail = node;
+            tail.next = new Node(tail, value, null);
+            tail = tail.next;
         }
         size++;
     }
@@ -38,16 +38,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         checkOutOfBounds(index);
-        Node node = new Node(value);
-        Node nextNode = getNode(index);
-        node.prev = nextNode.prev;
-        if (node.prev != null) {
-            node.prev.next = node;
+        Node node = getNode(index);
+        if (node.prev == null) {
+            head = new Node(null, value, node);
+            node.prev = head;
         } else {
-            head = node;
+            node.prev.next = new Node(node.prev, value, node);
+            node.prev = node.prev.next;
         }
-        node.next = nextNode;
-        nextNode.prev = node;
         size++;
     }
 
