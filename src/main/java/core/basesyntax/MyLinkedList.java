@@ -1,60 +1,32 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
-    private static class Node<E> {
-        private E item;
-        private Node<E> next;
-        private Node<E> prev;
+    private int size;
+    private Node<T> head;
+    private Node<T> tail;
 
-        public Node(Node<E> prev, E element, Node<E> next) {
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(Node<T> prev, T element, Node<T> next) {
             this.item = element;
             this.next = next;
             this.prev = prev;
         }
-
-        public void setItem(E item) {
-            this.item = item;
-        }
-
-        public E getItem() {
-            return item;
-        }
-
-        public Node<E> getNext() {
-            return next;
-        }
-
-        public void setNext(Node<E> next) {
-            this.next = next;
-        }
-
-        public Node<E> getPrev() {
-            return prev;
-        }
-
-        public void setPrev(Node<E> prev) {
-            this.prev = prev;
-        }
-
     }
-
-    private int size = 0;
-    private Node<T> head;
-    private Node<T> tail;
 
     @Override
     public void add(T value) {
         if (size == 0) {
             head = new Node<T>(null,value,null);
             tail = head;
-        } else if (size > 0) {
-            linkNodes(tail,new Node<T>(tail,value,null));
         } else {
-            throw new IndexOutOfBoundsException("Failed error");
+            linkNodes(tail,new Node<T>(tail,value,null));
         }
         size++;
     }
@@ -66,9 +38,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         Node<T> node = getNode(index);
-        Node<T> newNode = new Node<T>(node.prev,value,node);
-        linkNodes(node.prev,newNode);
-        linkNodes(newNode,node);
+        Node<T> newNode = new Node<T>(node.prev, value, node);
+        linkNodes(node.prev, newNode);
+        linkNodes(newNode, node);
         size++;
     }
 
@@ -81,23 +53,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Node<T> n = getNode(index);
-        return n.item;
-
+        return getNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         Node<T> node = getNode(index);
-        T oldvalue = node.item;
+        T valueBefore = node.item;
         node.item = value;
-        return oldvalue;
+        return valueBefore;
 
     }
 
     @Override
     public T remove(int index) {
-
         Node<T> node = getNode(index);
         linkNodes(node.prev,node.next);
         size--;
@@ -106,16 +75,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> currNode = head;
+        Node<T> rmNode = head;
         do {
-            if (Objects.equals(currNode.item,object)) {
-                linkNodes(currNode.prev,currNode.next);
+            if ((rmNode.item == object) || rmNode.item.equals(object)) {
+                linkNodes(rmNode.prev,rmNode.next);
                 size--;
                 return true;
             }
-            currNode = currNode.next;
-        } while (currNode.next != null);
-
+            rmNode = rmNode.next;
+        } while (rmNode.next != null);
         return false;
     }
 
@@ -132,13 +100,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        if (head == null || index >= size || index < 0) {
+        if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Index out of range");
         }
         Node<T> currNode;
         if (size / 2 >= index) {
             currNode = head;
-            for (int i = 1;i <= index;i++) {
+            for (int i = 1; i <= index; i++) {
                 currNode = currNode.next;
             }
         } else {
