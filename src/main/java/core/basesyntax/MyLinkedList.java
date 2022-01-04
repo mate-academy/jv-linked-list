@@ -40,7 +40,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else if (index == 0) {
-            head.prev = new Node(null, value, head);
+            head.prev = new Node<>(null, value, head);
             head = head.prev;
             size++;
         } else {
