@@ -45,7 +45,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             Node<T> getNode = getNode(index);
             Node<T> prevNode = getNode.prev;
-            Node<T> newNode = new Node<>(prevNode, value, getNode);
+            Node<T> newNode = new Node(prevNode, value, getNode);
             getNode.prev = newNode;
             prevNode.next = newNode;
             size++;
