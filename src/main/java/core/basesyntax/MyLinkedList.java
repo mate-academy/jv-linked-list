@@ -89,14 +89,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-
         return size;
     }
 
     @Override
     public boolean isEmpty() {
-
-        return size <= 0;
+        return size == 0;
     }
 
     private Node<T> getNode(int index) {
@@ -135,6 +133,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             tail = first;
         }
-
     }
 }
