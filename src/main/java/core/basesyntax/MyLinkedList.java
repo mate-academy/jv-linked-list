@@ -44,12 +44,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == size) { // item is adding at the last position, next by this.last
             addLast(value);
         } else {
-            MyLinkedList.Node positionNode = getPositionByIndex(index);
+            MyLinkedList.Node<T> positionNode = getPositionByIndex(index);
             addBefore(value, positionNode);
         }
     }
 
-    private Node getPositionByIndex(int index) {
+    private Node<T> getPositionByIndex(int index) {
         if (index <= size / 2) {
             return lookFromFirst(index);
         } else {
@@ -57,8 +57,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node lookFromFirst(int index) {
-        MyLinkedList.Node currentNode = this.first;
+    private Node<T> lookFromFirst(int index) {
+        MyLinkedList.Node<T> currentNode = this.first;
         for (int i = 0; i < size; i++) {
             if (i == index) {
                 break;
@@ -68,8 +68,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    private Node lookFromLast(int index) {
-        MyLinkedList.Node currentNode = this.last;
+    private Node<T> lookFromLast(int index) {
+        MyLinkedList.Node<T> currentNode = this.last;
         for (int i = size - 1; i >= 0; i--) {
             if (i == index) {
                 break;
@@ -99,10 +99,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         ++size;
     }
 
-    private void addBefore(T value, Node node) {
+    private void addBefore(T value, Node<T> node) {
         if (node == this.first) {
-            MyLinkedList.Node<T> newNode = new MyLinkedList.Node<>(null, value, node);
-            this.first = newNode;
+            this.first = new MyLinkedList.Node<>(null, value, node);
         } else {
             MyLinkedList.Node<T> newNode = new MyLinkedList.Node<>(node.prev, value, node);
             newNode.prev.next = newNode;
@@ -124,7 +123,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (!(index >= 0 && index < size)) {
             throw new IndexOutOfBoundsException("Wrong index value");
         }
-        MyLinkedList.Node node = getPositionByIndex(index);
+        MyLinkedList.Node<T> node = getPositionByIndex(index);
         T oldValue = (T) node.value;
         node.value = value;
         return oldValue;
@@ -135,8 +134,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (!(index >= 0 && index < size)) {
             throw new IndexOutOfBoundsException("Wrong index value");
         }
-        MyLinkedList.Node removedNode = getPositionByIndex(index);
-        return (T) unlink(removedNode);
+        return (T) unlink(getPositionByIndex(index));
     }
 
     @Override
@@ -144,20 +142,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0) {
             return false;
         }
-        boolean found = false;
-        MyLinkedList.Node<T> searchNode = new MyLinkedList.Node<>(null,
-                object == null ? null : object, null);
+        boolean foundAndRemoved = false;
+        MyLinkedList.Node<T> searchNode = new MyLinkedList.Node<>(null, object, null);
         MyLinkedList.Node<T> currentNode = this.first;
         for (int i = 0; i < size; i++) {
             if ((currentNode.value == searchNode.value && searchNode.value == null)
                     || currentNode.value.equals(searchNode.value)) {
-                found = true;
                 unlink(currentNode);
+                foundAndRemoved = true;
                 break;
             }
             currentNode = currentNode.next;
         }
-        return found;
+        return foundAndRemoved;
     }
 
     public T unlink(Node<T> node) {
@@ -174,7 +171,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else { // node is in between
             node.prev.next = node.next;
             node.next.prev = node.prev;
-            node.next = node.next = null;
+            node.next = null;
         }
         --size;
         return node.value;
