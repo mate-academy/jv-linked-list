@@ -53,14 +53,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndexOnGet(index);
-        return (T) getPositionByIndex(index).value;
+        return getPositionByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndexOnGet(index);
         Node<T> node = getPositionByIndex(index);
-        T oldValue = (T) node.value;
+        T oldValue = node.value;
         node.value = value;
         return oldValue;
     }
@@ -68,7 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndexOnGet(index);
-        return (T) unlink(getPositionByIndex(index));
+        return unlink(getPositionByIndex(index));
     }
 
     @Override
@@ -98,7 +98,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    public T unlink(Node<T> node) {
+    private T unlink(Node<T> node) {
         if (node == first && node == last) { // node is the one and only in the list
             first = last = null;
         } else if (node == last) { // node is last in the list
