@@ -7,30 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
 
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-    public Node<T> getFirst() {
-        return first;
-    }
-
-    public void setFirst(Node<T> first) {
-        this.first = first;
-    }
-
-    public Node<T> getLast() {
-        return last;
-    }
-
-    public void setLast(Node<T> last) {
-        this.last = last;
-    }
-
     private static class Node<T> {
         private T element;
         private Node<T> next;
@@ -45,34 +21,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
             this.prev = prev;
         }
-
-        public T getElement() {
-            return element;
-        }
-
-        public void setElement(T element) {
-            this.element = element;
-        }
-
-        public Node<T> getNext() {
-            return next;
-        }
-
-        public void setNext(Node<T> next) {
-            this.next = next;
-        }
-
-        public Node<T> getPrev() {
-            return prev;
-        }
-
-        public void setPrev(Node<T> prev) {
-            this.prev = prev;
-        }
-    }
-
-    private Node<T> getNextElement(Node<T> current) {
-        return current.getNext();
     }
 
     @Override
@@ -116,7 +64,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T e: list) {
+        for (T e : list) {
             add(e);
         }
     }
@@ -146,19 +94,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> x = first; x != null; x = x.next) {
+        for (Node<T> x = first; x != null; x = x.next) {
+            if (object == null) {
                 if (x.element == null) {
                     removeLink(x);
                     return true;
                 }
-            }
-        } else {
-            for (Node<T> x = first; x != null; x = x.next) {
-                if (object.equals(x.element)) {
-                    removeLink(x);
-                    return true;
-                }
+            } else if (object.equals(x.element)) {
+                removeLink(x);
+                return true;
             }
         }
         return false;
@@ -180,7 +124,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    T removeLink(Node<T> x) {
+    private T removeLink(Node<T> x) {
         T element = x.element;
         Node<T> next = x.next;
         Node<T> prev = x.prev;
