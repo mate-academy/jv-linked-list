@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size;
 
-    static class Node<T> {
-        private Node<T> prev;
-        private T item;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T items, Node<T> next) {
-            this.prev = prev;
-            this.item = items;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         if (first == null) {
@@ -47,7 +35,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkForIndex(index);
-        return nodeOnIndex(index) == null ? null : nodeOnIndex(index).item;
+        return nodeOnIndex(index).item;
     }
 
     @Override
@@ -67,8 +55,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         for (Node<T> nodeEdited = first; nodeEdited != null; nodeEdited = nodeEdited.next) {
-            if (nodeEdited.item == null && object == null
-                    || object != null && object.equals(nodeEdited.item)) {
+            if (nodeEdited.item == object || object != null && object.equals(nodeEdited.item)) {
                 unlink(nodeEdited);
                 return true;
             }
@@ -84,6 +71,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private static class Node<T> {
+        private Node<T> prev;
+        private T item;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T item, Node<T> next) {
+            this.prev = prev;
+            this.item = item;
+            this.next = next;
+        }
     }
 
     private Node<T> nodeOnIndex(int index) {
