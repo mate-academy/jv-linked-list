@@ -87,67 +87,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexCheck(index, size);
-        T removeElement;
+        indexCheck(index,size);
+        T removedElement;
         if (index == 0) {
-            removeElement = head.value;
-            unlink(head);
-        } else if (index == size - 1) {
-            removeElement = tail.value;
-            unlink(tail);
+            removedElement = head.value;
+            head = head.next;
+            if (head == null) {
+                tail = null;
+            }
         } else {
-            Node<T> current = getNodeByIndex(index);
-            removeElement = current.value;
-            unlink(current);
+            Node<T> prev = getNodeByIndex(index - 1);
+            removedElement = prev.next.value;
+            prev.next = prev.next.next;
+            if (index == size - 1) {
+                tail = prev;
+            }
         }
         size--;
-        return removeElement;
+        return removedElement;
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> current = head;
         for (int i = 0; i < size; i++) {
-            if (i == 0 && size == 1 && (object != null && object.equals(current.value))) {
-                unlink(head);
-                size--;
-                return true;
-            } else if (i == 0 && (object != null && object.equals(current.value))) {
-                unlink(head);
-                size--;
-                return true;
-            } else if (i == size - 1 && (object != null && object.equals(current.value))) {
-                tail = current.prev;
-                unlink(tail);
-                size--;
-                return true;
-            } else if (object == null && current.value == null) {
-                current.prev.next = current.next;
-                current.next.prev = current.prev;
-                size--;
-                return true;
-            } else if (object != null && object.equals(current.value)) {
-                unlink(current);
-                size--;
+            if (current.value == object || current.value.equals(object)) {
+                remove(i);
                 return true;
             }
             current = current.next;
         }
         return false;
-    }
-
-    private void unlink(Node nodeForRemove) {
-        if (nodeForRemove == head) {
-            head = head.next;
-            if (head == null) {
-                tail = null;
-            }
-        } else if (nodeForRemove == tail) {
-            tail = tail.prev;
-        } else {
-            nodeForRemove.next.prev = nodeForRemove.prev;
-            nodeForRemove.prev.next = nodeForRemove.next;
-        }
     }
 
     @Override
