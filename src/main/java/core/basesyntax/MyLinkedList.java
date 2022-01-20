@@ -5,7 +5,6 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> head;
-    private Node<T> element;
     private Node<T> tail;
     private int size;
 
@@ -25,7 +24,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (isEmpty()) {
-            head = tail = element = new Node(null, value, null);
+            head = tail = new Node(null, value, null);
         } else {
             Node<T> newNode = new Node(tail, value, null);
             tail.next = newNode;
@@ -39,31 +38,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         checkForEqualsIndex(index, size);
         Node<T> newNode = new Node<>(null, value, null);
-        if (head == null) {
-            head = tail = element = newNode;
+        if (index == size || head == null) {
+            add(value);
         } else if (index == 0) {
             head.prev = newNode;
             newNode.next = head;
             head = newNode;
-        } else if (index == size) {
-            tail.next = newNode;
-            newNode.prev = tail;
-            tail = newNode;
+            size++;
         } else {
-            Node<T> previuos = getItByIndex(index - 1);
-            newNode.prev = previuos;
-            newNode.next = previuos.next;
-            previuos.next = newNode;
+            Node<T> node = getNodeByIndex(index);
+            newNode.prev = node.prev;
+            newNode.next = node;
+            node.prev.next = newNode;
+            node.prev = newNode;
+            size++;
         }
-        size++;
-    }
 
-    private Node<T> getItByIndex(int i) {
-        Node<T> prevNode = head;
-        for (int j = 0; j < i; j++) {
-            prevNode = prevNode.next;
-        }
-        return prevNode;
     }
 
     @Override
@@ -75,14 +65,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, size);
-        return getItByIndex(index).value;
+        return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index, size);
-        Node<T> getNode = getItByIndex(index);
+        Node<T> getNode = getNodeByIndex(index);
         T element = getNode.value;
         getNode.value = value;
         return element;
@@ -90,8 +78,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index, size);
-        Node<T> removes = getItByIndex(index);
+        Node<T> removes = getNodeByIndex(index);
         if (index == 0 && size > 1) {
             Node<T> mustInHead = head.next;
             mustInHead.prev = null;
@@ -126,6 +113,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private Node<T> getNodeByIndex(int i) {
+        checkIndex(i, size);
+        boolean firstOrSecond = i > (size / 2);
+        int currIndex = firstOrSecond ? size - 1 : 0;
+        Node<T> newNode = firstOrSecond ? tail : head;
+        if (firstOrSecond) {
+            while (currIndex != i) {
+                newNode = newNode.prev;
+                currIndex--;
+            }
+        } else {
+            while (currIndex != i) {
+                newNode = newNode.next;
+                currIndex++;
+            }
+        }
+        return newNode;
     }
 
     private void checkForEqualsIndex(int index, int size) {
