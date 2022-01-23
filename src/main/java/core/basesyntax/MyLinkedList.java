@@ -63,7 +63,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         Node<T> resultNode = getNodeByIndex(index);
-        T result =  resultNode.item;
+        T result = resultNode.item;
         resultNode.item = value;
         return result;
     }
@@ -74,7 +74,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException(" index error ");
         } else {
             Node<T> removNode = getNodeByIndex(index);
-            T result =  removNode.item;
+            T result = removNode.item;
             unlink(removNode);
             size--;
             return result;
