@@ -4,12 +4,12 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size = 0;
-    private Node first;
-    private Node last;
+    private Node<T> first;
+    private Node<T> last;
 
     @Override
     public void add(T value) {
-        Node newNode = new Node(null, value,null);
+        Node<T> newNode = new Node<>(null, value,null);
         if (size == 0) {
             first = newNode;
             last = newNode;
@@ -24,11 +24,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Node newNode = new Node(null, value,null);
+        Node<T> newNode = new Node<>(null, value,null);
         if (size == index) {
-            add((T) newNode.item);
+            add(newNode.item);
         } else {
-            Node shiftableNode = nodeFromIndex(index);
+            Node<T> shiftableNode = getNodeByIndex(index);
             if (shiftableNode.prev == null) {
                 newNode.next = shiftableNode;
                 shiftableNode.prev = newNode;
@@ -57,13 +57,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
 
-        return nodeFromIndex(index).item;
+        return getNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        Node resultNode = nodeFromIndex(index);
-        T result = (T) resultNode.item;
+        Node<T> resultNode = getNodeByIndex(index);
+        T result =  resultNode.item;
         resultNode.item = value;
         return result;
     }
@@ -73,8 +73,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (isEmpty() || index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(" index error ");
         } else {
-            Node removNode = nodeFromIndex(index);
-            T result = (T) removNode.item;
+            Node<T> removNode = getNodeByIndex(index);
+            T result =  removNode.item;
             unlink(removNode);
             size--;
             return result;
@@ -110,7 +110,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return index < size / 2;
     }
 
-    private Node<T> nodeFromIndex(int index) {
+    private Node<T> getNodeByIndex(int index) {
         int i = 0;
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(" index error ");
@@ -137,7 +137,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
-    private void unlink(Node removtable) {
+    private void unlink(Node<T> removtable) {
         if (removtable.prev != null || removtable.next != null) {
             if (removtable.next != null) {
                 removtable.next.prev = removtable.prev;
