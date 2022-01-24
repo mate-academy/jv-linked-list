@@ -29,7 +29,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             prev.next = newNode;
         }
         size++;
-
     }
 
     private boolean isValidPositionIndex(int index) {
@@ -54,22 +53,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             linkLast(value);
         } else {
-            linkBefore(value, node(index));
+            linkBefore(value, findNode(index));
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        T[] array = (T[]) list.toArray();
-        int arraySize = array.length;
-        if (arraySize == 0) {
-            return;
-        }
-
-        for (T t : array) {
+        for (T t : list) {
             linkLast(t);
         }
-
     }
 
     private boolean isValidIndex(int index) {
@@ -82,7 +74,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> node(int index) {
+    private Node<T> findNode(int index) {
         checkValidIndex(index);
 
         int i;
@@ -95,7 +87,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 current = current.next;
                 i++;
             }
-
         } else {
             i = size - 1;
             current = last;
@@ -104,27 +95,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 i--;
             }
         }
-        return current;
 
+        return current;
     }
 
     @Override
     public T get(int index) {
         checkValidIndex(index);
 
-        return node(index).item;
+        return findNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         checkValidIndex(index);
-        Node<T> node = node(index);
+        Node<T> node = findNode(index);
         T oldValue = node.item;
         node.item = value;
         return oldValue;
     }
 
-    private T deleteLink(Node<T> node) {
+    private T unlink(Node<T> node) {
         final T value = node.item;
         Node<T> prev = node.prev;
         Node<T> next = node.next;
@@ -152,7 +143,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkValidIndex(index);
 
-        return deleteLink(node(index));
+        return unlink(findNode(index));
     }
 
     @Override
@@ -160,18 +151,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (object == null) {
             for (Node<T> current = first; current != null; current = current.next) {
                 if (current.item == null) {
-                    deleteLink(current);
+                    unlink(current);
                     return true;
                 }
             }
         } else {
             for (Node<T> current = first; current != null; current = current.next) {
                 if (current.item.equals(object)) {
-                    deleteLink(current);
+                    unlink(current);
                     return true;
                 }
             }
         }
+
         return false;
     }
 
@@ -194,8 +186,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.item = item;
             this.prev = prev;
             this.next = next;
-
         }
 
     }
+
 }
