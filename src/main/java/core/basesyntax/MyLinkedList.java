@@ -3,6 +3,10 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    int size = 0;
+    Node<T> first;
+    Node<T> second;
+
     @Override
     public void add(T value) {
     }
@@ -43,5 +47,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return false;
+    }
+
+    private static class Node<T> {
+        T item;
+        Node<T> next;
+        Node<T> prev;
+
+        public Node(Node<T> prev, T item, Node<T> next) {
+            this.prev = prev;
+            this.item = item;
+            this.next = next;
+        }
     }
 }
