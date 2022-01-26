@@ -5,10 +5,19 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     int size = 0;
     Node<T> first;
-    Node<T> second;
+    Node<T> last;
 
     @Override
     public void add(T value) {
+        Node<T> newNode = new Node<>(last, value,null);
+        if (size == 0) {
+            first = newNode;
+            last = newNode;
+            size++;
+        } else {
+            last = newNode;
+            size++;
+        }
     }
 
     @Override
@@ -21,7 +30,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndex(index);
+        Node<T> value = first;
+        for (int i = 0; i <= index; i++) {
+            value = value.next;
+        }
+        if (value.item == null) {
+            return null;
+        }
+        return value.item;
     }
 
     @Override
@@ -41,12 +58,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("The index is out of the bound");
+        }
     }
 
     private static class Node<T> {
