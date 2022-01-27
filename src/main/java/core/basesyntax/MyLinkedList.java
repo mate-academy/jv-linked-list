@@ -22,7 +22,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = newNode;
             size++;
         } else {
-            checkIndexOne(index);
+            checkIndex(index);
             Node<T> nodeByIndex = getNodeByIndex(index);
             Node<T> newNode = new Node<>(value, nodeByIndex.previous, nodeByIndex);
             nodeByIndex.previous.next = newNode;
@@ -40,13 +40,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndexOne(index);
+        checkIndex(index);
         return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndexOne(index);
+        checkIndex(index);
         Node<T> nodeByIndex = getNodeByIndex(index);
         T previousValue = nodeByIndex.value;
         nodeByIndex.value = value;
@@ -55,16 +55,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndexOne(index);
+        checkIndex(index);
         return unlink(getNodeByIndex(index));
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> actualNode;
-        for (actualNode = first; actualNode != null; actualNode = actualNode.next) {
-            if (actualNode.value == object || object != null && object.equals(actualNode.value)) {
-                unlink(actualNode);
+        Node<T> node;
+        for (node = first; node != null; node = node.next) {
+            if (node.value == object || object != null && object.equals(node.value)) {
+                unlink(node);
                 return true;
             }
         }
@@ -130,7 +130,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return element;
     }
 
-    private void checkIndexOne(int index) {
+    private void checkIndex(int index) {
         if (size <= index || index < 0) {
             throw new IndexOutOfBoundsException("Sorry, bad index entered" + index);
         }
