@@ -137,9 +137,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void unlink(Node<T> node) {
         if (node == head && size == 1) {
-            node.next = null;
+            head = null;
+            tail = null;
         } else if (node == head && size > 1) {
             head = head.next;
+            head.prev = null;
         } else if (node == tail) {
             node.prev.next = null;
             tail = node.prev;
