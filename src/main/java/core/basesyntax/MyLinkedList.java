@@ -16,25 +16,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         if (index == size) {
             addNew(value);
+            return;
         } else if (index == 0) {
             Node<T> newNode = new Node<>(value, null, first);
             first.previous = newNode;
             first = newNode;
-            size++;
         } else {
             checkIndex(index);
             Node<T> nodeByIndex = getNodeByIndex(index);
             Node<T> newNode = new Node<>(value, nodeByIndex.previous, nodeByIndex);
             nodeByIndex.previous.next = newNode;
             nodeByIndex.previous = newNode;
-            size++;
         }
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            addNew(t);
+        for (T value : list) {
+            addNew(value);
         }
     }
 
