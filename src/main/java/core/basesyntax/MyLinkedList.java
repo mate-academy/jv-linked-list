@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node<T> head;
     private Node<T> tail;
+    private Node<T> head;
     private int size;
 
     private static class Node<T> {
@@ -23,12 +23,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (isEmpty()) {
-            tail = new Node<T>(null, value, null);
-            head = tail;
+            head = new Node<>(null, value, null);
+            tail = head;
         } else {
-            Node<T> newNode = new Node<T>(head, value, null);
-            head.next = newNode;
-            head = newNode;
+            Node<T> newNode = new Node<>(tail, value, null);
+            tail.next = newNode;
+            tail = newNode;
         }
         size++;
     }
@@ -39,14 +39,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        Node<T> newNode;
-        Node<T> nodeOfIndex = getNodeOfIndex(index);
         if (index == 0) {
-            newNode = new Node<T>(null, value, nodeOfIndex);
-            nodeOfIndex.prev = newNode;
-            tail = newNode;
+            Node<T> newNode = new Node<>(null, value, head);
+            head = newNode;
+            head.next.prev = newNode;
         } else {
-            newNode = new Node<T>(nodeOfIndex.prev, value, nodeOfIndex);
+            Node<T> nodeOfIndex = getNodeOfIndex(index);
+            Node<T> newNode = new Node<>(nodeOfIndex.prev, value, nodeOfIndex);
             nodeOfIndex.prev.next = newNode;
             nodeOfIndex.prev = newNode;
         }
@@ -55,8 +54,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T value : list) {
+            add(value);
         }
     }
 
@@ -73,10 +72,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return oldValue;
         }
         throw new IndexOutOfBoundsException();
-    }
-
-    private boolean checkIndex(int index) {
-        return index >= 0 && index < size;
     }
 
     @Override
@@ -100,41 +95,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private int getIndexOfElement(T object) throws NoSuchElementException {
-        Node<T> node = tail;
-        for (int i = 0; i < size; i++) {
-            if (node.element == object || node.element.equals(object)) {
-                return i;
-            }
-            node = node.next;
-        }
-        throw new NoSuchElementException();
-    }
-
-    private void unlink(Node<T> node) {
-        if (node == tail && size == 1) {
-            node.prev = null;
-            node.next = null;
-            head = null;
-            tail = null;
-        } else if (node == tail && size > 1) {
-            tail = tail.next;
-            tail.prev = null;
-            node.prev = null;
-            node.next = null;
-        } else if (node == head) {
-            node.prev.next = node.next;
-            head = node.prev;
-            node.prev = null;
-            node.next = null;
-        } else {
-            node.prev.next = node.next;
-            node.next.prev = node.prev;
-            node.prev = null;
-            node.next = null;
-        }
-    }
-
     @Override
     public int size() {
         return size;
@@ -148,13 +108,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNodeOfIndex(int index) {
         if (checkIndex(index)) {
             if (index <= size / 2) {
-                Node<T> node = tail;
+                Node<T> node = head;
                 for (int i = 0; i < index; i++) {
                     node = node.next;
                 }
                 return node;
             } else if (index > size / 2) {
-                Node<T> node = head;
+                Node<T> node = tail;
                 for (int i = size - 1; i > index; i--) {
                     node = node.prev;
                 }
@@ -162,5 +122,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         throw new IndexOutOfBoundsException();
+    }
+
+    private int getIndexOfElement(T object) throws NoSuchElementException {
+        Node<T> node = head;
+        for (int i = 0; i < size; i++) {
+            if (node.element == object || node.element.equals(object)) {
+                return i;
+            }
+            node = node.next;
+        }
+        throw new NoSuchElementException();
+    }
+
+    private void unlink(Node<T> node) {
+        if (node == head && size == 1) {
+            node.next = null;
+        } else if (node == head && size > 1) {
+            head = head.next;
+        } else if (node == tail) {
+            node.prev.next = null;
+            tail = node.prev;
+        } else {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        }
+    }
+
+    private boolean checkIndex(int index) {
+        return index >= 0 && index < size;
     }
 }
