@@ -130,11 +130,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         throw new NoSuchElementException();
     }
 
-    private boolean checkingIndex(int index) {
+    private void checkingIndex(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
-        return index >= 0 && index < size;
     }
 
     private void unlink(Node<T> node) {
