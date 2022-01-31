@@ -9,13 +9,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        addNew(value);
+        if (isEmpty()) {
+            first = new Node<>(value, null, null);
+            last = first;
+        } else {
+            Node<T> newNode = new Node<>(value, last, null);
+            last.next = newNode;
+            last = newNode;
+        }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
         if (index == size) {
-            addNew(value);
+            add(value);
             return;
         } else if (index == 0) {
             Node<T> newNode = new Node<>(value, null, first);
@@ -34,7 +42,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         for (T value : list) {
-            addNew(value);
+            add(value);
         }
     }
 
@@ -79,18 +87,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void addNew(T value) {
-        if (isEmpty()) {
-            first = new Node<>(value, null, null);
-            last = first;
-        } else {
-            Node<T> newNode = new Node<>(value, last, null);
-            last.next = newNode;
-            last = newNode;
-        }
-        size++;
     }
 
     private Node<T> getNodeByIndex(int index) {
