@@ -66,23 +66,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (checkingIndex(index)) {
-            T old = getNode(index).value;
-            getNode(index).value = value;
-            return old;
-        }
-        throw new IndexOutOfBoundsException();
+        checkingIndex(index);
+        T old = getNode(index).value;
+        getNode(index).value = value;
+        return old;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= 0 && index < size) {
-            T removedElement = getNode(index).value;
-            unlink(getNode(index));
-            size--;
-            return removedElement;
-        }
-        throw new IndexOutOfBoundsException();
+        checkingIndex(index);
+        T removedElement = getNode(index).value;
+        unlink(getNode(index));
+        size--;
+        return removedElement;
     }
 
     @Override
@@ -106,22 +102,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        if (checkingIndex(index)) {
-            if (index <= size / 2) {
-                Node<T> node = last;
-                for (int i = 0; i < index; i++) {
-                    node = node.next;
-                }
-                return node;
-            } else if (index > size / 2) {
-                Node<T> node = first;
-                for (int i = size - 1; i > index; i--) {
-                    node = node.prev;
-                }
-                return node;
+        checkingIndex(index);
+        if (index <= size / 2) {
+            Node<T> node = last;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
             }
+            return node;
+        } else if (index > size / 2) {
+            Node<T> node = first;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
+            return node;
         }
-        throw new IndexOutOfBoundsException();
+        return null;
     }
 
     private int getIndex(T object) throws NoSuchElementException {
@@ -136,6 +131,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean checkingIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException();
+        }
         return index >= 0 && index < size;
     }
 
