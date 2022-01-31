@@ -19,8 +19,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             linkWithLast(value);
         } else {
-            Node<T> nodeAfter = findByIndex(index);
-            linkNode(value, nodeAfter);
+            linkNode(value, findByIndex(index));
         }
         size++;
     }
@@ -37,8 +36,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        Node<T> node = findByIndex(index);
-        return node.item;
+        return (findByIndex(index)).item;
     }
 
     @Override
@@ -63,8 +61,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         if (findByItem(object) != null) {
-            Node<T> node = findByItem(object);
-            unlink(node);
+            unlink(findByItem(object));
             size--;
             return true;
         }
@@ -141,18 +138,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void linkWithLast(T value) {
-        Node<T> node = new Node<>(last, value, null);
+        final Node<T> node = new Node<>(last, value, null);
         if (last == null) {
             first = node;
         } else {
             last.next = node;
-            node.prev = last;
         }
         last = node;
     }
 
     private void linkNode(T value, Node<T> nextNode) {
-        Node<T> node = new Node<>(null, value, nextNode);
+        final Node<T> node = new Node<>(null, value, nextNode);
         if (nextNode.prev == null) {
             first = node;
         } else {
