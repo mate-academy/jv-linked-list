@@ -7,9 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
 
-    public MyLinkedList() {
-    }
-
     @Override
     public void add(T value) {
         linkWithLast(value);
@@ -126,19 +123,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void unlink(Node<T> node) {
         if (node.prev != null && node.next != null) {
-            (node.next).prev = node.prev;
-            (node.prev).next = node.next;
+            node.next.prev = node.prev;
+            node.prev.next = node.next;
         }
         if (node.next == null) {
             last = node.prev;
             if (node.prev != null) {
-                (node.prev).next = null;
+                node.prev.next = null;
             }
         }
         if (node.prev == null) {
             first = node.next;
             if (node.next != null) {
-                (node.next).prev = null;
+                node.next.prev = null;
             }
         }
     }
