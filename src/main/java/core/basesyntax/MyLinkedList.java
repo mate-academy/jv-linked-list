@@ -12,7 +12,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> prev;
         private Node<T> next;
 
-
         public Node(Node<T> prev, T value, Node next) {
             this.prev = prev;
             this.value = value;
@@ -27,7 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = head;
         } else {
             Node<T> addedNode = new Node<>(tail, value, null);
-            tail.next  = addedNode;
+            tail.next = addedNode;
             tail = addedNode;
         }
         size++;
@@ -35,16 +34,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index == 0) {
-            head = new Node<>(null, value, null);
-            tail = head;
-        } else if (index == size) {
-            Node<T> addedNode = new Node<>(tail, value, null);
-            tail.next  = addedNode;
-            tail = addedNode;
-        } else if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Invalid index");
+        if (index == size) {
+            add(value);
+            return;
+        } else if (index == 0) {
+            Node<T> addedNode = new Node<>(null, value, head);
+            head.prev = addedNode;
+            head = addedNode;
         } else {
+            checkIndex(index);
             Node<T> targetNode = getTargetNode(index);
             Node<T> newNode = new Node<>(targetNode.prev, value, targetNode);
             targetNode.prev.next = newNode;
@@ -63,8 +61,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        T valueToReturn = getTargetNode(index).value;
-        return valueToReturn;
+        return getTargetNode(index).value;
     }
 
     @Override
@@ -80,9 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> targetNode = getTargetNode(index);
-        T valueToReturn = unlink(targetNode);
-        return valueToReturn;
-
+        return unlink(targetNode);
     }
 
     @Override
