@@ -9,7 +9,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        if (size == 0) {
+        if (isEmpty()) {
             tail = new Node<>(null, value, null);
             head = tail;
         } else {
@@ -25,7 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else if (index >= 0 && index < size) {
-            linkMiddle(value, getNode(index));
+            linkMiddle(value, getNodeByIndex(index));
         } else {
             checkElementIndex(index);
         }
@@ -33,21 +33,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T i : list) {
-            add(i);
+        for (T element : list) {
+            add(element);
         }
     }
 
     @Override
     public T get(int index) {
         checkElementIndex(index);
-        return getNode(index).item;
+        return getNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         checkElementIndex(index);
-        Node<T> setValue = getNode(index);
+        Node<T> setValue = getNodeByIndex(index);
         T oldVal = setValue.item;
         setValue.item = value;
         return oldVal;
@@ -56,7 +56,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkElementIndex(index);
-        return unlink(getNode(index));
+        return unlink(getNodeByIndex(index));
     }
 
     @Override
@@ -108,7 +108,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return element;
     }
 
-    private Node<T> getNode(int index) {
+    private Node<T> getNodeByIndex(int index) {
         Node<T> node;
         if (index < (size >> 1)) {
             node = head;
