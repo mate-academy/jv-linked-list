@@ -7,6 +7,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
 
+    private static class Node<T> {
+        private T element;
+        private Node<T> next;
+        private Node<T> previous;
+
+        Node(Node<T> previous, T element, Node<T> next) {
+            this.previous = previous;
+            this.element = element;
+            this.next = next;
+        }
+    }
+
     private void checkElementIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Not correct index " + index);
@@ -53,10 +65,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (isEmpty()) {
-            first = new Node<>(null, value,null);
+            first = new Node<>(null, value, null);
             last = first;
         } else {
-            Node<T> newNode = new Node<>(last, value,null);
+            Node<T> newNode = new Node<>(last, value, null);
             last.next = newNode;
             last = newNode;
         }
@@ -138,17 +150,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private static class Node<E> {
-        private E element;
-        private Node<E> next;
-        private Node<E> previous;
-
-        Node(Node<E> previous, E element, Node<E> next) {
-            this.previous = previous;
-            this.element = element;
-            this.next = next;
-        }
     }
 }
