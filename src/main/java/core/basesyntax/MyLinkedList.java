@@ -35,7 +35,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean isValidIndex(int index) {
-        return index >= 0 && index - 1 < size;
+        return index >= 0 && index < size;
     }
 
     void linkBefore(T value, Node<T> node) {
@@ -105,7 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (!isValidIndex(index)) {
+        if (!isValidIndex(index) && index != size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
         if (index == size) {
