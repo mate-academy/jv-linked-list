@@ -25,14 +25,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
         } else if (index == 0) {
             addFirst(value);
-        } else if (isIndexValid(index)) {
+        } else {
+            isIndexValid(index);
             Node<T> currentNode = searchNodeByIndex(index);
             Node<T> node = new Node<T>(currentNode.prev, value, currentNode);
             currentNode.prev.next = node;
             currentNode.prev = node;
             size++;
-        } else {
-            throw new IndexOutOfBoundsException("Index is invalid");
         }
     }
 
@@ -45,30 +44,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (isIndexValid(index)) {
-            return searchNodeByIndex(index).value;
-        } else {
-            throw new IndexOutOfBoundsException("Index is invalid");
-        }
+        return searchNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        add(value, index);
-        T oldValue = get(index + 1);
-        remove(index + 1);
+        Node<T> node = searchNodeByIndex(index);
+        T oldValue = node.value;
+        node.value = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        if (isIndexValid(index)) {
-            Node<T> currentNode = searchNodeByIndex(index);
-            unlink(currentNode);
-            return currentNode.value;
-        } else {
-            throw new IndexOutOfBoundsException("Index is invalid");
-        }
+        Node<T> currentNode = searchNodeByIndex(index);
+        unlink(currentNode);
+        return currentNode.value;
     }
 
     @Override
@@ -103,6 +94,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public Node<T> searchNodeByIndex(int index) {
+        isIndexValid(index);
         Node<T> currentNode = head;
         for (int i = 0; i < index; i++) {
             currentNode = currentNode.next;
@@ -110,8 +102,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    public boolean isIndexValid(int index) {
-        return index >= 0 && index < size;
+    public void isIndexValid(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index " + index + " is invalid");
+        }
     }
 
     public void addFirst(T value) {
@@ -128,7 +122,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    public void unlink(Node node) {
+    public void unlink(Node<T> node) {
         if (node == head) {
             if (size == 1) {
                 head = null;
