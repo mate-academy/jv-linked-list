@@ -87,12 +87,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        try {
-            remove(getIndexOfElement(object));
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
+        if (object == null) {
+            for (Node<T> node = head; node != null; node = node.next) {
+                if (node.element == null) {
+                    unlink(node);
+                    size--;
+                    return true;
+                }
+            }
+        } else {
+            for (Node<T> node = head; node != null; node = node.next) {
+                if (object.equals(node.element)) {
+                    unlink(node);
+                    size--;
+                    return true;
+                }
+            }
         }
+        return false;
     }
 
     @Override
@@ -124,7 +136,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         throw new IndexOutOfBoundsException();
     }
 
-    private int getIndexOfElement(T object) throws NoSuchElementException {
+    private int getIndexOfElement(T object) {
         Node<T> node = head;
         for (int i = 0; i < size; i++) {
             if (node.element == object || node.element.equals(object)) {
