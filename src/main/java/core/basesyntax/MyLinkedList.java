@@ -24,10 +24,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         if (index == size) {
             add(value);
-        } else if (index >= 0 && index < size) {
-            linkMiddle(value, getNodeByIndex(index));
         } else {
             checkElementIndex(index);
+            linkMiddle(value, getNodeByIndex(index));
         }
     }
 
