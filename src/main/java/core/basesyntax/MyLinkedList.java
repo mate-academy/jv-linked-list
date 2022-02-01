@@ -19,7 +19,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> node(int index) {
+    private Node<T> getNode(int index) {
         if (index < size / 2) {
             Node<T> currentNode = head;
             for (int i = 0; i < index; i++) {
@@ -46,8 +46,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private boolean isValidIndex(int index) {
-        return index >= 0 && index < size;
+    private void isValidIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
     }
 
     private void linkBefore(T value, Node<T> node) {
@@ -117,13 +119,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (!isValidIndex(index) && index != size) {
+        if ((index < 0 || index > size) && index != 0) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
         if (index == size) {
             linkLast(value);
         } else {
-            linkBefore(value, node(index));
+            linkBefore(value, getNode(index));
         }
     }
 
@@ -139,18 +141,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (!isValidIndex(index)) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-        return node(index).item;
+        isValidIndex(index);
+        return getNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        if (!isValidIndex(index)) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-        Node<T> currentNode = node(index);
+        isValidIndex(index);
+        Node<T> currentNode = getNode(index);
         T oldVal = currentNode.item;
         currentNode.item = value;
         return oldVal;
@@ -158,16 +156,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (!isValidIndex(index)) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        isValidIndex(index);
         if (index == 0) {
             return unlinkFirst(head);
         }
         if (index == size - 1) {
             return unlinkLast(tail);
         }
-        return unlink(node(index));
+        return unlink(getNode(index));
     }
 
     @Override
