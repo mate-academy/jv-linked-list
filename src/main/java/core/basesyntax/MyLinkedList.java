@@ -20,9 +20,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
+        Node<T> currentNode;
+        if (index < size / 2) {
+            currentNode = head;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+        } else {
+            currentNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                currentNode = currentNode.previous;
+            }
         }
         return currentNode;
     }
@@ -31,6 +39,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Index is invalid");
         }
+    }
+
+    private Node<T> unlink(int index) {
+        Node<T> unlinkNode = getNodeByIndex(index);
+        if (unlinkNode.next == null && unlinkNode.previous == null) {
+            head = tail = null;
+        } else if (unlinkNode.previous == null) {
+            head = head.next;
+            head.previous = null;
+        } else if (unlinkNode.next == null) {
+            tail = tail.previous;
+            tail.next = null;
+        } else {
+            unlinkNode.previous.next = unlinkNode.next;
+            unlinkNode.next.previous = unlinkNode.previous;
+        }
+        size--;
+        return unlinkNode;
     }
 
     @Override
@@ -93,24 +119,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedNodeValue = getNodeByIndex(index).value;
-        if (index == 0) {
-            head = head.next;
-            if (head == null) {
-                tail = null;
-            } else {
-                head.previous = head.previous.previous;
-            }
-        } else if (index == size - 1) {
-            tail.previous.next = tail.next;
-            tail = tail.previous;
-        } else {
-            Node<T> currentNode = getNodeByIndex(index);
-            currentNode.previous.next = currentNode.next;
-            currentNode.next.previous = currentNode.previous;
-        }
-        size--;
-        return removedNodeValue;
+        return unlink(index).value;
     }
 
     @Override
