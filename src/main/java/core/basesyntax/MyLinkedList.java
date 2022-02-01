@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String INDEX_EXCEPTION = "Index is invalid";
@@ -75,7 +74,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> thisNode = head;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(object, thisNode.element)) {
+            if (thisNode.element == object
+                    || object != null && object.equals(thisNode.element)) {
                 unlink(thisNode);
                 return true;
             }
@@ -94,12 +94,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private class Node<t> {
-        private t element;
-        private Node<t> next;
-        private Node<t> prev;
+    private class Node<T> {
+        private T element;
+        private Node<T> next;
+        private Node<T> prev;
 
-        Node(Node<t> prev, t element, Node<t> next) {
+        Node(Node<T> prev, T element, Node<T> next) {
             this.element = element;
             this.next = next;
             this.prev = prev;
