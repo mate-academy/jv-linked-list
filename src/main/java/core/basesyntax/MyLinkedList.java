@@ -51,18 +51,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> node = findByIndex(index);
-        T result = node.item;
-        unlink(node);
-        size--;
-        return result;
+        return unlink(findByIndex(index));
     }
 
     @Override
     public boolean remove(T object) {
         if (findByItem(object) != null) {
             unlink(findByItem(object));
-            size--;
             return true;
         }
         return false;
@@ -118,23 +113,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
-    private void unlink(Node<T> node) {
-        if (node.prev != null && node.next != null) {
-            node.next.prev = node.prev;
-            node.prev.next = node.next;
+    private T unlink(Node<T> node) {
+        Node<T> prev = node.prev;
+        Node<T> next = node.next;
+
+        if (prev == null) {
+            first = next;
+        } else {
+            prev.next = next;
+            node.prev = null;
         }
-        if (node.next == null) {
-            last = node.prev;
-            if (node.prev != null) {
-                node.prev.next = null;
-            }
+        if (next == null) {
+            last = prev;
+        } else {
+            next.prev = prev;
+            node.next = null;
         }
-        if (node.prev == null) {
-            first = node.next;
-            if (node.next != null) {
-                node.next.prev = null;
-            }
-        }
+        T result = node.item;
+        node.item = null;
+        size--;
+        return result;
     }
 
     private void linkWithLast(T value) {
@@ -152,7 +150,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (nextNode.prev == null) {
             first = node;
         } else {
-            (nextNode.prev).next = node;
+            nextNode.prev.next = node;
         }
         node.prev = nextNode.prev;
         nextNode.prev = node;
