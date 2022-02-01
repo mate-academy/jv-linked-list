@@ -132,19 +132,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 head = node.next;
                 node.next = null;
             }
-            size--;
         } else if (node == tail) {
             tail = node.prev;
             node.prev.next = null;
             node.prev = null;
-            size--;
         } else {
             node.prev.next = node.next;
             node.next.prev = node.prev;
             node.prev = null;
             node.next = null;
-            size--;
         }
+        size--;
     }
 
     static class Node<T> {
