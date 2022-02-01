@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
@@ -118,33 +117,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeOfIndex(int index) {
-        if (checkIndex(index)) {
-            if (index <= size / 2) {
-                Node<T> node = head;
-                for (int i = 0; i < index; i++) {
-                    node = node.next;
-                }
-                return node;
-            } else if (index > size / 2) {
-                Node<T> node = tail;
-                for (int i = size - 1; i > index; i--) {
-                    node = node.prev;
-                }
-                return node;
+        checkIndex(index);
+        if (index <= size / 2) {
+            Node<T> node = head;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
             }
-        }
-        throw new IndexOutOfBoundsException();
-    }
-
-    private int getIndexOfElement(T object) {
-        Node<T> node = head;
-        for (int i = 0; i < size; i++) {
-            if (node.element == object || node.element.equals(object)) {
-                return i;
+            return node;
+        } else {
+            Node<T> node = tail;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
             }
-            node = node.next;
+            return node;
         }
-        throw new NoSuchElementException();
     }
 
     private void unlink(Node<T> node) {
@@ -164,6 +150,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean checkIndex(int index) {
-        return index >= 0 && index < size;
+        if (index >= 0 && index < size) {
+            return true;
+        }
+        throw new IndexOutOfBoundsException();
     }
 }
