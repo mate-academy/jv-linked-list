@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+
     private Node<T> first;
     private Node<T> last;
     private int size;
 
     private static class Node<T> {
+
         private T value;
         private Node<T> prev;
         private Node<T> next;
@@ -83,13 +85,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        try {
-            remove(getIndex(object));
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+        remove(getIndex(object));
+        return true;
     }
+
 
     @Override
     public int size() {
