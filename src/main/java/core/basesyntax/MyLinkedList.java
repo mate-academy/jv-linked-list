@@ -1,94 +1,86 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
+    private int size;
     private Node<T> first;
     private Node<T> last;
-    private int size;
 
     private static class Node<T> {
-
         private T value;
-        private Node<T> prev;
         private Node<T> next;
+        private Node<T> prev;
 
-        private Node(Node<T> prev, T element, Node<T> next) {
-            this.value = element;
+        public Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
+            this.value = value;
             this.next = next;
         }
     }
 
     @Override
     public void add(T value) {
-        if (isEmpty()) {
-            last = new Node<>(null, value, null);
-            first = last;
-        } else {
-            Node<T> newNode = new Node<>(first, value, null);
-            first.next = newNode;
-            first = newNode;
-        }
-        size++;
+        linkLast(value);
     }
 
     @Override
     public void add(T value, int index) {
+        checkPositionIndex(index);
         if (index == size) {
-            add(value);
-            return;
-        }
-        if (index == 0) {
-            Node<T> newNode = new Node<>(null, value, last);
-            last = newNode;
-            last.next.prev = newNode;
+            linkLast(value);
         } else {
-            Node<T> nodeOfIndex = getNode(index);
-            Node<T> newNode = new Node<>(nodeOfIndex.prev, value, nodeOfIndex);
-            nodeOfIndex.prev.next = newNode;
-            nodeOfIndex.prev = newNode;
+            linkBefore(value, index);
         }
-        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (T value : list) {
-            add(value);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        return getNode(index).value;
+        checkElementIndex(index);
+        return findByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkingIndex(index);
-        T old = getNode(index).value;
-        getNode(index).value = value;
-        return old;
+        checkElementIndex(index);
+        Node<T> temp = findByIndex(index);
+        T oldValue = temp.value;
+        temp.value = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        checkingIndex(index);
-        T removedElement = getNode(index).value;
-        unlink(getNode(index));
-        size--;
-        return removedElement;
+        checkElementIndex(index);
+        return unlink(findByIndex(index));
     }
 
     @Override
     public boolean remove(T object) {
-        remove(getIndex(object));
-        return true;
+        if (object == null) {
+            for (Node<T> node = first; node != null; node = node.next) {
+                if (node.value == null) {
+                    unlink(node);
+                    return true;
+                }
+            }
+        } else {
+            for (Node<T> node = first; node != null; node = node.next) {
+                if (object.equals(node.value)) {
+                    unlink(node);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
-
 
     @Override
     public int size() {
@@ -100,54 +92,78 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node<T> getNode(int index) {
-        checkingIndex(index);
-        if (index <= size / 2) {
-            Node<T> node = last;
+    private void checkPositionIndex(int index) {
+        if (index > size || index < 0) {
+            throw new IndexOutOfBoundsException("The index is out of the bound");
+        }
+    }
+
+    private void checkElementIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("The index is out of bound");
+        }
+    }
+
+    private Node<T> findByIndex(int index) {
+        if (index < (size / 2)) {
+            Node<T> node = first;
             for (int i = 0; i < index; i++) {
                 node = node.next;
             }
             return node;
-        } else if (index > size / 2) {
-            Node<T> node = first;
+        } else {
+            Node<T> node = last;
             for (int i = size - 1; i > index; i--) {
                 node = node.prev;
             }
             return node;
         }
-        return null;
+
     }
 
-    private int getIndex(T object) throws NoSuchElementException {
-        Node<T> node = last;
-        for (int i = 0; i < size; i++) {
-            if (node.value == object || node.value.equals(object)) {
-                return i;
-            }
-            node = node.next;
-        }
-        throw new NoSuchElementException();
-    }
-
-    private void checkingIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException();
-        }
-    }
-
-    private void unlink(Node<T> node) {
-        if (node == last && size == 1) {
-            last = null;
-            first = null;
-        } else if (node == last && size > 1) {
-            last = last.next;
-            last.prev = null;
-        } else if (node == first) {
-            node.prev.next = null;
-            first = node.prev;
+    private void linkLast(T value) {
+        Node<T> temp = last;
+        Node<T> newNode = new Node<>(temp, value, null);
+        last = newNode;
+        if (temp == null) {
+            first = newNode;
         } else {
-            node.prev.next = node.next;
-            node.next.prev = node.prev;
+            temp.next = newNode;
         }
+        size++;
+    }
+
+    private void linkBefore(T value, int index) {
+        Node<T> lookedNode = findByIndex(index);
+        Node<T> temp = lookedNode.prev;
+        Node<T> newNode = new Node<>(temp, value, lookedNode);
+        lookedNode.prev = newNode;
+        if (temp == null) {
+            first = newNode;
+        } else {
+            temp.next = newNode;
+        }
+        size++;
+    }
+
+    private T unlink(Node<T> temp) {
+        final T oldValue = temp.value;
+        Node<T> next = temp.next;
+        Node<T> prev = temp.prev;
+        if (prev == null) {
+            first = next;
+        } else {
+            prev.next = next;
+            temp.prev = null;
+        }
+        if (next == null) {
+            last = prev;
+        } else {
+            next.prev = prev;
+            temp.next = null;
+        }
+        temp.value = null;
+        size--;
+        return oldValue;
     }
 }
