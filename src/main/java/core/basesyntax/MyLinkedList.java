@@ -20,10 +20,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public MyLinkedList() {
-        this.size = 0;
-    }
-
     private void checkIndex(int index) {
         if (!(index >= 0 && index < size || index >= 0 && size == 0)) {
             throw new IndexOutOfBoundsException(
@@ -61,13 +57,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (!isEmpty()) {
-            Node<T> tempNext = new Node<T>(tail, value, null);
+            Node<T> tempNext = new Node<>(tail, value, null);
             tail.next = tempNext;
             tail = tempNext;
             size++;
         }
         if (isEmpty()) {
-            head = new Node<T>(null, value, null);
+            head = new Node<>(null, value, null);
             tail = head;
             size++;
         }
@@ -88,8 +84,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T t : list) {
+            add(t);
         }
     }
 
