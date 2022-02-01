@@ -31,14 +31,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    void linkLast(T t) {
-        Node<T> l = last;
-        Node<T> newNode = new Node<>(l, t, null);
+    void linkLast(T value) {
+        Node<T> temporaryLast = last;
+        Node<T> newNode = new Node<>(temporaryLast, value, null);
         last = newNode;
-        if (l == null) {
+        if (temporaryLast == null) {
             first = newNode;
         } else {
-            l.next = newNode;
+            temporaryLast.next = newNode;
         }
         size++;
     }
