@@ -19,11 +19,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public MyLinkedList() {
-        first = null;
-        last = null;
-    }
-
     @Override
     public void add(T value) {
         if (size == 0) {
@@ -35,16 +30,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (size == 0 & index == 0) {
+        if (size == 0 && index == 0) {
             addFirst(value);
         } else if (index == 0) {
             addToStart(value);
-        } else if (index > 0 & index < size) {
-            insert(value, index);
         } else if (index == size) {
             addToEnd(value);
         } else {
-            throw new IndexOutOfBoundsException("Index out of list size!!! Size = " + size);
+            insert(value, index);
         }
     }
 
@@ -72,15 +65,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> deleteNode = indexSearch(index);
         if (index == 0) {
             first = first.next;
-            size--;
         } else if (index > 0 & index < size - 1) {
             deleteNode.next.prev = deleteNode.prev;
             deleteNode.prev.next = deleteNode.next;
-            size--;
         } else {
-            last = last.next;
-            size--;
+            last = last.prev;
         }
+        size--;
         return deleteNode.item;
     }
 
@@ -115,9 +106,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addToStart(T value) {
-        Node<T> newNode = new Node<>(null, value, null);
+        Node<T> newNode = new Node<>(null, value, first);
         first.prev = newNode;
-        newNode.next = first;
         first = newNode;
         size++;
     }
@@ -131,9 +121,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addToEnd(T value) {
-        Node<T> newNode = new Node<>(null, value, null);
+        Node<T> newNode = new Node<>(last, value, null);
         last.next = newNode;
-        newNode.prev = last;
         last = newNode;
         size++;
     }
