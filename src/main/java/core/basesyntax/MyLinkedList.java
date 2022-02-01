@@ -65,23 +65,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (checkIndex(index)) {
-            T oldValue = getNodeOfIndex(index).element;
-            getNodeOfIndex(index).element = value;
-            return oldValue;
-        }
-        throw new IndexOutOfBoundsException();
+        checkIndex(index);
+        T oldValue = getNodeOfIndex(index).element;
+        getNodeOfIndex(index).element = value;
+        return oldValue;
+
     }
 
     @Override
     public T remove(int index) {
-        if (index >= 0 && index < size) {
-            T removedElement = getNodeOfIndex(index).element;
-            unlink(getNodeOfIndex(index));
-            size--;
-            return removedElement;
-        }
-        throw new IndexOutOfBoundsException();
+        checkIndex(index);
+        T removedElement = getNodeOfIndex(index).element;
+        unlink(getNodeOfIndex(index));
+        size--;
+        return removedElement;
+
     }
 
     @Override
