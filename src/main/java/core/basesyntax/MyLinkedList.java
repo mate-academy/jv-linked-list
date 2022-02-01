@@ -34,9 +34,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if ((index == 0 && isEmpty()) || index == size) {
+        if (index == size) {
             add(value);
-        } else if (index == 0 && !isEmpty()) {
+        } else if (index == 0) {
             Node<T> newNode = new Node<T>(null, value, head);
             head.prev = newNode;
             head = newNode;
