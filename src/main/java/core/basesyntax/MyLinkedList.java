@@ -32,12 +32,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Node<T> temp = null;
-        if (indexExists(index)) {
-            temp = first;
-            for (int i = 0; i < index; i++) {
-                temp = temp.next;
-            }
+        indexExists(index);
+        Node<T> temp = first;
+        for (int i = 0; i < index; i++) {
+            temp = temp.next;
+
         }
         return temp;
     }
@@ -98,7 +97,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        return indexExists(index) ? unlink(getNodeByIndex(index)) : null;
+        indexExists(index);
+        return unlink(getNodeByIndex(index));
     }
 
     @Override
