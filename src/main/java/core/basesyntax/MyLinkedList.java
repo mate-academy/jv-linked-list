@@ -32,14 +32,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Node<T> temp;
-        if (index <= size && index >= 0) {
+        Node<T> temp = null;
+        if (indexExists(index)) {
             temp = first;
             for (int i = 0; i < index; i++) {
                 temp = temp.next;
             }
-        } else {
-            throw new IndexOutOfBoundsException("Such index does not exist!");
         }
         return temp;
     }
@@ -88,9 +86,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index == size) {
-            throw new IndexOutOfBoundsException("Such index does not exist!");
-        }
         return getNodeByIndex(index).item;
     }
 
@@ -103,11 +98,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < size && index >= 0) {
-            return unlink(getNodeByIndex(index));
-        } else {
-            throw new IndexOutOfBoundsException("Such index does not exist!");
-        }
+        return indexExists(index) ? unlink(getNodeByIndex(index)) : null;
     }
 
     @Override
@@ -138,6 +129,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private boolean indexExists(int index) {
+        if (index < size && index >= 0) {
+            return true;
+        } else {
+            throw new IndexOutOfBoundsException("Such index does not exist!");
+        }
     }
 
     private static class Node<T> {
