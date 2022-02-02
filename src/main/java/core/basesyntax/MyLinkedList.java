@@ -52,28 +52,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndexAdvanced(index);
-        Node<T> node = head;
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                return node.value;
-            }
-            node = node.next;
-        }
-        return null;
+        Node<T> node = getOptimizeWay(index);
+        node = node == head
+                ? moveFromHead(index, node)
+                : moveFromTail(index, node);
+        return node == null ? null : node.value;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndexAdvanced(index);
-        Node<T> node = head;
-        T oldValue = null;
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                oldValue = node.value;
-                node.value = value;
-            }
-            node = node.next;
-        }
+        Node<T> node = getOptimizeWay(index);
+        node = (node == head)
+                ? moveFromHead(index, node)
+                : moveFromTail(index, node);
+        T oldValue = node.value;
+        node.value = value;
         return oldValue;
     }
 
@@ -90,14 +84,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return removeTailElementFromList();
         }
 
-        Node<T> node = head;
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                return unlink(node);
-            }
-            node = node.next;
-        }
-        return null;
+        Node<T> node = getOptimizeWay(index);
+        node = (node == head)
+                ? moveFromHead(index, node)
+                : moveFromTail(index, node);
+        return node == null ? null : unlink(node);
     }
 
     @Override
@@ -206,5 +197,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index [" + index + "] "
                     + "is out of bound for size " + size);
         }
+    }
+
+    private Node<T> getOptimizeWay(int index) {
+        return index >= size / 2 ? tail : head;
+    }
+
+    private Node<T> moveFromTail(int index, Node<T> node) {
+        for (int i = size - 1; i > 0; i--) {
+            if (i == index) {
+                return node;
+            }
+            node = node.prev;
+        }
+        return null;
+    }
+
+    private Node<T> moveFromHead(int index, Node<T> node) {
+        for (int i = 0; i < size; i++) {
+            if (i == index) {
+                return node;
+            }
+            node = node.next;
+        }
+        return null;
     }
 }
