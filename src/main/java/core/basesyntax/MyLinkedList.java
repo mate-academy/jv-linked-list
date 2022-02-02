@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    //private static final String INDEX_EXCEPTION = "Index is invalid";
     private static final int SIZE_DEGREE = 2;
     private Node<T> head;
     private Node<T> tail;
@@ -20,6 +19,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail.next = newNode;
         }
         tail = newNode;
+        size++;
     }
 
     @Override
@@ -40,6 +40,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             currentNode.prev = newNode;
             prevNode.next = newNode;
         }
+        size++;
     }
 
     @Override
@@ -141,7 +142,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.element = element;
             this.next = next;
             this.prev = prev;
-            size++;
         }
     }
 }
