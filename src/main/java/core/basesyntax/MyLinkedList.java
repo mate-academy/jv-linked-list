@@ -111,7 +111,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return newNode;
     }
 
-
     private void isInvalidIndex(int index) {
         if (index < 0 || index > size) {
             throw new ArrayIndexOutOfBoundsException("Index is invalid");
