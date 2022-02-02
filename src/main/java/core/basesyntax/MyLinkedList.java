@@ -175,7 +175,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T unlink(Node<T> node) {
-        T removedValue = node.value;
+        final T removedValue = node.value;
         node.prev.next = node.next;
         node.next.prev = node.prev;
         size--;
