@@ -46,19 +46,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         Object[] arrayFromList = list.toArray();
-        Node<T> lastElement = tail;
         for (Object obj: arrayFromList) {
             T t = (T) obj;
-            Node<T> node = new Node<>(lastElement, t, null);
-            if (lastElement.prev == null) {
-                head = node;
-            } else {
-                lastElement.next = node;
-            }
-            lastElement = node;
-            size++;
+            linkLast(t);
         }
-        tail = lastElement;
     }
 
     @Override
