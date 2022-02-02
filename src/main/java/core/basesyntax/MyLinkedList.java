@@ -53,8 +53,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T value : list) {
+            add(value);
         }
     }
 
@@ -82,22 +82,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> node = first;
-        if (object == null) {
-            while (node != null) {
-                if (node.value == null) {
-                    unlink(node);
-                    return true;
-                }
-                node = node.next;
-            }
-        } else {
-            while (node != null) {
-                if (node.value.equals(object)) {
-                    unlink(node);
-                    return true;
-                }
-                node = node.next;
+        Node<T> node;
+        for (node = first; node != null; node = node.next) {
+            if ((object != null && object.equals(node.value)) || node.value == object) {
+                unlink(node);
+                return true;
             }
         }
         return false;
