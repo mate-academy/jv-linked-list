@@ -71,10 +71,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndex(int index, boolean isStrict) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("IndexOutOfBoundsException " + index);
-        }
-        if (!isStrict && index == size) {
+        if (index < 0 || index > size || !isStrict && index == size) {
             throw new IndexOutOfBoundsException("IndexOutOfBoundsException " + index);
         }
     }
