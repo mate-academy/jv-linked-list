@@ -27,12 +27,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndex(index);
-
         if (size == 0) {
             addFirstElementToList(value);
             return;
         }
-
         if (index == 0) {
             addHeadElementToList(value);
             return;
@@ -41,7 +39,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             addTailElementToList(value);
             return;
         }
-
         insertNode(value, index);
     }
 
@@ -55,7 +52,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndexAdvanced(index);
-
         Node<T> node = head;
         for (int i = 0; i < size; i++) {
             if (i == index) {
@@ -69,7 +65,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndexAdvanced(index);
-
         Node<T> node = head;
         T oldValue = null;
         for (int i = 0; i < size; i++) {
