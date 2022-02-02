@@ -101,20 +101,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         int halfSize = size / 2;
         if (index < halfSize) {
             boofNode = first;
-            if (index == 0) {
-                return boofNode;
-            }
-            int count = 1;
-            while (count <= index) {
+            int count = 0;
+            while (count < index) {
                 boofNode = boofNode.next;
                 count++;
             }
             return boofNode;
         } else {
             boofNode = last;
-            if (index == size - 1) {
-                return boofNode;
-            }
             int count = size - 1;
             while (count > index) {
                 boofNode = boofNode.prev;
