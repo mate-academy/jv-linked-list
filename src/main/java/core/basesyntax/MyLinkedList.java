@@ -30,7 +30,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head.prev = currentNode;
             head = currentNode;
         } else {
-            indexValidation(index);
             Node<T> currentNode = nodeFromIndex(index);
             Node<T> node = new Node<>(currentNode.prev, value, currentNode);
             currentNode.prev.next = node;
@@ -48,13 +47,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexValidation(index);
         return nodeFromIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        indexValidation(index);
         Node<T> currentNode = nodeFromIndex(index);
         T returnValue = currentNode.value;
         currentNode.value = value;
@@ -63,7 +60,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexValidation(index);
         Node<T> currentNode = nodeFromIndex(index);
         return unLink(currentNode);
     }
@@ -103,11 +99,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void indexValidation(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of bound exception");
+            throw new IndexOutOfBoundsException("Index " + index
+                    + " out of bounds for size: " + size);
         }
     }
 
     private Node<T> nodeFromIndex(int index) {
+        indexValidation(index);
         Node<T> currentNode;
         if (index < size / 2) {
             currentNode = head;
