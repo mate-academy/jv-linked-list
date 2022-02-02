@@ -52,20 +52,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndexAdvanced(index);
-        Node<T> node = getOptimizeWay(index);
-        node = node == head
-                ? moveFromHead(index, node)
-                : moveFromTail(index, node);
+        Node<T> node = getNode(index);
         return node == null ? null : node.value;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndexAdvanced(index);
-        Node<T> node = getOptimizeWay(index);
-        node = (node == head)
-                ? moveFromHead(index, node)
-                : moveFromTail(index, node);
+        Node<T> node = getNode(index);
         T oldValue = node.value;
         node.value = value;
         return oldValue;
@@ -84,10 +78,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return removeTailElementFromList();
         }
 
-        Node<T> node = getOptimizeWay(index);
-        node = (node == head)
-                ? moveFromHead(index, node)
-                : moveFromTail(index, node);
+        Node<T> node = getNode(index);
         return node == null ? null : unlink(node);
     }
 
@@ -197,6 +188,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index [" + index + "] "
                     + "is out of bound for size " + size);
         }
+    }
+
+    private Node<T> getNode(int index) {
+        Node<T> node = getOptimizeWay(index);
+        return node == head
+                ? moveFromHead(index, node)
+                : moveFromTail(index, node);
     }
 
     private Node<T> getOptimizeWay(int index) {
