@@ -44,9 +44,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             checkIndex(index);
             Node<T> targetNode = getNode(index);
-            Node<T> newnode = new Node<>(targetNode.prev, value, targetNode);
-            targetNode.prev.next = newnode;
-            targetNode.prev = newnode;
+            Node<T> newNode = new Node<>(targetNode.prev, value, targetNode);
+            targetNode.prev.next = newNode;
+            targetNode.prev = newNode;
         }
         size++;
     }
@@ -65,7 +65,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     void checkIndex(int index) {
-        if (index < 0 || index >= size) {
+        if (index < 0 | index >= size) {
             throw new IndexOutOfBoundsException("Index isn't valid.");
         }
     }
