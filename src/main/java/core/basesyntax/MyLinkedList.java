@@ -21,9 +21,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
 
     private void checkIndex(int index) {
-        if (!(index >= 0 && index < size || index >= 0 && size == 0)) {
+        if (!(index >= 0 && index < size)) {
             throw new IndexOutOfBoundsException(
-                    "Index must be: 0 > index > size for size = " + size
+                    "Index must be: 0 <= index < size for size = " + size
             );
         }
     }
@@ -37,6 +37,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             currentIndex++;
         }
         return currentNode;
+    }
+
+    private void unlink(Node<T> node) {
+        node.next.prev = node.prev;
+        node.prev.next = node.next;
     }
 
     private void addToHead(T value) {
@@ -110,8 +115,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = head.next;
         }
         if (index > 0 && index < size - 1) {
-            nodeAtIndex.next.prev = nodeAtIndex.prev;
-            nodeAtIndex.prev.next = nodeAtIndex.next;
+            unlink(nodeAtIndex);
         } else {
             tail = tail.prev;
         }
