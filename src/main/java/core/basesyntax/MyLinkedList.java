@@ -39,7 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        ioobException(index);
+        checkException(index);
         Node<T> currentNode;
         Node<T> nextNode = findByIndex(index);
         if (index == 0) {
@@ -57,20 +57,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T value : list) {
+            add(value);
         }
     }
 
     @Override
     public T get(int index) {
-        ioobException(index);
+        checkException(index);
         return findByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        ioobException(index);
+        checkException(index);
         Node<T> newNode = findByIndex(index);
         T oldVal = newNode.value;
         newNode.value = value;
@@ -79,7 +79,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        ioobException(index);
+        checkException(index);
         Node<T> removable = findByIndex(index);
         unlink(removable);
         size--;
@@ -129,7 +129,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findByIndex(int index) {
-        ioobException(index);
+        checkException(index);
         if (index == 0) {
             return head;
         }
@@ -151,7 +151,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return indexedNode;
     }
 
-    private void ioobException(int index) {
+    private void checkException(int index) {
         if (index >= size
                 || index < 0) {
             throw new IndexOutOfBoundsException("Index " + index + " out of bounds");
