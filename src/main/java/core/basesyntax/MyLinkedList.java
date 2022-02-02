@@ -3,15 +3,15 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Note<T> first;
-    private Note<T> last;
+    private Node<T> first;
+    private Node<T> last;
     private int size;
-    private Note<T> boofNode;
-    private Note<T> newNode;
+    private Node<T> boofNode;
+    private Node<T> newNode;
 
     @Override
     public void add(T value) {
-        if (size == 0) {
+        if (isEmpty()) {
             linkFirst(value);
         } else {
             linkLast(value);
@@ -29,10 +29,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         isIndexOutOfBounds(index);
-        Note<T> oldNote = findeIndex(index);
-        newNode = new Note<>(oldNote.prev, value, oldNote);
-        oldNote.prev.next = newNode;
-        oldNote.prev = newNode;
+        Node<T> oldNode = findeIndex(index);
+        newNode = new Node<>(oldNode.prev, value, oldNode);
+        oldNode.prev.next = newNode;
+        oldNode.prev = newNode;
         size++;
     }
 
@@ -97,39 +97,53 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Note<T> findeIndex(int index) {
-        boofNode = first;
-        if (index == 0) {
+    private Node<T> findeIndex(int index) {
+        int halfSize = size / 2;
+        if (index < halfSize) {
+            boofNode = first;
+            if (index == 0) {
+                return boofNode;
+            }
+            int count = 1;
+            while (count <= index) {
+                boofNode = boofNode.next;
+                count++;
+            }
+            return boofNode;
+        } else {
+            boofNode = last;
+            if (index == size - 1) {
+                return boofNode;
+            }
+            int count = size - 1;
+            while (count > index) {
+                boofNode = boofNode.prev;
+                count--;
+            }
             return boofNode;
         }
-        int count = 1;
-        while (count <= index) {
-            boofNode = boofNode.next;
-            count++;
-        }
-        return boofNode;
     }
 
     private void linkFirst(T value) {
-        Note<T> f = first;
-        newNode = new Note<>(null, value, f);
-        first = newNode;
-        if (f == null) {
+        Node<T> first = this.first;
+        newNode = new Node<>(null, value, first);
+        this.first = newNode;
+        if (first == null) {
             last = newNode;
         } else {
-            f.prev = newNode;
+            first.prev = newNode;
         }
         size++;
     }
 
     private void linkLast(T value) {
-        Note<T> l = last;
-        newNode = new Note<>(l, value, null);
-        last = newNode;
-        if (l == null) {
+        Node<T> last = this.last;
+        newNode = new Node<>(last, value, null);
+        this.last = newNode;
+        if (last == null) {
             first = newNode;
         } else {
-            l.next = newNode;
+            last.next = newNode;
         }
         size++;
     }
@@ -142,12 +156,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private static class Note<T> {
+    private static class Node<T> {
         private T value;
-        private Note<T> prev;
-        private Note<T> next;
+        private Node<T> prev;
+        private Node<T> next;
 
-        public Note(Note<T> prev, T value, Note<T> next) {
+        public Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
             this.next = next;
             this.value = value;
