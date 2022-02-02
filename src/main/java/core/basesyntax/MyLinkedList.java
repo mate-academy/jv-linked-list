@@ -30,7 +30,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head.prev = currentNode;
             head = currentNode;
         } else {
-            indexValidation(index);
+            if (index < 0 || index >= size) {
+                throw new IndexOutOfBoundsException("Index out of bound exception");
+            }
             Node<T> currentNode = nodeFromIndex(index);
             Node<T> node = new Node<>(currentNode.prev, value, currentNode);
             currentNode.prev.next = node;
@@ -48,13 +50,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexValidation(index);
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of bound exception");
+        }
         return nodeFromIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        indexValidation(index);
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of bound exception");
+        }
         Node<T> currentNode = nodeFromIndex(index);
         T returnValue = currentNode.value;
         currentNode.value = value;
@@ -63,9 +69,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexValidation(index);
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of bound exception");
+        }
         Node<T> currentNode = nodeFromIndex(index);
-        return removeFromIndex(currentNode);
+        return unLink(currentNode);
     }
 
     @Override
@@ -74,7 +82,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (object == null) {
             while (currentNode != null) {
                 if (currentNode.value == null) {
-                    removeFromIndex(currentNode);
+                    unLink(currentNode);
                     return true;
                 }
                 currentNode = currentNode.next;
@@ -82,7 +90,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             while (currentNode != null) {
                 if (currentNode.value.equals(object)) {
-                    removeFromIndex(currentNode);
+                    unLink(currentNode);
                     return true;
                 }
                 currentNode = currentNode.next;
@@ -101,12 +109,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void indexValidation(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of bound exception");
-        }
-    }
-
     private Node<T> nodeFromIndex(int index) {
         Node<T> currentNode;
         if (index < size / 2) {
@@ -123,7 +125,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    private T removeFromIndex(Node<T> node) {
+    private T unLink(Node<T> node) {
         if (node.prev == null) {
             head = node.next;
         } else if (node.next == null) {
