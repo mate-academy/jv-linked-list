@@ -45,20 +45,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] arr = list.toArray();
-        Node<T> elBefore = tail;
-        for (Object obj: arr) {
+        Object[] arrayFromList = list.toArray();
+        Node<T> lastElement = tail;
+        for (Object obj: arrayFromList) {
             T t = (T) obj;
-            Node<T> node = new Node<>(elBefore, t, null);
-            if (elBefore.prev == null) {
+            Node<T> node = new Node<>(lastElement, t, null);
+            if (lastElement.prev == null) {
                 head = node;
             } else {
-                elBefore.next = node;
+                lastElement.next = node;
             }
-            elBefore = node;
+            lastElement = node;
             size++;
         }
-        tail = elBefore;
+        tail = lastElement;
     }
 
     @Override
@@ -105,9 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndex(int index) {
-        if (index >= 0 && index < size) {
-            return;
-        } else {
+        if (!(index >= 0 && index < size)) {
             throw new IndexOutOfBoundsException("Wrong index");
         }
     }
