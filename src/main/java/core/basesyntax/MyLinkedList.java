@@ -130,12 +130,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findByIndex(int index) {
         checkException(index);
-        if (index == 0) {
-            return head;
-        }
-        if (index == size - 1) {
-            return tail;
-        }
         Node<T> indexedNode;
         if (index < size / 2) {
             indexedNode = head;
