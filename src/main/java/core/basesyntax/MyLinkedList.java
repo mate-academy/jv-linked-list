@@ -69,7 +69,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndexAdvanced(index);
         if (size == 1) {
-            return removeLastElementFromList();
+            return removeFinalElementFromList();
         }
         if (index == 0) {
             return removeHeadElementFromList();
@@ -127,7 +127,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private T removeLastElementFromList() {
+    private T removeFinalElementFromList() {
         head = tail = null;
         size--;
         return null;
