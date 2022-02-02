@@ -164,6 +164,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             lastEl.next = newNode;
         }
         size++;
-        dsadas;
     }
 }
