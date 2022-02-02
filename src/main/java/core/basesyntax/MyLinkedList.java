@@ -136,9 +136,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size - 1) {
             return tail;
         }
-        Node<T> indexedNode = head;
-        for (int i = 0; i < index; i++) {
-            indexedNode = indexedNode.next;
+        Node<T> indexedNode;
+        if (index < size / 2) {
+            indexedNode = head;
+            for (int i = 0; i < index; i++) {
+                indexedNode = indexedNode.next;
+            }
+        } else {
+            indexedNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                indexedNode = indexedNode.previous;
+            }
         }
         return indexedNode;
     }
