@@ -9,7 +9,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private int size;
 
-    static class Node<T> {
+    private static class Node<T> {
         private T element;
         private Node<T> next;
         private Node<T> prev;
@@ -95,12 +95,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
-        Node<T> current = first;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+
+        int halfSize = size / 2;
+        if (index < halfSize) {
+            newNode = first;
+            for (int i = 0; i < index; i++) {
+                newNode = newNode.next;
+            }
+        } else {
+            newNode = last;
+            for (int i = size - 1; i > index; i--) {
+                newNode = newNode.prev;
+            }
         }
-        return current;
+        return newNode;
     }
+
 
     private void isInvalidIndex(int index) {
         if (index < 0 || index > size) {
@@ -114,10 +124,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void linkBefore(T e, int index) {
+    private void linkBefore(T inputData, int index) {
         Node<T> midNode = findNodeByIndex(index);
         Node<T> someNode = midNode.prev;
-        Node<T> newNode = new Node<>(someNode, e, midNode);
+        Node<T> newNode = new Node<>(someNode, inputData, midNode);
         midNode.prev = newNode;
         if (someNode == null) {
             first = newNode;
@@ -127,37 +137,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    void linkLast(T e) {
-        Node<T> l = last;
-        newNode = new Node<T>(l, e, null);
+    void linkLast(T inputData) {
+        Node<T> leftToNode = last;
+        newNode = new Node<T>(leftToNode, inputData, null);
         last = newNode;
-        if (l == null) {
+        if (leftToNode == null) {
             first = newNode;
         } else {
-            l.next = newNode;
+            leftToNode.next = newNode;
         }
         size++;
     }
 
-    T unlink(Node<T> e) {
-        T element = e.element;
-        Node<T> next = e.next;
-        Node<T> prev = e.prev;
+    T unlink(Node<T> inputData) {
+        T element = inputData.element;
+        Node<T> next = inputData.next;
+        Node<T> prev = inputData.prev;
 
         if (prev == null) {
             first = next;
         } else {
             prev.next = next;
-            e.prev = null;
+            inputData.prev = null;
         }
         if (next == null) {
             last = prev;
         } else {
             next.prev = prev;
-            e.next = null;
+            inputData.next = null;
         }
 
-        e.element = null;
+        inputData.element = null;
         size--;
 
         return element;
