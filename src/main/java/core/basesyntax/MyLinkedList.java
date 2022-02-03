@@ -28,12 +28,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T element, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException("Index is invalid");
-        }
         if (index == size) {
             linkLast(element);
         } else {
+            checkIndexPos(index);
             linkBefore(element, index);
         }
     }
