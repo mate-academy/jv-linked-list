@@ -28,7 +28,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T element, int index) {
-        isInvalidIndex(index);
+        if (index < 0 || index > size) {
+            throw new ArrayIndexOutOfBoundsException("Index is invalid");
+        }
         if (index == size) {
             linkLast(element);
         } else {
@@ -38,8 +40,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T el : list) {
-            linkLast(el);
+        for (T current : list) {
+            linkLast(current);
         }
     }
 
@@ -109,12 +111,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return newNode;
-    }
-
-    private void isInvalidIndex(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException("Index is invalid");
-        }
     }
 
     private void checkIndexPos(int index) {
