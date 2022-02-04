@@ -153,7 +153,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             nodeToBeUnlinked.prev.next = nextNode;
             nodeToBeUnlinked.prev = null;
-
         }
         if (nodeToBeUnlinked.next == null) {
             tail = previousNode;
@@ -162,7 +161,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             nodeToBeUnlinked.next = null;
         }
         T elementToBeRemoved = nodeToBeUnlinked.element;
-
         sizeList--;
         return elementToBeRemoved;
     }
