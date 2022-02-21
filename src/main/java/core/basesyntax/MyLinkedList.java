@@ -7,7 +7,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    public static class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node<T> prev;
         private Node<T> next;
@@ -45,10 +45,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] arrayFromList = list.toArray();
-        for (Object obj: arrayFromList) {
-            T t = (T) obj;
-            linkLast(t);
+        for (T node : list) {
+            add(node);
         }
     }
 
