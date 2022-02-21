@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> head;
     private Node<T> last;
 
@@ -50,18 +50,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (!isPresent(index)) {
-            throw new IndexOutOfBoundsException("The specified index does not exist");
-        }
+        isPresent(index);
         Node<T> currentNode = findNodeByIndex(index);
         return (T) currentNode.value;
     }
 
     @Override
     public T set(T value, int index) {
-        if (!isPresent(index)) {
-            throw new IndexOutOfBoundsException("The specified index does not exist");
-        }
+        isPresent(index);
         Node<T> currentNode = findNodeByIndex(index);
         T oldValue = (T) currentNode.value;
         currentNode.value = value;
@@ -70,9 +66,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (!isPresent(index)) {
-            throw new IndexOutOfBoundsException("The specified index does not exist");
-        }
+        isPresent(index);
         Node currentNode = findNodeByIndex(index);
         T value = (T) currentNode.value;
         removeNode(currentNode);
@@ -118,7 +112,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public boolean isPresent(int index) {
-        return index >= 0 && index < size;
+        if (index >= 0 && index < size) {
+            return true;
+        }
+        throw new IndexOutOfBoundsException("The specified index does not exist");
     }
 
     public void removeNode(Node<T> node) {
