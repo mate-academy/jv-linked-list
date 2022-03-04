@@ -25,9 +25,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             createFirstNode(value);
         } else {
             Node<T> node = new Node<>(value,null, null);
-            if (size == 1) {
-                head.next = tail;
-            }
             addNode(node);
         }
         size++;
@@ -41,12 +38,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         Node<T> node;
         if (index == size) {
-            if (isEmpty()) {
-                createFirstNode(value);
-            } else {
-                node = new Node<>(value, null, null);
-                addNode(node);
-            }
+            add(value);
         } else {
             node = head;
             for (int i = 0; i < index; i++) {
@@ -54,8 +46,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             Node<T> newNode = new Node<>(value, node.prev, node);
             addNode(newNode, index);
+            size++;
         }
-        size++;
     }
 
     @Override
@@ -68,20 +60,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        Node<T> node = head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
-        }
+        Node<T> node = findNodeByIndex(index);
         return node.value;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> node = head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
-        }
+        Node<T> node = findNodeByIndex(index);
         T oldValue = node.value;
         node.value = value;
         return oldValue;
@@ -90,10 +76,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> node = head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
-        }
+        Node<T> node = findNodeByIndex(index);
         Node<T> nodeCopy = node;
         removeNode(node, index);
         return nodeCopy.value;
@@ -147,6 +130,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == size) {
             tail = node;
         }
+    }
+
+    private Node<T> findNodeByIndex(int index) {
+        Node<T> node = head;
+        for (int i = 0; i < index; i++) {
+            node = node.next;
+        }
+        return node;
     }
 
     private void checkIndex(int index) {
