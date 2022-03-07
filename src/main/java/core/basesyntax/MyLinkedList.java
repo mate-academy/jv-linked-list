@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
@@ -22,13 +21,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index == size) {
+        if (index == size && checkIndex(index)) {
             add(value);
             return;
         }
         Node<T> findNode = findIndex(index);
         Node<T> node;
-        if (findNode.equals(first)) {
+        if (findNode == first) {
             node = new Node<>(null, value, first);
             first.prev = node;
             first = node;
@@ -71,7 +70,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> node = first;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(object, node.item)) {
+            if (object == node.item || object != null && object.equals(node.item)) {
                 unlink(node);
                 return true;
             }
@@ -103,7 +102,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean checkIndex(int index) {
-        return index >= 0 && index <= size;
+        boolean result;
+        try {
+            result = index >= 0 && index <= size;
+        } catch (IndexOutOfBoundsException e) {
+            throw new IndexOutOfBoundsException("Invalid index " + e);
+        }
+        return result;
     }
 
     private Node<T> findIndex(int index) {
