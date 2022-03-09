@@ -31,28 +31,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node = new Node<>(null, value, first);
             first.prev = node;
             first = node;
-        } else if (newNode.next == null) {
-            node = new Node<>(last, value, null);
-            last.next = node;
-            last = node;
         } else {
             node = new Node<>(newNode.prev, value, newNode);
             newNode.prev.next = node;
             newNode.prev = node;
         }
-
-        /*
-        это решение, которое работает
-        else if (index == 0) {
-            node = new Node<>(null, value, first);
-            first.prev = node;
-            first = node;
-        } else {
-            node = findIndex(index);
-            Node<T> newNode = new Node<T>(node.prev, value, node);
-            node.prev.next = newNode;
-            node.prev = newNode;
-        }*/
         size++;
     }
 
