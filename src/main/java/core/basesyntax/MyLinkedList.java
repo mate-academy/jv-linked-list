@@ -21,21 +21,38 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index == size && checkIndex(index)) {
+        Node<T> node;
+        if (index == size) {
             add(value);
             return;
         }
-        Node<T> findNode = findIndex(index);
-        Node<T> node;
-        if (findNode == first) {
+        Node<T> newNode = findIndex(index);
+        if (newNode.prev == null) {
+            node = new Node<>(null, value, first);
+            first.prev = node;
+            first = node;
+        } else if (newNode.next == null) {
+            node = new Node<>(last, value, null);
+            last.next = node;
+            last = node;
+        } else {
+            node = new Node<>(newNode.prev, value, newNode);
+            newNode.prev.next = node;
+            newNode.prev = node;
+        }
+
+        /*
+        это решение, которое работает
+        else if (index == 0) {
             node = new Node<>(null, value, first);
             first.prev = node;
             first = node;
         } else {
-            node = new Node<>(findNode.prev, value, findNode);
-            findNode.prev.next = node;
-            findNode.prev = node;
-        }
+            node = findIndex(index);
+            Node<T> newNode = new Node<T>(node.prev, value, node);
+            node.prev.next = newNode;
+            node.prev = newNode;
+        }*/
         size++;
     }
 
@@ -102,13 +119,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean checkIndex(int index) {
-        boolean result;
-        try {
-            result = index >= 0 && index <= size;
-        } catch (IndexOutOfBoundsException e) {
-            throw new IndexOutOfBoundsException("Invalid index " + e);
+        if (index >= 0 && index <= size) {
+            return true;
+        } else {
+            throw new IndexOutOfBoundsException("Invalid index " + index);
         }
-        return result;
     }
 
     private Node<T> findIndex(int index) {
