@@ -107,9 +107,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Node<T> node = head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
+        Node<T> node;
+        if (index < size / 2) {
+            node = head;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+        } else {
+            node = tail;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
         }
         return node;
     }
@@ -117,9 +125,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private boolean checkIndex(int index) {
         if (index >= 0 && index < size) {
             return true;
-        } else {
-            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds");
         }
+        throw new IndexOutOfBoundsException("Index " + index + " is out of bounds");
     }
 
     private void removeNode(Node<T> node) {
