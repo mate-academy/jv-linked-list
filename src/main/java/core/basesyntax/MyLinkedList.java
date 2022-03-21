@@ -60,7 +60,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         checkIndex(index);
         Node<T> currentNode = getNodeByIndex(index);
-        T lastValue = getNodeByIndex(index).value;
+        T lastValue = currentNode.value;
         currentNode.value = value;
         return lastValue;
     }
@@ -82,7 +82,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 unlink(currentNode);
                 return true;
             }
-            currentNode = head.next;
+            currentNode = currentNode.next;
         }
         return false;
     }
@@ -139,10 +139,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private static class Node<T> {
         private T value;
-        private Node prev;
-        private Node next;
+        private Node<T> prev;
+        private Node<T> next;
 
-        public Node(Node prev, T value, Node next) {
+        public Node(Node<T> prev, T value, Node<T> next) {
             this.value = value;
             this.prev = prev;
             this.next = next;
