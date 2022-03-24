@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> head;
     private Node<T> tail;
 
@@ -21,8 +21,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        final Node<T> last = tail;
-        final Node<T> newNode = new Node<>(last, value, null);
+        Node<T> last = tail;
+        Node<T> newNode = new Node<>(last, value, null);
         tail = newNode;
         if (last == null) {
             head = newNode;
@@ -55,7 +55,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        final Node<T> replacedNode = findNode(index);
+        Node<T> replacedNode = findNode(index);
         T oldNodeValue = replacedNode.value;
         replacedNode.value = value;
         return oldNodeValue;
@@ -105,8 +105,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void insertBefore(T value, Node<T> node) {
-        final Node<T> previous = node.prevNode;
-        final Node<T> newNode = new Node<>(previous, value, node);
+        Node<T> previous = node.prevNode;
+        Node<T> newNode = new Node<>(previous, value, node);
         newNode.nextNode.prevNode = newNode;
         if (previous == null) {
             head = newNode;
@@ -117,8 +117,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T unlinkNode(Node<T> toRemove) {
-        final Node<T> next = toRemove.nextNode;
-        final Node<T> previous = toRemove.prevNode;
+        Node<T> next = toRemove.nextNode;
+        Node<T> previous = toRemove.prevNode;
 
         if (previous == null) {
             head = next;
