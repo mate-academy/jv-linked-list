@@ -14,7 +14,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = head;
         } else {
             Node<T> newNode = new Node<>(value, null, tail);
-            tail.setNext(newNode);
+            tail.next = newNode;
             tail = newNode;
         }
         size++;
@@ -31,31 +31,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     }
 
-    private void insert(T value, int index) {
-        Node<T> indexPositionNode = findNode(index);
-        Node<T> previousIndexPositionNode = indexPositionNode.getPrevious();
-        Node<T> newNode = new Node<>(value, indexPositionNode, previousIndexPositionNode);
-        indexPositionNode.setPrevious(newNode);
-        if (previousIndexPositionNode == null) {
-            head = newNode;
-        } else {
-            previousIndexPositionNode.setNext(newNode);
-        }
-        size++;
-    }
-
-    private void checkIndexForAdd(int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Wrong index!");
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Wrong index!");
-        }
-    }
-
     @Override
     public void addAll(List<T> list) {
         for (T element : list) {
@@ -67,75 +42,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T get(int index) {
         checkIndex(index);
         Node<T> foundedNode = findNode(index);
-        return foundedNode == null ? null : foundedNode.getValue();
-    }
-
-    private Node<T> findNode(T content) {
-        Node<T> iterationNode = head;
-        while (iterationNode != null) {
-            if (iterationNode.getValue() != null && iterationNode.getValue().equals(content)
-                    || (iterationNode.getValue() == content)) {
-                return iterationNode;
-            }
-            iterationNode = iterationNode.getNext();
-        }
-        return null;
-    }
-
-    private Node<T> findNode(int index) {
-        return (size - index) > index ? searchFromHead(index) : searchFromTail(index);
-    }
-
-    private Node<T> searchFromHead(int index) {
-        Node<T> neededNode = head;
-        for (int i = 0; i < index; i++) {
-            neededNode = neededNode.getNext();
-        }
-        return neededNode;
-    }
-
-    private Node<T> searchFromTail(int index) {
-        Node<T> neededNode = tail;
-        int whileIndex = size - 1;
-        while (index < whileIndex) {
-            neededNode = neededNode.getPrevious();
-            whileIndex--;
-        }
-        return neededNode;
+        return foundedNode == null ? null : foundedNode.value;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
         Node<T> indexPositionNode = findNode(index);
-        T oldContent = indexPositionNode.getValue();
-        indexPositionNode.setValue(value);
+        T oldContent = indexPositionNode.value;
+        indexPositionNode.value = value;
         return oldContent;
-    }
-
-    private T unLink(Node<T> node) {
-        T removedNodeContent = node.getValue();
-        if (node == head && node == tail) {
-            head = null;
-            tail = null;
-        } else if (node == head) {
-            head = head.getNext();
-            head.setPrevious(null);
-        } else if (node == tail) {
-            tail = tail.getPrevious();
-            tail.setNext(null);
-        } else {
-            Node<T> next = node.getNext();
-            Node<T> previous = node.getPrevious();
-            next.setPrevious(previous);
-            previous.setNext(next);
-        }
-        size--;
-        return removedNodeContent;
     }
 
     @Override
     public T remove(int index) {
+
         checkIndex(index);
         return unLink(findNode(index));
     }
@@ -170,29 +91,83 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
             this.previous = previous;
         }
+    }
 
-        public Node<T> getNext() {
-            return next;
+    private T unLink(Node<T> node) {
+        T removedNodeContent = node.value;
+        if (node == head && node == tail) {
+            head = null;
+            tail = null;
+        } else if (node == head) {
+            head = head.next;
+            head.previous = null;
+        } else if (node == tail) {
+            tail = tail.previous;
+            tail.next = null;
+        } else {
+            Node<T> next = node.next;
+            Node<T> previous = node.previous;
+            next.previous = previous;
+            previous.next = next;
         }
+        size--;
+        return removedNodeContent;
+    }
 
-        public void setNext(Node<T> next) {
-            this.next = next;
+    private Node<T> findNode(T content) {
+        Node<T> iterationNode = head;
+        while (iterationNode != null) {
+            if (iterationNode.value != null && iterationNode.value.equals(content)
+                    || (iterationNode.value == content)) {
+                return iterationNode;
+            }
+            iterationNode = iterationNode.next;
         }
+        return null;
+    }
 
-        public Node<T> getPrevious() {
-            return previous;
-        }
+    private Node<T> findNode(int index) {
+        return (size - index) > index ? searchFromHead(index) : searchFromTail(index);
+    }
 
-        public void setPrevious(Node<T> previous) {
-            this.previous = previous;
+    private Node<T> searchFromHead(int index) {
+        Node<T> neededNode = head;
+        for (int i = 0; i < index; i++) {
+            neededNode = neededNode.next;
         }
+        return neededNode;
+    }
 
-        public T getValue() {
-            return value;
+    private Node<T> searchFromTail(int index) {
+        Node<T> neededNode = tail;
+        for (int i = size - 1; index < i; i--) {
+            neededNode = neededNode.previous;
         }
+        return neededNode;
+    }
 
-        public void setValue(T value) {
-            this.value = value;
+    private void checkIndexForAdd(int index) {
+        if (index > size || index < 0) {
+            throw new IndexOutOfBoundsException("Wrong index!");
         }
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Wrong index!");
+        }
+    }
+
+    private void insert(T value, int index) {
+        Node<T> indexPositionNode = findNode(index);
+        Node<T> previousIndexPositionNode = indexPositionNode.previous;
+        Node<T> newNode = new Node<>(value, indexPositionNode, previousIndexPositionNode);
+        indexPositionNode.previous = newNode;
+        if (previousIndexPositionNode == null) {
+            head = newNode;
+        } else {
+            previousIndexPositionNode.next = newNode;
+        }
+        size++;
     }
 }
