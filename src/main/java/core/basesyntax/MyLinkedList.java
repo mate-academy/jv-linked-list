@@ -42,7 +42,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T get(int index) {
         checkIndex(index);
         Node<T> foundedNode = findNode(index);
-        return foundedNode == null ? null : foundedNode.value;
+        return foundedNode.value;
     }
 
     @Override
