@@ -38,7 +38,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             Node<T> currentNode = node(index);
             Node<T> currentNodePrev = currentNode.getPrev();
-            newNode = new Node<>(currentNode.getPrev(), value, currentNode);
+            newNode = new Node<>(currentNodePrev, value, currentNode);
             currentNode.setPrev(newNode);
             currentNodePrev.setNext(newNode);
             newNode.setNext(currentNode);
