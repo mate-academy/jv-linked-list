@@ -28,12 +28,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         if (index == size) {
             add(value);
-        } else if (index == 0) {
+            return;
+        }
+        if (index == 0) {
             newNode = new Node<>(null, value, head);
             newNode.setNext(head);
             head.setPrev(newNode);
             head = newNode;
-            size++;
         } else {
             Node<T> currentNode = node(index);
             Node<T> currentNodePrev = currentNode.getPrev();
@@ -42,16 +43,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             currentNodePrev.setNext(newNode);
             newNode.setNext(currentNode);
             newNode.setPrev(currentNodePrev);
-            size++;
         }
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (list != null) {
-            for (T element : list) {
-                add(element);
-            }
+        for (T element : list) {
+            add(element);
         }
     }
 
