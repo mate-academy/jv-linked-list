@@ -1,17 +1,16 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    Node<T> head;
-    Node<T> tail;
-    int size = 0;
+    private Node<T> head;
+    private Node<T> tail;
+    private int size = 0;
 
     private static class Node<T> {
-        T value;
-        Node<T> prev;
-        Node<T> next;
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
 
         public Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
@@ -99,30 +98,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current.value;
     }
 
-    private void removeService(Node<T> current) {
-        Node<T> prev = current.prev;
-        Node<T> next = current.next;
-        if (size == 1) {
-            tail = head = null;
-        } else if (prev == null) {
-            head.next.prev = null;
-            head = head.next;
-        } else if (next == null) {
-            tail.prev.next = null;
-            tail = tail.prev;
-        } else {
-            prev.next = next;
-            next.prev = prev;
-        }
-        size--;
-    }
-
-
     @Override
     public boolean remove(T object) {
         Node<T> current = head;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(object, current.value)) {
+            if (object == current.value || object != null
+                     && object.equals(current.value)) {
                 removeService(current);
                 return true;
             }
@@ -141,5 +122,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private void removeService(Node<T> node) {
+        Node<T> prev = node.prev;
+        Node<T> next = node.next;
+        if (size == 1) {
+            tail = head = null;
+        } else if (prev == null) {
+            head.next.prev = null;
+            head = head.next;
+        } else if (next == null) {
+            tail.prev.next = null;
+            tail = tail.prev;
+        } else {
+            prev.next = next;
+            next.prev = prev;
+        }
+        size--;
+    }
 
 }
