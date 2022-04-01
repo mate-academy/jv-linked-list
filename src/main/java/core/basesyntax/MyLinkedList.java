@@ -42,7 +42,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     }
 
-    public Node<T> searchNode(int index) {
+    private Node<T> searchNode(int index) {
         Node<T> current;
         if (index < size / 2) {
             current = head;
@@ -81,7 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return lastValue;
     }
 
-    public void checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index out of bound");
         }
