@@ -5,19 +5,7 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
-    private int size = 0;
-
-    private static class Node<T> {
-        private T value;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
+    private int size;
 
     @Override
     public void add(T value) {
@@ -54,11 +42,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     }
 
-    private Node<T> searchNode(int index) {
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+    public Node<T> searchNode(int index) {
+        Node<T> current;
+        if (index < size / 2) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
+
         return current;
     }
 
@@ -84,7 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return lastValue;
     }
 
-    private void checkIndex(int index) {
+    public void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index out of bound");
         }
@@ -94,7 +91,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> current = searchNode(index);
-        removeService(current);
+        unLink(current);
         return current.value;
     }
 
@@ -104,7 +101,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < size; i++) {
             if (object == current.value || object != null
                      && object.equals(current.value)) {
-                removeService(current);
+                unLink(current);
                 return true;
             }
             current = current.next;
@@ -122,7 +119,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void removeService(Node<T> node) {
+    private void unLink(Node<T> node) {
         Node<T> prev = node.prev;
         Node<T> next = node.next;
         if (size == 1) {
@@ -139,5 +136,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         size--;
     }
+    private static class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
 
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
+    }
 }
