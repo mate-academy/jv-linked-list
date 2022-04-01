@@ -42,23 +42,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     }
 
-    private Node<T> searchNode(int index) {
-        Node<T> current;
-        if (index < size / 2) {
-            current = head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
-        } else {
-            current = tail;
-            for (int i = size - 1; i > index; i--) {
-                current = current.prev;
-            }
-        }
-
-        return current;
-    }
-
     @Override
     public void addAll(List<T> list) {
         for (T element : list) {
@@ -79,12 +62,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         T lastValue = currentNode.value;
         currentNode.value = value;
         return lastValue;
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of bound");
-        }
     }
 
     @Override
@@ -135,6 +112,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             next.prev = prev;
         }
         size--;
+    }
+
+    private Node<T> searchNode(int index) {
+        Node<T> current;
+        if (index < size / 2) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
+        }
+
+        return current;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of bound");
+        }
     }
 
     private static class Node<T> {
