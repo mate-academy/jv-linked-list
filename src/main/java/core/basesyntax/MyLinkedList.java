@@ -3,16 +3,16 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    int size = 0;
-    Node<T> head;
-    Node<T> tail;
+    private int size = 0;
+    private Node<T> head;
+    private Node<T> tail;
 
-    private static class Node<E> {
-        E item;
-        Node<E> next;
-        Node<E> prev;
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
-        Node(Node<E> prev, E element, Node<E> next) {
+        Node(Node<T> prev, T element, Node<T> next) {
             this.item = element;
             this.next = next;
             this.prev = prev;
@@ -67,7 +67,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkElementIndex(index);
-        return unlink(node(index));
+        return unLink(node(index));
     }
 
     @Override
@@ -75,14 +75,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (object == null) {
             for (Node<T> currentNode = head; currentNode != null; currentNode = currentNode.next) {
                 if (currentNode.item == null) {
-                    unlink(currentNode);
+                    unLink(currentNode);
                     return true;
                 }
             }
         } else {
             for (Node<T> currentNode = head; currentNode != null; currentNode = currentNode.next) {
                 if (object.equals(currentNode.item)) {
-                    unlink(currentNode);
+                    unLink(currentNode);
                     return true;
                 }
             }
@@ -101,66 +101,72 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkPositionIndex(int index) {
-        if (!isPositionIndex(index))
+        if (!isPositionIndex(index)) {
             throw new IndexOutOfBoundsException();
+        }
     }
 
     private boolean isPositionIndex(int index) {
         return index >= 0 && index <= size;
     }
+
     private void checkElementIndex(int index) {
-        if (!isElementIndex(index))
+        if (!isElementIndex(index)) {
             throw new IndexOutOfBoundsException();
+        }
     }
+
     private boolean isElementIndex(int index) {
         return index >= 0 && index < size;
     }
 
-    void linkBefore(T e, Node<T> succ) {
-        final Node<T> pred = succ.prev;
-        final Node<T> newNode = new Node<>(pred, e, succ);
-        succ.prev = newNode;
-        if (pred == null)
+    void linkBefore(T element, Node<T> currentNode) {
+        final Node<T> before = currentNode.prev;
+        final Node<T> newNode = new Node<>(before, element, currentNode);
+        currentNode.prev = newNode;
+        if (before == null) {
             head = newNode;
-        else
-            pred.next = newNode;
+        } else {
+            before.next = newNode;
+        }
         size++;
     }
 
     Node<T> node(int index) {
+        Node<T> currentNode;
         if (index < (size >> 1)) {
-            Node<T> x = head;
-            for (int i = 0; i < index; i++)
-                x = x.next;
-            return x;
+            currentNode = head;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
         } else {
-            Node<T> x = tail;
-            for (int i = size - 1; i > index; i--)
-                x = x.prev;
-            return x;
+            currentNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                currentNode = currentNode.prev;
+            }
         }
+        return currentNode;
     }
 
-    T unlink(Node<T> x) {
-        final T element = x.item;
-        final Node<T> prev = x.prev;
-        final Node<T> next = x.next;
+    T unLink(Node<T> currentNode) {
+        final T element = currentNode.item;
+        final Node<T> prev = currentNode.prev;
+        final Node<T> next = currentNode.next;
 
         if (prev == null) {
             head = next;
         } else {
             prev.next = next;
-            x.prev = null;
+            currentNode.prev = null;
         }
 
         if (next == null) {
             tail = prev;
         } else {
             next.prev = prev;
-            x.next = null;
+            currentNode.next = null;
         }
-
-        x.item = null;
+        currentNode.item = null;
         size--;
         return element;
     }
