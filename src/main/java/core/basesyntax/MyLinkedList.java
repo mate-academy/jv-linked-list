@@ -30,7 +30,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             current.next = newNode;
         }
-        size = size + 1;
+        size++;
     }
 
     @Override
@@ -110,7 +110,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current.next != null) {
-            if (Objects.equals(current.value, object)) {
+            if ((current.value == object) || (current.value != null && current.value.equals(object))) {
                 break;
             }
             current = current.next;
