@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> first;
     private Node<T> last;
 
@@ -19,12 +19,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         indexCheck(index);
-        if (size == 0 && index == 0) {
-            firstAdd(value);
-        } else if (index == 0 && size > 0) {
+        if (size == index) {
+            add(value);
+            return;
+        }
+        if (index == 0) {
             addBefore(value);
-        } else if (index == size) {
-            addAfter(value);
         } else {
             addMiddle(value, index);
         }
@@ -43,7 +43,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index out of bound");
         }
         indexCheck(index);
-        return startFrom(index).item;
+        return getNodeByIndex(index).item;
     }
 
     @Override
@@ -67,13 +67,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> x = first;
+        Node<T> currentNode = first;
         for (int i = 0; i < size; i++) {
-            if (object == x.item || (object != null && object.equals(x.item))) {
+            if (object == currentNode.item || (object != null && object.equals(currentNode.item))) {
                 remove(i);
                 return true;
             }
-            x = x.right;
+            currentNode = currentNode.right;
         }
         return false;
     }
@@ -130,12 +130,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addMiddle(T value, int index) {
-        Node<T> x = startFrom(index);
-        Node<T> newNode = new Node<T>(x.left, value, x);
-        x.left.right = newNode;
-        newNode.left = x.left;
-        x.left = newNode;
-        newNode.right = x;
+        Node<T> currentNode = getNodeByIndex(index);
+        Node<T> newNode = new Node<T>(currentNode.left, value, currentNode);
+        currentNode.left.right = newNode;
+        newNode.left = currentNode.left;
+        currentNode.left = newNode;
+        newNode.right = currentNode;
         size++;
     }
 
@@ -161,27 +161,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == index) {
             throw new IndexOutOfBoundsException("Index out of bound");
         }
-        Node<T> x = startFrom(index);
-        x.left.right = x.right;
-        x.right.left = x.left;
+        Node<T> currentNode = getNodeByIndex(index);
+        currentNode.left.right = currentNode.right;
+        currentNode.right.left = currentNode.left;
         size--;
-        return x.item;
+        return currentNode.item;
     }
 
-    private Node<T> startFrom(int index) {
+    private Node<T> getNodeByIndex(int index) {
         if (index < (size / 2)) {
-            Node<T> x = first;
+            Node<T> currentNode = first;
             for (int i = 0; i < index; i++) {
-                x = x.right;
+                currentNode = currentNode.right;
             }
-            return x;
+            return currentNode;
         } else {
-            Node<T> x = last;
+            Node<T> currentNode = last;
             for (int i = size - 1; i > index; i--) {
-                x = x.left;
+                currentNode = currentNode.left;
             }
-            return x;
+            return currentNode;
         }
     }
-
 }
