@@ -8,12 +8,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size = 0;
 
     private static class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> previous;
+        private T item;
+        private Node<T> next;
+        private Node<T> previous;
 
-        Node(T item) {
+        Node(Node<T> previous, T item, Node<T> next) {
             this.item = item;
+            this.next = next;
+            this.previous = previous;
         }
     }
 
@@ -39,14 +41,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         verifyIndex(index);
         Node<T> current = findNode(index);
         Node<T> predecessor = current.previous;
-        Node<T> newNode = new Node<>(value);
-        newNode.previous = predecessor;
-        newNode.next = current;
+        Node<T> newNode = new Node<>(predecessor, value, current);
         current.previous = newNode;
         if (predecessor == null) {
             head = newNode;
-        }
-        else {
+        } else {
             predecessor.next = newNode;
         }
         size++;
@@ -72,7 +71,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         T oldValue = sett.item;
         sett.item = value;
         return oldValue;
-        }
+    }
 
     @Override
     public T remove(int index) {
@@ -120,21 +119,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void linkFirst(T e) {
         final Node<T> first = head;
-        final Node<T> newNode = new Node<> (e);
+        final Node<T> newNode = new Node<>(null, e, first);
         head = newNode;
-        head.next = first;
-        if (first == null)
+        if (first == null) {
             tail = newNode;
-        else
+        } else {
             first.previous = newNode;
+        }
         size++;
     }
 
     void linkLast(T value) {
         final Node<T> last = tail;
-        final Node<T> newNode = new Node<>(value);
+        final Node<T> newNode = new Node<>(last, value, null);
         tail = newNode;
-        newNode.previous = last;
         if (last != null) {
             last.next = newNode;
         }
@@ -165,12 +163,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> target;
         if (index < (size >> 1)) {
             target = head;
-            for (int i = 0; i < index; i++)
+            for (int i = 0; i < index; i++) {
                 target = target.next;
+            }
         } else {
             target = tail;
-            for (int i = size - 1; i > index; i--)
+            for (int i = size - 1; i > index; i--) {
                 target = target.previous;
+            }
         }
         return target;
     }
