@@ -47,9 +47,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Invalid index when set node");
         }
-        Node<T> nodeToSetNewValue = getNodeByIndex(index);
-        T oldValue = nodeToSetNewValue.value;
-        nodeToSetNewValue.value = value;
+        T oldValue = getNodeByIndex(index).value;
+        getNodeByIndex(index).value = value;
         return oldValue;
     }
 
@@ -58,10 +57,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Invalid index when remove");
         }
-        Node<T> nodeToRemove = getNodeByIndex(index);
+        T value = getNodeByIndex(index).value;
         unlink(getNodeByIndex(index));
         size--;
-        return nodeToRemove.value;
+        return value;
     }
 
     @Override
