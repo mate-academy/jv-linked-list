@@ -3,45 +3,161 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private int size;
+    private Node<T> first;
+    private Node<T> last;
+
+    class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
+    }
+
     @Override
     public void add(T value) {
+        linkLast(value);
     }
 
     @Override
     public void add(T value, int index) {
+        if (index > size || index < 0) {
+            throw new IndexOutOfBoundsException("Index out of bounds " + index);
+        }
+        if (index == size) {
+            linkLast(value);
+        } else {
+            linkBefore(value, getNode(index));
+        }
     }
 
     @Override
     public void addAll(List<T> list) {
+        for (int i = 0; i < list.size(); i++) {
+            linkLast(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkElementIndex(index);
+        return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        return null;
+        checkElementIndex(index);
+        Node<T> nodeByIndex = getNode(index);
+        T oldValue = nodeByIndex.value;
+        nodeByIndex.value = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkElementIndex(index);
+        return unlink(getNode(index));
     }
 
     @Override
     public boolean remove(T object) {
+        if (object == null) {
+            for (Node<T> current = first; current != null; current = current.next) {
+                if (current.value == null) {
+                    unlink(current);
+                    return true;
+                }
+            }
+        } else {
+            for (Node<T> current = first; current != null; current = current.next) {
+                if (object.equals(current.value)) {
+                    unlink(current);
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private void linkLast(T value) {
+        Node<T> lastNode = last;
+        Node<T> newNode = new Node<>(lastNode, value, null);
+        last = newNode;
+        if (lastNode == null) {
+            first = newNode;
+        } else {
+            lastNode.next = newNode;
+        }
+        size++;
+    }
+
+    private void linkBefore(T value, Node<T> nextNode) {
+        Node<T> previousNode = nextNode.prev;
+        Node<T> newNode = new Node<>(previousNode, value, nextNode);
+        nextNode.prev = newNode;
+        if (previousNode == null) {
+            first = newNode;
+        } else {
+            previousNode.next = newNode;
+        }
+        size++;
+    }
+
+    private void checkElementIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of bounds " + index);
+        }
+    }
+
+    Node<T> getNode(int index) {
+        Node<T> nodeByIndex;
+        if (index < (size >> 1)) {
+            nodeByIndex = first;
+            for (int i = 0; i < index; i++) {
+                nodeByIndex = nodeByIndex.next;
+            }
+        } else {
+            nodeByIndex = last;
+            for (int i = size - 1; i > index; i--) {
+                nodeByIndex = nodeByIndex.prev;
+            }
+        }
+        return nodeByIndex;
+    }
+
+    T unlink(Node<T> deletedNode) {
+        Node<T> next = deletedNode.next;
+        Node<T> previous = deletedNode.prev;
+
+        if (next == null && previous == null) {
+            last = null;
+            first = null;
+        } else if (previous == null) {
+            first = next;
+            next.prev = null;
+        } else if (next == null) {
+            last = previous;
+            previous.next = null;
+        } else {
+            previous.next = next;
+            next.prev = previous;
+        }
+        size--;
+        return deletedNode.value;
     }
 }
