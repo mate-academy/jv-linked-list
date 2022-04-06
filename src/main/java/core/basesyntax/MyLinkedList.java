@@ -5,7 +5,7 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
-    private int size = 0;
+    private int size;
 
     private static class Node<T> {
         private T item;
@@ -67,9 +67,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         verifyIndex(index);
-        Node<T> sett = findNode(index);
-        T oldValue = sett.item;
-        sett.item = value;
+        Node<T> replacedNode = findNode(index);
+        T oldValue = replacedNode.item;
+        replacedNode.item = value;
         return oldValue;
     }
 
@@ -117,9 +117,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void linkFirst(T e) {
-        final Node<T> first = head;
-        final Node<T> newNode = new Node<>(null, e, first);
+    private void linkFirst(T value) {
+        Node<T> first = head;
+        Node<T> newNode = new Node<>(null, value, first);
         head = newNode;
         if (first == null) {
             tail = newNode;
@@ -129,9 +129,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    void linkLast(T value) {
-        final Node<T> last = tail;
-        final Node<T> newNode = new Node<>(last, value, null);
+    private void linkLast(T value) {
+        Node<T> last = tail;
+        Node<T> newNode = new Node<>(last, value, null);
         tail = newNode;
         if (last != null) {
             last.next = newNode;
@@ -139,9 +139,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    void unlink(Node<T> deletedNode) {
-        final Node<T> next = deletedNode.next;
-        final Node<T> prev = deletedNode.previous;
+    private void unlink(Node<T> deletedNode) {
+        Node<T> next = deletedNode.next;
+        Node<T> prev = deletedNode.previous;
 
         if (prev == null) {
             head = next;
@@ -159,7 +159,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    Node<T> findNode(int index) {
+    private Node<T> findNode(int index) {
         Node<T> target;
         if (index < (size >> 1)) {
             target = head;
