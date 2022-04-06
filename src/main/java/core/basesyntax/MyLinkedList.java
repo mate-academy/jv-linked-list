@@ -8,9 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size;
 
-    public MyLinkedList() {
-    }
-
     private static class Node<T> {
         private T data;
         private Node<T> prev;
@@ -24,30 +21,38 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private boolean checkIndex(int index) {
         if (index >= 0 && index < size) {
             return true;
-        } else {
-            throw new IndexOutOfBoundsException("Wrong index" + index);
         }
+        throw new IndexOutOfBoundsException("Wrong index " + index);
     }
 
     private Node<T> findIndex(int index) {
-        Node<T> current = first;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        Node<T> current;
+        if (index < size / 2) {
+            current = first;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = last;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
         return current;
     }
 
-    private void removeLogic() {
-        Node<T> current = first;
-        if (current == first) {
-            first = current.next;
+    private void removeNode(Node<T> node) {
+        if (node.next == null && node.prev == null) {
+            last = null;
+            first = null;
+        } else if (node.prev == null) {
+            first = node.next;
+            node.next.prev = null;
+        } else if (node.next == null) {
+            last = node.prev;
         } else {
-            current.prev.next = current.next;
-        }
-        if (current == last) {
-            last = current.prev;
-        } else {
-            current.next.prev = current.prev;
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
         }
         size--;
     }
@@ -70,15 +75,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(value);
         if (index == size) {
             add(value);
-        } else if (index == 0) {
-            if (isEmpty()) {
-                last = newNode;
-            } else {
-                first.prev = newNode;
-                newNode.next = first;
-                first = newNode;
-                size++;
-            }
+            return;
+        }
+        if (index == 0) {
+            first.prev = newNode;
+            newNode.next = first;
+            first = newNode;
         } else {
             checkIndex(index);
             Node<T> current = findIndex(index);
@@ -86,8 +88,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             newNode.prev = current.prev;
             current.prev.next = newNode;
             current.prev = newNode;
-            size++;
         }
+        size++;
     }
 
     @Override
@@ -117,42 +119,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> current = findIndex(index);
-        while (current.data != get(index)) {
-            current = current.next;
-            if (current == null) {
-                return null;
-            }
-        }
-        removeLogic();
+        removeNode(current);
         return current.data;
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> current = first;
-        while (current.next != null) {
+        for (int i = 0; i < size; i++) {
             if (current.data == object || (object != null && object.equals(current.data))) {
-                break;
+                removeNode(current);
+                return true;
             }
             current = current.next;
-        }
-        if (current.data == object || (object != null && object.equals(current.data))) {
-            Node<T> prev = current.prev;
-            Node<T> next = current.next;
-            size--;
-            if (next == null && prev == null) {
-                last = null;
-                first = null;
-            } else if (prev == null) {
-                first = next;
-                next.prev = null;
-            } else if (next == null) {
-                last = prev;
-            } else {
-                prev.next = next;
-                next.prev = prev;
-            }
-            return true;
         }
         return false;
     }
