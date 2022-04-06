@@ -9,11 +9,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        if (size == 0) {
-            linkFirst(value);
-        } else {
-            linkLast(value);
-        }
+        linkLast(value);
         size++;
     }
 
@@ -63,7 +59,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Invalid index when remove");
         }
         Node<T> nodeToRemove = getNodeByIndex(index);
-        unlink(index);
+        unlink(getNodeByIndex(index));
         size--;
         return nodeToRemove.value;
     }
@@ -71,14 +67,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> node = head;
-        int index = 0;
         while (node != null) {
             if (node.value == object || node.value != null && node.value.equals(object)) {
-                unlink(index);
+                unlink(node);
                 size--;
                 return true;
             }
-            index++;
             node = node.next;
         }
         return false;
@@ -110,17 +104,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return nodeByIndex;
     }
 
-    private void linkFirst(T value) {
-        Node<T> newNode = new Node<>(value, null, null);
-        if (head == null) {
-            head = newNode;
-            tail = head;
-        } else {
-            head.prev = newNode;
-            head = newNode;
-        }
-    }
-
     private void linkLast(T value) {
         Node<T> lastNode = tail;
         Node<T> newNode = new Node<>(value, lastNode, null);
@@ -143,8 +126,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void unlink(int index) {
-        Node<T> currentNode = getNodeByIndex(index);
+    private void unlink(Node<T> currentNode) {
         Node<T> prev = currentNode.prev;
         Node<T> next = currentNode.next;
         if (prev == null && next == null) {
