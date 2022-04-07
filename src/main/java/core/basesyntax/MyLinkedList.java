@@ -9,7 +9,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        linkLast(value);
+        final Node<T> lastNode = last;
+        final Node<T> newNode = new Node<>(lastNode, value, null);
+        last = newNode;
+        if (lastNode == null) {
+            first = newNode;
+        } else {
+            lastNode.next = newNode;
+        }
+        size++;
     }
 
     @Override
@@ -18,56 +26,47 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Wrong index " + index);
         }
         if (index == size) {
-            linkLast(value);
+            add(value);
         } else {
-            linkBefore(value, node(index));
+            linkBefore(value, findNode(index));
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (T nodes : list) {
-            linkLast(nodes);
+        for (T value : list) {
+            add(value);
         }
     }
 
     @Override
     public T get(int index) {
         checkElementIndex(index);
-        return node(index).value;
+        return findNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkElementIndex(index);
-        Node<T> x = node(index);
-        T oldVal = x.value;
-        x.value = value;
-        return oldVal;
+        Node<T> changedNode = findNode(index);
+        T oldValue = changedNode.value;
+        changedNode.value = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
         checkElementIndex(index);
-        return unlink(node(index));
+        return unlink(findNode(index));
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> current;
-        if (object == null) {
-            for (current = first; current != null; current = current.next) {
-                if (current.value == null) {
-                    unlink(current);
-                    return true;
-                }
-            }
-        } else {
-            for (current = first; current != null; current = current.next) {
-                if (object.equals(current.value)) {
-                    unlink(current);
-                    return true;
-                }
+        for (current = first; current != null; current = current.next) {
+            if (object == null && (current.value == null || object.equals(current.value))) {
+                unlink(current);
+                return true;
             }
         }
         return false;
@@ -81,18 +80,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void linkLast(T value) {
-        final Node<T> lastNode = last;
-        final Node<T> newNode = new Node<>(lastNode, value, null);
-        last = newNode;
-        if (lastNode == null) {
-            first = newNode;
-        } else {
-            lastNode.next = newNode;
-        }
-        size++;
     }
 
     private void linkBefore(T value, Node<T> nextNode) {
@@ -113,7 +100,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    Node<T> node(int index) {
+    private Node<T> findNode(int index) {
         Node<T> current;
         if (index < (size >> 1)) {
             current = first;
