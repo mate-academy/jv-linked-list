@@ -7,7 +7,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    class Node<T> {
+    private class Node<T> {
         private T value;
         private Node<T> prev;
         private Node<T> next;
@@ -21,7 +21,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        linkLast(value);
+        Node<T> lastNode = tail;
+        Node<T> newNode = new Node<>(lastNode, value, null);
+        tail = newNode;
+        if (lastNode == null) {
+            head = newNode;
+        } else {
+            lastNode.next = newNode;
+        }
+        size++;
     }
 
     @Override
@@ -30,7 +38,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index out of bounds " + index);
         }
         if (index == size) {
-            linkLast(value);
+            add(value);
         } else {
             linkBefore(value, getNode(index));
         }
@@ -39,7 +47,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            linkLast(list.get(i));
+            add(list.get(i));
         }
     }
 
@@ -66,16 +74,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
+        while (object != null) {
             for (Node<T> current = head; current != null; current = current.next) {
-                if (current.value == null) {
-                    unlink(current);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> current = head; current != null; current = current.next) {
-                if (object.equals(current.value)) {
+                if (current.value == object || current.value != null
+                        && current.value.equals(object)) {
                     unlink(current);
                     return true;
                 }
@@ -92,18 +94,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void linkLast(T value) {
-        Node<T> lastNode = tail;
-        Node<T> newNode = new Node<>(lastNode, value, null);
-        tail = newNode;
-        if (lastNode == null) {
-            head = newNode;
-        } else {
-            lastNode.next = newNode;
-        }
-        size++;
     }
 
     private void linkBefore(T value, Node<T> nextNode) {
