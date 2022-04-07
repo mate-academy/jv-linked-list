@@ -33,12 +33,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Invalid index");
-        }
         if (index == size) {
             add(value);
         } else {
+            checkIndex(index, size);
             Node<T> current = getNodeByIndex(index);
             Node<T> prev = current.prev;
             Node<T> newNode = new Node<>(prev, value, current);
@@ -61,30 +59,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index > size || index < 0 || index == size) {
-            throw new IndexOutOfBoundsException("Invalid index");
-        } else {
-            return getNodeByIndex(index).value;
-        }
+        checkIndex(index, size);
+        return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index > size || index < 0 || index == size) {
-            throw new IndexOutOfBoundsException("Invalid index");
-        } else {
-            Node<T> node = getNodeByIndex(index);
-            T prev = node.value;
-            node.value = value;
-            return prev;
-        }
+        checkIndex(index, size);
+        Node<T> node = getNodeByIndex(index);
+        T prev = node.value;
+        node.value = value;
+        return prev;
     }
 
     @Override
     public T remove(int index) {
-        if (index > size || index < 0 || index == size) {
-            throw new IndexOutOfBoundsException("Invalid index");
-        }
+        checkIndex(index, size);
         Node<T> deleteNode = getNodeByIndex(index);
         unlink(deleteNode);
         return deleteNode.value;
@@ -130,14 +120,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void unlink(Node<T> deletedNode) {
         Node<T> next = deletedNode.next;
         Node<T> prev = deletedNode.prev;
-
         if (prev == null) {
             head = next;
         } else {
             prev.next = next;
             deletedNode.prev = null;
         }
-
         if (next == null) {
             tail = prev;
         } else {
@@ -145,5 +133,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             deletedNode.next = null;
         }
         size--;
+    }
+
+    private void checkIndex(int index, int size) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Invalid index");
+        }
     }
 }
