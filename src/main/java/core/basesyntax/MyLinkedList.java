@@ -1,11 +1,12 @@
 package core.basesyntax;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
-    static class Node<T> {
+    private static class Node<T> {
         private T velue;
         private Node<T> next;
         private Node<T> prev;
@@ -34,7 +35,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Objects.checkIndex(index, size + 1);
+        if (index < 0 || index >= size + 1) {
+            throw new IndexOutOfBoundsException();
+        }
         Node<T> newNode = new Node<>(value);
         if (head == null) {
             head = tail = newNode;
@@ -56,20 +59,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T element : list) {
+            add(element);
         }
     }
 
     @Override
     public T get(int index) {
-        Objects.checkIndex(index, size);
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
         return getNodeByIndex(index).velue;
     }
 
     @Override
     public T set(T value, int index) {
-        Objects.checkIndex(index, size);
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
         Node<T> node = getNodeByIndex(index);
         T nodeReturn = node.velue;
         node.velue = value;
@@ -78,7 +85,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Objects.checkIndex(index, size);
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
         T removedElement;
         if (index == 0) {
             removedElement = head.velue;
@@ -138,7 +147,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    T unlink(Node<T> x) {
+    private T unlink(Node<T> x) {
         // assert x != null;
         final T element = x.velue;
         final Node<T> next = x.next;
