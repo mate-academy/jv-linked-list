@@ -25,16 +25,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         if (index == size) {
             add(value);
-            return;
         } else if (index == 0) {
             Node<T> newNode = new Node<>(null, value, tail);
             newNode.next = tail;
             tail.prev = newNode;
             tail = newNode;
             size++;
-            return;
         } else {
-            checkSize(index);
+            checkIndex(index);
             Node<T> myNode = tail;
             for (int i = 0; i < index; i++) {
                 if (myNode.next != null) {
@@ -59,7 +57,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkSize(index);
+        checkIndex(index);
         Node<T> newNode = tail;
         for (int i = 0; i < index; i++) {
             if (newNode != null && newNode.next != null) {
@@ -71,7 +69,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        checkSize(index);
+        checkIndex(index);
         Node<T> nextNode = tail.next;
         for (int i = 0; i < index; i++) {
             if (nextNode.next != null) {
@@ -92,7 +90,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkSize(index);
+        checkIndex(index);
         Node<T> newNode = tail;
         for (int i = 0; i < index; i++) {
             if (newNode != null) {
@@ -126,7 +124,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkSize(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException(
                     "Wrong index, " + size);
