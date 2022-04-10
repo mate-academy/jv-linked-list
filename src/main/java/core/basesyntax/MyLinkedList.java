@@ -103,8 +103,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         if (index >= 0 && index < size) {
             T valueToRemove = get(index);
-            Node<T> nodeToRemove = getNodeByIndex(index);
-            unlink(nodeToRemove);
+            unlink(getNodeByIndex(index));
             return valueToRemove;
         }
         throw new IndexOutOfBoundsException("Index is out of bounds");
