@@ -55,16 +55,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index >= size) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException();
+        }
+        if (index == size) {
+            add(value);
+            return;
         }
         Node<T> currentNode = findByIndex(index);
 
         Node<T> newNode = new Node<T>(currentNode.prev, value, currentNode);
 
-        currentNode.prev.next = newNode;
-        newNode.prev = currentNode.prev;
-        newNode.next = currentNode;
+        if (currentNode.prev == null) {
+            head = newNode;
+        } else {
+
+            currentNode.prev.next = newNode;
+        }
         currentNode.prev = newNode;
 
         size++;
@@ -101,17 +108,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
-        int counter = 0;
-        Node<T> currentNode = head;
-        while (currentNode != null) {
-            if (counter == index) {
-                currentNode.value = value;
-                break;
-            }
-            counter++;
-            currentNode = currentNode.next;
-        }
-        return currentNode.value;
+        Node<T> temp = findByIndex(index);
+        T prevValue = temp.value;
+        temp.value = value;
+
+        return prevValue;
     }
 
     public void unlink(Node currentNode) {
