@@ -4,8 +4,8 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
-    private Node<T>[] linkedList;
-    private int defaultCapacity = 1;
+    private Node<T> head;
+    private Node<T> tail;
 
     private static class Node<T> {
         private Node<T> prev;
@@ -19,21 +19,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public MyLinkedList() {
-        linkedList = new Node[defaultCapacity];
-    }
-
     @Override
     public void add(T value) {
         if (size == 0) {
-            linkedList[0] = (Node<T>) new Node<>(null, value, null);
+            head = (Node<T>) new Node<>(null, value, null);
+            tail = head;
         }
         if (size > 0) {
-            linkedList[size] = (Node<T>) new Node<>(linkedList[size - 1], value, null);
-            linkedList[size - 1].next = linkedList[size];
+            Node<T> tempNode = tail;
+            tail = (Node<T>) new Node<>(tempNode, value, null);
+            tempNode.next = tail;
         }
         size++;
-        updateCapacity();
     }
 
     @Override
@@ -41,59 +38,63 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index > size || index < 0) {
             throw new IndexOutOfBoundsException("Invalid Index");
         }
-        if (index >= 0 && size >= index) {
-            Node<T> newNode = new Node<>(null, value, null);
-            if (index == 0 && size == 0) {
-                linkedList[index] = newNode;
-            }
-            if (index < size) {
-                Node<T>[] arrayCopy = linkedList;
-                linkedList = new Node[defaultCapacity];
-                if (index == 0) {
-                    for (int i = index + 1; i <= size; i++) {
-                        linkedList[i] = arrayCopy[i - 1];
-                    }
-                }
-                if (index > 0) {
-                    for (int i = 0; i < index; i++) {
-                        linkedList[i] = arrayCopy[i];
-                    }
-                    for (int i = index + 1; i <= size; i++) {
-                        linkedList[i] = arrayCopy[i - 1];
-                    }
-                }
-                linkedList[index] = newNode;
-                newNode.next = linkedList[index + 1];
-                newNode = linkedList[index + 1].prev;
-                if (index != 0) {
-                    newNode.prev = linkedList[index - 1];
-                    linkedList[index - 1].next = newNode;
-                }
-            }
-            if (index == size && size > 0) {
-                linkedList[index] = newNode;
-                newNode.prev = linkedList[index - 1];
-                linkedList[index - 1].next = newNode;
+        if (size == 0) {
+            head = (Node<T>) new Node<>(null, value, null);
+            tail = head;
+            size++;
+            return;
+        }
+        Node<T> tempNode = (Node<T>) new Node<>(null, value, null);
+
+        if (index == 0) {
+            tempNode.next = head;
+            head.prev = tempNode;
+            head = tempNode;
+            size++;
+            return;
+        }
+        if (index == size) {
+            tempNode.prev = tail;
+            tail.next = tempNode;
+            tail = tempNode;
+            size++;
+            return;
+        }
+        Node<T> prevNode = head;
+        Node<T> nextNode = head;
+
+        for (int i = 0; i < index; i++) {
+            nextNode = nextNode.next;
+            if (i != index - 1) {
+                prevNode = prevNode.next;
             }
         }
+        tempNode.prev = prevNode;
+        prevNode.next = tempNode;
+        tempNode.next = nextNode;
+        nextNode.prev = tempNode;
+
         size++;
-        updateCapacity();
     }
 
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            linkedList[size] = new Node<>(linkedList[size - 1], list.get(i), null);
-            linkedList[size - 1].next = linkedList[size];
+            Node<T> tempNode = tail;
+            tail = (Node<T>) new Node<>(tempNode, list.get(i), null);
+            tempNode.next = tail;
             size++;
-            updateCapacity();
         }
     }
 
     @Override
     public T get(int index) {
         if (size > index && index >= 0) {
-            return linkedList[index].item;
+            Node<T> tempNode = head;
+            for (int i = 0; i < index; i++) {
+                tempNode = tempNode.next;
+            }
+            return tempNode.item;
         } else {
             throw new IndexOutOfBoundsException("Invalid Index");
         }
@@ -102,18 +103,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         if (size > index && index >= 0) {
-            final T replacedElement = get(index);
+            Node<T> nodeToReplace = head;
+            for (int i = 0; i < index; i++) {
+                nodeToReplace = nodeToReplace.next;
+            }
             Node<T> newNode = new Node<>(null, value, null);
-            if (index != 0) {
-                linkedList[index - 1].next = newNode;
-                newNode.prev = linkedList[index].prev;
+            if (index == 0) {
+                newNode.next = head.next;
+                head.next.prev = newNode;
+                head = newNode;
+            } else {
+                newNode.prev = nodeToReplace.prev;
+                newNode.prev.next = newNode;
+                newNode.next = nodeToReplace.next;
+                newNode.next.prev = newNode;
             }
-            if (index != size - 1) {
-                linkedList[index + 1].prev = newNode;
-                newNode.next = linkedList[index].next;
-            }
-            linkedList[index] = newNode;
-            return replacedElement;
+            return nodeToReplace.item;
         } else {
             throw new IndexOutOfBoundsException("Invalid Index");
         }
@@ -122,19 +127,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         if (size > index && index >= 0) {
-            T removedElement = get(index);
-            if (index < size - 1) {
-                Node<T>[] arrayCopy = linkedList;
-                linkedList = new Node[defaultCapacity];
-                for (int i = 0; i < index; i++) {
-                    linkedList[i] = arrayCopy[i];
-                }
-                for (int j = index; j < size; j++) {
-                    linkedList[j] = arrayCopy[j + 1];
-                }
+            Node<T> nodeToDelete = head;
+            for (int i = 0; i < index; i++) {
+                nodeToDelete = nodeToDelete.next;
+            }
+            if (index == 0 && size == 1) {
+                nodeToDelete.next = null;
+                nodeToDelete.prev = null;
+            } else if (index == 0) {
+                nodeToDelete.next.prev = null;
+                head = nodeToDelete.next;
+            } else if (index == size - 1) {
+                nodeToDelete.prev.next = null;
+                tail = nodeToDelete.prev;
+            } else {
+                nodeToDelete.prev.next = nodeToDelete.next;
+                nodeToDelete.next.prev = nodeToDelete.prev;
             }
             size--;
-            return removedElement;
+            return nodeToDelete.item;
         } else {
             throw new IndexOutOfBoundsException("Invalid Index");
         }
@@ -142,23 +153,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
+        Node<T> nodeToDelete = head;
         for (int i = 0; i < size; i++) {
-            if (linkedList[i].item == null && object == null
-                    || object != null && object.equals(linkedList[i].item)) {
-                object = linkedList[i].item;
-                if (i < size - 1) {
-                    Node<T>[] arrayCopy = linkedList;
-                    linkedList = new Node[defaultCapacity];
-                    for (int k = 0; k < i; k++) {
-                        linkedList[k] = arrayCopy[k];
-                    }
-                    for (int j = i; j < size; j++) {
-                        linkedList[j] = arrayCopy[j + 1];
-                    }
+            if (nodeToDelete.item == null && object == null
+                    || object != null && object.equals(nodeToDelete.item)) {
+                if (i == 0 && size == 1) {
+                    nodeToDelete.next = null;
+                    nodeToDelete.prev = null;
+                } else if (i == 0) {
+                    nodeToDelete.next.prev = null;
+                    head = nodeToDelete.next;
+                } else if (i == size - 1) {
+                    nodeToDelete.prev.next = null;
+                    tail = nodeToDelete.prev;
+                } else {
+                    nodeToDelete.prev.next = nodeToDelete.next;
+                    nodeToDelete.next.prev = nodeToDelete.prev;
                 }
                 size--;
                 return true;
             }
+            nodeToDelete = nodeToDelete.next;
         }
         return false;
     }
@@ -174,14 +189,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return true;
         }
         return false;
-    }
-
-    private void updateCapacity() {
-        defaultCapacity = defaultCapacity + 1;
-        Node<T>[] arrayLinkedListCopy = linkedList;
-        linkedList = new Node[defaultCapacity];
-        for (int i = 0; i < defaultCapacity - 1; i++) {
-            linkedList[i] = arrayLinkedListCopy[i];
-        }
     }
 }
