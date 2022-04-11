@@ -29,7 +29,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         Node<T> node = getNodeByIndex(index);
-        Node<T> prevNode = node == null ? null : node.prev;
+        Node<T> prevNode = node.prev;
         Node<T> newNode = new Node<>(prevNode, value, node);
         node.prev = newNode;
         size++;
@@ -73,15 +73,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> node = head;
-        int index = 0;
-        while (node != null) {
-            if (node.value == object || node.value.equals(object)) {
-                remove(index);
+        Node<T> current = head;
+        for (int i = 0; i < size; i++) {
+            if (object == current.value || object != null
+                    && object.equals(current.value)) {
+                unlink(current);
                 return true;
             }
-            node = node.next;
-            index++;
+            current = current.next;
         }
         return false;
     }
@@ -135,6 +134,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private T value;
         private Node<T> next;
         private Node<T> prev;
+        private int[] mas = new int[5];
 
         public Node(Node<T> prev, T value, Node<T> next) {
             this.value = value;
