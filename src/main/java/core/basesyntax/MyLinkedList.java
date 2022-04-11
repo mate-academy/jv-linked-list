@@ -6,7 +6,7 @@ import java.util.Objects;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
-    private int size = 0;
+    private int size;
 
     @Override
     public void add(T value) {
@@ -70,21 +70,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndexInclusive(index);
         Node<T> current = findNodeByIndex(index);
-
-        if (current != null) {
-            return unlinkNode(current).value;
-        }
-        return null;
+        return unlinkNode(current).value;
     }
 
     @Override
     public boolean remove(T object) {
-        if (size == 1) {
-            head = null;
-            tail = null;
-            size--;
-            return true;
-        }
         Node<T> current = findNodeByValue(object);
 
         if (current != null) {
@@ -136,7 +126,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> findNodeByValue(T object) {
         Node<T> current = head;
 
-        while (current.next != null) {
+        for (int i = 0; i < size; i++) {
             if (Objects.equals(current.value, object)) {
                 return current;
             }
