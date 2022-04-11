@@ -3,37 +3,21 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private ListNode<T> first;
     private ListNode<T> last;
 
-    private ListNode<T> findByIndex(int index) {
-        if (index < size / 2) {
-            ListNode<T> x = first;
-            for (int i = 0; i < index; i++) {
-                x = x.next;
-            }
-            return x;
-        } else {
-            ListNode<T> x = last;
-            for (int i = size - 1; i > index; i--) {
-                x = x.prev;
-            }
-            return x;
-        }
-    }
-
     @Override
     public void add(T value) {
-        ListNode adding = new ListNode(value);
+        ListNode nodeToAdd = new ListNode(value);
         if (size != 0) {
-            adding.prev = last;
-            last.next = adding;
-            last = adding;
+            nodeToAdd.prev = last;
+            last.next = nodeToAdd;
+            last = nodeToAdd;
             size++;
         } else {
-            first = adding;
-            last = adding;
+            first = nodeToAdd;
+            last = nodeToAdd;
             size++;
         }
     }
@@ -44,85 +28,61 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException();
         }
         ListNode<T> valueNode = new ListNode<>(value);
-        if (size == 0) {
+        if (size == index) {
+            add(value);
+            return;
+        }
+        ListNode<T> indexNode = findByIndex(index);
+        if (index == 0) {
+            first.prev = valueNode;
+            valueNode.next = first;
             first = valueNode;
-            last = valueNode;
         } else {
-            ListNode<T> indexNode = findByIndex(index);
-            if (size == index) {
-                last.next = valueNode;
-                valueNode.prev = last;
-                last = valueNode;
-            } else if (index == 0) {
-                first.prev = valueNode;
-                valueNode.next = first;
-                first = valueNode;
-            } else {
-                indexNode.prev.next = valueNode;
-                valueNode.prev = indexNode.prev;
-                indexNode.prev = valueNode;
-                valueNode.next = indexNode;
-            }
+            indexNode.prev.next = valueNode;
+            valueNode.prev = indexNode.prev;
+            indexNode.prev = valueNode;
+            valueNode.next = indexNode;
         }
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (T i : list) {
-            add(i);
+        for (T node : list) {
+            add(node);
         }
     }
 
     @Override
     public T get(int index) {
-        if (index > size - 1 || index < 0) {
-            throw new IndexOutOfBoundsException();
-        }
+        throwOutOfBoundEx(index);
         return findByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index > size - 1 || index < 0) {
-            throw new IndexOutOfBoundsException();
-        }
+        throwOutOfBoundEx(index);
         ListNode<T> indexNode = findByIndex(index);
-        ListNode<T> valueNode = new ListNode<>(value);
-        if (indexNode == first) {
-            indexNode.next.prev = valueNode;
-            valueNode.next = indexNode.next;
-            first = valueNode;
-        } else if (indexNode == last) {
-            indexNode.next.prev = valueNode;
-            valueNode.prev = indexNode.prev;
-            last = valueNode;
-        } else {
-            indexNode.next.prev = valueNode;
-            indexNode.prev.next = valueNode;
-            valueNode.next = indexNode.next;
-            valueNode.prev = indexNode.prev;
-        }
-        return indexNode.value;
+        T returnValue = indexNode.value;
+        indexNode.value = value;
+        return returnValue;
     }
 
     @Override
     public T remove(int index) {
-        if (index > size - 1 || index < 0) {
-            throw new IndexOutOfBoundsException();
-        }
+        throwOutOfBoundEx(index);
         return unlink(findByIndex(index));
     }
 
     @Override
     public boolean remove(T object) {
-        ListNode<T> x = first;
+        ListNode<T> node = first;
         for (int i = 0; i < size;i++) {
-            if (object != null && object.equals(x.value) || object == x.value) {
-                unlink(x);
+            if (object != null && object.equals(node.value) || object == node.value) {
+                unlink(node);
                 return true;
             }
-            x = x.next;
+            node = node.next;
         }
         return false;
     }
@@ -135,6 +95,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void throwOutOfBoundEx(int index) {
+        if (index > size - 1 || index < 0) {
+            throw new IndexOutOfBoundsException("Wrong index: " + index);
+        }
     }
 
     private T unlink(ListNode<T> node) {
@@ -153,6 +119,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         size--;
         return returnValue;
+    }
+
+    private ListNode<T> findByIndex(int index) {
+        if (index < size / 2) {
+            ListNode<T> node = first;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+            return node;
+        } else {
+            ListNode<T> node = last;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
+            return node;
+        }
     }
 
     private class ListNode<T> {
