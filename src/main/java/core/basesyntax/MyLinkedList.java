@@ -126,12 +126,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findElementByIndex(int index) {
         checkIndex(index);
-        Node<T> newNode = head;
-        for (int i = 0; i < index; i++) {
-            if (newNode != null && newNode.next != null) {
+        if (index < size / 2) {
+            Node<T> newNode = head;
+            for (int i = 0; i < index; i++) {
                 newNode = newNode.next;
             }
+            return newNode;
+        } else {
+            Node<T> newNode = tail;
+            for (int i = 0; i < size - index - 1; i++) {
+                newNode = newNode.prev;
+            }
+            return newNode;
         }
-        return newNode;
     }
 }
