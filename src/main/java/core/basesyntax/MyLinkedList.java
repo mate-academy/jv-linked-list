@@ -8,8 +8,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        public Node(T value) {
+        private Node(T value) {
             this.value = value;
+        }
+
+        private Node(Node<T> prev, T value, Node<T> next) {
+            this.value = value;
+            this.next = next;
+            this.prev = prev;
         }
     }
 
@@ -18,11 +24,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
 
     private Node<T> iterateToIndex(int index) {
-        Node<T> node = head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
+        if (index <= size() / 2) {
+            Node<T> node = head;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+            return node;
+        } else {
+            Node<T> node = tail;
+            for (int i = size() - 1; i > index; i--) {
+                node = node.prev;
+            }
+            return node;
         }
-        return node;
+    }
+
+    private void unlink(Node node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
     }
 
     @Override
@@ -103,13 +122,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             removeValue = tail.value;
             tail = tail.prev;
         } else {
-            Node<T> oldNode = head;
-            for (int i = 0; i < index; i++) {
-                oldNode = oldNode.next;
-            }
+            Node<T> oldNode = iterateToIndex(index);
             removeValue = oldNode.value;
-            oldNode.prev.next = oldNode.next;
-            oldNode.next.prev = oldNode.prev;
+            unlink(oldNode);
         }
         size--;
         return removeValue;
