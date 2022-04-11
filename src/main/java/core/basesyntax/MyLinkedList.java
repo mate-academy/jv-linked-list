@@ -74,9 +74,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> node = findByIndex(index);
-        T oldNode = deliteNode(node);
-        return oldNode;
+        T node = deliteNode(findByIndex(index));
+        return node;
     }
 
     @Override
@@ -124,7 +123,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.item = value;
         }
 
-        public Node (Node<T> prev, T value, Node<T> next) {
+        public Node(Node<T> prev, T value, Node<T> next) {
             this.item = value;
             this.prev = prev;
             this.next = next;
@@ -132,7 +131,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T deliteNode(Node<T> node) {
-        T oldNode = node.item;
         Node<T> next = node.next;
         Node<T> prev = node.prev;
         if (node.prev == null) {
@@ -148,7 +146,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.next = null;
         }
         size--;
-        return oldNode;
+        return node.item;
     }
 
     private Node<T> findByIndex(int index) {
