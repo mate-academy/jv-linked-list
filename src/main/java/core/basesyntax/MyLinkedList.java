@@ -70,8 +70,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node<T> removeNode = getNodeByIndex(index);
         if (index >= 0 && index < size) {
+            Node<T> removeNode = getNodeByIndex(index);
             unlink(removeNode);
             return removeNode.item;
         }
