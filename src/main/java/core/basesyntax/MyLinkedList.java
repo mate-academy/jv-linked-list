@@ -89,7 +89,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return oldNode;
     }
 
-
     @Override
     public T remove(int index) {
         existIndex(index);
@@ -107,6 +106,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         size--;
         return removeValue;
+    }
+
+    @Override
+    public boolean remove(T object) {
+        Node<T> node = head;
+        for (int i = 0; i < size(); i++) {
+            if (object == get(i) || object != null && object.equals(get(i))) {
+                remove(i);
+                return true;
+            }
+            node = node.next;
+        }
+        return false;
     }
 
     private Node<T> iterateToIndex(int index) {
@@ -134,19 +146,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void unlink(Node node) {
         node.prev.next = node.next;
         node.next.prev = node.prev;
-    }
-
-    @Override
-    public boolean remove(T object) {
-        Node<T> node = head;
-        for (int i = 0; i < size(); i++) {
-            if (object == get(i) || object != null && object.equals(get(i))) {
-                remove(i);
-                return true;
-            }
-            node = node.next;
-        }
-        return false;
     }
 
     @Override
