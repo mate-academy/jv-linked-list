@@ -96,11 +96,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Node<T> node = head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
+        Node<T> newNode;
+        if (index < size / 2) {
+            newNode = head;
+            for (int i = 0; i < index; i++) {
+                newNode = newNode.next;
+            }
+        } else {
+            newNode = tail;
+            for (int i = 0; i < size - index - 1; i++) {
+                newNode = newNode.prev;
+            }
         }
-        return node;
+        return newNode;
     }
 
     private void checkIndex(int index) {
