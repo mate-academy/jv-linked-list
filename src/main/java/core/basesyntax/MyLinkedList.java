@@ -97,9 +97,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index > size - 1 || index < 0) {
             throw new IndexOutOfBoundsException("Index out of bounds");
         }
-        Node<T> counter = getElementByIndex(index);
-        T result = counter.value;
-        counter.value = value;
+        Node<T> current = getElementByIndex(index);
+        T result = current.value;
+        current.value = value;
         return result;
     }
 
@@ -117,26 +117,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size--;
             return result;
         }
-        Node<T> counter = getElementByIndex(index);
-        if (counter.prev == null) {
-            result = counter.value;
-            head = counter.next;
-            counter.next.prev = null;
-            counter.next = null;
+        Node<T> current = getElementByIndex(index);
+        if (current.prev == null) {
+            result = current.value;
+            head = current.next;
+            current.next.prev = null;
+            current.next = null;
             size--;
             return result;
         }
-        if (counter.next == null) {
-            result = counter.value;
-            tail = counter.prev;
-            counter.prev.next = null;
-            counter.prev = null;
+        if (current.next == null) {
+            result = current.value;
+            tail = current.prev;
+            current.prev.next = null;
+            current.prev = null;
             size--;
             return result;
         }
-        result = counter.value;
-        counter.prev.next = counter.next;
-        counter.next.prev = counter.prev;
+        result = current.value;
+        current.prev.next = current.next;
+        current.next.prev = current.prev;
         size--;
         return result;
     }
@@ -150,29 +150,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size--;
             return true;
         }
-        Node<T> counter = head;
-        while (counter != null) {
-            if (counter.value == null && counter.value == object || counter.value.equals(object)) {
-                if (counter.prev == null) {
-                    head = counter.next;
-                    counter.next.prev = null;
-                    counter.next = null;
+        Node<T> current = head;
+        while (current != null) {
+            if (current.value == null && current.value == object || current.value.equals(object)) {
+                if (current.prev == null) {
+                    head = current.next;
+                    current.next.prev = null;
+                    current.next = null;
                     size--;
                     return true;
                 }
-                if (counter.next == null) {
-                    tail = counter.prev;
-                    counter.prev.next = null;
-                    counter.prev = null;
+                if (current.next == null) {
+                    tail = current.prev;
+                    current.prev.next = null;
+                    current.prev = null;
                     size--;
                     return true;
                 }
-                counter.prev.next = counter.next;
-                counter.next.prev = counter.prev;
+                current.prev.next = current.next;
+                current.next.prev = current.prev;
                 size--;
                 return true;
             }
-            counter = counter.next;
+            current = current.next;
         }
         return false;
     }
@@ -192,24 +192,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getElementByIndex(int index) {
         if (index < size / 2) {
-            Node<T> counter = head;
+            Node<T> current = head;
             int count = 0;
-            while (counter != null) {
+            while (current != null) {
                 if (count == index) {
-                    return counter;
+                    return current;
                 }
                 count++;
-                counter = counter.next;
+                current = current.next;
             }
         } else {
-            Node<T> counter = tail;
+            Node<T> current = tail;
             int count = size - 1;
-            while (counter != null) {
+            while (current != null) {
                 if (count == index) {
-                    return counter;
+                    return current;
                 }
                 count--;
-                counter = counter.prev;
+                current = current.prev;
             }
         }
         throw new RuntimeException("Value non exists");
