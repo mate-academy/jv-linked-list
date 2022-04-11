@@ -27,14 +27,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = tail;
             tail.prev = null;
             tail.next = null;
-            size++;
-            return;
+        } else {
+            nodeToAdd.prev = tail;
+            tail.next = nodeToAdd;
+            tail = nodeToAdd;
         }
-        nodeToAdd.prev = tail;
-        tail.next = nodeToAdd;
-        tail = nodeToAdd;
         size++;
-        return;
     }
 
     @Override
@@ -42,13 +40,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> nodeToAddByIndex = new Node<>(null, value, null);
         if (index == size) {
             add(value);
-            return;
         } else if (index == 0) {
             nodeToAddByIndex.next = head;
             head = nodeToAddByIndex;
             head.next.prev = head;
             size++;
-            return;
         } else {
             Node<T> currentNode = getNodeByIndex(index);
             nodeToAddByIndex.prev = currentNode.prev;
@@ -56,7 +52,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             nodeToAddByIndex.next = currentNode;
             currentNode.prev = nodeToAddByIndex;
             size++;
-            return;
         }
     }
 
@@ -69,44 +64,35 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is out of bounds");
-        }
+        verifyIndex(index);
         Node<T> nodeAtIndex = null;
         if (index < (int) size / 2) {
             nodeAtIndex = head;
             for (int i = 0; i < index; i++) {
                 nodeAtIndex = nodeAtIndex.next;
             }
-            return nodeAtIndex.value;
         } else {
             nodeAtIndex = tail;
             for (int i = size - 1; i > index; i--) {
                 nodeAtIndex = nodeAtIndex.prev;
             }
-            return nodeAtIndex.value;
         }
+        return nodeAtIndex.value;
     }
 
     @Override
     public T set(T value, int index) {
         T currentValue;
-        if (index >= 0 && index < size) {
-            currentValue = getNodeByIndex(index).value;
-            getNodeByIndex(index).value = value;
-            return currentValue;
-        }
-        throw new IndexOutOfBoundsException("Index is out of bounds");
+        verifyIndex(index);
+        currentValue = getNodeByIndex(index).value;
+        getNodeByIndex(index).value = value;
+        return currentValue;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= 0 && index < size) {
-            T valueToRemove = get(index);
-            unlink(getNodeByIndex(index));
-            return valueToRemove;
-        }
-        throw new IndexOutOfBoundsException("Index is out of bounds");
+        verifyIndex(index);
+        return unlink(getNodeByIndex(index));
     }
 
     @Override
@@ -135,9 +121,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is out of bounds");
-        }
+        verifyIndex(index);
         Node<T> nodeAtIndex = null;
         if (index < (int)(size / 2)) {
             nodeAtIndex = head;
@@ -154,19 +138,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void unlink(Node<T> nodeToUnlink) {
+    private T unlink(Node<T> nodeToUnlink) {
         Node<T> previousNode = nodeToUnlink.prev;
         Node<T> nextNode = nodeToUnlink.next;
         if (previousNode == null) {
             head = nextNode;
-
         } else if (nextNode == null) {
             tail = previousNode;
-
         } else {
             nextNode.prev = previousNode;
             previousNode.next = nextNode;
         }
         size--;
+        return nodeToUnlink.value;
+    }
+
+    private void verifyIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index is out of bounds");
+        }
     }
 }
