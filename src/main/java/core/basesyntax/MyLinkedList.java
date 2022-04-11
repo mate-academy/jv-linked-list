@@ -10,16 +10,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node newNode;
+        Node<T> newNode;
 
         if (isEmpty()) {
-            newNode = new Node<T>(null, value, null);
+            newNode = new Node<>(null, value, null);
             head = newNode;
             tail = newNode;
         } else {
-            newNode = new Node(tail.prev, value, null);
+            newNode = new Node<>(tail, value, null);
             tail.next = newNode;
-            newNode.prev = tail;
             tail = newNode;
         }
         size++;
@@ -27,9 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index out of bound");
-        }
+        checkIndexNotInclusive(index);
 
         if (index == size) {
             add(value);
@@ -56,18 +53,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of bound");
-        }
-        Node<T> current = findNodeByIndex(index);
-        return current.value;
+        checkIndexInclusive(index);
+        return findNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of bound");
-        }
+        checkIndexInclusive(index);
         Node<T> current = findNodeByIndex(index);
         T overwrittenValue = current.value;
         current.value = value;
@@ -76,9 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of bound");
-        }
+        checkIndexInclusive(index);
         Node<T> current = findNodeByIndex(index);
 
         if (current != null) {
@@ -112,6 +102,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkIndexInclusive(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of bound");
+        }
+    }
+
+    private void checkIndexNotInclusive(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index out of bound");
+        }
     }
 
     private Node<T> findNodeByIndex(int index) {
