@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private T value;
-        private Node<T> next;
-        private Node<T> prev;
-
-        private Node(Node<T> prev, T value, Node<T> next) {
-            this.value = value;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> nodeToAdd = new Node<>(null, value, null);
@@ -67,15 +55,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        verifyIndex(index);
-        T currentValue = getNodeByIndex(index).value;
-        getNodeByIndex(index).value = value;
+        Node<T> currentNode = getNodeByIndex(index);
+        T currentValue = currentNode.value;
+        currentNode.value = value;
         return currentValue;
     }
 
     @Override
     public T remove(int index) {
-        verifyIndex(index);
         return unlink(getNodeByIndex(index));
     }
 
@@ -107,7 +94,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNodeByIndex(int index) {
         verifyIndex(index);
         Node<T> nodeAtIndex = null;
-        if (index < (int)(size / 2)) {
+        if (index < size / 2) {
             nodeAtIndex = head;
             for (int i = 0; i < index; i++) {
                 nodeAtIndex = nodeAtIndex.next;
@@ -140,6 +127,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void verifyIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index is out of bounds");
+        }
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        private Node(Node<T> prev, T value, Node<T> next) {
+            this.value = value;
+            this.next = next;
+            this.prev = prev;
         }
     }
 }
