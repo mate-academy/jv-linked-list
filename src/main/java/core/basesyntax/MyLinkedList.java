@@ -70,10 +70,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
+        Node<T> removeNode = getNodeByIndex(index);
         if (index >= 0 && index < size) {
-            T removeNode = getNodeByIndex(index).item;
-            unlink(getNodeByIndex(index));
-            return removeNode;
+            unlink(removeNode);
+            return removeNode.item;
         }
         throw new IndexOutOfBoundsException("Can't remove item. Pass correct input index");
     }
