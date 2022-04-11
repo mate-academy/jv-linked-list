@@ -25,8 +25,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0) {
             tail = nodeToAdd;
             head = tail;
-            tail.prev = null;
-            tail.next = null;
         } else {
             nodeToAdd.prev = tail;
             tail.next = nodeToAdd;
@@ -64,27 +62,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        verifyIndex(index);
-        Node<T> nodeAtIndex = null;
-        if (index < (int) size / 2) {
-            nodeAtIndex = head;
-            for (int i = 0; i < index; i++) {
-                nodeAtIndex = nodeAtIndex.next;
-            }
-        } else {
-            nodeAtIndex = tail;
-            for (int i = size - 1; i > index; i--) {
-                nodeAtIndex = nodeAtIndex.prev;
-            }
-        }
-        return nodeAtIndex.value;
+        return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        T currentValue;
         verifyIndex(index);
-        currentValue = getNodeByIndex(index).value;
+        T currentValue = getNodeByIndex(index).value;
         getNodeByIndex(index).value = value;
         return currentValue;
     }
