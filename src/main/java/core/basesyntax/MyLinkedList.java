@@ -77,7 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         while (thisNode != null) {
             if (thisNode.value == object
-                        || thisNode != null && thisNode.value.equals(object)) {
+                        || thisNode.value != null && thisNode.value.equals(object)) {
                 terminateLink(thisNode);
                 return true;
             }
