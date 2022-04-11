@@ -22,7 +22,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkPositionIndex(index);
+        checkElementIndexForAdd(index);
         if (index == size) {
             add(value);
         } else {
@@ -59,9 +59,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public boolean remove(T o) {
+    public boolean remove(T object) {
         for (Node<T> currentNode = head; currentNode != null; currentNode = currentNode.next) {
-            if (currentNode.item == o || o != null && o.equals(currentNode.item)) {
+            if (currentNode.item == object || object != null && object.equals(currentNode.item)) {
                 unLink(currentNode);
                 return true;
             }
@@ -79,15 +79,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkPositionIndex(int index) {
+    private void checkElementIndexForAdd(int index) {
         if (!(index >= 0 && index <= size)) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index out of size!");
         }
     }
 
     private void checkElementIndex(int index) {
         if (!(index >= 0 && index < size)) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index out of size borders");
         }
     }
 
