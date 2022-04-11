@@ -79,8 +79,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        int j = 0;
-        for (Node<T> node = head; node != null; node = node.next, j++) {
+        for (Node<T> node = head; node != null; node = node.next) {
             if (object == node.value || object != null && object.equals(node.value)) {
                 unlink(node);
                 return true;
@@ -96,7 +95,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size() == 0;
+        return size == 0;
     }
 
     private Node<T> iterateToIndex(int index) {
