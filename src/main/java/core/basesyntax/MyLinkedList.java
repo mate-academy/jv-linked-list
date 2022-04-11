@@ -134,7 +134,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size < 1;
+        return size == 0;
     }
 
     private T unlink(ListNode<T> node) {
