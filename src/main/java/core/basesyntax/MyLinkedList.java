@@ -27,7 +27,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value) {
         Node<T> newNode = new Node<>(value);
         if (head == null) {
-            head = tail = newNode;
+            head = newNode;
+            tail = newNode;
         } else {
             tail.next = newNode;
             newNode.prev = tail;
@@ -38,10 +39,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        existIndexForAdd(index);
+        checkIndexForAdd(index);
         Node<T> newNode = new Node<>(value);
         if (head == null) {
-            head = tail = newNode;
+            head = newNode;
+            tail = newNode;
         } else if (index == 0) {
             newNode.next = head;
             head.prev = newNode;
@@ -60,7 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void existIndexForAdd(int index) {
+    private void checkIndexForAdd(int index) {
         if (index < 0 || index > size()) {
             throw new IndexOutOfBoundsException(index + " out of bounds for " + size());
         }
@@ -75,14 +77,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        existIndex(index);
+        checkIndex(index);
         Node<T> node = iterateToIndex(index);
         return node.value;
     }
 
     @Override
     public T set(T value, int index) {
-        existIndex(index);
+        checkIndex(index);
         Node<T> node = iterateToIndex(index);
         T oldNode = node.value;
         node.value = value;
@@ -91,7 +93,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        existIndex(index);
+        checkIndex(index);
         T removeValue;
         if (index == 0) {
             removeValue = head.value;
@@ -137,7 +139,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void existIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size()) {
             throw new IndexOutOfBoundsException(index + " out of bounds for " + size());
         }
