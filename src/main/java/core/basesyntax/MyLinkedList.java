@@ -12,11 +12,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> node = new Node<>(tail, value, null);
         if (isEmpty()) {
             head = node;
-            tail = node;
         } else {
             tail.next = node;
-            tail = node;
         }
+        tail = node;
         size++;
     }
 
@@ -62,53 +61,50 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
+        if (checkIndex(index) == false) {
             throw new IndexOutOfBoundsException("Invalid Index");
-        } else {
-            Node<T> tempNode = head;
-            for (int i = 0; i < index; i++) {
-                tempNode = tempNode.next;
-            }
-            return tempNode.item;
         }
+        Node<T> tempNode = head;
+        for (int i = 0; i < index; i++) {
+            tempNode = tempNode.next;
+        }
+        return tempNode.item;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index >= size || index < 0) {
+        if (checkIndex(index) == false) {
             throw new IndexOutOfBoundsException("Invalid Index");
-        } else {
-            Node<T> nodeToReplace = head;
-            for (int i = 0; i < index; i++) {
-                nodeToReplace = nodeToReplace.next;
-            }
-            T returnValue = nodeToReplace.item;
-            nodeToReplace.item = value;
-            return returnValue;
         }
+        Node<T> nodeToReplace = head;
+        for (int i = 0; i < index; i++) {
+            nodeToReplace = nodeToReplace.next;
+        }
+        T returnValue = nodeToReplace.item;
+        nodeToReplace.item = value;
+        return returnValue;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
+        if (checkIndex(index) == false) {
             throw new IndexOutOfBoundsException("Invalid Index");
-        } else {
-            Node<T> nodeToDelete = head;
-            if (index == 0) {
-                head = nodeToDelete.next;
-            }
-            for (int i = 0; i < index; i++) {
-                nodeToDelete = nodeToDelete.next;
-            }
-            if (nodeToDelete.prev != null) {
-                nodeToDelete.prev.next = nodeToDelete.next;
-            }
-            if (nodeToDelete.next != null) {
-                nodeToDelete.next.prev = nodeToDelete.prev;
-            }
-            size--;
-            return nodeToDelete.item;
         }
+        Node<T> nodeToDelete = head;
+        if (index == 0) {
+            head = nodeToDelete.next;
+        }
+        for (int i = 0; i < index; i++) {
+            nodeToDelete = nodeToDelete.next;
+        }
+        if (nodeToDelete.prev != null) {
+            nodeToDelete.prev.next = nodeToDelete.next;
+        }
+        if (nodeToDelete.next != null) {
+            nodeToDelete.next.prev = nodeToDelete.prev;
+        }
+        size--;
+        return nodeToDelete.item;
     }
 
     @Override
@@ -142,6 +138,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private boolean checkIndex(int index) {
+        return index < size && index >= 0;
     }
 
     private static class Node<T> {
