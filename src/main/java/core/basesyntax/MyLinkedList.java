@@ -61,9 +61,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (checkIndex(index) == false) {
-            throw new IndexOutOfBoundsException("Invalid Index");
-        }
+        checkIndex(index);
         Node<T> tempNode = head;
         for (int i = 0; i < index; i++) {
             tempNode = tempNode.next;
@@ -73,9 +71,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (checkIndex(index) == false) {
-            throw new IndexOutOfBoundsException("Invalid Index");
-        }
+        checkIndex(index);
         Node<T> nodeToReplace = head;
         for (int i = 0; i < index; i++) {
             nodeToReplace = nodeToReplace.next;
@@ -87,9 +83,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (checkIndex(index) == false) {
-            throw new IndexOutOfBoundsException("Invalid Index");
-        }
+        checkIndex(index);
         Node<T> nodeToDelete = head;
         if (index == 0) {
             head = nodeToDelete.next;
@@ -140,8 +134,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private boolean checkIndex(int index) {
-        return index < size && index >= 0;
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Invalid Index");
+        }
     }
 
     private static class Node<T> {
