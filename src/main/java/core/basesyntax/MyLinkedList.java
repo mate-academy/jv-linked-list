@@ -28,7 +28,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            nodeMidle(value, findByIndex(index));
+            addNode(value, findByIndex(index));
         }
     }
 
@@ -117,7 +117,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void nodeMidle(T value, Node<T> node) {
+    private void addNode(T value, Node<T> node) {
         Node<T> prevNode = node.prev;
         Node<T> newNode = new Node<>(prevNode, value, node);
         node.prev = newNode;
@@ -162,11 +162,4 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void addItem(Node<T> oldNode, Node<T> newNode) {
-        Node<T> oldNodePrevios = oldNode.prev;
-        newNode.next = oldNode;
-        newNode.prev = oldNodePrevios;
-        oldNodePrevios.next = newNode;
-        oldNode.prev = newNode;
-    }
 }
