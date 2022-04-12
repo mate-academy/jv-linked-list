@@ -36,15 +36,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = current;
             size++;
             return;
-        } else {
-            Node<T> counter = getElementByIndex(index);
-            current.prev = counter.prev;
-            counter.prev.next = current;
-            counter.prev = current;
-            current.next = counter;
-            size++;
-            return;
         }
+        Node<T> counter = getElementByIndex(index);
+        current.prev = counter.prev;
+        counter.prev.next = current;
+        counter.prev = current;
+        current.next = counter;
+        size++;
     }
 
     @Override
@@ -56,13 +54,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        checkIndexBounds(index);
         return getElementByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
+        checkIndexBounds(index);
         Node<T> current = getElementByIndex(index);
         T result = current.value;
         current.value = value;
@@ -71,7 +69,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
+        checkIndexBounds(index);
         Node<T> current = getElementByIndex(index);
         T result = current.value;
         unlink(current);
@@ -137,6 +135,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         throw new IndexOutOfBoundsException("Index out of bounds");
     }
 
+    private void checkIndexBounds(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Index out of bounds");
+        }
+    }
+
     private void checkIndex(int index) {
         if (index > size || index < 0) {
             throw new IndexOutOfBoundsException("Index out of bounds");
@@ -144,29 +148,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> node) {
-        if (size == 1) {
-            size--;
+        size--;
+        if (size == 0) {
             head = null;
             tail = null;
             return;
         }
         if (node.prev == null) {
-            size--;
             head = node.next;
             node.next.prev = null;
             node.next = null;
             return;
         }
         if (node.next == null) {
-            size--;
             tail = node.prev;
             node.prev.next = null;
             node.prev = null;
             return;
         }
-        size--;
         node.prev.next = node.next;
         node.next.prev = node.prev;
-        return;
     }
 }
