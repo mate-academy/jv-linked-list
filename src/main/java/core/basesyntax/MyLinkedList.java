@@ -50,7 +50,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         Node<T> tempNode = getNodeByIndex(index);
         T value = tempNode.item;
         return value;
@@ -58,11 +57,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> newNode = getNodeByIndex(index);
-        if (newNode == null) {
-            throw new NullPointerException("Index not correct");
-        }
         T newValue = newNode.item;
         newNode.item = value;
         return newValue;
@@ -70,7 +65,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> tempNode = getNodeByIndex(index);
         unLink(tempNode);
         T revoveItem = tempNode.item;
@@ -102,15 +96,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeByIndex(int index) {
         checkIndex(index);
-        Node<T> tempNode = head;
-        if (tempNode == null) {
-            throw new IndexOutOfBoundsException("Index out of bound exception");
-        } else {
+        Node<T> tempNode;
+        if (index < size / 2) {
+            tempNode = head;
             for (int i = 0; i < index; i++) {
                 tempNode = tempNode.next;
             }
-            return tempNode;
+        } else {
+            tempNode = tail;
+            for (int j = size - 1; j > index; j--) {
+                tempNode = tempNode.prev;
+            }
         }
+        return tempNode;
     }
 
     private void checkIndex(int index) {
