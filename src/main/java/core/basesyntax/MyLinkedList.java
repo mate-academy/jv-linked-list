@@ -13,19 +13,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size != 0) {
             nodeToAdd.prev = last;
             last.next = nodeToAdd;
-            last = nodeToAdd;
-            size++;
         } else {
             first = nodeToAdd;
-            last = nodeToAdd;
-            size++;
         }
+        last = nodeToAdd;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Wrong index: " + index);
         }
         ListNode<T> valueNode = new ListNode<>(value);
         if (size == index) {
@@ -55,13 +53,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        throwOutOfBoundEx(index);
+        checkIndex(index);
         return findByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        throwOutOfBoundEx(index);
+        checkIndex(index);
         ListNode<T> indexNode = findByIndex(index);
         T returnValue = indexNode.value;
         indexNode.value = value;
@@ -70,14 +68,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        throwOutOfBoundEx(index);
+        checkIndex(index);
         return unlink(findByIndex(index));
     }
 
     @Override
     public boolean remove(T object) {
         ListNode<T> node = first;
-        for (int i = 0; i < size;i++) {
+        for (int i = 0; i < size; i++) {
             if (object != null && object.equals(node.value) || object == node.value) {
                 unlink(node);
                 return true;
@@ -97,7 +95,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void throwOutOfBoundEx(int index) {
+    private void checkIndex(int index) {
         if (index > size - 1 || index < 0) {
             throw new IndexOutOfBoundsException("Wrong index: " + index);
         }
