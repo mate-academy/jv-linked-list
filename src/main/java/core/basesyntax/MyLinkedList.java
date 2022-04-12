@@ -9,14 +9,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<T>(null, value, null);
-        if (first == null) {
+        Node<T> lastNode = last;
+        Node<T> newNode = new Node<>(lastNode, value, null);
+        last = newNode;
+        if (lastNode == null) {
             first = newNode;
-            last = newNode;
         } else {
-            last.next = newNode;
-            newNode.prev = last;
-            last = newNode;
+            lastNode.next = newNode;
         }
         size++;
     }
@@ -26,22 +25,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("index is wrong");
         }
-        Node<T> newNode = new Node(value);
-        if ((index == 0 && size == 0) || index == size) {
+        if (index == size) {
             add(value);
-        } else if (index == 0 && size > 0) {
-            newNode.next = first;
-            newNode.prev = null;
-            first.prev = newNode;
-            first = newNode;
-            size++;
         } else {
-            Node<T> oldNode = first;
-            for (int i = 0; i < index; i++) {
-                oldNode = oldNode.next;
-            }
-            addItem(oldNode, newNode);
-            size++;
+            nodeMidle(value, findByIndex(index));
         }
     }
 
@@ -74,7 +61,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T node = deliteNode(findByIndex(index));
+        T node = unlink(findByIndex(index));
         return node;
     }
 
@@ -87,7 +74,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (object == null) {
             for (int i = 0; i < size; i++) {
                 if (object == node.item) {
-                    deliteNode(node);
+                    unlink(node);
                     return true;
                 }
                 node = node.next;
@@ -95,7 +82,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             for (int i = 0; i < size; i++) {
                 if (object.equals(node.item)) {
-                    deliteNode(node);
+                    unlink(node);
                     return true;
                 }
                 node = node.next;
@@ -130,7 +117,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private T deliteNode(Node<T> node) {
+    private void nodeMidle(T value, Node<T> node) {
+        Node<T> prevNode = node.prev;
+        Node<T> newNode = new Node<>(prevNode, value, node);
+        node.prev = newNode;
+        if (prevNode == null) {
+            first = newNode;
+        } else {
+            prevNode.next = newNode;
+        }
+        size++;
+    }
+
+    private T unlink(Node<T> node) {
         Node<T> next = node.next;
         Node<T> prev = node.prev;
         if (node.prev == null) {
