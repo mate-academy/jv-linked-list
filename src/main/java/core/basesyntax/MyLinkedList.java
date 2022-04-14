@@ -7,7 +7,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public void checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("This index doesn't exist");
         }
@@ -40,7 +40,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             newNode.next = head;
             head.prev = newNode;
             head = newNode;
-
         } else {
             Node<T> oldNode = getNodeByIndex(index);
             newNode.prev = oldNode.prev;
@@ -73,7 +72,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return returnedValue;
     }
 
-    public void unlinkNode(Node<T> removedNode) {
+    private void unlinkNode(Node<T> removedNode) {
         if (removedNode.prev == null) {
             head = removedNode.next;
         } else if (removedNode.next == null) {
@@ -117,7 +116,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    public Node<T> getNodeByIndex(int index) {
+    private Node<T> getNodeByIndex(int index) {
         checkIndex(index);
         Node<T> current;
         if (index < size / 2) {
