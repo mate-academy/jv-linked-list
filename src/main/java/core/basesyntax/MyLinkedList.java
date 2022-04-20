@@ -5,7 +5,7 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
-    private int size = 0;
+    private int size;
 
     private class Node<T> {
         private T value;
@@ -39,7 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             linkLast(value);
             return;
         } else {
-            linkBefore(value, node(index));
+            linkBefore(value, getNode(index));
         }
     }
 
@@ -47,26 +47,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void addAll(List<T> list) {
         Object[] listToAdd = list.toArray();
         int countToAdd = listToAdd.length;
-
         for (int i = 0; i < countToAdd; i++) {
-            if (first == null) {
-                linkFirst((T) listToAdd[i]);
-            } else {
-                linkLast((T) listToAdd[i]);
-            }
+            add((T) listToAdd[i]);
         }
     }
 
     @Override
     public T get(int index) {
         checkElementIndex(index);
-        return node(index).value;
+        return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkElementIndex(index);
-        Node<T> nodeToSet = node(index);
+        Node<T> nodeToSet = getNode(index);
         T oldVal = nodeToSet.value;
         nodeToSet.value = value;
         return oldVal;
@@ -75,24 +70,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkElementIndex(index);
-        return unlink(node(index));
+        return unlink(getNode(index));
     }
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> x = first; x != null; x = x.next) {
+        for (Node<T> x = first; x != null; x = x.next) {
+            if (object == null) {
                 if (x.value == null) {
                     unlink(x);
                     return true;
                 }
+                continue;
             }
-        } else {
-            for (Node<T> x = first; x != null; x = x.next) {
-                if (object.equals(x.value)) {
-                    unlink(x);
-                    return true;
-                }
+            if (object.equals(x.value)) {
+                unlink(x);
+                return true;
             }
         }
         return false;
@@ -129,7 +122,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return (first == null);
     }
 
-    private Node<T> node(int index) {
+    private Node<T> getNode(int index) {
         checkElementIndex(index);
         if (index < (size >> 1)) {
             Node<T> x = first;
@@ -171,23 +164,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private boolean elementExists(int index) {
-        return index >= 0 && index < size;
-    }
-
-    private boolean positionAddable(int index) {
-        return index >= 0 && index <= size;
-    }
-
     private void checkPositionIndex(int index) {
-        if (!positionAddable(index)) {
+        if (!(index >= 0 && index <= size)) {
             throw new IndexOutOfBoundsException("index " + index + " size " + size);
         }
-
     }
 
     private void checkElementIndex(int index) {
-        if (!elementExists(index)) {
+        if (!(index >= 0 && index < size)) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
