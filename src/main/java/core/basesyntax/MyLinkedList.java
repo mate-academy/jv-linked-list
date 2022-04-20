@@ -45,10 +45,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] listToAdd = list.toArray();
-        int countToAdd = listToAdd.length;
-        for (int i = 0; i < countToAdd; i++) {
-            add((T) listToAdd[i]);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
@@ -76,14 +74,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         for (Node<T> x = first; x != null; x = x.next) {
-            if (object == null) {
-                if (x.value == null) {
-                    unlink(x);
-                    return true;
-                }
-                continue;
-            }
-            if (object.equals(x.value)) {
+            if (object == x.value || object != null && object.equals(x.value)) {
                 unlink(x);
                 return true;
             }
@@ -119,7 +110,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return (first == null);
+        return first == null;
     }
 
     private Node<T> getNode(int index) {
