@@ -21,19 +21,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        switch (size) {
-            case 0 :
-                first = new Node<>(null, value, null);
-                last = first;
-                break;
-            case 1 :
-                last = new Node<>(first, value, null);
-                first.next = last;
-                break;
-            default :
-                last.next = new Node<>(last, value, null);
-                last = last.next;
+        Node<T> newNode = new Node<>(last, value, null);
+        if (size == 0) {
+            first = newNode;
+        } else {
+            last.next = newNode;
         }
+        last = newNode;
         size++;
     }
 
@@ -44,13 +38,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        Node<T> node = getNodeByIndex(index);
-        node.prev = new Node<>(node.prev, value, node);
-        if (node.prev.prev == null) {
-            first = node.prev;
+        Node<T> next = getNodeByIndex(index);
+        Node<T> prev = next.prev;
+        Node<T> newNode = new Node<>(prev, value, next);
+        if (prev == null) {
+            first = newNode;
         } else {
-            node.prev.prev.next = node.prev;
+            prev.next = newNode;
         }
+        next.prev = newNode;
         size++;
     }
 
