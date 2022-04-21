@@ -21,14 +21,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        if (first == null) {
-            first = new Node<>(null, value, null);
-        } else if (last == null) {
-            last = new Node<>(first, value, null);
-            first.next = last;
-        } else {
-            last.next = new Node<>(last, value, null);
-            last = last.next;
+        switch (size) {
+            case 0 :
+                first = new Node<>(null, value, null);
+                last = first;
+                break;
+            case 1 :
+                last = new Node<>(first, value, null);
+                first.next = last;
+                break;
+            default :
+                last.next = new Node<>(last, value, null);
+                last = last.next;
         }
         size++;
     }
@@ -36,11 +40,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndexToBounds(index, size);
-        Node<T> node = getNodeByIndex(index);
-        if (node == null) {
+        if (index == size) {
             add(value);
             return;
         }
+        Node<T> node = getNodeByIndex(index);
         node.prev = new Node<>(node.prev, value, node);
         if (node.prev.prev == null) {
             first = node.prev;
@@ -124,11 +128,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Node<T> node = first;
-        int i = 0;
-        while (i != index) {
-            node = node.next;
-            i++;
+        Node<T> node;
+        int i;
+        if (index < size / 2) {
+            node = first;
+            i = 0;
+            while (i != index) {
+                node = node.next;
+                i++;
+            }
+        } else {
+            node = last;
+            i = size - 1;
+            while (i != index) {
+                node = node.prev;
+                i--;
+            }
         }
         return node;
     }
