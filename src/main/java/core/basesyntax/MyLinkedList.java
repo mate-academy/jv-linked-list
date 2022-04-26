@@ -40,7 +40,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        Node<T> curNode = findNode(index);
+        Node<T> currentNode = findNode(index);
         Node<T> newNode = new Node<>(curNode.prev, value, curNode);
         if (curNode.prev == null) {
             first = newNode;
