@@ -121,9 +121,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 node = node.next;
             }
         } else {
-        node = last;
-        for (int i = size - 1; i > index; i--) {
-            node = node.prev;
+            node = last;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
         }
         return node;
     }
