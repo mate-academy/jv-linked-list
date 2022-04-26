@@ -120,7 +120,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             for (int i = 0; i < index; i++) {
                 node = node.next;
             }
-        }
+        } else {
         node = last;
         for (int i = size - 1; i > index; i--) {
             node = node.prev;
