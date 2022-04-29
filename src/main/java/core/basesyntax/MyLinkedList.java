@@ -63,53 +63,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-
-        return null;
+        MyNode<T> currentNode = node(index);
+        T oldVal = currentNode.item;
+        currentNode.item = value;
+        return oldVal;
     }
 
     @Override
     public T remove(int index) {
-        checkForNegativeIndex(index);
-        T result = null;
-        if (index == 0) {
-            result = head.item;
-            head = head.next;
-            head.prev = null;
-            size--;
-        } else if (index == size) {
-            result = tail.item;
-            tail = tail.prev;
-            tail.next = null;
-            size--;
-        } else {
-            MyNode<T> currentNode = head;
-            for (int i = 0; i < index; i++) {
-                currentNode = currentNode.next;
-            }
-            currentNode.next.prev = currentNode.prev;
-            currentNode.prev.next = currentNode.next;
-            result = currentNode.item;
-            size--;
+        checkIndex(index);
+        MyNode<T> currentNode = head;
+        for (int i = 0; i < index && currentNode.next != null; i++) {
+            currentNode = currentNode.next;
         }
-        return result;
+        return unlink(currentNode);
     }
 
     @Override
     public boolean remove(T object) {
-        if (head == null) {
-            return false;
-        }
-        if (head.item == object) {
-            head = head.next;
-            head.prev = null;
-            size--;
-            return true;
-        }
-        MyNode currentNode = head;
-        while (currentNode.next != null) {
-            if (currentNode.next.item == object) {
-                currentNode.next = currentNode.next.next;
-                size--;
+        MyNode<T> currentNode = head;
+        for (int i = 0; i < size; i++) {
+            if ((object == null && currentNode.item == null)
+                    || (currentNode != null
+                    && currentNode.item.equals(object))) {
+                unlink(currentNode);
                 return true;
             }
             currentNode = currentNode.next;
@@ -127,15 +104,52 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private MyNode<T> node(int index) {
+        if (index < (size / 2)) {
+            MyNode<T> currentNode = head;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+            return currentNode;
+        } else {
+            MyNode<T> currentNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                currentNode = currentNode.prev;
+            }
+            return currentNode;
+        }
+    }
+
+    private T unlink(MyNode<T> node) {
+        final T element = node.item;
+        MyNode<T> next = node.next;
+        MyNode<T> prev = node.prev;
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
+            node.prev = null;
+        }
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.prev = prev;
+            node.next = null;
+        }
+        node.item = null;
+        size--;
+        return element;
+    }
+
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index doesn't exist");
         }
     }
 
     private void checkForNegativeIndex(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index doesn't exist");
         }
     }
 
@@ -169,9 +183,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class MyNode<E> {
-        MyNode<E> next;
-        E item;
-        MyNode<E> prev;
+        private MyNode<E> next;
+        private E item;
+        private MyNode<E> prev;
 
         public MyNode(MyNode<E> next, E item, MyNode<E> prev) {
             this.next = next;
