@@ -75,14 +75,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> removeResult = getNodeByIndex(index);
+        if (index > 0 && index < size - 1) {
+            Node<T> current = first;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+            current.next.prev = current.prev;
+            current.prev.next = current.next;
+            size--;
+            return current.item;
+        }
+        T item;
         if (index == 0) {
-            return unlinkFirst(removeResult);
+            item = first.item;
+            first = first.next;
+        } else {
+            item = last.item;
+            last = last.prev;
         }
-        if (index == size) {
-            return unlinkLast(removeResult);
-        }
-        return unlink(removeResult);
+        size--;
+        return item;
     }
 
     @Override
@@ -145,58 +157,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index " + index + " out of bounds for list size "
                     + size);
         }
-    }
-
-    private T unlinkFirst(MyLinkedList.Node<T> first) {
-        final T element = first.item;
-        final var next = first.next;
-        first.item = null;
-        first.next = null;
-        this.first = next;
-        if (next == null) {
-            last = null;
-        } else {
-            next.prev = null;
-        }
-        size--;
-        return element;
-    }
-
-    private T unlinkLast(MyLinkedList.Node<T> last) {
-        final T element = last.item;
-        final var prev = last.prev;
-        last.item = null;
-        last.prev = null;
-        this.last = prev;
-        if (prev == null) {
-            first = null;
-        } else {
-            prev.next = null;
-        }
-        size--;
-        return element;
-    }
-
-    private T unlink(MyLinkedList.Node<T> x) {
-        final T element = x.item;
-        final var next = x.next;
-        final var prev = x.prev;
-        if (prev == null) {
-            first = next;
-        } else {
-            prev.next = next;
-            x.prev = null;
-        }
-
-        if (next == null) {
-            last = prev;
-        } else {
-            next.prev = prev;
-            x.next = null;
-        }
-
-        x.item = null;
-        size--;
-        return element;
     }
 }
