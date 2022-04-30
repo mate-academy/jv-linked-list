@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private MyNode<T> head;
     private MyNode<T> tail;
 
@@ -13,13 +13,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (head == null) {
             head = node;
         } else {
-            MyNode<T> currentNode = head;
-            while (currentNode.next != null) {
-                currentNode = currentNode.next;
-            }
-            currentNode.next = node;
-            node.prev = currentNode;
-            tail = node;
+            addLast(value);
         }
         size++;
     }
@@ -39,31 +33,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list != null) {
-            for (T t : list) {
-                add(t);
-            }
+        for (T t : list) {
+            add(t);
         }
     }
 
     @Override
     public T get(int index) {
         checkIndex(index);
-        if (head == null) {
-            return null;
-        } else {
-            MyNode<T> currentNode = head;
-            for (int i = 0; i < index; i++) {
-                currentNode = currentNode.next;
-            }
-            return currentNode.item;
+        MyNode<T> currentNode = head;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
         }
+        return currentNode.item;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        MyNode<T> currentNode = node(index);
+        MyNode<T> currentNode = getNodeByIndex(index);
         T oldVal = currentNode.item;
         currentNode.item = value;
         return oldVal;
@@ -104,7 +92,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private MyNode<T> node(int index) {
+    private MyNode<T> getNodeByIndex(int index) {
         if (index < (size / 2)) {
             MyNode<T> currentNode = head;
             for (int i = 0; i < index; i++) {
