@@ -107,7 +107,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size--;
             return null;
         }
-        T element = node.item;
+        final T element = node.item;
         MyNode<T> next = node.next;
         MyNode<T> prev = node.prev;
         if (prev == null) {
