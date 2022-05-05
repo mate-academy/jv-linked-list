@@ -25,6 +25,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        indexCheckForAdding(index);
+        if (index == size){
+            add(value);
+        } else {
+            Node<T> currentNode = node(index);
+            Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
+            if (currentNode.prev == null) {
+                head = newNode;
+            } else {
+                currentNode.prev.next = newNode;
+            }
+            currentNode.prev = newNode;
+            size++;
+        }
     }
 
     @Override
@@ -34,17 +48,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         indexCheck(index);
-        if (index < (size >> 1)) {
-            Node<T> node = head;
-            for (int i = 0; i < index; i++)
-                node = node.next;
-            return node.element;
-        } else {
-            Node<T> node = tail;
-            for (int i = size - 1; i > index; i--)
-                node = node.prev;
-            return node.element;
-        }
+        return node(index).element;
     }
 
     @Override
@@ -75,19 +79,41 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public String toString() {
         return "MyLinkedList{" +
-                "size=" + size +
-                "," + System.lineSeparator() + "head=" + head +
-                "," + System.lineSeparator() + "tail=" + tail +
-                '}';
+                "size=" + size + "," + System.lineSeparator() +
+                "head=" + head + "," + System.lineSeparator() +
+                "tail=" + tail + " }";
     }
 
     private void indexCheck(int index) {
         if (index >= 0 && index < size) {
             return;
         }
-        throw new RuntimeException("Wrong index. Index should be: 0 <= index <= "
+        throw new IndexOutOfBoundsException("Wrong index. Index should be: 0 <= index <= "
                 + (size - 1));
     }
+
+    private void indexCheckForAdding(int index) {
+        if (index >= 0 && index <= size) {
+            return;
+        }
+        throw new IndexOutOfBoundsException("Wrong index. Index should be: 0 <= index <= "
+                + size);
+    }
+
+    private Node<T> node(int index) {
+        if (index < (size >> 1)) {
+            Node<T> node = head;
+            for (int i = 0; i < index; i++)
+                node = node.next;
+            return node;
+        } else {
+            Node<T> node = tail;
+            for (int i = size - 1; i > index; i--)
+                node = node.prev;
+            return node;
+        }
+    }
+
 }
 
 class Node<T>{
@@ -105,6 +131,6 @@ class Node<T>{
     public String toString() {
         return "Node{" +
                 "element=" + element +
-                " }";
+                "}";
     }
 }
