@@ -3,8 +3,23 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private int size;
+    private Node<T> head;
+    private Node<T> tail;
+
     @Override
     public void add(T value) {
+        if (size == 0) {
+            Node<T> newNode = new Node<>(null, value, null);
+            head = newNode;
+            tail = newNode;
+            size++;
+        } else {
+            Node<T> newNode = new Node<>(tail, value, null);
+            tail.next = newNode;
+            tail = newNode;
+            size++;
+        }
     }
 
     @Override
@@ -37,11 +52,39 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    @Override
+    public String toString() {
+        return "MyLinkedList{" +
+                "size=" + size +
+                "," + System.lineSeparator() + "head=" + head +
+                "," + System.lineSeparator() + "tail=" + tail +
+                '}';
+    }
+}
+
+class Node<T>{
+    T element;
+    Node<T> prev;
+    Node<T> next;
+
+    public Node(Node<T> prev, T element, Node<T> next) {
+        this.prev = prev;
+        this.element = element;
+        this.next = next;
+    }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "element=" + element +
+                " }";
     }
 }
