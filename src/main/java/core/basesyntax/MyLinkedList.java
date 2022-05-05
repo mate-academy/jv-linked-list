@@ -4,13 +4,14 @@ import java.util.List;
 import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    int size;
-    Node<T> head;
-    Node<T> tail;
+    private int size;
+    private Node<T> head;
+    private Node<T> tail;
+
     public static class Node<T> {
-        Node<T> prev;
-        T value;
-        Node<T> next;
+        private Node<T> prev;
+        private T value;
+        private Node<T> next;
 
         public Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
@@ -96,14 +97,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> NodeToFind = head;
+        Node<T> nodeToFind = head;
         int i = 0;
         while (i < size) {
-            if (Objects.equals(NodeToFind.value, object)) {
+            if (Objects.equals(nodeToFind.value, object)) {
                 remove(i);
                 return true;
             }
-            NodeToFind = NodeToFind.next;
+            nodeToFind = nodeToFind.next;
             i++;
         }
         return false;
