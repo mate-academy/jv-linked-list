@@ -16,48 +16,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         public Node(T item) {
             this.item = item;
         }
-
-    }
-
-    public void insertAtTheBeginningOfTheList(T value) {
-        Node<T> newNode = new Node<>(value);
-        head.prev = newNode;
-        newNode.next = head;
-        head = newNode;
-    }
-
-    public void insertAtTheEndOfTheList(T value) {
-        Node<T> newNode = new Node<>(value);
-        tail.next = newNode;
-        newNode.prev = tail;
-        tail = newNode;
-    }
-
-    public void insertAtTheMiddleOfTheList(T value, int index) {
-        Node<T> newNode = new Node<>(value);
-        Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
-        newNode.next = currentNode;
-        newNode.prev = currentNode.prev;
-        currentNode.prev.next = newNode;
-        currentNode.prev = newNode;
-
-    }
-
-    public void unlink(Node<T> node) {
-        if (node.prev == null) {
-            head.prev = null;
-            head = node.next;
-        } else if (node.next == null) {
-            tail = node.prev;
-            tail.next = null;
-        } else {
-            node.next.prev = node.prev;
-            node.prev.next = node.next;
-        }
-        size--;
     }
 
     @Override
@@ -74,13 +32,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         Objects.checkIndex(index, size + 1);
-        Node<T> newNode = new Node<>(value);
-        if (isEmpty()) {
-            head = tail = newNode;
-        } else if (index == 0) {
+        if (index == size) {
+            add(value);
+            return;
+        }
+        if (index == 0) {
             insertAtTheBeginningOfTheList(value);
-        } else if (index == size) {
-            insertAtTheEndOfTheList(value);
         } else {
             insertAtTheMiddleOfTheList(value, index);
         }
@@ -97,35 +54,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         Objects.checkIndex(index, size);
-        Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
-        return currentNode.item;
+        Node<T> getElement = findingNodeByIndex(index);
+        return getElement.item;
     }
 
     @Override
     public T set(T value, int index) {
         Objects.checkIndex(index, size);
-        Node<T> newNode = new Node<>(value);
-        Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
-        T oldValue = currentNode.item;
-        currentNode.item = newNode.item;
+        Node<T> overwriteValue = findingNodeByIndex(index);
+        T oldValue = overwriteValue.item;
+        overwriteValue.item = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
         Objects.checkIndex(index, size);
-        Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
-        unlink(currentNode);
-        return currentNode.item;
+        Node<T> removedNode = findingNodeByIndex(index);
+        return unlink(removedNode);
     }
 
     @Override
@@ -151,4 +97,53 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size() == 0;
     }
 
+    private Node<T> findingNodeByIndex(int index) {
+        Node<T> currentNode = head;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
+        }
+        return currentNode;
+    }
+
+    private void insertAtTheBeginningOfTheList(T value) {
+        Node<T> newNode = new Node<>(value);
+        head.prev = newNode;
+        newNode.next = head;
+        head = newNode;
+    }
+
+    private void insertAtTheEndOfTheList(T value) {
+        Node<T> newNode = new Node<>(value);
+        tail.next = newNode;
+        newNode.prev = tail;
+        tail = newNode;
+    }
+
+    private void insertAtTheMiddleOfTheList(T value, int index) {
+        Node<T> newNode = new Node<>(value);
+        Node<T> currentNode = head;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
+        }
+        newNode.next = currentNode;
+        newNode.prev = currentNode.prev;
+        currentNode.prev.next = newNode;
+        currentNode.prev = newNode;
+    }
+
+    private T unlink(Node<T> node) {
+        if (node.prev == null) {
+            head.prev = null;
+            head = node.next;
+        } else if (node.next == null) {
+            tail = node.prev;
+            tail.next = null;
+        } else {
+            node.next.prev = node.prev;
+            node.prev.next = node.next;
+        }
+        T element = node.item;
+        size--;
+        return element;
+    }
 }
