@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -32,7 +33,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return null;
+        indexCheck(index);
+        if (index < (size >> 1)) {
+            Node<T> node = head;
+            for (int i = 0; i < index; i++)
+                node = node.next;
+            return node.element;
+        } else {
+            Node<T> node = tail;
+            for (int i = size - 1; i > index; i--)
+                node = node.prev;
+            return node.element;
+        }
     }
 
     @Override
@@ -67,6 +79,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 "," + System.lineSeparator() + "head=" + head +
                 "," + System.lineSeparator() + "tail=" + tail +
                 '}';
+    }
+
+    private void indexCheck(int index) {
+        if (index >= 0 && index < size) {
+            return;
+        }
+        throw new RuntimeException("Wrong index. Index should be: 0 <= index <= "
+                + (size - 1));
     }
 }
 
