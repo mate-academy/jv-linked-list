@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
@@ -31,7 +30,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Objects.checkIndex(index, size + 1);
+        checkIndex(index, size + 1);
         if (index == size) {
             add(value);
             return;
@@ -53,15 +52,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Objects.checkIndex(index, size);
-        Node<T> getElement = findingNodeByIndex(index);
+        checkIndex(index, size);
+        Node<T> getElement = findNodeByIndex(index);
         return getElement.item;
     }
 
     @Override
     public T set(T value, int index) {
-        Objects.checkIndex(index, size);
-        Node<T> overwriteValue = findingNodeByIndex(index);
+        checkIndex(index, size);
+        Node<T> overwriteValue = findNodeByIndex(index);
         T oldValue = overwriteValue.item;
         overwriteValue.item = value;
         return oldValue;
@@ -69,8 +68,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Objects.checkIndex(index, size);
-        Node<T> removedNode = findingNodeByIndex(index);
+        checkIndex(index, size);
+        Node<T> removedNode = findNodeByIndex(index);
         return unlink(removedNode);
     }
 
@@ -97,12 +96,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size() == 0;
     }
 
-    private Node<T> findingNodeByIndex(int index) {
-        Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
+    private Node<T> findNodeByIndex(int index) {
+        checkIndex(index, size);
+        if (index < (size >> 1)) {
+            Node<T> searchNodeFromHead = head;
+            for (int i = 0; i < index; i++) {
+                searchNodeFromHead = searchNodeFromHead.next;
+            }
+            return searchNodeFromHead;
+        } else {
+            Node<T> searchNodeFromTail = tail;
+            for (int i = size - 1; i > index; i--) {
+                searchNodeFromTail = searchNodeFromTail.prev;
+            }
+            return searchNodeFromTail;
         }
-        return currentNode;
     }
 
     private void insertAtTheBeginningOfTheList(T value) {
@@ -120,6 +128,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void insertAtTheMiddleOfTheList(T value, int index) {
+        checkIndex(index, size);
         Node<T> newNode = new Node<>(value);
         Node<T> currentNode = head;
         for (int i = 0; i < index; i++) {
@@ -145,5 +154,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         T element = node.item;
         size--;
         return element;
+    }
+
+    public void checkIndex(int index, int size) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Enter the correct index");
+        }
     }
 }
