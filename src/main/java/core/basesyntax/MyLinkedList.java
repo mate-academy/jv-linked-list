@@ -43,7 +43,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = newNode;
             size++;
         } else {
-            Node<T> searchIndex = searchIndex(index);
+            Node<T> searchIndex = getByIndex(index);
             Node<T> newNode = new Node<>(searchIndex.prev, value, searchIndex);
             searchIndex.prev.next = newNode;
             searchIndex.prev = newNode;
@@ -61,14 +61,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return searchIndex(index).value;
+        return getByIndex(index).value;
 
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> currentNode = searchIndex(index);
+        Node<T> currentNode = getByIndex(index);
         T currentValue = currentNode.value;
         currentNode.value = value;
         return currentValue;
@@ -77,7 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        return unlink(searchIndex(index));
+        return unlink(getByIndex(index));
     }
 
     @Override
@@ -109,14 +109,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> searchIndex(int index) {
-        Node<T> searchedNode = first;
+    private Node<T> getByIndex(int index) {
+        Node<T> getByIndex = first;
         int i = 0;
         while (i < index) {
-            searchedNode = searchedNode.next;
+            getByIndex = getByIndex.next;
             i++;
         }
-        return searchedNode;
+        return getByIndex;
     }
 
     private T unlink(Node<T> node) {
