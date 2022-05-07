@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-//import java.util.LinkedList;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -107,14 +106,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    //    @Override
-    //    public String toString() {
-    //        return "MyLinkedList{" +
-    //                "size=" + size + "," + System.lineSeparator() +
-    //                "head=" + head + "," + System.lineSeparator() +
-    //                "tail=" + tail + " }";
-    //    }
-
     private void indexCheck(int index) {
         if (index >= 0 && index < size) {
             return;
@@ -153,10 +144,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = null;
         } else if (nodeCopy.prev == null) {
             head = nodeCopy.next;
-            // когда переприсваивается ХЭД, под индексом 0 становится нода 10,
-            // и обнулить ноду 25 уже нельзя.
             nodeCopy.next.prev = null;
-            // остается ли в памяти первоначальная нода со значением 25?
         } else if (nodeCopy.next == null) {
             tail = nodeCopy.prev;
             nodeCopy.prev.next = null;
@@ -176,13 +164,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.element = element;
             this.next = next;
         }
-
-    //        @Override
-    //        public String toString() {
-    //            return "Node{" +
-    //                    "element=" + element +
-    //                    "}";
-    //        }
     }
 
 }
