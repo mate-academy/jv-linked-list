@@ -1,6 +1,6 @@
 package core.basesyntax;
 
-import java.util.LinkedList;
+//import java.util.LinkedList;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -26,23 +26,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         indexCheckForAdding(index);
-        if (index == size){
+        if (index == size) {
             add(value);
         } else {
-            Node<T> currentNode = node(index);
-            Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
-            if (currentNode.prev == null) {
+            Node<T> node = node(index);
+            Node<T> newNode = new Node<>(node.prev, value, node);
+            if (node.prev == null) {
                 head = newNode;
             } else {
-                currentNode.prev.next = newNode;
+                node.prev.next = newNode;
             }
-            currentNode.prev = newNode;
+            node.prev = newNode;
             size++;
         }
     }
 
     @Override
     public void addAll(List<T> list) {
+        if (list.size() == 0) {
+            return;
+        }
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
@@ -53,16 +59,41 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        return null;
+        indexCheck(index);
+        Node<T> copyNode = node(index);
+        T copyValue = copyNode.element;
+        copyNode.element = value;
+        return copyValue;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        indexCheck(index);
+        final Node<T> nodeCopy = node(index);
+        unlink(node(index));
+        size--;
+        return nodeCopy.element;
     }
 
     @Override
     public boolean remove(T object) {
+        if (object == null) {
+            for (Node<T> i = head; i != null; i = i.next) {
+                if (i.element == null) {
+                    unlink(i);
+                    size--;
+                    return true;
+                }
+            }
+        } else {
+            for (Node<T> i = head; i != null; i = i.next) {
+                if (object.equals(i.element)) {
+                    unlink(i);
+                    size--;
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -76,13 +107,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    @Override
-    public String toString() {
-        return "MyLinkedList{" +
-                "size=" + size + "," + System.lineSeparator() +
-                "head=" + head + "," + System.lineSeparator() +
-                "tail=" + tail + " }";
-    }
+    //    @Override
+    //    public String toString() {
+    //        return "MyLinkedList{" +
+    //                "size=" + size + "," + System.lineSeparator() +
+    //                "head=" + head + "," + System.lineSeparator() +
+    //                "tail=" + tail + " }";
+    //    }
 
     private void indexCheck(int index) {
         if (index >= 0 && index < size) {
@@ -103,34 +134,55 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> node(int index) {
         if (index < (size >> 1)) {
             Node<T> node = head;
-            for (int i = 0; i < index; i++)
+            for (int i = 0; i < index; i++) {
                 node = node.next;
+            }
             return node;
         } else {
             Node<T> node = tail;
-            for (int i = size - 1; i > index; i--)
+            for (int i = size - 1; i > index; i--) {
                 node = node.prev;
+            }
             return node;
         }
     }
 
-}
-
-class Node<T>{
-    T element;
-    Node<T> prev;
-    Node<T> next;
-
-    public Node(Node<T> prev, T element, Node<T> next) {
-        this.prev = prev;
-        this.element = element;
-        this.next = next;
+    private void unlink(Node<T> nodeCopy) {
+        if (nodeCopy.prev == null && nodeCopy.next == null) {
+            head = null;
+            tail = null;
+        } else if (nodeCopy.prev == null) {
+            head = nodeCopy.next;
+            // когда переприсваивается ХЭД, под индексом 0 становится нода 10,
+            // и обнулить ноду 25 уже нельзя.
+            nodeCopy.next.prev = null;
+            // остается ли в памяти первоначальная нода со значением 25?
+        } else if (nodeCopy.next == null) {
+            tail = nodeCopy.prev;
+            nodeCopy.prev.next = null;
+        } else {
+            nodeCopy.prev.next = nodeCopy.next;
+            nodeCopy.next.prev = nodeCopy.prev;
+        }
     }
 
-    @Override
-    public String toString() {
-        return "Node{" +
-                "element=" + element +
-                "}";
+    private class Node<T> {
+        private T element;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T element, Node<T> next) {
+            this.prev = prev;
+            this.element = element;
+            this.next = next;
+        }
+
+    //        @Override
+    //        public String toString() {
+    //            return "Node{" +
+    //                    "element=" + element +
+    //                    "}";
+    //        }
     }
+
 }
