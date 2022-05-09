@@ -22,20 +22,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index != 0) {
-            isInRange(index - 1);
+            isIndexInRange(index - 1);
         }
         if (index == size) {
             add(value);
             return;
         }
-        Node<T> existingNode = findByIndex(index);
-        Node<T> newNode = new Node<>(existingNode.prev, value, existingNode);
-        if (existingNode.prev == null) {
+        Node<T> nodeByIndex = findByIndex(index);
+        Node<T> newNode = new Node<>(nodeByIndex.prev, value, nodeByIndex);
+        if (nodeByIndex.prev == null) {
             head = newNode;
         } else {
-            existingNode.prev.next = newNode;
+            nodeByIndex.prev.next = newNode;
         }
-        existingNode.prev = newNode;
+        nodeByIndex.prev = newNode;
         size++;
     }
 
@@ -48,13 +48,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        isInRange(index);
+        isIndexInRange(index);
         return findByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        isInRange(index);
+        isIndexInRange(index);
         Node<T> currentNode = findByIndex(index);
         T oldValue = currentNode.value;
         currentNode.value = value;
@@ -63,25 +63,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-
-        isInRange(index);
+        isIndexInRange(index);
         Node<T> currentNode = findByIndex(index);
         T removedValue = currentNode.value;
-        disconnect(currentNode);
+        unlink(currentNode);
         size--;
         return removedValue;
     }
 
     @Override
     public boolean remove(T value) {
-        Node<T> theNode = head;
-        while (theNode != null) {
-            if (theNode.value == value || theNode.value.equals(value)) {
-                disconnect(theNode);
+        Node<T> node = head;
+        while (node != null) {
+            if (node.value == value || node.value.equals(value)) {
+                unlink(node);
                 size--;
                 return true;
             }
-            theNode = theNode.next;
+            node = node.next;
         }
         return false;
     }
@@ -108,7 +107,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void isInRange(int index) {
+    private void isIndexInRange(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Invalid index" + index);
         }
@@ -130,7 +129,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    private void disconnect(Node<T> node) {
+    private void unlink(Node<T> node) {
         if (node.prev == null && node.next == null) {
             head = null;
             tail = null;
