@@ -9,12 +9,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode;
+        Node<T> newNode = new Node<>(tail, value, null);
         if (size == 0) {
-            newNode = new Node<>(null, value, null);
             head = newNode;
         } else {
-            newNode = new Node<>(tail, value, null);
             tail.next = newNode;
         }
         tail = newNode;
@@ -58,10 +56,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> copyNode = getByIndex(index);
-        T copyValue = copyNode.element;
-        copyNode.element = value;
-        return copyValue;
+        Node<T> node = getByIndex(index);
+        T oldValue = node.element;
+        node.element = value;
+        return oldValue;
     }
 
     @Override
@@ -75,10 +73,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        for (Node<T> i = head; i != null; i = i.next) {
-            if (i.element == null
-                    || (object == i.element || (object != null && object.equals(i.element)))) {
-                unlink(i);
+        for (Node<T> node = head; node != null; node = node.next) {
+            if (node.element == null
+                    || (object == node.element
+                    || (object != null && object.equals(node.element)))) {
+                unlink(node);
                 size--;
                 return true;
             }
