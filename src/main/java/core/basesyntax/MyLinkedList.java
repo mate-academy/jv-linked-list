@@ -11,12 +11,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         T item;
         Node<T> next;
         Node<T> prev;
-        int index;
 
         public Node(T item, Node<T> next, Node<T> prev) {
             this.item = item;
             this.next = next;
             this.prev = prev;
+        }
+
+        private int locateByIndex(int index) {
+            int indexToFind = 0;
+            Node currentNode = this;
+            while (indexToFind != index) {
+                indexToFind++;
+                currentNode = currentNode.next;
+            }
+            return indexToFind;
         }
     }
 
@@ -26,11 +35,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+
     @Override
     public void add(T value) {
         if (size == 0) {
             Node newNode = new Node(value, null, null);
-            newNode.index = size;
             first = newNode;
             last = newNode;
         } else {
@@ -41,7 +50,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             currentNode.next = newNode;
             newNode.prev = currentNode;
-            newNode.index = size;
         }
         size++;
     }
@@ -53,23 +61,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         if (size == 0 && index == 0) {
             Node newNode = new Node(value, null, null);
-            newNode.index = size;
             first = newNode;
             last = newNode;
         } else {
             Node newNode = new Node(value, null, null);
             Node currentNode = first;
-            while (currentNode.next != null && currentNode.index != index) {
+            while (currentNode.next != null && currentNode.locateByIndex(index) != index) {
                 currentNode = currentNode.next;
             }
             newNode.next = currentNode;
             newNode.prev = currentNode.prev;
             currentNode.prev.next = newNode;
             currentNode.prev = newNode;
-            newNode.index = index;
-            currentNode.index += 1;
             while (currentNode.next != null) {
-                currentNode.next.index += 1;
                 currentNode = currentNode.next;
             }
         }
@@ -87,7 +91,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T get(int index) {
         checkIndex(index);
         Node currentNode = first;
-        while (currentNode.index != index) {
+        int counter = 0;
+        while (counter != index) {
+            counter++;
             currentNode = currentNode.next;
         }
         return (T) currentNode.item;
@@ -97,7 +103,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         checkIndex(index);
             Node currentNode = first;
-            while (currentNode.index != index) {
+            while (currentNode.locateByIndex(index) != index) {
                 currentNode = currentNode.next;
             }
             T returnValue = (T) currentNode.item;
@@ -109,7 +115,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node currentNode = first;
-        while (currentNode.index != index) {
+        while (currentNode.locateByIndex(index) != index) {
             currentNode = currentNode.next;
         }
         T returnValue = (T) currentNode.item;
@@ -119,9 +125,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
          if (index != size - 1){
              currentNode.next.prev = currentNode.prev;
         }
-         currentNode.index -= 1;
         while (currentNode.next != null) {
-            currentNode.next.index -= 1;
             currentNode = currentNode.next;
         }
         size--;
