@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
 
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        public Node(T item, Node<T> next, Node<T> prev) {
-            this.item = item;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     private void checkIndex(int index) {
         if (index < 0 || index == size) {
             throw new IndexOutOfBoundsException("Invalid index");
@@ -161,4 +149,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             nodeToUnlink.next.prev = nodeToUnlink.prev;
         }
     }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(T item, Node<T> next, Node<T> prev) {
+            this.item = item;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
 }
+
