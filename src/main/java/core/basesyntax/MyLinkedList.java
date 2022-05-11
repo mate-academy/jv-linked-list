@@ -37,6 +37,32 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private Node iterateMyLinkedList(int index) {
+        int count = 0;
+        if (index <= size / 2) {
+            Node currentNode = first;
+            while (count != index) {
+                currentNode = currentNode.next;
+                count++;
+            }
+            return currentNode;
+        }
+        if (index > size / 2) {
+            Node currentNode = last;
+            while (count != size - index - 1) {
+                currentNode = currentNode.prev;
+                count++;
+            }
+            return currentNode;
+        }
+        return null;
+    }
+
+//    private void unlink(Node nodeToUnlink) {
+//        nodeToUnlink.prev.next = nodeToUnlink.next;
+//        nodeToUnlink.next.prev = nodeToUnlink.prev;
+//    }
+
 
     @Override
     public void add(T value) {
@@ -81,12 +107,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         if (size > 0) {
             Node node = new Node<>(value, null, null);
-            int count = 0;
-            Node currentNode = first;
-            while (count != index) {
-                currentNode = currentNode.next;
-                count++;
-            }
+            Node currentNode = iterateMyLinkedList(index);
             currentNode.prev.next = node;
             node.prev = currentNode.prev;
             currentNode.prev = node;
@@ -104,24 +125,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndexSet(index);
-        int count = 0;
-        Node currentNode = first;
-        while (count != index) {
-            currentNode = currentNode.next;
-            count++;
-        }
+        Node currentNode = iterateMyLinkedList(index);
         return (T) currentNode.item;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndexSet(index);
-        int count = 0;
-        Node currentNode = first;
-        while (count != index) {
-            currentNode = currentNode.next;
-            count++;
-        }
+        Node currentNode = iterateMyLinkedList(index);
         Node returnNode = new Node(currentNode.item, currentNode.next, currentNode.prev);
         currentNode.item = value;
         return (T) returnNode.item;
@@ -130,7 +141,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndexRemove(index);
-        int count = 0;
         if (index == 0 && size == 1) {
             size--;
             return (T) first.item;
@@ -149,11 +159,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size--;
             return (T) returnNode.item;
         }
-        Node currentNode = first;
-        while (count != index) {
-            currentNode = currentNode.next;
-            count++;
-        }
+        Node currentNode = iterateMyLinkedList(index);
         currentNode.prev.next = currentNode.next;
         currentNode.next.prev = currentNode.prev;
         size--;
