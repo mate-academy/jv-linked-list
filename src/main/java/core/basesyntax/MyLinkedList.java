@@ -3,45 +3,151 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    @Override
-    public void add(T value) {
+
+    private int size;
+    private Node<T> head;
+    private Node<T> tail;
+
+    private class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        Node(Node<T> prev, T value, Node<T> next) {
+            this.value = value;
+            this.prev = prev;
+            this.next = next;
+        }
+    }
+
+    private Node<T> findNode(int index) {
+        Node<T> currentNode = head;
+        if (index == size - 1) {
+            currentNode = tail;
+        } else if (index <= size / 2) {
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+        } else if (index > size / 2) {
+            currentNode = tail.prev;
+            for (int i = size - 2; i > index; i--) {
+                currentNode = currentNode.prev;
+            }
+        }
+        return currentNode;
+    }
+
+    private void unlinkNode(Node<T> node) {
+        Node beforeNode;
+        Node afterNode;
+        if (node.prev == null) {
+            afterNode = node.next;
+            head = afterNode;
+        } else if (node.next == null) {
+            beforeNode = node.prev;
+            tail = beforeNode;
+        } else {
+            afterNode = node.next;
+            beforeNode = node.prev;
+            afterNode.prev = beforeNode;
+            beforeNode.next = afterNode;
+        }
     }
 
     @Override
-    public void add(T value, int index) {
+        public void add(T value) {
+        if (size == 0) {
+            head = new Node<>(null, value, null);
+            tail = head;
+        } else {
+            Node<T> newNode = new Node<>(tail, value, null);
+            tail.next = newNode;
+            tail = newNode;
+        }
+        size++;
+    }
+
+    @Override
+        public void add(T value, int index) throws IndexOutOfBoundsException {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index out of bounds");
+        }
+        if (index == size) {
+            add(value);
+        } else if (index == 0) {
+            Node currentNode = new Node<>(null, value, head);
+            head = currentNode;
+            size++;
+        } else {
+            Node currentNode;
+            Node currentNode2;
+            currentNode = findNode(index);
+            currentNode2 = findNode(index).prev;
+            Node newNode = new Node(findNode(index).prev, value, findNode(index));
+            currentNode.prev = newNode;
+            currentNode2.next = newNode;
+            if (findNode(index) == tail) {
+                newNode = tail;
+            }
+            size++;
+        }
     }
 
     @Override
     public void addAll(List<T> list) {
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i), size);
+        }
     }
 
     @Override
-    public T get(int index) {
-        return null;
+    public T get(int index) throws IndexOutOfBoundsException {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of bounds!");
+        }
+        return findNode(index).value;
     }
 
     @Override
-    public T set(T value, int index) {
-        return null;
+    public T set(T value, int index) throws IndexOutOfBoundsException {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of bounds!");
+        }
+        T out = findNode(index).value;
+        findNode(index).value = value;
+        return out;
     }
 
     @Override
-    public T remove(int index) {
-        return null;
+    public T remove(int index) throws IndexOutOfBoundsException {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of bounds!");
+        }
+        T out = findNode(index).value;
+        unlinkNode(findNode(index));
+        size--;
+        return out;
     }
 
     @Override
     public boolean remove(T object) {
+        for (Node node = head; node != null; node = node.next) {
+            if (node.value == null || node.value.equals(object)) {
+                unlinkNode(node);
+                size--;
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 }
