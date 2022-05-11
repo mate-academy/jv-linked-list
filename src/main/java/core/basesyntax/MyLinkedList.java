@@ -19,25 +19,110 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void checkIndexAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Invalid index");
-        }
-    }
-
-    private void checkIndexSet(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index");
-        }
-    }
-
-    private void checkIndexRemove(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index == size) {
             throw new IndexOutOfBoundsException("Invalid index");
         }
     }
 
-    private Node iterateMyLinkedList(int index) {
+    @Override
+    public void add(T value) {
+        Node node = new Node<>(value, null, null);
+        if (size == 0) {
+            first = node;
+        } else {
+            Node currentNode = last;
+            currentNode.next = node;
+            node.prev = currentNode;
+        }
+        last = node;
+        size++;
+    }
+
+    @Override
+    public void add(T value, int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Invalid index");
+        }
+        if (size == 0 || index == size) {
+            add(value);
+            return;
+        }
+        if (index == 0) {
+            Node node = new Node<>(value, null, null);
+            node.next = first;
+            first.prev = node;
+            first = node;
+            size++;
+            return;
+        }
+        Node node = new Node<>(value, null, null);
+        Node currentNode = getNodeByIndex(index);
+        currentNode.prev.next = node;
+        node.prev = currentNode.prev;
+        currentNode.prev = node;
+        node.next = currentNode;
+        size++;
+    }
+
+    @Override
+    public void addAll(List<T> list) {
+        for (T listItem: list) {
+            add(listItem);
+        }
+    }
+
+    @Override
+    public T get(int index) {
+        checkIndex(index);
+        Node currentNode = getNodeByIndex(index);
+        return (T) currentNode.item;
+    }
+
+    @Override
+    public T set(T value, int index) {
+        checkIndex(index);
+        Node currentNode = getNodeByIndex(index);
+        T oldValue = (T) currentNode.item;
+        currentNode.item = value;
+        return oldValue;
+    }
+
+    @Override
+    public T remove(int index) {
+        checkIndex(index);
+        Node currentNode = getNodeByIndex(index);
+        unlink(currentNode);
+        size--;
+        return (T) currentNode.item;
+    }
+
+    @Override
+    public boolean remove(T object) {
+        Node currentNode = first;
+        int index = 0;
+        while (index < size) {
+            if (currentNode.item == object || currentNode.item.equals(object)) {
+                remove(index);
+                return true;
+            }
+            currentNode = currentNode.next;
+            index++;
+        }
+        return false;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    private Node getNodeByIndex(int index) {
         int count = 0;
         if (index <= size / 2) {
             Node currentNode = first;
@@ -67,112 +152,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (nodeToUnlink == first) {
             nodeToUnlink.next.prev = null;
             first = nodeToUnlink.next;
-            return;
-        }
-        if (nodeToUnlink == last) {
+        } else if (nodeToUnlink == last) {
             nodeToUnlink.prev.next = null;
             last = nodeToUnlink.prev;
             return;
+        } else {
+            nodeToUnlink.prev.next = nodeToUnlink.next;
+            nodeToUnlink.next.prev = nodeToUnlink.prev;
         }
-        nodeToUnlink.prev.next = nodeToUnlink.next;
-        nodeToUnlink.next.prev = nodeToUnlink.prev;
-    }
-
-    @Override
-    public void add(T value) {
-        if (size == 0) {
-            Node node = new Node<>(value, null, null);
-            first = node;
-            last = node;
-        }
-        if (size > 0) {
-            Node node = new Node<>(value, null, null);
-            Node currentNode = last;
-            currentNode.next = node;
-            node.prev = currentNode;
-            last = node;
-        }
-        size++;
-    }
-
-    @Override
-    public void add(T value, int index) {
-        checkIndexAdd(index);
-        if (size == 0 || index == size) {
-            this.add(value);
-            return;
-        }
-        if (index == 0) {
-            Node node = new Node<>(value, null, null);
-            node.next = first;
-            first.prev = node;
-            first = node;
-            size++;
-            return;
-        }
-        Node node = new Node<>(value, null, null);
-        Node currentNode = iterateMyLinkedList(index);
-        currentNode.prev.next = node;
-        node.prev = currentNode.prev;
-        currentNode.prev = node;
-        node.next = currentNode;
-        size++;
-    }
-
-    @Override
-    public void addAll(List<T> list) {
-        for (T listItem: list) {
-            this.add(listItem);
-        }
-    }
-
-    @Override
-    public T get(int index) {
-        checkIndexSet(index);
-        Node currentNode = iterateMyLinkedList(index);
-        return (T) currentNode.item;
-    }
-
-    @Override
-    public T set(T value, int index) {
-        checkIndexSet(index);
-        Node currentNode = iterateMyLinkedList(index);
-        Node returnNode = new Node(currentNode.item, currentNode.next, currentNode.prev);
-        currentNode.item = value;
-        return (T) returnNode.item;
-    }
-
-    @Override
-    public T remove(int index) {
-        checkIndexRemove(index);
-        Node currentNode = iterateMyLinkedList(index);
-        unlink(currentNode);
-        size--;
-        return (T) currentNode.item;
-    }
-
-    @Override
-    public boolean remove(T object) {
-        Node currentNode = first;
-        int index = 0;
-        while (index < size) {
-            if (currentNode.item == object || currentNode.item.equals(object)) {
-                remove(index);
-                return true;
-            }
-            currentNode = currentNode.next;
-            index++;
-        }
-        return false;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
     }
 }
