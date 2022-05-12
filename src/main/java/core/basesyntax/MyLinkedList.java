@@ -9,14 +9,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
         public void add(T value) {
+        Node<T> newNode = new Node<>(tail, value, null);
         if (size == 0) {
-            head = new Node<>(null, value, null);
-            tail = head;
+            head = newNode;
         } else {
-            Node<T> newNode = new Node<>(tail, value, null);
             tail.next = newNode;
-            tail = newNode;
         }
+        tail = newNode;
         size++;
     }
 
@@ -114,15 +113,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNode(int index) {
         Node<T> currentNode = head;
-        if (index == size - 1) {
-            currentNode = tail;
-        } else if (index <= size / 2) {
+        if (index < size / 2) {
             for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
             }
-        } else if (index > size / 2) {
-            currentNode = tail.prev;
-            for (int i = size - 2; i > index; i--) {
+        } else {
+            currentNode = tail;
+            for (int i = size - 1; i > index; i--) {
                 currentNode = currentNode.prev;
             }
         }
