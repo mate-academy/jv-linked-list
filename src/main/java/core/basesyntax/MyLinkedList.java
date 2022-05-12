@@ -7,12 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
 
-    private void checkIndex(int index) {
-        if (index < 0 || index == size) {
-            throw new IndexOutOfBoundsException("Invalid index");
-        }
-    }
-
     @Override
     public void add(T value) {
         Node node = new Node<>(value, null, null);
@@ -150,7 +144,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private void checkIndex(int index) {
+        if (index < 0 || index == size) {
+            throw new IndexOutOfBoundsException("Invalid index");
+        }
+    }
+
     private static class Node<T> {
+
         private T item;
         private Node<T> next;
         private Node<T> prev;
