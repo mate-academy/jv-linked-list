@@ -54,13 +54,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) throws IndexOutOfBoundsException {
-        indexCheck(index);
+        checkIndex(index);
         return findNode(index).value;
     }
 
     @Override
     public T set(T value, int index) throws IndexOutOfBoundsException {
-        indexCheck(index);
+        checkIndex(index);
         Node currentNode = findNode(index);
         T oldValue = (T)currentNode.value;
         currentNode.value = value;
@@ -69,7 +69,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) throws IndexOutOfBoundsException {
-        indexCheck(index);
+        checkIndex(index);
         Node currentNode = findNode(index);
         T oldValue = (T)currentNode.value;
         unlinkNode(currentNode);
@@ -143,7 +143,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void indexCheck(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index is out of bounds!");
         }
