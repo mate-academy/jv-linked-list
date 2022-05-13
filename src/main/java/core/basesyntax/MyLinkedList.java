@@ -111,10 +111,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getByIndex(int index) {
         Node<T> getByIndex = first;
-        int i = 0;
-        while (i < index) {
-            getByIndex = getByIndex.next;
-            i++;
+        if (index <= size / 2) {
+            for (int i = 0; i < index; i++) {
+                getByIndex = getByIndex.next;
+            }
+        } else {
+            getByIndex = last;
+            for (int i = size - 1; i > index; i--) {
+                getByIndex = getByIndex.prev;
+            }
         }
         return getByIndex;
     }
