@@ -10,9 +10,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (isEmpty()) {
-            linkFirst(value);
+            final Node<T> first = head;
+            final Node<T> newNode = new Node<>(null, value, first);
+            head = newNode;
+            tail = newNode;
         } else {
-            linkLast(value);
+            final Node<T> last = tail;
+            final Node<T> newNode = new Node<>(last, value, null);
+            tail = newNode;
+            last.next = newNode;
         }
         size++;
     }
@@ -91,17 +97,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = newNode;
         } else {
             first.prev = newNode;
-        }
-    }
-
-    private void linkLast(T value) {
-        final Node<T> last = tail;
-        final Node<T> newNode = new Node<>(last, value, null);
-        tail = newNode;
-        if (last == null) {
-            head = newNode;
-        } else {
-            last.next = newNode;
         }
     }
 
