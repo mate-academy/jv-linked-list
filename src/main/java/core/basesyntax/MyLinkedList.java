@@ -9,18 +9,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        if (isEmpty()) {
-            linkFirst(value);
+        Node<T> newNode = new Node<>(tail, value, null);
+        if (size == 0) {
+            head = newNode;
         } else {
-            linkLast(value);
+            tail.next = newNode;
         }
+        tail = newNode;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Invalid index entered");
+            throw new IndexOutOfBoundsException("Invalid index entered. Index: " + index + "list size: " + size);
         }
         if (index == size) {
             add(value);
@@ -83,28 +85,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void linkFirst(T value) {
-        final Node<T> first = head;
-        final Node<T> newNode = new Node<>(null, value, first);
-        head = newNode;
-        if (first == null) {
-            tail = newNode;
-        } else {
-            first.prev = newNode;
-        }
-    }
-
-    private void linkLast(T value) {
-        final Node<T> last = tail;
-        final Node<T> newNode = new Node<>(last, value, null);
-        tail = newNode;
-        if (last == null) {
-            head = newNode;
-        } else {
-            last.next = newNode;
-        }
-    }
-
     private void linkBefore(T value, Node<T> place) {
         final Node<T> prev = place.prev;
         final Node<T> newNode = new Node<>(prev, value, place);
@@ -138,7 +118,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index entered");
+            throw new IndexOutOfBoundsException("Invalid index entered. Index: " + index + "list size: " + size);
         }
     }
 
