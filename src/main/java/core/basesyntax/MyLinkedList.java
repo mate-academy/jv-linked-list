@@ -14,13 +14,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> prev;
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
         Node(Node<T> prev, T element, Node<T> next) {
             this.item = element;
             this.next = next;
+            this.prev = prev;
+        }
+
+        public T getItem() {
+            return item;
+        }
+
+        public void setItem(T item) {
+            this.item = item;
+        }
+
+        public Node<T> getNext() {
+            return next;
+        }
+
+        public void setNext(Node<T> next) {
+            this.next = next;
+        }
+
+        public Node<T> getPrev() {
+            return prev;
+        }
+
+        public void setPrev(Node<T> prev) {
             this.prev = prev;
         }
     }
@@ -45,7 +69,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == listSize) {
             add(value);
         } else if (index == 0) {
-            Node<T> newNode  = new Node<>(null, value, first);
+            Node<T> newNode = new Node<>(null, value, first);
             first.prev = newNode;
             first = newNode;
             listSize++;
@@ -115,12 +139,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current;
         if (index < (listSize >> 1)) {
             current = first;
-            for (int i = 0; i < index; i++)
+            for (int i = 0; i < index; i++) {
                 current = current.next;
+            }
         } else {
             current = last;
-            for (int i = listSize - 1; i > index; i--)
+            for (int i = listSize - 1; i > index; i--) {
                 current = current.prev;
+            }
         }
         return current;
     }
