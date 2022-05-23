@@ -3,11 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
-    private Node<T> element;
     private Node<T> head;
     private Node<T> tail;
-    private int size = 0;
+    private int size;
 
     @Override
     public void add(T value) {
@@ -40,8 +38,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = tail.next;
             size++;
         } else {
-            element = head;
-            passageElements(index);
+            Node<T> element = head;
+            element = passageElements(index);
             element.previous.next = newNode;
             newNode.next = element;
             size++;
@@ -57,17 +55,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        element = head;
-        checkPositionIndex(index);
-        passageElements(index);
+        Node<T> element = head;
+        checkIndex(index);
+        element = passageElements(index);
         return element.value;
     }
 
     @Override
     public T set(T value, int index) {
-        element = head;
-        checkPositionIndex(index);
-        passageElements(index);
+        Node<T> element = head;
+        checkIndex(index);
+        element = passageElements(index);
         Node<T> oldElement = new Node<>(null, element.value, null);
         element.value = value;
         return oldElement.value;
@@ -75,8 +73,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        element = head;
-        checkPositionIndex(index);
+        Node<T> element = head;
+        checkIndex(index);
         if (index == 0) {
             head = head.next;
             size--;
@@ -84,7 +82,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             element = tail;
             size--;
         } else {
-            passageElements(index);
+            element = passageElements(index);
             element.next.previous = element.previous;
             element.previous.next = element.next;
             size--;
@@ -94,7 +92,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        element = head;
+        Node<T> element = head;
         for (int i = 0; i < size; i++) {
             if ((object == null && element.value == null) || element.value.equals(object)) {
                 remove(i);
@@ -112,11 +110,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0 ? true : false;
+        return size == 0;
     }
 
-    static class Node<T> {
-
+    private static class Node<T> {
         private T value;
         private Node<T> previous;
         private Node<T> next;
@@ -128,15 +125,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void checkPositionIndex(int index) {
+    private void checkIndex(int index) {
         if (size <= index || index < 0) {
             throw new IndexOutOfBoundsException("The index does not exist");
         }
     }
 
-    private void passageElements(int index) {
+    private Node<T> passageElements(int index) {
+        Node<T> element = head;
         for (int i = 0; i < index; i++) {
             element = element.next;
         }
+        return element;
     }
 }
