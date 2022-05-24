@@ -9,16 +9,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode;
+        Node<T> newNode = new Node<>(tail, value, null);
         if (size == 0) {
-            newNode = new Node<>(null, value, null);
-            tail = newNode;
             head = newNode;
         } else {
-            newNode = new Node<>(tail, value, null);
-            tail = newNode;
             newNode.prev.next = newNode;
         }
+        tail = newNode;
         size++;
     }
 
@@ -81,11 +78,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         for (Node<T> node = head; node != null; node = node.next) {
-            if (node.item == null && object == null) {
-                unlink(node);
-                return true;
-            }
-            if (object != null && object.equals(node.item)) {
+            if (node.item == null && object == null || object != null && object.equals(node.item)) {
                 unlink(node);
                 return true;
             }
