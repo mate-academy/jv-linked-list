@@ -3,15 +3,15 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private final static String MESSAGE = "index out of bounds";
-private Node<T> head;
-private Node tail;
-private int size = 0;
+    private static final String MESSAGE = "index out of bounds";
+    private Node<T> head;
+    private Node tail;
+    private int size = 0;
 
     static class Node<T> {
-        T value;
-        Node<T> next;
-        Node<T> prev;
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
 
         public Node(Node<T> prev, T value, Node<T> next) {
             this.next = next;
@@ -46,45 +46,45 @@ private int size = 0;
         }
         Node<T> node;
         int count = 0;
-            node = head;
-            while (count != index) {
-                node = node.next;
-                count++;
-            }
-            Node<T> current;
-            switch (count) {
-                case 0:
-                    if (head == null) {
-                        head = new Node<>(null, value, null);
-                    } else {
-                        current = new Node<>(null, value, head);
-                        head.prev = current;
-                        head = current;
-                    }
-                    break;
-                case 1:
-                    if (tail == null) {
-                        tail = new Node<>(head, value, null);
-                        head.next = tail;
-                    } else {
+        node = head;
+        while (count != index) {
+            node = node.next;
+            count++;
+        }
+        Node<T> current;
+        switch (count) {
+            case 0:
+                if (head == null) {
+                    head = new Node<>(null, value, null);
+                } else {
+                    current = new Node<>(null, value, head);
+                    head.prev = current;
+                    head = current;
+                }
+                break;
+            case 1:
+                if (tail == null) {
+                    tail = new Node<>(head, value, null);
+                    head.next = tail;
+                } else {
                     current = new Node<>(head, value, node);
                     node.prev = current;
                     head.next = current;
-                    }
-                    break;
-                default:
-                    if (count == size) {
-                        current = new Node<>(tail, value, null);
-                        tail.next = current;
-                        tail = current;
-                    } else {
-                        current = new Node<>(node.prev, value, node);
-                        node.prev.next = current;
-                        node.prev = current;
-                    }
-            }
-            size++;
+                }
+                break;
+            default:
+                if (count == size) {
+                    current = new Node<>(tail, value, null);
+                    tail.next = current;
+                    tail = current;
+                } else {
+                    current = new Node<>(node.prev, value, node);
+                    node.prev.next = current;
+                    node.prev = current;
+                }
         }
+        size++;
+    }
 
     @Override
     public void addAll(List<T> list) {
@@ -101,9 +101,6 @@ private int size = 0;
     public T get(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(MESSAGE);
-        }
-        if (size == 0) {
-            return null;
         }
         Node<T> node = head;
         for (int i = 1; i <= index; i++) {
