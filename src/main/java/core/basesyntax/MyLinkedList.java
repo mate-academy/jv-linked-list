@@ -39,7 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size++;
         } else {
             Node<T> element = head;
-            element = passageElements(index);
+            element = findNodeByIndex(index);
             element.previous.next = newNode;
             newNode.next = element;
             size++;
@@ -55,50 +55,46 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Node<T> element = head;
         checkIndex(index);
-        element = passageElements(index);
-        return element.value;
+        Node<T> node = findNodeByIndex(index);
+        return node.value;
     }
 
     @Override
     public T set(T value, int index) {
-        Node<T> element = head;
         checkIndex(index);
-        element = passageElements(index);
-        Node<T> oldElement = new Node<>(null, element.value, null);
-        element.value = value;
-        return oldElement.value;
+        Node<T> node = findNodeByIndex(index);
+        T oldValue = node.value;
+        node.value = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        Node<T> element = head;
+        Node<T> node = head;
         checkIndex(index);
         if (index == 0) {
             head = head.next;
-            size--;
         } else if (index == size - 1) {
-            element = tail;
-            size--;
+            node = tail;
         } else {
-            element = passageElements(index);
-            element.next.previous = element.previous;
-            element.previous.next = element.next;
-            size--;
+            node = findNodeByIndex(index);
+            node.next.previous = node.previous;
+            node.previous.next = node.next;
         }
-        return element.value;
+        size--;
+        return node.value;
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> element = head;
+        Node<T> node = head;
         for (int i = 0; i < size; i++) {
-            if ((object == null && element.value == null) || element.value.equals(object)) {
+            if ((object == null && node.value == null) || node.value.equals(object)) {
                 remove(i);
                 return true;
             }
-            element = element.next;
+            node = node.next;
         }
         return false;
     }
@@ -131,7 +127,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> passageElements(int index) {
+    private Node<T> findNodeByIndex(int index) {
         Node<T> element = head;
         for (int i = 0; i < index; i++) {
             element = element.next;
