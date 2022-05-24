@@ -3,74 +3,19 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private transient int size = 0;
-    private transient Node<T> head;
-    private transient Node<T> tail;
-
-    private static class Node<T> {
-        private T item;
-        private Node<T> prev;
-        private Node<T> next;
-
-        private Node(Node<T> prev, T value, Node<T> next) {
-            this.item = value;
-            this.prev = prev;
-            this.next = next;
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-    }
-
-    Node<T> nodeByIndex(int index) {
-        if (index < (size >> 1)) {
-            Node<T> node = head;
-            for (int i = 0; i < index; i++) {
-                node = node.next;
-            }
-            return node;
-        } else {
-            Node<T> node = tail;
-            for (int i = size - 1; i > index; i--) {
-                node = node.prev;
-            }
-            return node;
-        }
-    }
-
-    T unlink(Node<T> x) {
-        final T element = x.item;
-        final Node<T> next = x.next;
-        final Node<T> prev = x.prev;
-        if (prev == null) {
-            head = next;
-        } else {
-            prev.next = next;
-            x.prev = null;
-        }
-
-        if (next == null) {
-            tail = prev;
-        } else {
-            next.prev = prev;
-            x.next = null;
-        }
-        x.item = null;
-        size--;
-        return element;
-    }
+    private int size;
+    private Node<T> head;
+    private Node<T> tail;
 
     @Override
     public void add(T value) {
+        Node<T> newNode;
         if (size == 0) {
-            Node<T> newNode = new Node<>(null, value, null);
+            newNode = new Node<>(null, value, null);
             tail = newNode;
             head = newNode;
         } else {
-            Node<T> newNode = new Node<>(tail, value, null);
+            newNode = new Node<>(tail, value, null);
             tail = newNode;
             newNode.prev.next = newNode;
         }
@@ -83,23 +28,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
         if (size == index) {
-            final Node<T> l = tail;
-            final Node<T> newNode = new Node<>(l, value, null);
+            final Node<T> tailNode = tail;
+            final Node<T> newNode = new Node<>(tailNode, value, null);
             tail = newNode;
-            if (l == null) {
+            if (tailNode == null) {
                 head = newNode;
             } else {
-                l.next = newNode;
+                tailNode.next = newNode;
             }
             size++;
         } else {
-            final Node<T> beginingNode = nodeByIndex(index).prev;
-            final Node<T> newNode = new Node<>(beginingNode, value, nodeByIndex(index));
+            final Node<T> beginNode = nodeByIndex(index).prev;
+            final Node<T> newNode = new Node<>(beginNode, value, nodeByIndex(index));
             nodeByIndex(index).prev = newNode;
-            if (beginingNode == null) {
+            if (beginNode == null) {
                 head = newNode;
             } else {
-                beginingNode.next = newNode;
+                beginNode.next = newNode;
             }
             size++;
         }
@@ -121,9 +66,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> x = nodeByIndex(index);
-        T oldVal = x.item;
-        x.item = value;
+        Node<T> node = nodeByIndex(index);
+        T oldVal = node.item;
+        node.item = value;
         return oldVal;
     }
 
@@ -135,19 +80,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> x = head; x != null; x = x.next) {
-                if (x.item == null) {
-                    unlink(x);
-                    return true;
-                }
+        for (Node<T> node = head; node != null; node = node.next) {
+            if (node.item == null && object == null) {
+                unlink(node);
+                return true;
             }
-        } else {
-            for (Node<T> x = head; x != null; x = x.next) {
-                if (object.equals(x.item)) {
-                    unlink(x);
-                    return true;
-                }
+            if (object != null && object.equals(node.item)) {
+                unlink(node);
+                return true;
             }
         }
         return false;
@@ -161,5 +101,61 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> prev;
+        private Node<T> next;
+
+        private Node(Node<T> prev, T value, Node<T> next) {
+            this.item = value;
+            this.prev = prev;
+            this.next = next;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+    private Node<T> nodeByIndex(int index) {
+        if (index < (size >> 1)) {
+            Node<T> node = head;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+            return node;
+        } else {
+            Node<T> node = tail;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
+            return node;
+        }
+    }
+
+    private T unlink(Node<T> node) {
+        final T element = node.item;
+        final Node<T> next = node.next;
+        final Node<T> prev = node.prev;
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
+            node.prev = null;
+        }
+
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.prev = prev;
+            node.next = null;
+        }
+        node.item = null;
+        size--;
+        return element;
     }
 }
