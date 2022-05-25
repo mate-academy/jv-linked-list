@@ -64,7 +64,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkElementIndex(index);
         MyNode<T> node = findNodeByIndex(index);
         unlink(node);
         return node.item;
@@ -151,6 +150,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (node == null) {
             return;
         }
+        size--;
         if (node.prev == null && node.next == null) {
             first = null;
             last = null;
@@ -168,7 +168,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         node.prev.next = node.next;
         node.next.prev = node.prev;
-        size--;
     }
 
     private static class MyNode<T> {
