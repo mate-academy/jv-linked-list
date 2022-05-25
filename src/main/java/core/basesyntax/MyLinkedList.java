@@ -10,7 +10,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public MyLinkedList() {
         size = 0;
     }
-    
+
     private static class Node<T>{
         private T item;
         Node<T> next;
@@ -113,13 +113,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkPositionIndex(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Invalid index position");
+            throw new IndexOutOfBoundsException("Invalid index position:" + index);
         }
     }
 
     private void checkElementIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index element");
+            throw new IndexOutOfBoundsException("Invalid index element:" + index);
         }
     }
 
