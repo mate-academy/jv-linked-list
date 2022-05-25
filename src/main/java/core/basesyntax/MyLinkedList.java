@@ -50,7 +50,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.prev = node.prev.next;
             size++;
         }
-
     }
 
     @Override
