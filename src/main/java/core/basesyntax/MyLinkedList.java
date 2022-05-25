@@ -74,9 +74,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         checkIndex(index);
         Node<T> currentNode = head;
-        if (currentNode == null) {
-            return null;
-        }
         for (int i = 0; i < index; i++) {
             currentNode = currentNode.next;
         }
