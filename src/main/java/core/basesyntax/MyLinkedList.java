@@ -1,10 +1,10 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String MESSAGE = "index out of bounds";
+    private static final int DOUBLE_GO_ROUND_BOTTOM_LIMIT = 3;
     private Node<T> head;
     private Node<T> tail;
     private int size = 0;
@@ -45,15 +45,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException(MESSAGE);
         }
-        Node<T> node;
-        int count = 0;
-        node = head;
-        while (count != index) {
-            node = node.next;
-            count++;
-        }
+        Node<T> node = findNodeStartDirection(index);
         Node<T> current;
-        switch (count) {
+        switch (index) {
             case 0:
                 if (head == null) {
                     head = new Node<>(null, value, null);
@@ -74,7 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 }
                 break;
             default:
-                if (count == size) {
+                if (index == size) {
                     current = new Node<>(tail, value, null);
                     tail.next = current;
                     tail = current;
@@ -103,10 +97,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(MESSAGE);
         }
-        Node<T> node = head;
-        for (int i = 1; i <= index; i++) {
-            node = node.next;
-        }
+        Node<T> node = findNodeStartDirection(index);
         return node.value;
     }
 
@@ -115,25 +106,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(MESSAGE);
         }
-        Node<T> node;
-        int count = 0;
-        boolean directionSearchingIndex = index <= (size / 2);
-        if (directionSearchingIndex) {
-            node = head;
-            while (count != index) {
-                node = node.next;
-                count++;
-            }
-            T current = node.value;
-            node.value = value;
-            return current;
-        }
-        node = tail;
-        count = size - 1;
-        while (count != index) {
-            node = node.prev;
-            count--;
-        }
+        Node<T> node = findNodeStartDirection(index);
         T current = node.value;
         node.value = value;
         return current;
@@ -144,12 +117,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(MESSAGE);
         }
-        int count = 0;
-        Node<T> node = head;
-        while (count != index) {
-            node = node.next;
-            count++;
-        }
+        Node<T> node = findNodeStartDirection(index);
         T value = node.value;
         unlink(node);
         return value;
@@ -165,9 +133,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (node.value == null && object == null) {
                 unlink(node);
                 return true;
-            } else if (Objects.equals(node.value, object)) {
-                unlink(node);
-                return true;
+            } else {
+                assert node.value != null;
+                if (node.value.equals(object)) {
+                    unlink(node);
+                    return true;
+                }
             }
             node = node.next;
         }
@@ -209,5 +180,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.next.prev = node.prev;
         }
         size--;
+    }
+
+    private Node<T> findNodeStartDirection(int index) {
+        int count;
+        Node<T> node = (index > size / 2 && size >= DOUBLE_GO_ROUND_BOTTOM_LIMIT) ? tail : head;
+        if (node == head) {
+            count = 0;
+            while (count != index) {
+                node = node.next;
+                count++;
+            }
+        } else {
+            count = size - 1;
+            while (count != index) {
+                node = node.prev;
+                count--;
+            }
+        }
+        return node;
     }
 }
