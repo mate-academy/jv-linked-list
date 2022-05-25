@@ -11,10 +11,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size = 0;
     }
 
-    private static class Node<T>{
+    private static class Node<T> {
         private T item;
-        Node<T> next;
-        Node<T> prev;
+        private Node<T> prev;
+        private Node<T> next;
 
         public Node(Node<T> prev, T item, Node<T> next) {
             this.item = item;
@@ -123,7 +123,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> node(int index){
+    private Node<T> node(int index) {
         Node<T> node;
         if (index < size >> 1) {
             node = head;
@@ -132,7 +132,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         } else {
             node = tail;
-            for (int i = size - 1; i > index ; i--) {
+            for (int i = size - 1; i > index; i--) {
                 node = node.prev;
             }
         }
@@ -151,7 +151,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail.next = null;
         } else {
             node.prev.next = node.next;
-            node.next.prev = node.prev;}
+            node.next.prev = node.prev;
+        }
         size--;
         return node.item;
     }
