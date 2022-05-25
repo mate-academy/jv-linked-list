@@ -3,47 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
-
-    public MyLinkedList() {
-    }
-
-    private void setHead(T value) {
-        Node<T> oldHead = head;
-        Node<T> newNode = new Node<>(null, value, oldHead);
-        head = newNode;
-        if (oldHead == null) {
-            tail = newNode;
-        } else {
-            oldHead.prev = newNode;
-        }
-        size++;
-    }
-
-    private T removeHead() {
-        final T oldValue = head.value;
-        if (size > 1) {
-            head = head.next;
-            head.prev = null;
-            size--;
-        } else {
-            head.next = null;
-            head.value = null;
-            size = 0;
-        }
-        return oldValue;
-    }
-
-    private T removeTail() {
-        final T oldValue = tail.value;
-        tail = tail.prev;
-        tail.next = null;
-        size--;
-        return oldValue;
-    }
 
     @Override
     public void add(T value) {
@@ -93,8 +55,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T value : list) {
+            add(value);
         }
     }
 
@@ -128,9 +90,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < index; i++) {
             currentNode = currentNode.next;
         }
-        final T oldValue = currentNode.value;
+        T oldValue = currentNode.value;
         currentNode.value = value;
-
         return oldValue;
     }
 
@@ -156,7 +117,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         currentNode.prev.next = removedNode.next;
         currentNode.next.prev = removedNode.prev;
         size--;
-
         return removedNode.value;
     }
 
@@ -191,6 +151,40 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void setHead(T value) {
+        Node<T> oldHead = head;
+        Node<T> newNode = new Node<>(null, value, oldHead);
+        head = newNode;
+        if (oldHead == null) {
+            tail = newNode;
+        } else {
+            oldHead.prev = newNode;
+        }
+        size++;
+    }
+
+    private T removeHead() {
+        T oldValue = head.value;
+        if (size > 1) {
+            head = head.next;
+            head.prev = null;
+            size--;
+        } else {
+            head.next = null;
+            head.value = null;
+            size = 0;
+        }
+        return oldValue;
+    }
+
+    private T removeTail() {
+        T oldValue = tail.value;
+        tail = tail.prev;
+        tail.next = null;
+        size--;
+        return oldValue;
     }
 
     private static class Node<T> {
