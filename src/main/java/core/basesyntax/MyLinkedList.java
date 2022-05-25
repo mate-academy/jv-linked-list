@@ -62,12 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException(
-                    "Index passed to the method is negative or "
-                            + "bigger than size of MyLinkedList. "
-                            + "Index: " + index + ", Size: " + size);
-        }
+        checkIndex(index);
         Node<T> currentNode = head;
         for (int i = 0; i < index; i++) {
             currentNode = currentNode.next;
@@ -77,12 +72,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException(
-                    "Index passed to the method is negative or "
-                            + "bigger than size of MyLinkedList. "
-                            + "Index: " + index + ", Size: " + size);
-        }
+        checkIndex(index);
         Node<T> currentNode = head;
         if (currentNode == null) {
             return null;
@@ -97,12 +87,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException(
-                    "Index passed to the method is negative or "
-                            + "bigger than size of MyLinkedList. "
-                            + "Index: " + index + ", Size: " + size);
-        }
+        checkIndex(index);
         if (index == 0) {
             return removeHead();
         }
@@ -151,6 +136,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException(
+                    "Index passed to the method is negative or "
+                            + "bigger than size of MyLinkedList. "
+                            + "Index: " + index + ", Size: " + size);
+        }
     }
 
     private void setHead(T value) {
