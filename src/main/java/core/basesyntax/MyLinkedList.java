@@ -1,11 +1,12 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String MESSAGE = "index out of bounds";
     private Node<T> head;
-    private Node tail;
+    private Node<T> tail;
     private int size = 0;
 
     static class Node<T> {
@@ -164,7 +165,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (node.value == null && object == null) {
                 unlink(node);
                 return true;
-            } else if (node.value.equals(object)) {
+            } else if (Objects.equals(node.value, object)) {
                 unlink(node);
                 return true;
             }
@@ -183,7 +184,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void unlink(Node node) {
+    private void unlink(Node<T> node) {
         if (node == head) {
             switch (size) {
                 case 1:
