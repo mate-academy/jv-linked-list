@@ -94,18 +94,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(MESSAGE);
-        }
+        checkIfIndexValid(index);
         Node<T> node = findNodeStartDirection(index);
         return node.value;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(MESSAGE);
-        }
+        checkIfIndexValid(index);
         Node<T> node = findNodeStartDirection(index);
         T current = node.value;
         node.value = value;
@@ -114,9 +110,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(MESSAGE);
-        }
+        checkIfIndexValid(index);
         Node<T> node = findNodeStartDirection(index);
         T value = node.value;
         unlink(node);
@@ -199,5 +193,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return node;
+    }
+
+    private void checkIfIndexValid(int index) {
+        if (index< 0||index >=size) {
+            throw new IndexOutOfBoundsException(MESSAGE);
+        }
     }
 }
