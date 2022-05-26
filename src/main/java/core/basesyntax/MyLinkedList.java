@@ -23,21 +23,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        if (size == 0) {
-            head = new Node<>(null, value, null);
-            size++;
-        } else {
-            if (tail == null) {
-                tail = new Node<>(head, value, null);
+        Node<T> node = (size == 0) ? new Node<>(null, value, null)
+                : (tail == null) ? new Node<>(head, value, null)
+                : new Node<>(tail, value, null);
+        switch (size) {
+            case 0:
+                head = node;
+                break;
+            case 1:
+                tail = node;
                 head.next = tail;
-                size++;
-                return;
-            }
-            Node<T> node = new Node<>(tail, value, null);
-            tail.next = node;
-            tail = node;
-            size++;
+                break;
+            default:
+                tail = node;
+                tail.prev.next = tail;
         }
+        size++;
     }
 
     @Override
