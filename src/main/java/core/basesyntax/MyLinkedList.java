@@ -9,17 +9,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
+        Node<T> node = new Node<>(tail, value, null);
         if (size == 0) {
-            Node<T> node = new Node<>(null, value, null);
             head = node;
-            tail = node;
-            size++;
         } else {
-            Node<T> node = new Node<>(tail, value, null);
             tail.next = node;
-            tail = node;
-            size++;
         }
+        tail = node;
+        size++;
     }
 
     @Override
@@ -30,24 +27,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         if (index == size) {
             add(value);
-        } else if (index == 0) {
+            return;
+        }
+        if (index == 0) {
             Node<T> node = new Node<>(null, value, head);
             head.prev = node;
             head = node;
-            size++;
         } else {
             Node<T> lastNode = getNodeByIndex(index);
             Node<T> newNode = new Node<>(lastNode.prev, value, lastNode);
             lastNode.prev.next = newNode;
             lastNode.prev = newNode;
-            size++;
         }
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (T ls : list) {
-            add(ls);
+        for (T item : list) {
+            add(item);
         }
     }
 
@@ -60,10 +58,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> lastNode = getNodeByIndex(index);
-        T oldNodeItem = lastNode.item;
-        lastNode.item = value;
-        return oldNodeItem;
+        Node<T> node = getNodeByIndex(index);
+        T oldItem = node.item;
+        node.item = value;
+        return oldItem;
     }
 
     @Override
@@ -97,21 +95,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     public Node<T> getNodeByIndex(int index) {
         checkIndex(index);
-        int indexCounter = 0;
         Node<T> node;
         if (index <= (size / 2)) {
             node = head;
-            while (indexCounter != index) {
+            while (index != 0) {
                 node = node.next;
-                indexCounter++;
+                index--;
             }
             return node;
         }
         node = tail;
-        indexCounter = size - 1;
-        while (indexCounter != index) {
+        while (index != size - 1) {
             node = node.prev;
-            indexCounter--;
+            index++;
         }
         return node;
     }
