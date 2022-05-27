@@ -86,11 +86,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void addAll(List<T> list) {
         Node<T> node;
         for (T value : list) {
-            node = new Node<>(tail, value, null);
-            tail.next = node;
-            tail = node;
+            this.add(value);
         }
-        size += list.size();
     }
 
     @Override
