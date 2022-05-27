@@ -7,55 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size = 0;
 
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        private Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
-    private Node<T> getNode(int index) {
-        if (index < (size >> 1)) {
-            Node<T> x = first;
-            for (int i = 0; i < index; i++) {
-                x = x.next;
-            }
-            return x;
-        } else {
-            Node<T> x = last;
-            for (int i = size - 1; i > index; i--) {
-                x = x.prev;
-            }
-            return x;
-        }
-    }
-
-    private T unlink(Node<T> node) {
-        final T element = node.item;
-        final Node<T> next = node.next;
-        final Node<T> prev = node.prev;
-        if (prev == null) {
-            first = next;
-        } else {
-            prev.next = next;
-            node.prev = null;
-        }
-        if (next == null) {
-            last = prev;
-        } else {
-            next.prev = prev;
-            node.next = null;
-        }
-        node.item = null;
-        size--;
-        return element;
-    }
-
     @Override
     public void add(T value) {
         Node<T> l = last;
@@ -71,7 +22,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkPositionIndex(index);
+        if (index > size || index < 0) {
+            throw new IndexOutOfBoundsException("Index  " + index + "is out of bounds");
+        }
         if (index == 0) {
             Node<T> f = first;
             Node<T> newValue = new Node<>(null, value, first);
@@ -144,10 +97,53 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkPositionIndex(int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Index  " + index + "is out of bounds");
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        private Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
         }
+    }
+
+    private Node<T> getNode(int index) {
+        if (index < (size >> 1)) {
+            Node<T> x = first;
+            for (int i = 0; i < index; i++) {
+                x = x.next;
+            }
+            return x;
+        } else {
+            Node<T> x = last;
+            for (int i = size - 1; i > index; i--) {
+                x = x.prev;
+            }
+            return x;
+        }
+    }
+
+    private T unlink(Node<T> node) {
+        final T element = node.item;
+        final Node<T> next = node.next;
+        final Node<T> prev = node.prev;
+        if (prev == null) {
+            first = next;
+        } else {
+            prev.next = next;
+            node.prev = null;
+        }
+        if (next == null) {
+            last = prev;
+        } else {
+            next.prev = prev;
+            node.next = null;
+        }
+        node.item = null;
+        size--;
+        return element;
     }
 
     private void checkElementIndex(int index) {
