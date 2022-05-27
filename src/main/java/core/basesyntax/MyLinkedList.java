@@ -122,15 +122,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         Node<T> node = head;
         while (node != null) {
-            if (node.value == null && object == null) {
+            if (node.value == null && object == null
+                    || (node.value != null && node.value.equals(object))) {
                 unlink(node);
                 return true;
-            } else {
-                assert node.value != null;
-                if (node.value.equals(object)) {
-                    unlink(node);
-                    return true;
-                }
             }
             node = node.next;
         }
