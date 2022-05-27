@@ -9,34 +9,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size = 0;
 
-    static class Node<T> {
-        private T value;
-        private Node<T> next;
-        private Node<T> prev;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.next = next;
-            this.value = value;
-            this.prev = prev;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> node = (size == 0) ? new Node<>(null, value, null)
                 : (tail == null) ? new Node<>(head, value, null)
                 : new Node<>(tail, value, null);
-        switch (size) {
-            case 0:
-                head = node;
-                break;
-            case 1:
-                tail = node;
+        if (size == 0) {
+            head = node;
+        } else {
+            tail = node;
+            if (size == 1) {
                 head.next = tail;
-                break;
-            default:
-                tail = node;
+            } else {
                 tail.prev.next = tail;
+            }
         }
         size++;
     }
@@ -191,6 +177,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void checkIfIndexValid(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(MESSAGE);
+        }
+    }
+
+    static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.next = next;
+            this.value = value;
+            this.prev = prev;
         }
     }
 }
