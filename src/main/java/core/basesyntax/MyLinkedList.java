@@ -32,38 +32,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException(MESSAGE);
         }
+        if (index <= 1 && (head == null || tail == null) || (index == size && index > 1)) {
+            add(value);
+            return;
+        }
         Node<T> node = getNode(index);
-        Node<T> current;
-        switch (index) {
-            case 0:
-                if (head == null) {
-                    head = new Node<>(null, value, null);
-                } else {
-                    current = new Node<>(null, value, head);
-                    head.prev = current;
-                    head = current;
-                }
-                break;
-            case 1:
-                if (tail == null) {
-                    tail = new Node<>(head, value, null);
-                    head.next = tail;
-                } else {
-                    current = new Node<>(head, value, node);
-                    node.prev = current;
-                    head.next = current;
-                }
-                break;
-            default:
-                if (index == size) {
-                    current = new Node<>(tail, value, null);
-                    tail.next = current;
-                    tail = current;
-                } else {
-                    current = new Node<>(node.prev, value, node);
-                    node.prev.next = current;
-                    node.prev = current;
-                }
+        Node<T> current = (index == 0) ? new Node<>(null, value, head)
+                : (index == 1) ? new Node<>(head, value, node)
+                : new Node<>(node.prev, value, node);
+        if (index == 0) {
+            head.prev = current;
+            head = current;
+        } else if (index == 1) {
+            node.prev = current;
+            head.next = current;
+        } else {
+            node.prev.next = current;
+            node.prev = current;
         }
         size++;
     }
