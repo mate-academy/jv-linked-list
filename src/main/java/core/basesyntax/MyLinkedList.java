@@ -55,7 +55,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Node<T> node;
         for (T value : list) {
             this.add(value);
         }
@@ -88,9 +87,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (size == 0) {
-            return false;
-        }
         Node<T> node = head;
         while (node != null) {
             if (node.value == null && object == null
