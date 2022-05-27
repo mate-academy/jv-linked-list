@@ -46,7 +46,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException(MESSAGE);
         }
-        Node<T> node = findNodeStartDirection(index);
+        Node<T> node = getNode(index);
         Node<T> current;
         switch (index) {
             case 0:
@@ -93,14 +93,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIfIndexValid(index);
-        Node<T> node = findNodeStartDirection(index);
+        Node<T> node = getNode(index);
         return node.value;
     }
 
     @Override
     public T set(T value, int index) {
         checkIfIndexValid(index);
-        Node<T> node = findNodeStartDirection(index);
+        Node<T> node = getNode(index);
         T current = node.value;
         node.value = value;
         return current;
@@ -109,7 +109,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIfIndexValid(index);
-        Node<T> node = findNodeStartDirection(index);
+        Node<T> node = getNode(index);
         T value = node.value;
         unlink(node);
         return value;
@@ -139,7 +139,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0;
+        return size() == 0;
     }
 
     private void unlink(Node<T> node) {
@@ -169,7 +169,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private Node<T> findNodeStartDirection(int index) {
+    private Node<T> getNode(int index) {
         int count;
         Node<T> node = (index > size / 2 && size >= DOUBLE_GO_ROUND_BOTTOM_LIMIT) ? tail : head;
         if (node == head) {
