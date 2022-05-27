@@ -166,7 +166,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T removeTail() {
-        T oldValue = tail.value;
+        T oldValue;
+        oldValue = tail.value;
         tail = tail.prev;
         tail.next = null;
         size--;
