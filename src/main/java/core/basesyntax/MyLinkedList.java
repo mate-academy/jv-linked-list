@@ -10,18 +10,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (size == 0) {
-            head = new Node<>(null, value, null);
-            tail = head;
-            size++;
+            setHead(value);
             return;
         }
         Node<T> last = tail;
-        Node<T> newNode = new Node<>(last, value, null);
-        tail = newNode;
+        //Node<T> newNode =
+        tail = new Node<>(last, value, null);//newNode;
         if (last == null) {
-            head = newNode;
+            head = tail;
         } else {
-            last.next = newNode;
+            last.next = tail;
         }
         size++;
     }
@@ -105,22 +103,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T value) {
         int index = 0;
-        if (value == null) {
-            for (Node<T> x = head; x != null; x = x.next) {
+        for (Node<T> x = head; x != null; x = x.next) {
+            if (value == null) {
                 if (x.value == null) {
                     remove(index);
                     return true;
                 }
-                index++;
-            }
-        } else {
-            for (Node<T> x = head; x != null; x = x.next) {
+            } else {
                 if (value.equals(x.value)) {
                     remove(index);
                     return true;
                 }
-                index++;
             }
+            index++;
         }
         return false;
     }
