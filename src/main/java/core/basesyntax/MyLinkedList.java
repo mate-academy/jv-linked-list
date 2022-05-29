@@ -33,11 +33,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             setHead(value);
             return;
         }
-        Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
-
+        Node<T> currentNode = getCurrentNode(index);
         Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
         currentNode.prev.next = newNode;
         currentNode.prev = newNode;
@@ -74,11 +70,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return removeTail();
         }
         Node<T> currentNode = getCurrentNode(index);
-        Node<T> removedNode = currentNode;
-        currentNode.prev.next = removedNode.next;
-        currentNode.next.prev = removedNode.prev;
+        currentNode.prev.next = currentNode.next;
+        currentNode.next.prev = currentNode.prev;
         size--;
-        return removedNode.value;
+        return currentNode.value;
     }
 
     @Override
