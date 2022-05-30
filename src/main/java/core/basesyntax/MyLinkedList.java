@@ -7,6 +7,86 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size = 0;
 
+    @Override
+    public void add(T value) {
+        linkTail(value);
+    }
+
+    @Override
+    public void add(T value, int index) {
+        checkIndexForOperation(index);
+        if (index == 0) {
+            linkHead(value);
+        } else if (index == size) {
+            linkTail(value);
+        } else {
+            linkByIndex(value, index);
+        }
+    }
+
+    @Override
+    public void addAll(List<T> list) {
+        for (T t : list) {
+            linkTail(t);
+        }
+    }
+
+    @Override
+    public T get(int index) {
+        checkIndexForElement(index);
+        return nodeByIndex(index).value;
+    }
+
+    @Override
+    public T set(T value, int index) {
+        checkIndexForElement(index);
+        T valueForReturn = nodeByIndex(index).value;
+        nodeByIndex(index).value = value;
+        return valueForReturn;
+    }
+
+    @Override
+    public T remove(int index) {
+        checkIndexForElement(index);
+        return unlink(nodeByIndex(index));
+    }
+
+    @Override
+    public boolean remove(T object) {
+        Node<T> forSearching = head;
+        while (forSearching != null) {
+            if (forSearching.value == object
+                    || object != null && object.equals(forSearching.value)) {
+                unlink(forSearching);
+                return true;
+            }
+            forSearching = forSearching.next;
+        }
+        return false;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.value = value;
+            this.prev = prev;
+            this.next = next;
+        }
+    }
+
     private T unlink(Node<T> node) {
         T value = node.value;
         Node<T> next = node.next;
@@ -90,85 +170,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         currentNode.prev.next = newNode;
         currentNode.prev = newNode;
         size++;
-    }
-
-    @Override
-    public void add(T value) {
-        linkTail(value);
-    }
-
-    @Override
-    public void add(T value, int index) {
-        checkIndexForOperation(index);
-        if (index == 0) {
-            linkHead(value);
-        } else if (index == size) {
-            linkTail(value);
-        } else {
-            linkByIndex(value, index);
-        }
-    }
-
-    @Override
-    public void addAll(List<T> list) {
-        for (T t : list) {
-            linkTail(t);
-        }
-    }
-
-    @Override
-    public T get(int index) {
-        checkIndexForElement(index);
-        return nodeByIndex(index).value;
-    }
-
-    @Override
-    public T set(T value, int index) {
-        checkIndexForElement(index);
-        T valueForReturn = nodeByIndex(index).value;
-        nodeByIndex(index).value = value;
-        return valueForReturn;
-    }
-
-    @Override
-    public T remove(int index) {
-        checkIndexForElement(index);
-        return unlink(nodeByIndex(index));
-    }
-
-    @Override
-    public boolean remove(T object) {
-        Node<T> forSearching = head;
-        while (forSearching != null) {
-            if (forSearching.value == null && object == null
-                    || object != null && object.equals(forSearching.value)) {
-                unlink(forSearching);
-                return true;
-            }
-            forSearching = forSearching.next;
-        }
-        return false;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    private static class Node<T> {
-        private T value;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.value = value;
-            this.prev = prev;
-            this.next = next;
-        }
     }
 }
