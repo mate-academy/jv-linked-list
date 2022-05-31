@@ -7,7 +7,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public static class Node<T> {
+    private static class Node<T> {
         private Node<T> prev;
         private Node<T> next;
         private T value;
@@ -26,7 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = newNode;
             tail = newNode;
         } else {
-            this.tail.next = newNode;
+            tail.next = newNode;
             tail = newNode;
         }
         size++;
@@ -84,14 +84,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> currentNode = head;
-        int index = 0;
-        while (currentNode != null) {
+        for (int i = 0; currentNode != null; i++) {
             if (object == currentNode.value || object != null && object.equals(currentNode.value)) {
-                remove(index);
+                remove(i);
                 return true;
             }
             currentNode = currentNode.next;
-            index++;
         }
         return false;
     }
