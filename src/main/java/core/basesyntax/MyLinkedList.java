@@ -17,12 +17,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (size == 1) {
             Node<T> newNode = new Node<>(null, value, head);
             head.next = newNode;
-            newNode.prev = head;
             tail = newNode;
             size++;
         } else {
             Node<T> newNode = new Node<>(null, value, tail);
-            newNode.prev = tail;
             newNode.prev.next = newNode;
             tail = newNode;
             size++;
@@ -37,7 +35,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         indexCheck(index);
         if (index == 0) {
             Node<T> newNode = new Node<>(head, value, null);
-            newNode.next = head;
             head.prev = newNode;
             head = newNode;
             size++;
@@ -45,10 +42,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index < size) {
             Node<T> nodeOnIndex = getNodeByIndex(index);
             Node<T> newNode = new Node<>(nodeOnIndex, value, nodeOnIndex.prev);
-            newNode.prev = nodeOnIndex.prev;
             nodeOnIndex.prev.next = newNode;
             nodeOnIndex.prev = newNode;
-            newNode.next = nodeOnIndex;
             size++;
         } else {
             add(value);
@@ -147,7 +142,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void unlink(Node<T> node) {
         if (node.prev == null && node.next == null) {
-            node.item = null;
             head = null;
             tail = null;
         } else if (node.prev == null) {
@@ -156,7 +150,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (node.next == null) {
             node.prev.next = null;
             tail = node.prev;
-            node.prev = null;
         } else {
             node.prev.next = node.next;
             node.next.prev = node.prev;
