@@ -8,10 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
 
     public MyLinkedList() {
-        firstNode = new Node<>(null, null, null);
-        lastNode = new Node<>(null, null, null);
-        firstNode.next = lastNode;
-        lastNode.prev = firstNode;
         size = 0;
     }
 
@@ -34,19 +30,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
             return;
-        } else if (index == 0) {
-            Node<T> newNode = new Node<>(null, value, firstNode);
+        }
+        Node<T> newNode = new Node<>(null, value, firstNode);
+        if (index == 0) {
             firstNode.prev = newNode;
+            newNode.next = firstNode;
             firstNode = newNode;
-        } else if (index == size - 1) {
-            Node<T> newNode = new Node<>(lastNode.prev, value, lastNode);
-            lastNode.prev.next = newNode;
-            lastNode.prev = newNode;
         } else {
-            Node<T> current = findCurrentNode(index);
-            Node<T> newNode = new Node<>(current.prev, value, current);
-            current.prev.next = newNode;
-            current.prev = newNode;
+            Node<T> foundNode = findCurrentNode(index);
+            newNode.prev = foundNode.prev;
+            newNode.next = foundNode;
+            foundNode.prev = newNode;
+            newNode.prev.next = newNode;
         }
         size++;
     }
@@ -61,8 +56,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         validateIndex(index, 0);
-        Node<T> current = findCurrentNode(index);
-        return current.item;
+        return findCurrentNode(index).item;
     }
 
     @Override
@@ -77,45 +71,35 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         validateIndex(index, 0);
-        T item;
-        if (index == 0) {
-            item = firstNode.item;
-            if (size == 1) {
-                firstNode = null;
-                lastNode = null;
-            } else {
-                firstNode = firstNode.next;
-                firstNode.prev = null;
-            }
+        Node<T> current = findCurrentNode(index);
+        T removedItem = current.item;
+        if (size == 1) {
+            firstNode = null;
+            lastNode = null;
+        } else if (index == 0) {
+            firstNode = firstNode.next;
+            firstNode.prev = null;
         } else if (index == size - 1) {
-            item = lastNode.item;
             lastNode = lastNode.prev;
             lastNode.next = null;
         } else {
-            Node<T> current = findCurrentNode(index);
-            item = current.item;
             unlink(current);
         }
         size--;
-        return item;
+        return removedItem;
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> current = firstNode;
-        while (current != null) {
+        int i = 0;
+        while (i < size) {
             if (current.item == object || current.item != null && current.item.equals(object)) {
-                if (current == firstNode) {
-                    remove(0);
-                } else if (current == lastNode) {
-                    remove(size - 1);
-                } else {
-                    unlink(current);
-                    size--;
-                }
+                remove(i);
                 return true;
             }
             current = current.next;
+            i++;
         }
         return false;
     }
