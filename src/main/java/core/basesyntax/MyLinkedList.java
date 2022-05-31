@@ -3,6 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private final static String OUT_OF_BOUND = "Your index is not valid.";
     private int size = 0;
     private Node<T> head;
     private Node<T> tail;
@@ -27,17 +28,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         checkIndex(index);
         if (index == 0) {
-            Node<T> node = new Node<T>(null, value, head);
+            Node<T> node = new Node<>(null, value, head);
             head.prev = node;
             head = node;
-            size++;
         } else {
             Node<T> current = getNode(index);
-            Node<T> node = new Node<T>(current.prev, value, current);
+            Node<T> node = new Node<>(current.prev, value, current);
             current.prev.next = node;
             current.prev = node;
-            size++;
         }
+        size++;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> current = head;
-        for (int i = 0; i < size; i++) {
+        while (current != null) {
             if (current.value == object
                     || (current.value != null && current.value.equals(object))) {
                 unlink(current);
@@ -95,7 +95,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Your index is not valid.");
+            throw new IndexOutOfBoundsException(OUT_OF_BOUND);
         }
     }
 
