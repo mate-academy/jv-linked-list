@@ -123,14 +123,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         isWrongIndex(index);
-        Node<T> current = head;
-        int i = 0;
-        while (current != null || i < size) {
-            if (i == index) {
-                return current;
+        if (size / 2 > index) {
+            Node<T> current = head;
+            int i = 0;
+            while (current != null || i < size) {
+                if (i == index) {
+                    return current;
+                }
+                i++;
+                current = current.next;
             }
-            i++;
-            current = current.next;
+        } else {
+            Node<T> current = tail;
+            int i = size - 1;
+            while (current != null || i >= 0) {
+                if (i == index) {
+                    return current;
+                }
+                i--;
+                current = current.prev;
+            }
         }
         return null;
     }
