@@ -141,12 +141,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size > 1) {
             head = head.next;
             head.prev = null;
-            size--;
         } else {
             head.next = null;
             head.value = null;
-            size = 0;
         }
+        size--;
         return oldValue;
     }
 
