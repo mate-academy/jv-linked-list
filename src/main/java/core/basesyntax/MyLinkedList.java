@@ -127,25 +127,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNode(int index) {
-        if (index == 0) {
-            return head;
-        }
-        if (index == size() - 1) {
-            return tail;
-        }
+        Node<T> checked;
         if (index <= size() >> 1) {
-            Node<T> checked = head;
+            checked = head;
             for (int i = 0; i < index; i++) {
                 checked = checked.next;
             }
-            return checked;
         } else {
-            Node<T> checked = tail;
+            checked = tail;
             for (int i = size() - 1; i > index; i--) {
                 checked = checked.prev;
             }
-            return checked;
         }
+        return checked;
     }
 
     private Node<T> findNode(T element) {
@@ -173,12 +167,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public static class Node<T> {
+    private static class Node<T> {
         private T item;
         private Node<T> prev;
         private Node<T> next;
 
-        public Node(Node<T> prev, T item, Node<T> next) {
+        private Node(Node<T> prev, T item, Node<T> next) {
             this.item = item;
             this.prev = prev;
             this.next = next;
