@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -55,12 +54,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        try {
-            unlink(findNode(object));
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
+        for (Node<T> checked = head; checked != null; checked = checked.next) {
+            if (isElementsEquals(checked.item, object)) {
+                unlink(checked);
+                return true;
+            }
         }
+        return false;
     }
 
     @Override
@@ -142,17 +142,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return checked;
     }
 
-    private Node<T> findNode(T element) {
-        for (Node<T> checked = head; checked != null; checked = checked.next) {
-            if (isElementsEquals(checked.item, element)) {
-                return checked;
-            }
-        }
-        throw new NoSuchElementException("The is no such element:" + element);
-    }
-
     private boolean isElementsEquals(Object item1, Object item2) {
-        return (item1 == item2 || item1 != null && item1.equals(item2));
+        return item1 == item2 || item1 != null && item1.equals(item2);
     }
 
     private void checkPositionIndex(int index) {
