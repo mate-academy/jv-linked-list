@@ -75,12 +75,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < size; i++) {
             if (node.value == object || object != null && object.equals(node.value)) {
                 output = true;
+                removeNode(node);
                 break;
             }
             node = node.next;
-        }
-        if (output) {
-            removeNode(node);
         }
         return output;
     }
