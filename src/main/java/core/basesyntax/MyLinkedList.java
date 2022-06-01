@@ -22,11 +22,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        validateIndexForAdd(index);
         if (index == size) {
             add(value);
             return;
         }
+        validateIndex(index);
         Node<T> newNode = new Node<>(null, value, firstNode);
         if (index == 0) {
             firstNode.prev = newNode;
@@ -116,12 +116,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void validateIndex(int index) {
         if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Invalid index");
-        }
-    }
-
-    private void validateIndexForAdd(int index) {
-        if (index >= size + 1 || index < 0) {
             throw new IndexOutOfBoundsException("Invalid index");
         }
     }
