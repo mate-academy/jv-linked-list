@@ -77,12 +77,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void checkPosistionIndex(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Invalid index" + index);
-        }
-    }
-
     private static class Node<T> {
         private T item;
         private Node<T> next;
