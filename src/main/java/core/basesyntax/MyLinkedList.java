@@ -3,24 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> head;
     private Node<T> tail;
-
-    public MyLinkedList() {
-    }
-
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
 
     @Override
     public void add(T value) {
@@ -64,13 +49,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        isWrongIndex(index);
+        checkBoundIndex(index);
         return getNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        isWrongIndex(index);
+        checkBoundIndex(index);
         Node<T> current = getNode(index);
         T oldItem = current.item;
         current.item = value;
@@ -93,7 +78,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
         int i = 0;
         while (current != null || i < size) {
-            if ((current.item == object)
+            if (current.item == object
                     || (current.item != null && current.item.equals(object))) {
                 unlink(current);
                 return true;
@@ -114,7 +99,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void isWrongIndex(int index)
+    private void checkBoundIndex(int index)
             throws IndexOutOfBoundsException {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
@@ -122,7 +107,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        isWrongIndex(index);
+        checkBoundIndex(index);
         if (size / 2 > index) {
             Node<T> current = head;
             int i = 0;
@@ -163,4 +148,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         size--;
     }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+
 }
