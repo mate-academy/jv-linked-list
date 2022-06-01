@@ -14,10 +14,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkPosistionIndex(index);
         if (index == size) {
             linkTail(value);
         } else {
+            validateIndex(index);
             insertNode(value, findNode(index));
         }
     }
@@ -31,13 +31,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        validIndex(index);
+        validateIndex(index);
         return findNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        validIndex(index);
+        validateIndex(index);
         Node<T> oldNode = findNode(index);
         T oldVal = oldNode.item;
         oldNode.item = value;
@@ -46,7 +46,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        validIndex(index);
+        validateIndex(index);;
         return unlink(findNode(index));
     }
 
@@ -71,7 +71,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size() == 0;
     }
 
-    private void validIndex(int index) {
+    private void validateIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Invalid index" + index);
         }
