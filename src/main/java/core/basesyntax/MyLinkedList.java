@@ -114,7 +114,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public Node<T> getNodeByIndex(int index) {
+    private Node<T> getNodeByIndex(int index) {
         indexCheck(index);
         Node<T> actual;
         if (index < (size / 2)) {
@@ -157,3 +157,4 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 }
+
