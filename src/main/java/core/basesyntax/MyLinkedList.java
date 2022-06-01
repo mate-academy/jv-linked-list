@@ -34,7 +34,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(null, value, firstNode);
         if (index == 0) {
             firstNode.prev = newNode;
-            newNode.next = firstNode;
             firstNode = newNode;
         } else {
             Node<T> foundNode = findCurrentNode(index);
