@@ -3,108 +3,85 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> head;
     private Node<T> tail;
+
     private class Node<T> {
-        public T value;
-        public Node<T> prev;
-        public Node<T> next;
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
 
         public Node(T value) {
             this.value = value;
         }
-
-        public T getValue() {
-            return value;
-        }
-
-        public void setValue(T value) {
-            this.value = value;
-        }
-
-        public Node<T> getPrev() {
-            return prev;
-        }
-
-        public void setPrev(Node<T> prev) {
-            this.prev = prev;
-        }
-
-        public Node<T> getNext() {
-            return next;
-        }
-
-        public void setNext(Node<T> next) {
-            this.next = next;
-        }
     }
 
-    public MyLinkedList() {}
+    public MyLinkedList() {
+        size = 0;
+    }
+
+    private void insert(Node<T> nodeT, T value) {
+        Node<T> previousNode = nodeT.prev;
+        Node<T> node = new Node<>(value);
+        previousNode.next = node;
+        node.prev = previousNode;
+        node.next = nodeT;
+        nodeT.prev = node;
+        size++;
+    }
 
     private void insertFirst(T value) {
-            Node<T> node = new Node<>(value);
-            node.prev = null;
-            node.next = null;
-            head = node;
-            tail = node;
-            size++;
+        Node<T> node = new Node<>(value);
+        node.prev = null;
+        node.next = null;
+        head = node;
+        tail = node;
+        size++;
     }
 
     private void insertLast(T value) {
         Node<T> node = new Node<>(value);
-        tail.setNext(node);
-        node.setPrev(tail);
-        node.setNext(null);
+        tail.next = node;
+        node.prev = tail;
+        node.next = null;
         tail = node;
         size++;
     }
+
     private void insertHead(T value) {
         Node<T> node = new Node<>(value);
         Node<T> nextNode = head;
-        node.setPrev(null);
-        node.setNext(nextNode);
-        nextNode.setPrev(node);
+        node.prev = null;
+        node.next = nextNode;
+        nextNode.prev = node;
         head = node;
         size++;
     }
 
-    private void insert(Node<T> tNode, T value) {
-        Node<T> previousNode = tNode.getPrev();
-        Node<T> node = new Node<>(value);
-        previousNode.next = node;
-        node.prev = previousNode;
-        node.next = tNode;
-        tNode.prev = node;
-        size++;
-    }
-
     private Node<T> iterator(int index) {
-        if (index < size - index) {
-            return headIterator(index);
-        } else {
-            return tailIterator(index);
-        }
+        return (index < size - index) ? headIterator(index) : tailIterator(index);
     }
 
     private Node<T> headIterator(int index) {
-        Node<T> tNode = head;
+        Node<T> nodeT = head;
         for (int i = 0; i < index; i++) {
-            tNode = tNode.getNext();
+            nodeT = nodeT.next;
         }
-        return tNode;
+        return nodeT;
     }
 
     private Node<T> tailIterator(int index) {
-        Node<T> tNode = tail;
+        Node<T> nodeT = tail;
         for (int i = 0; i < size - index - 1; i++) {
-            tNode = tNode.getPrev();
+            nodeT = nodeT.prev;
         }
-        return tNode;
+        return nodeT;
     }
+
     public void unlink(Node node) {
-        Node previous = node.getPrev();
-        Node next = node.getNext();
+        Node previous = node.prev;
+        Node next = node.next;
         if (previous == null && size != 1) {
             next.prev = null;
             head = next;
@@ -120,30 +97,40 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             next.prev = previous;
         }
     }
+
     private void indexCheck(int index) {
-        if (index >= size || index < 0) throw new ArrayIndexOutOfBoundsException("Invalid index");
+        if (index >= size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("Invalid index");
+        }
     }
 
     private void indexCheckAdd(int index) {
-        if (index > size || index < 0) throw new ArrayIndexOutOfBoundsException("Invalid index");
+        if (index > size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("Invalid index");
+        }
     }
 
     private void addByIndex(int index, T value) {
-        if (index == size && size != 0) insertLast(value);
-        else if (index == 0 && size != 0) insertHead(value);
-        else if (index == 0 && size == 0) insertFirst(value);
-        else insert(iterator(index), value);
+        if (index == size && size != 0) {
+            insertLast(value);
+        } else if (index == 0 && size != 0) {
+            insertHead(value);
+        } else if (index == 0 && size == 0) {
+            insertFirst(value);
+        } else {
+            insert(iterator(index), value);
+        }
     }
 
     public boolean removeByValue(T object) {
-        Node<T> tNode = head;
+        Node<T> nodeT = head;
         for (int i = 0; i < size; i++) {
-            if (tNode.getValue() == object || tNode.getValue() != null && tNode.getValue().equals(object)) {
-                unlink(tNode);
+            if (nodeT.value == object || nodeT.value != null && nodeT.value.equals(object)) {
+                unlink(nodeT);
                 size--;
                 return true;
             } else {
-                tNode = tNode.getNext();
+                nodeT = nodeT.next;
             }
         }
         return false;
@@ -154,20 +141,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         indexCheck(index);
         unlink(old);
         size--;
-        return (T)old.getValue();
+        return (T)old.value;
     }
 
     private T setByIndex(int index, T value) {
         indexCheck(index);
-        Node<T> tNode = iterator(index);
-        T oldValue = tNode.getValue();
-        tNode.setValue(value);
+        Node<T> nodeT = iterator(index);
+        T oldValue = nodeT.value;
+        nodeT.value = value;
         return oldValue;
     }
+
     @Override
     public void add(T value) {
-        if (isEmpty()) insertFirst(value);
-        else insertLast(value);
+        if (isEmpty()) {
+            insertFirst(value);
+        } else {
+            insertLast(value);
+        }
     }
 
     @Override
