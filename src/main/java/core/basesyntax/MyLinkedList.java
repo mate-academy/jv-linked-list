@@ -70,8 +70,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> node = first;
         for (int i = 0; i < size; i++) {
-            if (node.item == object
-                    || node.item.equals(object)) {
+            if (object == null ? node.item == null
+                    : node.item.equals(object)) {
                 unlink(node);
                 return true;
             }
