@@ -13,18 +13,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> newNode = new Node<>(null, value, null);
             head = newNode;
             tail = newNode;
-            size++;
         } else if (size == 1) {
             Node<T> newNode = new Node<>(null, value, head);
             head.next = newNode;
             tail = newNode;
-            size++;
         } else {
             Node<T> newNode = new Node<>(null, value, tail);
             newNode.prev.next = newNode;
             tail = newNode;
-            size++;
         }
+        size++;
     }
 
     @Override
@@ -66,9 +64,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         Node<T> nodeWillReplaced = getNodeByIndex(index);
-        T a = nodeWillReplaced.item;
+        T deletedElement = nodeWillReplaced.item;
         nodeWillReplaced.item = value;
-        return a;
+        return deletedElement;
     }
 
     @Override
