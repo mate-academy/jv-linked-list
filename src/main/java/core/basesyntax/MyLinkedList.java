@@ -91,16 +91,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndex(index, index > size);
-        if (index == size && size != 0) {
-            insertLast(value);
+        if (index == size) {
+            add(value);
         } else if (index == 0 && size != 0) {
             insertHead(value);
-        } else if (index == 0 && size == 0) {
-            insertFirst(value);
+            size++;
         } else {
             insert(iterate(index), value);
+            size++;
         }
-        size++;
     }
 
     @Override
