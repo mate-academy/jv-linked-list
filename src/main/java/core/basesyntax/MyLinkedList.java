@@ -3,22 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
-
-    private static class Node<T> {
-        private Node<T> prev;
-        private T item;
-        private Node<T> next;
-
-        Node(Node<T> prev, T item, Node<T> next) {
-            this.prev = prev;
-            this.item = item;
-            this.next = next;
-        }
-    }
 
     @Override
     public void add(T value) {
@@ -27,7 +14,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        indexValidation(index, size);
+        validateIndex(index, size);
         if (index == 0) {
             addFirst(value);
         } else if (index == size) {
@@ -50,7 +37,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexValidation(index, size - 1);
+        validateIndex(index, size - 1);
         return findElenemt(index).item;
     }
 
@@ -63,7 +50,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexValidation(index, size - 1);
+        validateIndex(index, size - 1);
         if (index == 0) {
             return removeFirst();
         } else if (index == size - 1) {
@@ -78,17 +65,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        int index = -1;
-        for (int i = 0; i < size; i++) {
-            T element = get(i);
-            if (element == object || (element != null && element.equals(object))) {
-                index = i;
-                break;
+        if (size != 0) {
+            int index = -1;
+            Node<T> currNode = head;
+            for (int i = 0; i < size; i++) {
+                if (currNode.item == object
+                        || (currNode.item != null && currNode.item.equals(object))) {
+                    index = i;
+                    break;
+                }
+                currNode = currNode.next;
             }
-        }
-        if (index != -1) {
-            remove(index);
-            return true;
+            if (index != -1) {
+                if (index == 0) {
+                    removeFirst();
+                } else if (index == size - 1) {
+                    removeLast();
+                } else {
+                    unlink(currNode);
+                    size--;
+                }
+                return true;
+            }
         }
         return false;
     }
@@ -103,7 +101,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void indexValidation(int index, int limit) {
+    private void validateIndex(int index, int limit) {
         if (index < 0 || index > limit) {
             throw new IndexOutOfBoundsException("Invalid index");
         }
@@ -178,5 +176,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         node.next.prev = node.prev;
         node.prev = null;
         node.next = null;
+    }
+
+    private static class Node<T> {
+        private Node<T> prev;
+        private T item;
+        private Node<T> next;
+
+        Node(Node<T> prev, T item, Node<T> next) {
+            this.prev = prev;
+            this.item = item;
+            this.next = next;
+        }
     }
 }
