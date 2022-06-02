@@ -19,25 +19,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public MyLinkedList() {}
+    public MyLinkedList() {
+
+    }
 
     private void insert(Node<T> nodeT, T value) {
         Node<T> previousNode = nodeT.prev;
-        Node<T> node = new Node<>(previousNode ,value, nodeT);
+        Node<T> node = new Node<>(previousNode,value, nodeT);
         previousNode.next = node;
         nodeT.prev = node;
         size++;
     }
 
     private void insertFirst(T value) {
-        Node<T> node = new Node<>(null ,value, null);
+        Node<T> node = new Node<>(null,value, null);
         head = node;
         tail = node;
         size++;
     }
 
     private void insertLast(T value) {
-        Node<T> node = new Node<>(tail ,value, null);
+        Node<T> node = new Node<>(tail,value, null);
         tail.next = node;
         tail = node;
         size++;
@@ -45,7 +47,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void insertHead(T value) {
         Node<T> nextNode = head;
-        Node<T> node = new Node<>(null ,value, nextNode);
+        Node<T> node = new Node<>(null,value, nextNode);
         nextNode.prev = node;
         head = node;
         size++;
@@ -90,14 +92,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void indexCheck(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("Invalid index");
-        }
-    }
-
-    private void indexCheckAdd(int index) {
-        if (index > size || index < 0) {
+    private void indexCheck(int index, boolean dependence) {
+        if (dependence || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Invalid index");
         }
     }
@@ -113,7 +109,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        indexCheckAdd(index);
+        indexCheck(index, index > size);
         if (index == size && size != 0) {
             insertLast(value);
         } else if (index == 0 && size != 0) {
@@ -134,13 +130,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexCheck(index);
+        indexCheck(index, index >= size);
         return iterator(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        indexCheck(index);
+        indexCheck(index, index >= size);
         Node<T> nodeT = iterator(index);
         T oldValue = nodeT.value;
         nodeT.value = value;
@@ -150,7 +146,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node old = iterator(index);
-        indexCheck(index);
+        indexCheck(index, index >= size);
         unlink(old);
         size--;
         return (T)old.value;
