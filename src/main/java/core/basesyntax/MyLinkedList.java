@@ -46,6 +46,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
+        checkIndexException(index);
         return findNodeByIndex(index).value;
     }
 
@@ -88,7 +89,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
-        checkIndexException(index);
         Node<T> current;
         if (index < (size >> 1)) {
             current = head;
@@ -114,10 +114,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 1) {
             head = null;
             tail = null;
-        } else if (removedNode == head) {
+        } else if (removedNode.equals(head)) {
             head.next.prev = null;
             head = removedNode.next;
-        } else if (removedNode == tail) {
+        } else if (removedNode.equals(tail)) {
             tail.prev.next = null;
             tail = removedNode.prev;
         } else {
