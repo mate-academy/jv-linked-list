@@ -62,7 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = null;
             tail = null;
         } else {
-            deleteLink(index, current);
+            unlink(index, current);
         }
         size--;
         return removedValue;
@@ -148,7 +148,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    public void deleteLink(int index, Node<T> current) {
+    public void unlink(int index, Node<T> current) {
         if (index == 0) {
             current.next.prev = null;
             head.prev = null;
