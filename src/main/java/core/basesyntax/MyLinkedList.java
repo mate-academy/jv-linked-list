@@ -9,11 +9,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
+        Node<T> newNode = new Node<>(tail, value, null);
         if (size == 0) {
-            addHead(value);
+            head = newNode;
+            tail = head;
         } else {
-            addTail(value);
+            tail.next = newNode;
+            tail = newNode;
         }
+        size++;
     }
 
     @Override
@@ -28,7 +32,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = newNode;
             size++;
         } else {
-            addInside(index,value);
+            addInMiddle(index,value);
         }
     }
 
@@ -41,13 +45,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkValidIndex(index);
+        checkIndex(index);
         return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkValidIndex(index);
+        checkIndex(index);
         T replacedValue = findNodeByIndex(index).item;
         findNodeByIndex(index).item = value;
         return replacedValue;
@@ -55,7 +59,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkValidIndex(index);
+        checkIndex(index);
         Node<T> current = findNodeByIndex(index);
         T removedValue = current.item;
         if (size == 1) {
@@ -104,27 +108,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void addHead(T value) {
-        head = new Node<>(null, value, null);
-        tail = head;
-        size++;
-    }
-
-    private void addTail(T value) {
-        Node<T> newNode = new Node<>(tail, value, null);
-        tail.next = newNode;
-        tail = newNode;
-        size++;
-    }
-
-    private void checkValidIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index " + index + " is invalid for size " + size);
         }
     }
 
-    private void addInside(int index, T value) {
-        checkValidIndex(index);
+    private void addInMiddle(int index, T value) {
+        checkIndex(index);
         Node<T> currentNode = findNodeByIndex(index);
         Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
         currentNode.prev.next = newNode;
