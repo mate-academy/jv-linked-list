@@ -4,17 +4,16 @@ import java.util.List;
 import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> first;
     private Node<T> last;
 
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(last, value, null);
-        if (first == null) {
+        if (size == 0) {
             first = newNode;
-        }
-        if (last != null) {
+        } else {
             last.next = newNode;
         }
         last = newNode;
@@ -27,15 +26,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkPositionIndex(index);
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException();
+        }
         Node<T> currentNode = findNodeAtIndex(index);
         Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
         if (currentNode.prev == null) {
-            currentNode.prev = newNode;
             first = newNode;
         } else {
             currentNode.prev.next = newNode;
         }
+        currentNode.prev = newNode;
         size++;
     }
 
@@ -48,14 +49,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkElementIndex(index);
+        checkIndex(index);
         Node<T> currentNode = findNodeAtIndex(index);
         return currentNode.value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkElementIndex(index);
+        checkIndex(index);
         Node<T> currentNode = findNodeAtIndex(index);
         T oldValue = currentNode.value;
         currentNode.value = value;
@@ -64,9 +65,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkElementIndex(index);
+        checkIndex(index);
         Node<T> findedNode = findNodeAtIndex(index);
-        removeNode(findedNode);
+        unlink(findedNode);
         size--;
         return findedNode.value;
     }
@@ -75,7 +76,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> findedNode = findIndexAtValue(object);
         if (findedNode != null) {
-            removeNode(findedNode);
+            unlink(findedNode);
             size--;
             return true;
         }
@@ -93,11 +94,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeAtIndex(int index) {
-        Node<T> currentNode = first;
-        for (int i = 0; i != index; i++) {
-            currentNode = currentNode.next;
+        Node<T> findedNode;
+        if (index > size / 2) {
+            findedNode = last;
+            for (int i = size - 1; i != index; i--) {
+                findedNode = findedNode.prev;
+            }
+        } else {
+            findedNode = first;
+            for (int i = 0; i != index; i++) {
+                findedNode = findedNode.next;
+            }
         }
-        return currentNode;
+        return findedNode;
     }
 
     private Node<T> findIndexAtValue(T value) {
@@ -109,7 +118,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
-    private void removeNode(Node<T> node) {
+    private void unlink(Node<T> node) {
         if (node.prev != null) {
             node.prev.next = node.next;
         } else {
@@ -122,28 +131,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void checkElementIndex(int index) {
-        if (!isElementIndex(index)) {
-            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
         }
-    }
-
-    private void checkPositionIndex(int index) {
-        if (!isPositionIndex(index)) {
-            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
-        }
-    }
-
-    private String outOfBoundsMsg(int index) {
-        return "Index: " + index + ", Size: " + size;
-    }
-
-    private boolean isElementIndex(int index) {
-        return index >= 0 && index < size;
-    }
-
-    private boolean isPositionIndex(int index) {
-        return index >= 0 && index <= size;
     }
 
     private static class Node<T> {
