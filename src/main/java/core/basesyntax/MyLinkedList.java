@@ -27,7 +27,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Unable to add index: " + index);
         }
         Node<T> currentNode = findNodeAtIndex(index);
         Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
@@ -133,7 +133,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index not found: " + index);
         }
     }
 
