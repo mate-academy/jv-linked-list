@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -10,9 +9,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
 
     private static class Node<T> {
-        T item;
-        Node<T> prev;
-        Node<T> next;
+        private T item;
+        private Node<T> prev;
+        private Node<T> next;
 
         public Node(Node<T> prev, T item, Node<T> next) {
             this.prev = prev;
@@ -43,9 +42,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            Node<T> newNode = new Node<>(node(index).prev, value, node(index).next);
-            node(index).prev.next = newNode;
-            node(index).next.prev = newNode;
+            Node<T> newNode = new Node<>(node(index).prev, value, node(index));
+            if (index == 0) {
+                first = newNode;
+            } else {
+                newNode.prev.next = newNode;
+            }
+            newNode.next.prev = newNode;
             size++;
         }
 
@@ -87,10 +90,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             removingNode = removingNode.next;
         }
         unlink(removingNode);
-        size--;
         return true;
     }
-
 
     @Override
     public int size() {
@@ -103,6 +104,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> node(int index) {
+        checkIndex(index);
         Node<T> searchingNode;
         if (size / 2 > index) {
             searchingNode = first;
@@ -119,20 +121,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T unlink(Node<T> node) {
+        final T item = node.item;
         if (node == first) {
             first = node.next;
-        }
-        T item = node.item;
-        node.next.prev = node.prev;
-        if (node.prev != null) {
+        } else {
             node.prev.next = node.next;
-            node.prev = null;
         }
-        node.next = null;
+        if (node == last) {
+            last = node.prev;
+        } else {
+            node.next.prev = node.prev;
+        }
+        node.prev = null;
         node.item = null;
+        node.next = null;
         size--;
         return item;
     }
+
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Can't do anything with this index");
