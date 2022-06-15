@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> first;
     private Node<T> last;
 
@@ -21,27 +21,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(null, value, null);
+        Node<T> newNode = new Node<>(last, value, null);
         if (first == null) {
             first = newNode;
-            last = newNode;
         } else {
             last.next = newNode;
-            newNode.prev = last;
-            last = newNode;
         }
+        last = newNode;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Can't do anything with this index");
+            throw new IndexOutOfBoundsException(
+                    "Can't add an element on index " + index + " for list size " + size);
         }
         if (index == size) {
             add(value);
         } else {
-            Node<T> newNode = new Node<>(node(index).prev, value, node(index));
+            Node<T> searchingNode = node(index);
+            Node<T> newNode = new Node<>(searchingNode.prev, value, searchingNode);
             if (index == 0) {
                 first = newNode;
             } else {
@@ -141,7 +141,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Can't do anything with this index");
+            throw new IndexOutOfBoundsException(
+                    "Invalid index " + index + " for list size " + size);
         }
     }
 }
