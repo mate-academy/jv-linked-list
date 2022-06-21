@@ -12,11 +12,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node(tail, value, null);
         if (head == null) {
             head = newNode;
-            tail = newNode;
         } else {
             tail.next = newNode;
-            tail = newNode;
         }
+        tail = newNode;
         size++;
     }
 
@@ -56,30 +55,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> current = findByIndex(index);
-        T values = current.element;
-        current.element = value;
-        return values;
+        Node<T> currentNode = findByIndex(index);
+        T oldValue = currentNode.element;
+        currentNode.element = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> deletedIndex = findByIndex(index);
-        clearLink(deletedIndex);
-        return deletedIndex.element;
+        Node<T> deletedNode = findByIndex(index);
+        unLink(deletedNode);
+        return deletedNode.element;
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> deletedObject = head;
-        for (int i = 0; deletedObject != null; i++) {
-            if (object == deletedObject.element
-                    || object != null && object.equals(deletedObject.element)) {
+        Node<T> node = head;
+        for (int i = 0; node != null; i++) {
+            if (object == node.element || object != null && object.equals(node.element)) {
                 remove(i);
                 return true;
             }
-            deletedObject = deletedObject.next;
+            node = node.next;
         }
         return false;
     }
@@ -115,22 +113,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findByIndex(int index) {
         checkIndex(index);
-        Node<T> current;
+        Node<T> currentNode;
         if (index < size / 2) {
-            current = head;
+            currentNode = head;
             for (int i = 0; i < index; i++) {
-                current = current.next;
+                currentNode = currentNode.next;
             }
         } else {
-            current = tail;
+            currentNode = tail;
             for (int i = size - 1;i > index; i--) {
-                current = current.prev;
+                currentNode = currentNode.prev;
             }
         }
-        return current;
+        return currentNode;
     }
 
-    private void clearLink(Node<T> clearing) {
+    private void unLink(Node<T> clearing) {
         Node<T> prevNode = clearing.prev;
         Node<T> nextNode = clearing.next;
         if (prevNode == null) {
