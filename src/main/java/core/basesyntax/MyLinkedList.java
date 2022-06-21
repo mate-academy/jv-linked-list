@@ -3,43 +3,40 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int count;
-    private Node<T> newNode = new Node<>(null, null, null);
+    private int size;
     private Node<T> heard;
     private Node<T> tail;
 
     @Override
     public void add(T value) {
-        newNode = new Node<>(tail, value, null);
-        if (count == 0) {
+        Node<T> newNode = new Node<>(tail, value, null);
+        if (size == 0) {
             heard = newNode;
         } else {
             tail.next = newNode;
         }
         tail = newNode;
-        count++;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
+        Node<T> node = findNodeByIndex(index);
         if (index == size()) {
             add(value);
             return;
         }
+        checkIndex(index);
         if (index == 0) {
-            heard = new Node<>(null,value,finedNodeByIndex(index));
-            finedNodeByIndex(index).prev = heard;
-            count++;
+            heard = new Node<>(null, value, node);
+            node.prev = heard;
+            size++;
             return;
         }
-        if (count <= index || index < 0) {
-            throw new IndexOutOfBoundsException("Out of bound exception for index: " + index);
-        }
-        Node<T> nextNode = finedNodeByIndex(index);
-        newNode = new Node<>(nextNode.prev, value, nextNode);
-        nextNode.prev.next = newNode;
-        nextNode.prev = newNode;
-        count++;
+        Node<T> newNode = new Node<>(node.prev, value, node);
+        node.prev.next = newNode;
+        node.prev = newNode;
+        size++;
     }
 
     @Override
@@ -51,23 +48,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        outOfIndexException(index);
-        return finedNodeByIndex(index).item;
+        checkIndex(index);
+        return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        outOfIndexException(index);
-        T oldValue = finedNodeByIndex(index).item;
-        finedNodeByIndex(index).item = value;
+        checkIndex(index);
+        T oldValue = findNodeByIndex(index).item;
+        findNodeByIndex(index).item = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        outOfIndexException(index);
-        final T value = finedNodeByIndex(index).item;
-        Node<T> removedNode = finedNodeByIndex(index);
+        checkIndex(index);
+        final T value = findNodeByIndex(index).item;
+        Node<T> removedNode = findNodeByIndex(index);
         Node<T> prev = removedNode.prev;
         Node<T> next = removedNode.next;
         if (prev == null) {
@@ -80,7 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             next.prev = prev;
         }
-        count--;
+        size--;
         return value;
     }
 
@@ -99,12 +96,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        return count;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return count == 0;
+        return size == 0;
     }
 
     public static class Node<T> {
@@ -119,26 +116,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void outOfIndexException(int index) {
-        if (count <= index || index < 0) {
+    private void checkIndex(int index) {
+        if (size <= index || index < 0) {
             throw new IndexOutOfBoundsException("Out of bound exception for index: " + index);
         }
     }
 
-    public Node<T> finedNodeByIndex(int index) {
-        Node<T> needfulNode;
+    private Node<T> findNodeByIndex(int index) {
+        Node<T> node;
         if (size() / 2 >= index) {
-            needfulNode = heard;
+            node = heard;
             for (int i = 0; i < index; i++) {
-                needfulNode = needfulNode.next;
+                node = node.next;
             }
         } else {
-            needfulNode = tail;
+            node = tail;
             for (int i = size() - 1; i > index; i--) {
-                needfulNode = needfulNode.prev;
+                node = node.prev;
             }
         }
-        return needfulNode;
+        return node;
     }
-
 }
