@@ -74,7 +74,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> currentNode = findIndexByValue(object);
+        Node<T> currentNode = findNodeByValue(object);
         if (currentNode != null) {
             unlink(currentNode);
             size--;
@@ -109,7 +109,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    private Node<T> findIndexByValue(T value) {
+    private Node<T> findNodeByValue(T value) {
         for (Node<T> node = first; node != null; node = node.next) {
             if (Objects.equals(node.value, value)) {
                 return node;
