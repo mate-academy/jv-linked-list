@@ -54,17 +54,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
+        Node<T> node = findNodeByIndex(index);
         checkIndex(index);
-        T oldValue = findNodeByIndex(index).item;
-        findNodeByIndex(index).item = value;
+        T oldValue = node.item;
+        node.item = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        final T value = findNodeByIndex(index).item;
         Node<T> removedNode = findNodeByIndex(index);
+        final T value = removedNode.item;
         Node<T> prev = removedNode.prev;
         Node<T> next = removedNode.next;
         if (prev == null) {
