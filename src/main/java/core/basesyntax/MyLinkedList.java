@@ -13,11 +13,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<T>(tail, value, null);
         if (head == null) {
             head = newNode;
-            tail = newNode;
         } else {
             tail.next = newNode;
-            tail = newNode;
         }
+        tail = newNode;
         size++;
     }
 
@@ -27,11 +26,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkingIndex(index);
-        Node<T> nodeOfIndex = getNodeOfIndex(index);
-        Node<T> prevNode = nodeOfIndex.prev;
-        Node<T> newNode = new Node<>(prevNode, value, nodeOfIndex);
-        nodeOfIndex.prev = newNode;
+        checkIndex(index);
+        Node<T> currentNode = getNodeByIndex(index);
+        Node<T> prevNode = currentNode.prev;
+        Node<T> newNode = new Node<>(prevNode, value, currentNode);
+        currentNode.prev = newNode;
         if (prevNode == null) {
             head = newNode;
         } else {
@@ -49,22 +48,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkingIndex(index);
-        return getNodeOfIndex(index).value;
+        checkIndex(index);
+        return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkingIndex(index);
-        T valueForReturn = getNodeOfIndex(index).value;
-        getNodeOfIndex(index).value = value;
-        return valueForReturn;
+        checkIndex(index);
+        Node<T> currentNode = getNodeByIndex(index);
+        T oldValue = currentNode.value;
+        currentNode.value = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        checkingIndex(index);
-        return unlink(getNodeOfIndex(index));
+        checkIndex(index);
+        return unlink(getNodeByIndex(index));
     }
 
     @Override
@@ -90,29 +90,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private int getIndex(T value) {
-        Node<T> currentNode = head;
-        int index = 0;
-        while (currentNode != value) {
-            currentNode = currentNode.next;
-            index++;
-        }
-        return -1;
-    }
-
-    private void checkingIndex(int index) {
+    private void checkIndex(int index) {
         if (index >= size() || index < 0) {
             throw new IndexOutOfBoundsException(
                     "Index " + index + " is invalid for size " + size);
         }
     }
 
-    private Node<T> getNodeOfIndex(int index) {
-        Node<T> buffer = head;
-        for (int i = 0; i < index; i++) {
-            buffer = buffer.next;
+    private Node<T> getNodeByIndex(int index) {
+        if ((size / 2) > index) {
+            Node<T> currentNode = head;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+            return currentNode;
+        } else {
+            Node<T> currentNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                currentNode = currentNode.prev;
+            }
+            return currentNode;
         }
-        return buffer;
     }
 
     private T unlink(Node<T> node) {
