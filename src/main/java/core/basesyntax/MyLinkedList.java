@@ -44,4 +44,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean isEmpty() {
         return false;
     }
+
+    private static class Node<E> {
+        E value;
+        Node<E> next;
+        Node<E> prev;
+
+        Node(Node<E> prev, E value, Node<E> next) {
+            this.prev = prev;
+            this.next = next;
+            this.value = value;
+        }
+    }
 }
