@@ -14,26 +14,24 @@ public class MyLinkedList<E> implements MyLinkedListInterface<E> {
         if (size == 0){
             linkFirst(value);
         } else {
-            Node<E> l = last;
-            Node<E> newNode = new Node<>(l, value, null);
-            last = newNode;
-            l.next = newNode;
-            size++;
+            linkLast(value);
         }
 
     }
 
     @Override
     public void add(E value, int index) {
+        checkPositionIndex(index);
         if (size == 0){
             linkFirst(value);
         } else {
-            checkPositionIndex(index);
             if (index == size){
-                add(value);
+                linkLast(value);
             }else {
                 Node<E> x = node(index);
-                x.prev = new Node<>( x.prev, value, x);
+                Node<E> newNode = new Node<>( x.prev, value, x);
+                x.prev = newNode;
+                x.prev.next = newNode;
                 size++;
             }
         }
@@ -57,23 +55,37 @@ public class MyLinkedList<E> implements MyLinkedListInterface<E> {
     @Override
     public E set(E value, int index) {
         checkElementIndex(index);
-        Node<E> x = node(index);
         if (index == 0){
-
+            Node<E> f = first;
+            unLinkFirst(f);
+            linkFirst(value);
+            return f.item;
+        } else {
+            Node<E> x = node(index);
+            unLink(x);
+            add(value,index);
+            return x.item;
         }
-        Node<E> newNode = new Node<>(x.prev, value, x.next);
-        x.prev.next = newNode;
-        x.next.prev = newNode;
-        return null;
+
     }
 
     @Override
     public E remove(int index) {
         checkElementIndex(index);
-        Node<E> x = node(index);
-        unLink(x);
-        size--;
-        return x.item;
+        if (index == 0) {
+            Node<E> f = first;
+            unLinkFirst(f);
+            return f.item;
+        } else if (index == size - 1){
+            Node<E> l = last;
+            unLinkLast(l);
+            return l.item;
+        }else {
+            Node<E> x = node(index);
+            unLink(x);
+            return x.item;
+        }
+
     }
 
     @Override
@@ -82,7 +94,6 @@ public class MyLinkedList<E> implements MyLinkedListInterface<E> {
             for (Node<E> x = first; x != null; x = x.next) {
                 if (x.item == null) {
                     unLink(x);
-                    size--;
                     return true;
                 }
             }
@@ -90,7 +101,6 @@ public class MyLinkedList<E> implements MyLinkedListInterface<E> {
             for (Node<E> x = first; x != null; x = x.next) {
                 if (object.equals(x.item)) {
                     unLink(x);
-                    size--;
                     return true;
                 }
             }
@@ -125,6 +135,19 @@ public class MyLinkedList<E> implements MyLinkedListInterface<E> {
     private void unLink(Node<E> node) {
         node.prev.next = node.next;
         node.next.prev = node.prev;
+        size--;
+    }
+
+    private void unLinkFirst(Node<E> node){
+        first = node.next;
+        node.next.prev = null;
+        size--;
+    }
+
+    private void unLinkLast(Node<E> node){
+        last = node.prev;
+        node.prev.next = null;
+        size--;
     }
 
     private boolean isElementIndex(int index) {
@@ -171,6 +194,18 @@ public class MyLinkedList<E> implements MyLinkedListInterface<E> {
             f.prev = newNode;
         }else {
             last = newNode;
+        }
+        size++;
+    }
+
+    private void linkLast(E value) {
+        Node<E> l = last;
+        Node<E> newNode = new Node<>(l, value,null);
+        last = newNode;
+        if (l != null){
+            l.next = newNode;
+        } else {
+            first = newNode;
         }
         size++;
     }
