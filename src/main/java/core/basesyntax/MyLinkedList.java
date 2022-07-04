@@ -12,10 +12,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         last = new Node<>(last, value, null);
         if (size == 0) {
             first = last;
-            size++;
-            return;
+        } else {
+            last.prev.next = last;
         }
-        last.prev.next = last;
         size++;
     }
 
@@ -51,26 +50,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkExist(index);
-        Node<T> node = first;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
-        }
+        checkIndex(index);
+        Node<T> node = findNode(index);
         return node == null ? null : node.value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkExist(index);
+        checkIndex(index);
         Node<T> node = findNode(index);
-        final T oldValue = node.value;
+        T oldValue = node.value;
         node.value = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        checkExist(index);
+        checkIndex(index);
         if (size == 1 || index == 0 || index + 1 == size) {
             return removeSpecialIndex(index);
         }
@@ -105,35 +101,43 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkExist(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Invalid index " + index + " for size " + size);
         }
     }
 
     private Node<T> findNode(int index) {
-        Node<T> node = first;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
+        Node<T> node;
+        if (index < size/2) {
+             node = first;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+        } else {
+            node = last;
+            for (int i = 0; i < index; i++) {
+                node = node.prev;
+            }
         }
         return node;
     }
 
     private T removeSpecialIndex(int index) {
         if (size == 1) {
-            final T removedValue = first.value;
+            T removedValue = first.value;
             last = null;
             first = null;
             size--;
             return removedValue;
         } else if (index == 0) {
-            final T removedValue = first.value;
+            T removedValue = first.value;
             first = first.next;
             first.prev = null;
             size--;
             return removedValue;
         } else {
-            final T removedValue = last.value;
+            T removedValue = last.value;
             last = last.prev;
             last.prev.next = null;
             size--;
