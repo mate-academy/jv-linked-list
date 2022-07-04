@@ -59,7 +59,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         checkIndex(index);
         Node<T> node = findNode(index);
-        T oldValue = node.value;
+        final T oldValue = node.value;
         node.value = value;
         return oldValue;
     }
@@ -108,15 +108,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNode(int index) {
-        Node<T> node;
+        Node<T> node = first;
         if (index < size/2) {
-             node = first;
             for (int i = 0; i < index; i++) {
                 node = node.next;
             }
-        } else {
+        }
+        else {
             node = last;
-            for (int i = 0; i < index; i++) {
+            for (int i = size - 1; i > index; i--) {
                 node = node.prev;
             }
         }
