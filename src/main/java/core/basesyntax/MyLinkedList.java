@@ -72,8 +72,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkExist(index);
         if (size == 1) {
+            final T removedValue = first.value;
+            last = null;
             size--;
-            return first.value;
+            return removedValue;
         } else if (index == 0) {
             final T removedValue = first.value;
             first = first.next;
