@@ -3,10 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<E> implements MyLinkedListInterface<E> {
-
     private Node<E> first;
     private Node<E> last;
-    private int size = 0;
+    private int size;
 
     @Override
     public void add(E value) {
@@ -84,23 +83,18 @@ public class MyLinkedList<E> implements MyLinkedListInterface<E> {
 
     @Override
     public boolean remove(E object) {
-        if (object == null) {
-            for (Node<E> x = first; x != null; x = x.next) {
-                if (x.item == null) {
-                    unLink(x);
-                    return true;
-                }
+        for (Node<E> x = first; x != null; x = x.next) {
+            if (object == null && x.item == null) {
+                unLink(x);
+                return true;
             }
-        } else {
-            for (Node<E> x = first; x != null; x = x.next) {
-                if (object.equals(x.item)) {
-                    if (size == 1 || object.equals(first.item)) {
-                        unLinkFirst(x);
-                    } else {
-                        unLink(x);
-                    }
-                    return true;
+            if (object != null && object.equals(x.item)) {
+                if (size == 1 || object.equals(first.item)) {
+                    unLinkFirst(x);
+                } else {
+                    unLink(x);
                 }
+                return true;
             }
         }
         return false;
@@ -150,22 +144,14 @@ public class MyLinkedList<E> implements MyLinkedListInterface<E> {
         size--;
     }
 
-    private boolean isElementIndex(int index) {
-        return index >= 0 && index < size;
-    }
-
     private void checkElementIndex(int index) {
-        if (!isElementIndex(index)) {
+        if (!(index >= 0 && index < size)) {
             throw new IndexOutOfBoundsException("Index " + index + " doesn`t exist");
         }
     }
 
-    private boolean isPositionIndex(int index) {
-        return index >= 0 && index <= size;
-    }
-
     private void checkPositionIndex(int index) {
-        if (!isPositionIndex(index)) {
+        if (!(index >= 0 && index <= size)) {
             throw new IndexOutOfBoundsException("Index " + index + " doesn`t exist");
         }
     }
