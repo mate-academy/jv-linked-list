@@ -81,27 +81,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node.value;
     }
 
-    private T removeSpecialIndex(int index) {
-        if (size == 1) {
-            final T removedValue = first.value;
-            last = null;
-            first = null;
-            size--;
-            return removedValue;
-        } else if (index == 0) {
-            final T removedValue = first.value;
-            first = first.next;
-            first.prev = null;
-            size--;
-            return removedValue;
-        } else {
-            final T removedValue = last.value;
-            last = last.prev;
-            last.prev.next = null;
-            size--;
-            return removedValue;
-        }
-    }
     @Override
     public boolean remove(T object) {
         Node<T> node = first;
@@ -138,6 +117,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node = node.next;
         }
         return node;
+    }
+
+    private T removeSpecialIndex(int index) {
+        if (size == 1) {
+            final T removedValue = first.value;
+            last = null;
+            first = null;
+            size--;
+            return removedValue;
+        } else if (index == 0) {
+            final T removedValue = first.value;
+            first = first.next;
+            first.prev = null;
+            size--;
+            return removedValue;
+        } else {
+            final T removedValue = last.value;
+            last = last.prev;
+            last.prev.next = null;
+            size--;
+            return removedValue;
+        }
     }
 
     private static class Node<E> {
