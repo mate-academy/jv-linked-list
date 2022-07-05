@@ -76,8 +76,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void addAll(List<T> list) {
         Object[] elements = list.toArray();
         if (elements.length != 0) {
-            Node<T> pred, successor;
-            successor = null;
+            Node<T> pred;
             pred = tail;
             for (Object element : elements) {
                 T e = (T) element;
@@ -87,8 +86,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 } else {
                     pred.next = newNode;
                 }
-                size += elements.length;
             }
+            size += elements.length;
         }
     }
 
@@ -101,16 +100,38 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        return null;
+        Node<T> element = searchElement(index);
+        T oldValue = element.item;
+        element.item = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIndex(index);
+        Node<T> element = searchElement(index);
+        linkRemover(element);
+    return (T)element;
     }
 
     @Override
     public boolean remove(T object) {
+        if (object == null) {
+            for (Node<T> element = tail; element !=null; element = element.next) {
+                if (element.item == null) {
+                    linkRemover(element);
+                    return true;
+                }
+            }
+        } else {
+            for (Node<T> element = tail; element !=null; element = element.next) {
+                if (object.equals(element.item)) {
+                    linkRemover(element);
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 
@@ -121,7 +142,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 
     private void checkIndex(int index) {
@@ -141,5 +162,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 current = current.prev;
             return current;
         }
+    }
+    private void linkRemover (Node<T> element) {
+        final Node<T> next = element.next;
+        final Node<T> prev = element.prev;
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
+            element.prev =null;
+        }
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.prev = prev;
+            element.next = null;
+        }
+        element.item = null;
+        size--;
     }
 }
