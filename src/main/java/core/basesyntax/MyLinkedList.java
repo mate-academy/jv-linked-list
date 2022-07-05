@@ -79,16 +79,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> pred, successor;
             successor = null;
             pred = tail;
+            for (Object element : elements) {
+                T e = (T) element;
+                Node<T> newNode = new Node<>(pred, e, null);
+                if (pred == null) {
+                    head = newNode;
+                } else {
+                    pred.next = newNode;
+                }
+                size += elements.length;
+            }
         }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndex(index);
+        return (T) searchElement(index);
     }
 
     @Override
     public T set(T value, int index) {
+        checkIndex(index);
         return null;
     }
 
