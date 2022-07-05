@@ -26,7 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkIndexException(index);
+        checkIndex(index);
         Node<T> previousNode = findNodeByIndex(index);
         Node<T> newNode = new Node<>(previousNode.prev, value, previousNode);
         if (previousNode.prev == null) {
@@ -47,13 +47,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndexException(index);
+        checkIndex(index);
         return findNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndexException(index);
+        checkIndex(index);
         Node<T> currentNode = findNodeByIndex(index);
         T oldValue = currentNode.value;
         currentNode.value = value;
@@ -62,7 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndexException(index);
+        checkIndex(index);
         Node<T> node = findNodeByIndex(index);
         Node<T> prev = node.prev;
         Node<T> next = node.next;
@@ -82,13 +82,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> newNode = head;
+        Node<T> node = head;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(object, newNode.value)) {
+            if (Objects.equals(object, node.value)) {
                 remove(i);
                 return true;
             }
-            newNode = newNode.next;
+            node = node.next;
         }
         return false;
     }
@@ -103,14 +103,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkIndexException(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index " + index + " is invalid");
         }
     }
 
     private Node<T> findNodeByIndex(int index) {
-        checkIndexException(index);
+        checkIndex(index);
         Node<T> currentNode;
         if (index < (size >> 1)) {
             currentNode = head;
