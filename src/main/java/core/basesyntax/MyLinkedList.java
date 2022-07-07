@@ -8,18 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size = 0;
 
-    void headElement(T element) {
-        final Node<T> first = head;
-        final Node<T> newNode = new Node<>(null, element, first);
-        head = newNode;
-        if (first == null) {
-            tail = newNode;
-        } else {
-            first.left = newNode;
-        }
-        size++;
-    }
-
     void tailElement(T element) {
         final Node<T> last = tail;
         final Node<T> newNode = new Node<>(last, element, null);
