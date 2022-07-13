@@ -7,7 +7,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    public MyLinkedList() {}
+    public MyLinkedList() {
+
+    }
 
     public MyLinkedList(int size, Node<T> head, Node<T> tail) {
         this.size = size;
@@ -34,7 +36,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             oldNode.prev = newNode;
             size++;
         }
-
     }
 
     @Override
@@ -101,7 +102,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size--;
             return true;
         }
-
     }
 
     @Override
@@ -114,12 +114,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-     private class Node<T> {
-        Node<T> prev;
-        T value;
-        Node<T> next;
+    @Override
+    public String toString() {
+        return "MyLinkedList{"
+                + "size=" + size
+                + ", head=" + head.value
+                + ", tail=" + tail.value
+                + '}';
+    }
 
-        public Node( Node<T> prev, T value, Node<T> next) {
+    private class Node<T> {
+        private Node<T> prev;
+        private T value;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
             this.value = value;
             this.next = next;
@@ -164,7 +173,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void unlink(Node<T> node){
+    private void unlink(Node<T> node) {
         node.next.prev = node.prev;
         node.prev.next = node.next;
         node.prev = null;
@@ -202,6 +211,4 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
         return oldNode.value;
     }
-
-
 }
