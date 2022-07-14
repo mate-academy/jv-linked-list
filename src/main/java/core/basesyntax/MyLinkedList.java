@@ -166,30 +166,4 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     + " is out or range for limit " + limit);
         }
     }
-
-    private T removeFirst() {
-        Node<T> oldNode = head;
-        head = head.next;
-        if (head != null) {
-            head.prev = null;
-        } else {
-            tail = null;
-        }
-        oldNode.next = null;
-        size--;
-        return oldNode.value;
-    }
-
-    private T removeLast() {
-        Node<T> oldNode = tail;
-        tail = tail.prev;
-        if (tail != null) {
-            tail.next = null;
-        } else {
-            head = null;
-        }
-        oldNode.prev = null;
-        size--;
-        return oldNode.value;
-    }
 }
