@@ -7,16 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    public MyLinkedList() {
-
-    }
-
-    public MyLinkedList(int size, Node<T> head, Node<T> tail) {
-        this.size = size;
-        this.head = head;
-        this.tail = tail;
-    }
-
     @Override
     public void add(T value) {
         add(value, size);
@@ -53,55 +43,38 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        T removed = remove(index);
-        add(value, index);
-        return removed;
+        checkIndex(index, size -1);
+        Node<T> currentNode = findElement(index);
+       T oldValue = currentNode.value;
+        currentNode.value = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index, size - 1);
-        if (index == 0) {
-            return removeFirst();
-        } else if (index == size - 1) {
-            return removeLast();
-        } else {
-            Node<T> oldNode = findElement(index);
-            unlink(oldNode);
-            size--;
-            return oldNode.value;
-        }
+        checkIndex(index, size-1);
+        Node<T> currentNode = head;
+        return  unlink(currentNode);
     }
 
     @Override
     public boolean remove(T object) {
-        if (size == 0) {
-            return false;
-        }
-        int index = -1;
-        Node<T> currentNode = head;
-        for (int i = 0; i < size; i++) {
-            if (currentNode.value == object || (currentNode.value != null
-                    && currentNode.value.equals(object))) {
-                index = i;
-                break;
+        if (object == null) {
+            for (Node<T> currentNode = head; currentNode != null; currentNode = currentNode.next) {
+                if (currentNode.value == null) {
+                    unlink(currentNode);
+                    return true;
+                }
             }
-            currentNode = currentNode.next;
-        }
-        if (index == -1) {
-            return false;
-        }
-        if (index == 0) {
-            removeFirst();
-            return true;
-        } else if (index == size - 1) {
-            removeLast();
-            return true;
         } else {
-            unlink(currentNode);
-            size--;
-            return true;
+            for (Node<T> currentNode = head; currentNode != null; currentNode = currentNode.next) {
+                if (object.equals(currentNode.value)) {
+                    unlink(currentNode);
+                    return true;
+                }
+            }
         }
+        return false;
     }
 
     @Override
@@ -112,15 +85,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    @Override
-    public String toString() {
-        return "MyLinkedList{"
-                + "size=" + size
-                + ", head=" + head.value
-                + ", tail=" + tail.value
-                + '}';
     }
 
     private class Node<T> {
@@ -173,16 +137,33 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void unlink(Node<T> node) {
-        node.next.prev = node.prev;
-        node.prev.next = node.next;
-        node.prev = null;
-        node.next = null;
+    private T unlink(Node<T> node) {
+        final T value = node.value;
+        final Node<T> next = node.next;
+        final Node<T> prev = node.prev;
+
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
+            node.prev = null;
+        }
+
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.prev = prev;
+            node.next = null;
+        }
+        node.value = null;
+        size--;
+        return value;
     }
 
     private void checkIndex(int index, int limit) {
         if (index < 0 || index > limit) {
-            throw new IndexOutOfBoundsException("Index is outside");
+            throw new IndexOutOfBoundsException("Index " + index
+                    + " is out or range for limit " + limit);
         }
     }
 
