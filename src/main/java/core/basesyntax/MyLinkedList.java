@@ -148,8 +148,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 | index >= size) {
-            throw new IndexOutOfBoundsException("Index of element is"
-                    + " out of bounds of linked list");
+            throw new IndexOutOfBoundsException("Index is invalid " + index);
         }
     }
 }
