@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final String INDEX_OUT_OF_BOUNDS_EXCEPTION_MESSAGE =
-            "Index is out of bounds of linked list";
     private Node<T> first;
     private Node<T> last;
     private int size;
@@ -27,11 +25,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 | index > size) {
-            throw new IndexOutOfBoundsException("Out of bound");
+            throw new IndexOutOfBoundsException("Index of element is"
+                    + " out of bounds of linked list");
         }
         Node<T> node = new Node<>(value);
         Node<T> currentNode = findByIndex(index);
-
         if (currentNode == null) {
             add(value);
         } else if (index == 0) {
@@ -51,8 +49,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T el : list) {
-            add(el);
+        for (T element : list) {
+            add(element);
         }
     }
 
@@ -77,8 +75,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Node<T> currentNode = findByIndex(index);
         T removedNodeValue = currentNode.value;
-
-        if (currentNode.equals(first)) {
+        if (currentNode == first) {
             if (currentNode.next == null) {
                 first = null;
                 last = null;
@@ -87,8 +84,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 first.prev = null;
                 currentNode.next = null;
             }
-
-        } else if (currentNode.equals(last)) {
+        } else if (currentNode == last) {
             currentNode.prev.next = null;
             last = currentNode;
         } else {
@@ -104,7 +100,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         int index = findByElement(object);
-
         if (index == -1) {
             return false;
         }
@@ -133,10 +128,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findByIndex(int index) {
         Node<T> currentNode = first;
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                break;
-            }
+        for (int i = 0; i < index; i++) {
             currentNode = currentNode.next;
         }
         return currentNode;
@@ -145,7 +137,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int findByElement(T object) {
         Node<T> currentNode = first;
         for (int i = 0; i < size; i++) {
-            if ((object == null & currentNode.value == null) || currentNode.value.equals(object)) {
+            if ((object == null & currentNode.value == null)
+                    || currentNode.value.equals(object)) {
                 return i;
             }
             currentNode = currentNode.next;
@@ -155,7 +148,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 | index >= size) {
-            throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_EXCEPTION_MESSAGE);
+            throw new IndexOutOfBoundsException("Index of element is"
+                    + " out of bounds of linked list");
         }
     }
 }
