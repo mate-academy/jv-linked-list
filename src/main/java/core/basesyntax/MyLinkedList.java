@@ -127,9 +127,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findByIndex(int index) {
-        Node<T> currentNode = first;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
+        Node<T> currentNode;
+        if (index == size) {
+            return null;
+        }
+        if (index <= size / 2) {
+            currentNode = first;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+        } else {
+            currentNode = last;
+            for (int i = 0; i < size - index - 1; i++) {
+                currentNode = currentNode.prev;
+            }
         }
         return currentNode;
     }
