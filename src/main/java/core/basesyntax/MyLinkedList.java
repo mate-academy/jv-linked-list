@@ -33,13 +33,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkElementIndex(index);
+        checkIndex(index);
         return node(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkElementIndex(index);
+        checkIndex(index);
         Node<T> node = node(index);
         T oldItem = node.item;
         node.item = value;
@@ -48,14 +48,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkElementIndex(index);
+        checkIndex(index);
         return unlink(node(index));
     }
 
     @Override
     public boolean remove(T object) {
         for (Node<T> checked = head; checked != null; checked = checked.next) {
-            if (isElementsEquals(checked.item, object)) {
+            if (isElementsEqual(checked.item, object)) {
                 unlink(checked);
                 return true;
             }
@@ -127,41 +127,33 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> node(int index) {
-        Node<T> checked;
+        Node<T> currentNode;
         if (index <= size() >> 1) {
-            checked = head;
+            currentNode = head;
             for (int i = 0; i < index; i++) {
-                checked = checked.next;
+                currentNode = currentNode.next;
             }
         } else {
-            checked = tail;
+            currentNode = tail;
             for (int i = size() - 1; i > index; i--) {
-                checked = checked.prev;
+                currentNode = currentNode.prev;
             }
         }
-        return checked;
+        return currentNode;
     }
 
-    private boolean isElementsEquals(Object item1, Object item2) {
+    private boolean isElementsEqual(Object item1, Object item2) {
         return item1 == item2 || item1 != null && item1.equals(item2);
     }
 
-    private boolean isElementIndex(int index) {
-        return index >= 0 && index < size;
-    }
-
-    private boolean isPositionIndex(int index) {
-        return index >= 0 && index <= size;
-    }
-
     private void checkPositionIndex(int index) {
-        if (!isPositionIndex(index)) {
+        if (index >= 0 && index <= size) {
             throw new IndexOutOfBoundsException("Index #" + index + " is invalid.");
         }
     }
 
-    private void checkElementIndex(int index) {
-        if (!isElementIndex(index)) {
+    private void checkIndex(int index) {
+        if (index >= 0 && index < size) {
             throw new IndexOutOfBoundsException("Index #" + index + " is invalid.");
         }
     }
