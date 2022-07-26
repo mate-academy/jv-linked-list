@@ -12,7 +12,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        Node(Node<T> prev, T element, Node<T> next) {
+        private Node(Node<T> prev, T element, Node<T> next) {
             this.prev = prev;
             this.item = element;
             this.next = next;
@@ -35,7 +35,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else if (index == 0) {
-            isValid(index);
             first = new Node<>(null, value, first);
             first.next.prev = first;
             size++;
@@ -74,15 +73,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         isValid(index);
         Node<T> temporaryNode = findNode(index);
         if (size == 1) {
-            temporaryNode.next = null;
-            temporaryNode.prev = null;
             first = last = null;
         } else if (index == 0) {
-            temporaryNode.next.prev = null;
-            first = temporaryNode.next;
+            first.next.prev = null;
+            first = first.next;
         } else if (index == size - 1) {
-            temporaryNode.prev.next = null;
-            last = temporaryNode;
+            last.prev.next = null;
+            last = last.prev;
         } else {
             temporaryNode.prev.next = temporaryNode.next;
             temporaryNode.next.prev = temporaryNode.prev;
@@ -142,4 +139,3 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 }
-
