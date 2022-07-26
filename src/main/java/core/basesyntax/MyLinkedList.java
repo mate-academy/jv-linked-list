@@ -39,7 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first.next.prev = first;
             size++;
         } else {
-            isValid(index);
+            checkIndex(index);
             Node<T> current = findNode(index);
             current.prev = new Node<>(current.prev, value, current);
             current.prev.prev.next = current.prev;
@@ -56,13 +56,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        isValid(index);
+        checkIndex(index);
         return findNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        isValid(index);
+        checkIndex(index);
         T temporaryItem = findNode(index).item;
         findNode(index).item = value;
         return temporaryItem;
@@ -70,7 +70,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        isValid(index);
+        checkIndex(index);
         Node<T> temporaryNode = findNode(index);
         if (size == 1) {
             first = last = null;
@@ -109,7 +109,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void isValid(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Your index " + index
                         + " is over the size " + size);
