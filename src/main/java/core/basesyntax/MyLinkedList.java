@@ -75,11 +75,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 1) {
             first = last = null;
         } else if (index == 0) {
-            first.next.prev = null;
             first = first.next;
+            first.prev = null;
         } else if (index == size - 1) {
-            last.prev.next = null;
             last = last.prev;
+            last.next = null;
         } else {
             temporaryNode.prev.next = temporaryNode.next;
             temporaryNode.next.prev = temporaryNode.prev;
