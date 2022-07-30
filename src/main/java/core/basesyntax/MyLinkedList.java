@@ -21,28 +21,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index == size) {
+            add(value);
+            return;
+        }
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index  " + index
                     + "is invalid for size " + size);
         }
-        if (index == size) {
-            add(value);
-        } else if (index == 0) {
-            Node<T> current = first;
-            current.next.prev = current;
-            first = new Node<>(null, value, current);
-            current.prev = first;
-            size++;
+        Node<T> next = findNode(index);
+        Node<T> prev = next.prev;
+        Node<T> newNode = new Node<>(prev, value, next);
+        if (prev == null) {
+            first = newNode;
         } else {
-            Node<T> nodeAfterCurrent = first;
-            nodeAfterCurrent.next.prev = nodeAfterCurrent;
-            nodeAfterCurrent = findNode(nodeAfterCurrent, index);
-            Node<T> nodeBefore = nodeAfterCurrent.prev;
-            Node<T> current = new Node<>(nodeAfterCurrent.prev, value, nodeAfterCurrent);
-            nodeAfterCurrent.prev = current;
-            nodeBefore.next = current;
-            size++;
+            prev.next = newNode;
         }
+        next.prev = newNode;
+        size++;
     }
 
     @Override
