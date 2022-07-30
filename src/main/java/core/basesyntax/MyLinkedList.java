@@ -9,20 +9,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        if (first == null && last == null) {
-            first = new Node<>(null, value, null);
-            size++;
-        } else if (last == null) {
-            last = new Node<>(first, value, null);
-            first.next = last;
-            size++;
+        Node<T> newNode = new Node<>(last, value, null);
+        if (size == 0) {
+            first = newNode;
         } else {
-            Node<T> current = last;
-            current.prev.next = current;
-            last = new Node<>(current, value, null);
-            current.next = last;
-            size++;
+            last.next = newNode;
         }
+        last = newNode;
+        size++;
     }
 
     @Override
