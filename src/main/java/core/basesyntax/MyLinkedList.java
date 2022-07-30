@@ -59,12 +59,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
-        Node<T> nodeSet = first;
-        nodeSet.next.prev = nodeSet;
-        nodeSet = findNode(nodeSet, index);
-        T oldValue = nodeSet.value;
-        nodeSet.value = value;
+        Node<T> node = findNode(index);
+        T oldValue = node.value;
+        node.value = value;
         return oldValue;
     }
 
