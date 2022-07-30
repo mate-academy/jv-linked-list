@@ -51,10 +51,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        Node<T> currentNode = first;
-        currentNode.next.prev = currentNode;
-        currentNode = findNode(currentNode, index);
-        return currentNode.value;
+        Node<T> node = first;
+        node = findNode(index);
+        return node.value;
     }
 
     @Override
@@ -68,46 +67,35 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T result;
+        T removedValue;
         if (index == 0) {
-            result = first.value;
+            removedValue = first.value;
             first = first.next;
             size--;
         } else if (index == size - 1) {
-            result = last.value;
-            last.prev.next = null;
+            removedValue = last.value;
             last = last.prev;
             size--;
         } else {
-            Node<T> nodeDeleted = first;
-            nodeDeleted.next.prev = nodeDeleted;
-            nodeDeleted = findNode(nodeDeleted, index);
-            result = nodeDeleted.value;
-            nodeDeleted.prev.next = nodeDeleted.next;
-            nodeDeleted.next.prev = nodeDeleted.prev;
+            removedValue = findNode(index).value;
+            unLink(findNode(index));
             size--;
         }
-        return result;
+        return removedValue;
     }
 
     @Override
     public boolean remove(T object) {
-        int count = 0;
-        Node<T> nodeRemoved = first;
-        while (count != size && nodeRemoved.value != object) {
-            if (nodeRemoved.value != null && nodeRemoved.value.equals(object)) {
-                count++;
-                remove(count);
+        Node<T> current = first;
+        for (int i = 0; i < size; i++) {
+            if ((current.value == object) || (current.value
+                    != null && current.value.equals(object))) {
+                remove(i);
                 return true;
             }
-            nodeRemoved = nodeRemoved.next;
-            count++;
+            current = current.next;
         }
-        if (count == size) {
-            return false;
-        }
-        remove(count);
-        return true;
+        return false;
     }
 
     @Override
@@ -127,7 +115,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-private Node<T> findNode(int index) {
+    private Node<T> findNode(int index) {
         checkIndex(index);
         Node<T> current;
         if (index < size / 2) {
@@ -142,6 +130,11 @@ private Node<T> findNode(int index) {
             }
         }
         return current;
+    }
+
+    private void unLink(Node<T> node) {
+        node.next.prev = node.prev;
+        node.prev.next = node.next;
     }
 
     private static class Node<T> {
