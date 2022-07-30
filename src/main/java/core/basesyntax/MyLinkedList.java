@@ -124,7 +124,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void unLink(Node<T> node) {
         if (first == node) {
             first = first.next;
-        }else if (last == node) {
+        } else if (last == node) {
             last = last.prev;
         } else {
             node.next.prev = node.prev;
