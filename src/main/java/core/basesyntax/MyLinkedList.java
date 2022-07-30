@@ -130,13 +130,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> findNode(Node<T> node, int index) {
-        int count = 0;
-        while (count != index) {
-            node = node.next;
-            count++;
+private Node<T> findNode(int index) {
+        checkIndex(index);
+        Node<T> current;
+        if (index < size / 2) {
+            current = first;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = last;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
-        return node;
+        return current;
     }
 
     private static class Node<T> {
