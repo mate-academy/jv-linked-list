@@ -21,13 +21,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index == size) {
-            add(value);
-            return;
-        }
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index  " + index
                     + "is invalid for size " + size);
+        }
+        if (index == size) {
+            add(value);
+            return;
         }
         Node<T> next = findNode(index);
         Node<T> prev = next.prev;
