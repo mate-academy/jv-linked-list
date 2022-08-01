@@ -56,7 +56,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        Node node = findNode(index);
+        Node<T> node = findNode(index);
         T oldValue = node.value;
         node.value = value;
         return oldValue;
