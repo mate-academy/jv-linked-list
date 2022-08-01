@@ -7,24 +7,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public MyLinkedList() {
-    }
-
     @Override
     public void add(T value) {
-        if (isEmpty()) {
-            head = new Node<>(value, null, null);
-            size++;
-            return;
+        Node newNode = new Node<>(value, tail, null);
+        if (size == 0) {
+            head = newNode;
+        } else {
+            if (tail == null) {
+                tail = newNode;
+                tail.previous = head;
+                head.next = tail;
+            } else {
+                tail.next = newNode;
+                tail = newNode;
+            }
         }
-        if (tail == null) {
-            tail = new Node<>(value, head, null);
-            head.next = tail;
-            size++;
-            return;
-        }
-        tail.next = new Node<>(value, tail, null);
-        tail = tail.next;
         size++;
     }
 
@@ -51,8 +48,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        T oldValue = getNode(index).value;
-        getNode(index).value = value;
+        Node<T> node = getNode(index);
+        T oldValue = node.value;
+        node.value = value;
         return oldValue;
     }
 
@@ -63,9 +61,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> deletedObject = getNode(object);
-        if (deletedObject != null) {
-            unlinkNode(deletedObject);
+        Node<T> deletedNode = getNode(object);
+        if (deletedNode != null) {
+            unlinkNode(deletedNode);
             return true;
         }
         return false;
