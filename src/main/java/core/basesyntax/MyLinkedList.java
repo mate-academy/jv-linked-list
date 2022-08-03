@@ -108,19 +108,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getIndex(int index) {
-        Node<T> foundIndex;
+        Node<T> foundNode;
         if (index < size / 2) {
-            foundIndex = head;
+            foundNode = head;
             for (int i = 0; i < index; i++) {
-                foundIndex = foundIndex.next;
+                foundNode = foundNode.next;
             }
         } else {
-            foundIndex = tail;
+            foundNode = tail;
             for (int i = size - 1; i > index; i--) {
-                foundIndex = foundIndex.prev;
+                foundNode = foundNode.prev;
             }
         }
-        return foundIndex;
+        return foundNode;
     }
 
     private T unlink(Node<T> node) {
