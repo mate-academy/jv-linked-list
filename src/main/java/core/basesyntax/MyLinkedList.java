@@ -98,18 +98,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException(ERROR_MESSAGE_OUT_OF_BOUNDS + index);
         }
         Node<T> currentNode;
-        switch (Integer.compare(index, size / 2)) {
-            case -1:
-                currentNode = head;
-                for (int i = 0; i < index; i++) {
-                    currentNode = currentNode.next;
-                }
-            case 1:
-            default:
-                currentNode = tail;
-                for (int i = size - 1; i > index; i--) {
-                    currentNode = currentNode.prev;
-                }
+        if (Integer.compare(index, size / 2) == -1) {
+            currentNode = head;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+        }
+        currentNode = tail;
+        for (int i = size - 1; i > index; i--) {
+            currentNode = currentNode.prev;
         }
         return currentNode;
     }
