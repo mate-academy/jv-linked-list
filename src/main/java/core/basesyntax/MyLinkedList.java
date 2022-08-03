@@ -25,11 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index > size() || index < 0) {
             throw new IndexOutOfBoundsException(ERROR_MESSAGE_OUT_OF_BOUNDS + index);
         }
-        if (head == null) {
-            head = new Node<T>(null, value, null);
-            tail = head;
-            size++;
-        } else if (size() == index) {
+        if (size == index) {
             add(value);
         } else {
             Node<T> nodeByIndex = findNodeByIndex(index);
@@ -98,29 +94,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
-        Node<T> currentNode = null;
-        int currentIndex = 0;
-        if (index <= size / 2) {
-            currentNode = head;
-            while (currentNode != null && index >= 0) {
-                if (index == currentIndex) {
-                    return currentNode;
-                }
-                currentNode = currentNode.next;
-                currentIndex++;
-            }
-        } else {
-            currentNode = tail;
-            currentIndex = size - 1;
-            while (currentNode != null && index >= 0) {
-                if (index == currentIndex) {
-                    return currentNode;
-                }
-                currentNode = currentNode.prev;
-                currentIndex--;
-            }
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(ERROR_MESSAGE_OUT_OF_BOUNDS + index);
         }
-        throw new IndexOutOfBoundsException(ERROR_MESSAGE_OUT_OF_BOUNDS + index);
+        Node<T> currentNode;
+        switch (Integer.compare(index, size / 2)) {
+            case -1:
+                currentNode = head;
+                for (int i = 0; i < index; i++) {
+                    currentNode = currentNode.next;
+                }
+            case 1:
+            default:
+                currentNode = tail;
+                for (int i = size - 1; i > index; i--) {
+                    currentNode = currentNode.prev;
+                }
+        }
+        return currentNode;
     }
 
     private void removeNode(Node<T> currentNode) {
