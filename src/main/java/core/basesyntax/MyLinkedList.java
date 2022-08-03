@@ -123,7 +123,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return foundIndex;
     }
 
-    private T unlink(Node <T> node) {
+    private T unlink(Node<T> node) {
         final T deletedNode = node.value;
         Node<T> next = node.next;
         Node<T> prev = node.prev;
