@@ -123,23 +123,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return foundIndex;
     }
 
-        private T unlink(Node <T> node) {
-            final T deletedNode = node.value;
-            Node<T> next = node.next;
-            Node<T> prev = node.prev;
-            if (next == null) {
-                tail = prev;
-            } else {
-                next.prev = prev;
-                node.next = null;
-            }
-            if (prev == null) {
-                head = next;
-            } else {
-                prev.next = next;
-                node.prev = null;
-            }
-            size--;
-            return deletedNode;
+    private T unlink(Node <T> node) {
+        final T deletedNode = node.value;
+        Node<T> next = node.next;
+        Node<T> prev = node.prev;
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.prev = prev;
+            node.next = null;
         }
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
+            node.prev = null;
+        }
+        size--;
+        return deletedNode;
     }
+}
