@@ -46,19 +46,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         indexValidator(index);
-        size++;
+
         Node<T> node = new Node<>(null, value, null);
         Node<T> currentNode = findNode(index);
         if (index == 0) {
             node.next = head;
             head.prev = node;
             head = node;
+            size++;
             return;
         }
         node.prev = currentNode.prev;
         node.next = currentNode;
         currentNode.prev.next = node;
         currentNode.prev = node;
+        size++;
     }
 
     @Override
@@ -149,13 +151,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNode(int index) {
         int counter = 0;
-        Node<T> currentNode = head;
+        if (index < size / 2) {
+            Node<T> currentNode = head;
+            while (currentNode != null) {
+                if (counter == index) {
+                    break;
+                }
+                counter++;
+                currentNode = currentNode.next;
+            }
+            return currentNode;
+        }
+        index = size - index - 1;
+        Node<T> currentNode = tail;
         while (currentNode != null) {
             if (counter == index) {
                 break;
             }
             counter++;
-            currentNode = currentNode.next;
+            currentNode = currentNode.prev;
         }
         return currentNode;
     }
