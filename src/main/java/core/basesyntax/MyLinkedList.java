@@ -5,13 +5,14 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
-    private int numberOfElements;
+    private int size;
 
     public MyLinkedList() {
         head = null;
         tail = null;
-        numberOfElements = 0;
+        size = 0;
     }
+
     private class Node<T> {
         private T value;
         private Node<T> prev;
@@ -27,7 +28,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> node = new Node<>(null, value, null);
-        numberOfElements++;
+        size++;
         if (tail == null) {
             head = node;
             tail = node;
@@ -40,13 +41,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index >= 0 && index <= numberOfElements) {
-            if (index == numberOfElements) {
+        if (index >= 0 && index <= size) {
+            if (index == size) {
                 add(value);
                 return;
             }
             Node<T> node = new Node<>(null, value, null);
-            numberOfElements++;
+            size++;
             if (index == 0) {
                 node.next = head;
                 head.prev = node;
@@ -77,10 +78,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (numberOfElements != 0 && (index >= 0 && index < numberOfElements)) {
+        if (!isEmpty() && index >= 0 && index < size) {
             int counter = 0;
             Node<T> currentNode = head;
-            while (counter < index) {
+            while (currentNode != null) {
+                if (index == counter) {
+                    break;
+                }
                 currentNode = currentNode.next;
                 counter++;
             }
@@ -92,46 +96,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (index >= 0 && index <= numberOfElements) {
-            Node<T> node = new Node<>(null, value, null);
-            if(index == 0 && (numberOfElements == 0 || numberOfElements == 1)) {
-                if (numberOfElements == 0) {
-                    numberOfElements++;
-                }
-                head = node;
-                tail = node;
-                return node.value;
-            }
-            if (index == 0) {
-                node.next = head.next;
-                head.next.prev = node;
-                head = node;
-                return node.value;
-            }
-            if (index == numberOfElements) {
-                numberOfElements++;
-                tail.next = node;
-                node.prev = tail;
-                tail = node;
-                return node.value;
-            }
-            if (index == numberOfElements - 1) {
-                node.prev = tail.prev;
-                tail.prev.next = node;
-                tail = node;
-                return node.value;
-            }
+        if (!isEmpty() && index >= 0 && index < size) {
             int counter = 0;
             Node<T> currentNode = head;
-            while (counter < index) {
-                currentNode = currentNode.next;
+            while (currentNode != null) {
+                if (counter == index) {
+                    break;
+                }
                 counter++;
+                currentNode = currentNode.next;
             }
-            node.next = currentNode.next;
-            node.prev = currentNode.prev;
-            currentNode.prev.next = node;
-            currentNode.next.prev = node;
-            return node.value;
+            T oldValiue = currentNode.value;
+            currentNode.value = value;
+            return oldValiue;
         } else {
             throw new IndexOutOfBoundsException("There is no such index.");
         }
@@ -139,30 +116,84 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        return null;
+        if (!isEmpty() && index >= 0 && index < size) {
+            int counter = 0;
+            Node<T> currentNode = head;
+            while (currentNode != null) {
+                if (counter == index) {
+                    break;
+                }
+                currentNode = currentNode.next;
+                counter++;
+            }
+            if (currentNode == head && size == 1) {
+                head = null;
+                tail = null;
+                size = 0;
+                return currentNode.value;
+            }
+            if (currentNode == head) {
+                head = currentNode.next;
+                currentNode.next.prev = null;
+                size--;
+                return currentNode.value;
+            }
+            if (currentNode == tail) {
+                tail = currentNode.prev;
+                currentNode.prev.next = null;
+                size--;
+                return currentNode.value;
+            }
+            currentNode.prev.next = currentNode.next;
+            currentNode.next.prev = currentNode.prev;
+            size--;
+            return currentNode.value;
+        } else {
+            throw new IndexOutOfBoundsException("There is no such index.");
+        }
     }
 
     @Override
     public boolean remove(T object) {
+        Node<T> currentNode = head;
+        while (currentNode != null) {
+            if (currentNode.value == null && object == null
+                    || currentNode != null && currentNode.value.equals(object)) {
+                if (currentNode == head && size == 1) {
+                    head = null;
+                    tail = null;
+                    size--;
+                    return true;
+                }
+                if (currentNode == head) {
+                    head = currentNode.next;
+                    currentNode.next.prev = null;
+                    size--;
+                    return true;
+                }
+                if (currentNode == tail) {
+                    tail = currentNode.prev;
+                    currentNode.prev.next = null;
+                    size--;
+                    return true;
+                }
+                currentNode.prev.next = currentNode.next;
+                currentNode.next.prev = currentNode.prev;
+                size--;
+                return true;
+            }
+            currentNode = currentNode.next;
+        }
         return false;
     }
 
     @Override
     public int size() {
-        if (head == null) {
-            return 0;
-        }
-        int counter = 1;
-        Node<T> currentNode = head;
-        while (currentNode.next != null) {
-            currentNode = currentNode.next;
-            counter++;
-        }
-        return counter;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 }
