@@ -92,7 +92,49 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        return null;
+        if (index >= 0 && index <= numberOfElements) {
+            Node<T> node = new Node<>(null, value, null);
+            if(index == 0 && (numberOfElements == 0 || numberOfElements == 1)) {
+                if (numberOfElements == 0) {
+                    numberOfElements++;
+                }
+                head = node;
+                tail = node;
+                return node.value;
+            }
+            if (index == 0) {
+                node.next = head.next;
+                head.next.prev = node;
+                head = node;
+                return node.value;
+            }
+            if (index == numberOfElements) {
+                numberOfElements++;
+                tail.next = node;
+                node.prev = tail;
+                tail = node;
+                return node.value;
+            }
+            if (index == numberOfElements - 1) {
+                node.prev = tail.prev;
+                tail.prev.next = node;
+                tail = node;
+                return node.value;
+            }
+            int counter = 0;
+            Node<T> currentNode = head;
+            while (counter < index) {
+                currentNode = currentNode.next;
+                counter++;
+            }
+            node.next = currentNode.next;
+            node.prev = currentNode.prev;
+            currentNode.prev.next = node;
+            currentNode.next.prev = node;
+            return node.value;
+        } else {
+            throw new IndexOutOfBoundsException("There is no such index.");
+        }
     }
 
     @Override
@@ -107,7 +149,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        return 0;
+        if (head == null) {
+            return 0;
+        }
+        int counter = 1;
+        Node<T> currentNode = head;
+        while (currentNode.next != null) {
+            currentNode = currentNode.next;
+            counter++;
+        }
+        return counter;
     }
 
     @Override
