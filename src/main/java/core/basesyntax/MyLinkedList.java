@@ -41,29 +41,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        indexValidator(index, 1);
         if (index == size) {
             add(value);
             return;
         }
-        Node<T> node = new Node<>(null, value, null);
+        indexValidator(index);
         size++;
+        Node<T> node = new Node<>(null, value, null);
+        Node<T> currentNode = findNode(index);
         if (index == 0) {
             node.next = head;
             head.prev = node;
             head = node;
             return;
         }
-        int counter = 0;
-        Node<T> currentNode = head;
-        while (counter < index - 1) {
-            currentNode = currentNode.next;
-            counter++;
-        }
-        node.next = currentNode.next;
-        node.prev = currentNode;
-        currentNode.next.prev = node;
-        currentNode.next = node;
+        node.prev = currentNode.prev;
+        node.next = currentNode;
+        currentNode.prev.next = node;
+        currentNode.prev = node;
     }
 
     @Override
@@ -75,31 +70,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexValidator(index, 0);
-        int counter = 0;
-        Node<T> currentNode = head;
-        while (currentNode != null) {
-            if (counter == index) {
-                break;
-            }
-            counter++;
-            currentNode = currentNode.next;
-        }
+        indexValidator(index);
+        Node<T> currentNode = findNode(index);
         return currentNode.value;
     }
 
     @Override
     public T set(T value, int index) {
-        indexValidator(index, 0);
-        int counter = 0;
-        Node<T> currentNode = head;
-        while (currentNode != null) {
-            if (counter == index) {
-                break;
-            }
-            counter++;
-            currentNode = currentNode.next;
-        }
+        indexValidator(index);
+        Node<T> currentNode = findNode(index);
         T oldValiue = currentNode.value;
         currentNode.value = value;
         return oldValiue;
@@ -107,16 +86,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexValidator(index, 0);
-        int counter = 0;
-        Node<T> currentNode = head;
-        while (currentNode != null) {
-            if (counter == index) {
-                break;
-            }
-            counter++;
-            currentNode = currentNode.next;
-        }
+        indexValidator(index);
+        Node<T> currentNode = findNode(index);
         unlink(currentNode);
         return currentNode.value;
     }
@@ -169,13 +140,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private void indexValidator(int index, int key) {
-        if (key == 0 && index >= 0 && index < size) {
-            return;
-        }
-        if (key == 1 && index >= 0 && index <= size) {
+    private void indexValidator(int index) {
+        if (index >= 0 && index < size) {
             return;
         }
         throw new IndexOutOfBoundsException("There is no such index.");
+    }
+
+    private Node<T> findNode(int index) {
+        int counter = 0;
+        Node<T> currentNode = head;
+        while (currentNode != null) {
+            if (counter == index) {
+                break;
+            }
+            counter++;
+            currentNode = currentNode.next;
+        }
+        return currentNode;
     }
 }
