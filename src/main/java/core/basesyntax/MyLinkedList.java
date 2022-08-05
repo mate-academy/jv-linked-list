@@ -17,9 +17,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value) {
         Node<T> newNode = new Node<>(null, value, null);
         if (size == 0) {
-            head = newNode;
-            tail = newNode;
-            size++;
+            addFirstNode(value, newNode);
         } else {
             tail.setNext(newNode);
             newNode.setPrev(tail);
@@ -30,38 +28,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        Node<T> newNode = new Node<>(null, value, null);
         if (index == 0 && size == 0) {
-            Node<T> newNode = new Node<>(null, value, null);
-            head = newNode;
-            tail = newNode;
-            size++;
+            addFirstNode(value, newNode);
         } else {
             if (index == 0) {
-                Node<T> currentNode = head;
-                Node<T> newNode = new Node<>(null, value, null);
-                newNode.setNext(currentNode);
+                newNode.setNext(head);
                 newNode.setPrev(null);
-                currentNode.setPrev(newNode);
+                head.setPrev(newNode);
+                head = newNode;
                 size++;
-                if (head == currentNode) {
-                    head = newNode;
-                }
-                if (tail == currentNode) {
-                    tail = newNode;
-                }
             } else if (index == size) {
-                Node<T> currentNode = tail;
-                Node<T> newNode = new Node<>(null, value, null);
                 newNode.setNext(null);
-                newNode.setPrev(currentNode);
-                currentNode.setNext(newNode);
+                newNode.setPrev(tail);
+                tail.setNext(newNode);
+                tail = newNode;
                 size++;
-                if (tail == currentNode) {
-                    tail = newNode;
-                }
             } else {
-                Node<T> currentNode = searchPosition(index, "add");
-                Node<T> newNode = new Node<>(null, value, null);
+                checkCorrectIndexAdd(index);
+                Node<T> currentNode = searchPosition(index);
                 newNode.setNext(currentNode);
                 newNode.setPrev(currentNode.getPrev());
                 currentNode.getPrev().setNext(newNode);
@@ -83,13 +68,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Node<T> currentNode = searchPosition(index, "get");
+        checkCorrectIndexGetRemove(index);
+        Node<T> currentNode = searchPosition(index);
         return currentNode.getValue();
     }
 
     @Override
     public T set(T value, int index) {
-        Node<T> currentNode = searchPosition(index, "set");
+        checkCorrectIndexGetRemove(index);
+        Node<T> currentNode = searchPosition(index);
         T previousValue = currentNode.getValue();
         currentNode.setValue(value);
         ;
@@ -98,7 +85,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node<T> currentNode = searchPosition(index, "remove");
+        checkCorrectIndexGetRemove(index);
+        Node<T> currentNode = searchPosition(index);
         unlink(currentNode);
         return currentNode.getValue();
     }
@@ -130,38 +118,42 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return false;
     }
 
-    private Node<T> searchPosition(int index, String operation) {
-        Node<T> node = new Node<>();
-        if (operation == "add") {
-            if (index < 0 || index > size) {
-                throw new IndexOutOfBoundsException("Wrong index");
-            } else if (index <= size / 2 + 1) {
-                node = head;
-                for (int i = 0; i < index; i++) {
-                    node = node.getNext();
-                }
-            } else {
-                node = tail;
-                for (int i = 0; i <= size - index - 2; i++) {
-                    node = node.getPrev();
-                }
+    private void addFirstNode(T value, Node<T> newNode) {
+        head = newNode;
+        tail = newNode;
+        size++;
+    }
+
+    private void checkCorrectIndexAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Wrong index");
+        }
+    }
+
+    private void checkCorrectIndexGetRemove(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Wrong index");
+        }
+    }
+
+    private Node<T> searchPosition(int index) {
+        Node<T> currentNode = new Node<>();
+        if (index < size / 2) {
+            currentNode = head;
+            int position = 0;
+            while (position < index) {
+                currentNode = currentNode.next;
+                position++;
             }
         } else {
-            if (index < 0 || index >= size) {
-                throw new IndexOutOfBoundsException("Wrong index");
-            } else if (index < size / 2) {
-                node = head;
-                for (int i = 0; i < index; i++) {
-                    node = node.getNext();
-                }
-            } else {
-                node = tail;
-                for (int i = 0; i <= size - index - 2; i++) {
-                    node = node.getPrev();
-                }
+            currentNode = tail;
+            int position = size - 1;
+            while (position > index) {
+                currentNode = currentNode.prev;
+                position--;
             }
         }
-        return node;
+        return currentNode;
     }
 
     private void unlink(Node<T> node) {
