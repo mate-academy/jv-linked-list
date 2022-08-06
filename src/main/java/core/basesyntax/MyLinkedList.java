@@ -72,26 +72,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) throws IndexOutOfBoundsException {
         checkIndex(index);
-
         Node<T> deletedNode = findNodeByIndex(index);
-        if (size == 1) {
-            head = null;
-            tail = null;
-            size = 0;
-            return deletedNode.value;
-        }
-
-        if (index == 0) {
-            deletedNode.next.prev = null;
-            head = deletedNode.next;
-        } else if (index == size - 1) {
-            deletedNode.prev.next = null;
-            tail = deletedNode.prev;
-        } else {
-            deletedNode.prev.next = deletedNode.next;
-            deletedNode.next.prev = deletedNode.prev;
-        }
-        size--;
+        unlinkNode(index, deletedNode);
         return deletedNode.value;
     }
 
@@ -103,7 +85,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode = head;
         for (int i = 0; i < size; i++) {
             if (object == currentNode.value || object != null && object.equals(currentNode.value)) {
-                remove(i);
+                unlinkNode(i, currentNode);
                 return true;
             }
             currentNode = currentNode.next;
@@ -141,6 +123,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(WRONG_INDEX);
         }
+    }
+
+    private void unlinkNode(int index, Node<T> deletedNode) {
+        if (size == 1) {
+            head = null;
+            tail = null;
+            size = 0;
+            return;
+        }
+
+        if (index == 0) {
+            deletedNode.next.prev = null;
+            head = deletedNode.next;
+        } else if (index == size - 1) {
+            deletedNode.prev.next = null;
+            tail = deletedNode.prev;
+        } else {
+            deletedNode.prev.next = deletedNode.next;
+            deletedNode.next.prev = deletedNode.prev;
+        }
+        size--;
     }
 
     private static class Node<T> {
