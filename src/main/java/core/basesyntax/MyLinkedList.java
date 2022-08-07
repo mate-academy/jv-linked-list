@@ -1,8 +1,7 @@
 package core.basesyntax;
 
-import java.util.LinkedList;
+
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
@@ -56,15 +55,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return findNodeByIndex(index).value;
+        return findNodeByIndex(index).getValue();
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
         Node<T> oldNode = findNodeByIndex(index);
-        T oldValue = oldNode.value;
-        oldNode.value = value;
+        T oldValue = oldNode.getValue();
+        oldNode.setValue(value);
         return  oldValue;
     }
 
@@ -80,14 +79,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         if (object == null) {
             for (Node<T> removeNode = head; removeNode != null; removeNode = removeNode.next) {
-                if (removeNode.value == null) {
+                if (removeNode.getValue() == null) {
                     unlink(removeNode);
                     return true;
                 }
             }
         } else {
             for (Node<T> removeNode = head; removeNode != null; removeNode = removeNode.next) {
-                if (object.equals(removeNode.value)) {
+                if (object.equals(removeNode.getValue())) {
                     unlink(removeNode);
                     return true;
                 }
@@ -106,7 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
     private T unlink(Node<T> unlinkNode ) {
-        T element = unlinkNode.value;
+        T element = unlinkNode.getValue();
         Node<T> next = unlinkNode.next;
         Node<T> prev = unlinkNode.prev;
         if (prev == null) {
@@ -121,7 +120,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             next.prev = prev;
             unlinkNode.next = null;
         }
-        unlinkNode.value = null;
+        unlinkNode.setValue(null);
         size--;
         return element;
 
