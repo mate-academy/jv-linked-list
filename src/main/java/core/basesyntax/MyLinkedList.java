@@ -23,6 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.nextElement = nextElement;
         }
     }
+
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(null, value, null);
@@ -44,22 +45,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         if (index == size) {
             add(value);
-            return;
-        }
-        Node<T> currentNode = findByIndex(index);
-        Node<T> newNode = new Node<>(null, value, null);
-        if (index == 0) {
-            newNode.nextElement = firstNode;
-            firstNode.prevElement = newNode;
-            firstNode = newNode;
+        } else {
+            Node<T> currentNode = findByIndex(index);
+            Node<T> newNode = new Node<>(currentNode.prevElement, value, currentNode);
+            newNode.nextElement.prevElement = newNode;
+            if (index != 0) {
+                newNode.prevElement.nextElement = newNode;
+            } else {
+                firstNode = newNode;
+            }
             size++;
-            return;
         }
-        newNode.prevElement = currentNode.prevElement;
-        newNode.nextElement = currentNode;
-        currentNode.prevElement = newNode;
-        currentNode.prevElement.nextElement = newNode;
-        size++;
     }
 
     @Override
