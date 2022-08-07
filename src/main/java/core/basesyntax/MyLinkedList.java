@@ -12,7 +12,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node newNode = new Node(value);
         if (head == null) {
             head = newNode;
-            tail = newNode;
         } else {
             tail.next = newNode;
             newNode.prev = tail;
@@ -79,7 +78,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         T originValue = getNodeByIndex(index).value;
-        unlink(getNodeByIndex(index), index);
+        unLink(getNodeByIndex(index), index);
         return originValue;
     }
 
@@ -127,7 +126,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return temp;
     }
 
-    private void unlink(Node node, int index) {
+    private void unLink(Node node, int index) {
         if (index == 0) {
             head = head.next;
         }
@@ -148,28 +147,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         public Node(T value) {
             this.value = value;
-        }
-    }
-
-    public void printDebug() {
-
-        System.out.println("Forward:");
-        Node tmp = head;
-        for (int i = 0; i < size; i++) {
-            System.out.println(tmp.value);
-            tmp = tmp.next;
-        }
-
-        System.out.println("Backward:");
-        Node tmp1 = tail;
-        for (int i = 0; i < size; i++) {
-            System.out.println(tmp1.value);
-            tmp1 = tmp1.prev;
-        }
-
-        System.out.println("get:");
-        for (int i = 0; i < size; i++) {
-            System.out.println(get(i));
         }
     }
 }
