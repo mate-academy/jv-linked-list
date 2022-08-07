@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -11,14 +10,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode= new Node<>(null, value,null);
+        Node<T> newNode = new Node<>(null, value,null);
         if (head == null) {
             head = tail = newNode;
         } else {
-            tail.next = newNode;
-            newNode.prev = tail;
+            tail.setNext(newNode);
+            newNode.setPrev(tail);
             tail = newNode;
-            tail.next = null;
+            tail.setNext(null);
         }
         size++;
     }
@@ -31,17 +30,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (head == null || index == size) {
             add(value);
             return;
-        }
-        else if(index == 0) {
+        } else if (index == 0) {
             Node<T> insertNode = new Node<>(null,value,head);
-            head.prev = insertNode;
+            head.setPrev(insertNode);
             head = insertNode;
         } else {
             Node<T> refNode = findNodeByIndex(index);
-            Node<T> insertNode = new Node<>(refNode.prev,value,refNode);
-            refNode.prev.next = insertNode;
-            refNode.prev = insertNode;
-           }
+            Node<T> insertNode = new Node<>(refNode.getPrev(),value,refNode);
+            refNode.getPrev().setNext(insertNode);
+            refNode.setPrev(insertNode);
+        }
         size++;
     }
 
@@ -64,7 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> oldNode = findNodeByIndex(index);
         T oldValue = oldNode.getValue();
         oldNode.setValue(value);
-        return  oldValue;
+        return oldValue;
     }
 
     @Override
@@ -72,20 +70,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Your index is out of range");
         }
-    return unlink(findNodeByIndex(index));
+        return unlink(findNodeByIndex(index));
     }
 
     @Override
     public boolean remove(T object) {
         if (object == null) {
-            for (Node<T> removeNode = head; removeNode != null; removeNode = removeNode.next) {
+            for (Node<T> removeNode = head; removeNode != null; removeNode = removeNode.getNext()) {
                 if (removeNode.getValue() == null) {
                     unlink(removeNode);
                     return true;
                 }
             }
         } else {
-            for (Node<T> removeNode = head; removeNode != null; removeNode = removeNode.next) {
+            for (Node<T> removeNode = head; removeNode != null; removeNode = removeNode.getNext()) {
                 if (object.equals(removeNode.getValue())) {
                     unlink(removeNode);
                     return true;
@@ -104,37 +102,39 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean isEmpty() {
         return size == 0;
     }
-    private T unlink(Node<T> unlinkNode ) {
-        T element = unlinkNode.getValue();
-        Node<T> next = unlinkNode.next;
-        Node<T> prev = unlinkNode.prev;
+
+    private T unlink(Node<T> unlinkNode) {
+        final T element = unlinkNode.getValue();
+        final Node<T> next = unlinkNode.getNext();
+        final Node<T> prev = unlinkNode.getPrev();
         if (prev == null) {
             head = next;
         } else {
-            prev.next = next;
-            unlinkNode.prev = null;
+            prev.setNext(next);
+            unlinkNode.setPrev(null);
         }
         if (next == null) {
             tail = prev;
         } else {
-            next.prev = prev;
-            unlinkNode.next = null;
+            next.setPrev(prev);
+            unlinkNode.setNext(null);
         }
         unlinkNode.setValue(null);
         size--;
         return element;
-
     }
+
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Your index is out of range");
         }
     }
+
     private Node<T> findNodeByIndex(int index) {
         int count = 0;
         Node<T> findNode = head;
-        while (count != index){
-            findNode = findNode.next;
+        while (count != index) {
+            findNode = findNode.getNext();
             count++;
         }
         return findNode;

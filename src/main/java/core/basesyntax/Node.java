@@ -2,10 +2,10 @@ package core.basesyntax;
 
 public class Node<T> {
     private T value;
-    Node<T> next;
-    Node<T> prev;
+    private Node<T> next;
+    private Node<T> prev;
 
-    public Node( Node<T> prev, T value, Node<T> next) {
+    public Node(Node<T> prev, T value, Node<T> next) {
         this.prev = prev;
         this.value = value;
         this.next = next;
