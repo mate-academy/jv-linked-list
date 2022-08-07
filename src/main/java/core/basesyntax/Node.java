@@ -1,7 +1,7 @@
 package core.basesyntax;
 
 public class Node<T> {
-    private T value;
+    T value;
     Node<T> next;
     Node<T> prev;
 
@@ -9,13 +9,5 @@ public class Node<T> {
         this.prev = prev;
         this.value = value;
         this.next = next;
-    }
-
-    public T getValue() {
-        return value;
-    }
-
-    public void setValue(T value) {
-        this.value = value;
     }
 }

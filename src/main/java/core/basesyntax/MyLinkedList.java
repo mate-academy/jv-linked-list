@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -55,44 +56,43 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return findNodeByIndex(index).getValue();
+        return findNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
         Node<T> oldNode = findNodeByIndex(index);
-        T oldValue = oldNode.getValue();
-        oldNode.setValue(value);
+        T oldValue = oldNode.value;
+        oldNode.value = value;
         return  oldValue;
     }
 
     @Override
     public T remove(int index) {
-        if (index > size || index < 0) {
+        if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Your index is out of range");
         }
-        size--;
-        Node<T> deleteNode = findNodeByIndex(index);
-        if (index != 0 && index != size) {
-            unlink(deleteNode);
-        }
-        if (index == 0) {
-            head = deleteNode.next;
-            deleteNode.next.prev = null;
-        }
-        return deleteNode.getValue();
+    return unlink(findNodeByIndex(index));
     }
 
     @Override
     public boolean remove(T object) {
-       if (head == null || object == null) {
-           return false;}
-        if (head == tail && head.equals(object)){
-           head = tail = null;
-           size--;
-           return true;
-       } else
+        if (object == null) {
+            for (Node<T> removeNode = head; removeNode != null; removeNode = removeNode.next) {
+                if (removeNode.value == null) {
+                    unlink(removeNode);
+                    return true;
+                }
+            }
+        } else {
+            for (Node<T> removeNode = head; removeNode != null; removeNode = removeNode.next) {
+                if (object.equals(removeNode.value)) {
+                    unlink(removeNode);
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -105,9 +105,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean isEmpty() {
         return size == 0;
     }
-    private void unlink(Node<T> node) {
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
+    private T unlink(Node<T> unlinkNode ) {
+        T element = unlinkNode.value;
+        Node<T> next = unlinkNode.next;
+        Node<T> prev = unlinkNode.prev;
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
+            unlinkNode.prev = null;
+        }
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.prev = prev;
+            unlinkNode.next = null;
+        }
+        unlinkNode.value = null;
+        size--;
+        return element;
+
     }
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
@@ -122,22 +139,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             count++;
         }
         return findNode;
-    }
-    private Node<T> findByObject(T object) {
-        boolean objectFound = false;
-        Node<T> removeNode = head;
-        if ( removeNode == null) {
-            throw new NoSuchElementException("Your object is null");
-        }
-        while (!objectFound) {
-            if (removeNode.getValue().equals(object)
-                    || removeNode.getValue() == object) {
-                objectFound = true;
-            }
-            else {
-                removeNode = removeNode.next;
-            }
-        }
-        return removeNode;
     }
 }
