@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
@@ -36,7 +37,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head.prev = insertNode;
             head = insertNode;
         } else {
-            Node<T> refNode = findNode(index);
+            Node<T> refNode = findNodeByIndex(index);
             Node<T> insertNode = new Node<>(refNode.prev,value,refNode);
             refNode.prev.next = insertNode;
             refNode.prev = insertNode;
@@ -54,13 +55,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return findNode(index).getValue();
+        return findNodeByIndex(index).getValue();
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> oldNode = findNode(index);
+        Node<T> oldNode = findNodeByIndex(index);
         T oldValue = oldNode.getValue();
         oldNode.setValue(value);
         return  oldValue;
@@ -72,7 +73,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Your index is out of range");
         }
         size--;
-        Node<T> deleteNode = findNode(index);
+        Node<T> deleteNode = findNodeByIndex(index);
         if (index != 0 && index != size) {
             unlink(deleteNode);
         }
@@ -85,24 +86,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-       if (head == tail && head == object){
+       if (head == null || object == null) {
+           return false;}
+        if (head == tail && head.equals(object)){
            head = tail = null;
            size--;
            return true;
-       }
-        boolean objectFound = false;
-        Node<T> removeNode = head;
-        while (!objectFound) {
-            if (removeNode.getValue().equals(object)) {
-                objectFound = true;
-                size--;
-
-            }
-            else {
-                removeNode = removeNode.next;
-            }
-        }
-        return objectFound;
+       } else
+        return false;
     }
 
     @Override
@@ -123,7 +114,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Your index is out of range");
         }
     }
-    private Node<T> findNode(int index) {
+    private Node<T> findNodeByIndex(int index) {
         int count = 0;
         Node<T> findNode = head;
         while (count != index){
@@ -131,5 +122,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             count++;
         }
         return findNode;
+    }
+    private Node<T> findByObject(T object) {
+        boolean objectFound = false;
+        Node<T> removeNode = head;
+        if ( removeNode == null) {
+            throw new NoSuchElementException("Your object is null");
+        }
+        while (!objectFound) {
+            if (removeNode.getValue().equals(object)
+                    || removeNode.getValue() == object) {
+                objectFound = true;
+            }
+            else {
+                removeNode = removeNode.next;
+            }
+        }
+        return removeNode;
     }
 }
