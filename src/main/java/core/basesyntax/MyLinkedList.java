@@ -75,18 +75,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     public void linkLast(T e) {
         final Node<T> l = last;
         final Node<T> newNode = new Node<>(l, e, null);
@@ -153,4 +141,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return nodeByIndex;
     }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
 }
+
