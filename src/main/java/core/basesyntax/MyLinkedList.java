@@ -3,13 +3,13 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node head;
-    private Node tail;
+    private Node<T> head;
+    private Node<T> tail;
     private int size;
 
     @Override
     public void add(T value) {
-        Node newNode = new Node(value);
+        Node<T> newNode = new Node<>(value);
         if (head == null) {
             head = newNode;
         } else {
@@ -27,7 +27,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         checkIndex(index);
-        Node newNode = new Node(value);
+        Node<T> newNode = new Node<>(value);
         if (index == 0) {
             newNode.next = head;
             newNode.prev = null;
@@ -35,9 +35,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = newNode;
         } else {
             newNode.next = getNodeByIndex(index);
-            newNode.prev = getNodeByIndex(index - 1);
-            getNodeByIndex(index).prev = newNode;
-            getNodeByIndex(index - 1).next = newNode;
+            newNode.prev = newNode.next.prev;
+            newNode.next.prev = newNode;
+            newNode.prev.next = newNode;
         }
         size++;
     }
@@ -51,35 +51,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-        if (index > size / 2) {
-            Node temp = tail;
-            for (int i = 0; i < size - index - 1; i++) {
-                temp = temp.prev;
-            }
-            return temp.value;
-        }
-        Node temp = head;
-        for (int i = 0; i < index; i++) {
-            temp = temp.next;
-        }
-        return temp.value;
+        return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
-        T originValue = getNodeByIndex(index).value;
-        getNodeByIndex(index).value = value;
-        return originValue;
+        Node<T> originNode = getNodeByIndex(index);
+        T originNodeValue = originNode.value;
+        originNode.value = value;
+        return originNodeValue;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        T originValue = getNodeByIndex(index).value;
-        unLink(getNodeByIndex(index), index);
-        return originValue;
+        Node<T> originNode = getNodeByIndex(index);
+        T originNodeValue = originNode.value;
+        unLink(originNode, index);
+        return originNodeValue;
     }
 
     @Override
@@ -95,11 +83,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
+
         return size;
     }
 
     @Override
     public boolean isEmpty() {
+
         return size == 0;
     }
 
@@ -110,23 +100,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node getNodeByIndex(int index) {
+    private Node<T> getNodeByIndex(int index) {
         checkIndex(index);
         if (index > size / 2) {
-            Node temp = tail;
+            Node<T> temp = tail;
             for (int i = 0; i < size - index - 1; i++) {
                 temp = temp.prev;
             }
             return temp;
         }
-        Node temp = head;
+        Node<T> temp = head;
         for (int i = 0; i < index; i++) {
             temp = temp.next;
         }
         return temp;
     }
 
-    private void unLink(Node node, int index) {
+    private void unLink(Node<T> node, int index) {
         if (index == 0) {
             head = head.next;
         }
@@ -140,10 +130,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private class Node {
+    private static class Node<T> {
         private T value;
-        private Node prev;
-        private Node next;
+        private Node<T> prev;
+        private Node<T> next;
 
         public Node(T value) {
             this.value = value;
