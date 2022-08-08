@@ -45,8 +45,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        indexValidator(index);
-
+        validateIndex(index);
         Node<T> node = new Node<>(null, value, null);
         Node<T> currentNode = findNode(index);
         if (index == 0) {
@@ -72,14 +71,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexValidator(index);
+        validateIndex(index);
         Node<T> currentNode = findNode(index);
         return currentNode.value;
     }
 
     @Override
     public T set(T value, int index) {
-        indexValidator(index);
+        validateIndex(index);
         Node<T> currentNode = findNode(index);
         T oldValiue = currentNode.value;
         currentNode.value = value;
@@ -88,7 +87,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexValidator(index);
+        validateIndex(index);
         Node<T> currentNode = findNode(index);
         unlink(currentNode);
         return currentNode.value;
@@ -142,11 +141,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private void indexValidator(int index) {
-        if (index >= 0 && index < size) {
-            return;
+    private void validateIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("There is no such index.");
         }
-        throw new IndexOutOfBoundsException("There is no such index.");
     }
 
     private Node<T> findNode(int index) {
