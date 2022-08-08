@@ -199,8 +199,8 @@ public class MyLinkedListTest {
         String oldSecondItem = myLinkedList.set(ANOTHER_NEW_ITEM, 1);
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
-//        Assert.assertEquals(FIRST_ITEM, oldFirstItem);
-//        Assert.assertEquals(SECOND_ITEM, oldSecondItem);
+        Assert.assertEquals(FIRST_ITEM, oldFirstItem);
+        Assert.assertEquals(SECOND_ITEM, oldSecondItem);
         Assert.assertEquals("Test failed! After setting expected element is " + NEW_ITEM,
                 NEW_ITEM, actualFirst);
         Assert.assertEquals("Test failed! After setting expected element is "
