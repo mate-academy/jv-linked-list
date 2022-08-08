@@ -7,11 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> lastNode;
     private int size = 0;
 
-    public MyLinkedList() {
-        firstNode = null;
-        lastNode = null;
-    }
-
     private class Node<T> {
         private T currentElement;
         private Node<T> prevElement;
@@ -67,18 +62,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new IndexOutOfBoundsException("Index out of bounds");
-        }
+        checkValidationIndex(index);
         Node<T> currentNode = findByIndex(index);
         return currentNode.currentElement;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index > size - 1) {
-            throw new IndexOutOfBoundsException("Index out of bounds");
-        }
+        checkValidationIndex(index);
         Node<T> currentNode = findByIndex(index);
         T deletedValue = currentNode.currentElement;
         currentNode.currentElement = value;
@@ -87,11 +78,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new IndexOutOfBoundsException("Index out of bounds");
-        }
+        checkValidationIndex(index);
         Node<T> currentNode = findByIndex(index);
-        deleteLinks(currentNode);
+        unlink(currentNode);
         return currentNode.currentElement;
     }
 
@@ -101,7 +90,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (currentNode != null) {
             if (currentNode.currentElement == null && object == null
                     || currentNode != null && currentNode.currentElement.equals(object)) {
-                deleteLinks(currentNode);
+                unlink(currentNode);
                 return true;
             }
             currentNode = currentNode.nextElement;
@@ -120,19 +109,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findByIndex(int index) {
-        int counter = 0;
-        Node<T> currentNode = firstNode;
-        while (currentNode.nextElement != null) {
-            if (counter == index) {
-                break;
+        checkValidationIndex(index);
+        Node<T> currentNode;
+        if (index < size / 2) {
+            currentNode = firstNode;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.nextElement;
             }
-            currentNode = currentNode.nextElement;
-            counter++;
+        } else {
+            currentNode = lastNode;
+            for (int i = size - 1; i > index; i--) {
+                currentNode = currentNode.prevElement;
+            }
         }
         return currentNode;
     }
 
-    private void deleteLinks(Node<T> currentNode) {
+    private void unlink(Node<T> currentNode) {
         if (size == 1 && currentNode == firstNode) {
             firstNode = null;
             lastNode = null;
@@ -154,5 +147,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         currentNode.prevElement.nextElement = currentNode.nextElement;
         currentNode.nextElement.prevElement = currentNode.prevElement;
         size--;
+    }
+
+    private void checkValidationIndex(int index) {
+        if (index < 0 || index > size - 1) {
+            throw new IndexOutOfBoundsException("Index out of bounds");
+        }
     }
 }
