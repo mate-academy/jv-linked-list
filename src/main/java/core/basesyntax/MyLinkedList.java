@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private Node<T> prev;
-        private T value;
-        private Node<T> next;
-
-        private Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(null, value, null);
@@ -53,16 +41,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size) {
-            throw new IndexOutOfBoundsException("The index is out of bounds");
+        if (isIndexInInvalidRange(index)) {
+            throw new IndexOutOfBoundsException("Index" + index + "is out of bounds!");
         }
         return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index >= size) {
-            throw new IndexOutOfBoundsException("The index is out of bounds");
+        if (isIndexInInvalidRange(index)) {
+            throw new IndexOutOfBoundsException("Index" + index + "is out of bounds!");
         }
         Node<T> currentNode = getNodeByIndex(index);
         T oldNodeValue = currentNode.value;
@@ -72,8 +60,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index >= size) {
-            throw new IndexOutOfBoundsException("The index is out of bounds");
+        if (isIndexInInvalidRange(index)) {
+            throw new IndexOutOfBoundsException("Index" + index + "is out of bounds!");
         }
         Node<T> currentNode = getNodeByIndex(index);
         unlinkNode(currentNode.prev, currentNode, currentNode.next, "remove");
@@ -104,9 +92,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private boolean isIndexInInvalidRange(int index) {
+        return index >= size || index < 0;
+    }
+
     private Node<T> getNodeByIndex(int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("The index is out of bounds");
+        if (isIndexInInvalidRange(index)) {
+            throw new IndexOutOfBoundsException("Index" + index + "is out of bounds!");
         }
         Node<T> currentNode;
         if (index <= size / 2) {
@@ -153,6 +145,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 break;
             default:
                 break;
+        }
+    }
+
+    private static class Node<T> {
+        private Node<T> prev;
+        private T value;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
         }
     }
 }
