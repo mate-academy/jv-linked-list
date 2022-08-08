@@ -8,8 +8,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size = 0;
 
     public MyLinkedList() {
-        first = new Node<>(null, null, null);
-        last = new Node<>(null, null, null);
+        first = new Node<>();
+        last = new Node<>();
     }
 
     @Override
@@ -118,7 +118,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNode(T value) {
         Node<T> currentNode = first;
         while (currentNode.next != null) {
-            if ((currentNode.value == null && value == null)
+            if ((currentNode.value == value)
                     || (currentNode != null && currentNode.value.equals(value))) {
                 return currentNode;
             }
@@ -159,5 +159,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
         }
 
+        public Node() {
+
+        }
     }
 }
