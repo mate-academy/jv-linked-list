@@ -7,12 +7,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    static class Node<T> {
+    private static class Node<T> {
         private Node<T> prev;
         private T value;
         private Node<T> next;
 
-        public Node(Node<T> prev, T value, Node<T> next) {
+        private Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
             this.value = value;
             this.next = next;
@@ -56,8 +56,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index >= size) {
             throw new IndexOutOfBoundsException("The index is out of bounds");
         }
-        Node<T> currentNode = getNodeByIndex(index);
-        return currentNode.value;
+        return getNodeByIndex(index).value;
     }
 
     @Override
@@ -84,22 +83,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> currentNode = head;
-        if (object == null) {
-            for (int i = 0; i < size; i++) {
-                if (currentNode.value == null) {
-                    unlinkNode(currentNode.prev, currentNode, currentNode.next, "remove");
-                    return true;
-                }
-                currentNode = currentNode.next;
+        for (int i = 0; i < size; i++) {
+            if ((object == null && currentNode.value == null)
+                    || (object != null && object.equals(currentNode.value))) {
+                unlinkNode(currentNode.prev, currentNode, currentNode.next, "remove");
+                return true;
             }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (object.equals(currentNode.value)) {
-                    unlinkNode(currentNode.prev, currentNode, currentNode.next, "remove");
-                    return true;
-                }
-                currentNode = currentNode.next;
-            }
+            currentNode = currentNode.next;
         }
         return false;
     }
