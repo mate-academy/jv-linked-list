@@ -79,7 +79,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode = searchPosition(index);
         T previousValue = currentNode.getValue();
         currentNode.setValue(value);
-        ;
         return previousValue;
     }
 
@@ -112,10 +111,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        }
-        return false;
+        return size == 0;
     }
 
     private void addFirstNode(T value, Node<T> newNode) {
