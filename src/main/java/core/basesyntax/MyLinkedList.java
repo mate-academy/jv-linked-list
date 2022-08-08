@@ -54,7 +54,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size++;
             return;
         }
-
         ListNode temp = findElementByIndex(index);
         newnode.setNext(temp);
         newnode.setPrev(temp.getPrev());
@@ -93,7 +92,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        //throw exception if empty ?
         if (size == 0) {
             return false;
         }
@@ -105,7 +103,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             found = true;
             return found;
         }
-
         while (temp != tail && !found) {
             if (temp.getValue() != null && temp.getValue().equals(object)
                     || temp.getValue() == object) {
@@ -121,7 +118,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 || temp.getValue() == object) {
             unlink(tail);
             found = true;
-
         }
         return found;
     }
@@ -138,7 +134,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private ListNode findElementByIndex(int index) {
         if (index < 0 || index > size - 1 || isEmpty()) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("invalid index");
         }
         if (index == 0) {
             return head;
@@ -154,10 +150,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 index--;
             }
             return temp;
-
         }
         ListNode temp = head;
-
         while (index != 0) {
             temp = temp.getNext();
             index--;
