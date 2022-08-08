@@ -119,27 +119,35 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         switch (operation) {
             case "add":
                 if (next.equals(head)) {
+                    current.next = head;
+                    head.prev = current;
                     head = current;
-                }
-                if (previous != null) {
+                } else if (previous.equals(tail)) {
                     previous.next = current;
+                    current.prev = previous;
+                    tail = current;
+                } else {
+                    previous.next = current;
+                    current.prev = previous;
+                    next.prev = current;
+                    current.next = next;
                 }
-                current.prev = previous;
-                current.next = next;
-                next.prev = current;
                 size++;
                 break;
             case "remove":
                 if (head.equals(current)) {
-                    head = next;
-                }
-                current.prev = null;
-                current.next = null;
-                if (previous != null) {
-                    previous.next = next;
-                }
-                if (next != null) {
-                    next.prev = previous;
+                    if (head == tail) {
+                        head = null;
+                        tail = null;
+                    } else {
+                        head = head.next;
+                    }
+                } else if (current.equals(tail)) {
+                    tail = tail.prev;
+                    tail.next = null;
+                } else {
+                    previous.next = current.next;
+                    next.prev = current.prev;
                 }
                 size--;
                 break;
