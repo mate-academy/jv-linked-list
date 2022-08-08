@@ -153,9 +153,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> previous;
         private T value;
 
-        public Node(Node<T> prev, T value, Node<T> next) {
+        public Node(Node<T> previous, T value, Node<T> next) {
             this.next = next;
-            this.previous = prev;
+            this.previous = previous;
             this.value = value;
         }
     }
