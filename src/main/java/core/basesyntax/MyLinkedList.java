@@ -7,22 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size;
 
-    static class Node<T> {
-        private T value;
-        private Node<T> next;
-        private Node<T> previous;
-
-        public Node(T value) {
-            this.value = value;
-        }
-
-        public Node(T value, Node<T> next, Node<T> previous) {
-            this.value = value;
-            this.next = next;
-            this.previous = previous;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(value);
@@ -168,5 +152,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void unlink(Node<T> node) {
         node.next = null;
         node.previous = null;
+    }
+
+    static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> previous;
+
+        public Node(T value) {
+            this.value = value;
+        }
+
+        public Node(T value, Node<T> next, Node<T> previous) {
+            this.value = value;
+            this.next = next;
+            this.previous = previous;
+        }
     }
 }
