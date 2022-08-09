@@ -122,13 +122,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkCorrectIndexAdd(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Wrong index");
+            throw new IndexOutOfBoundsException("Wrong index" + index);
         }
     }
 
     private void checkCorrectIndexGetRemove(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Wrong index");
+            throw new IndexOutOfBoundsException("Wrong index" + index);
         }
     }
 
