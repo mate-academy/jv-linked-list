@@ -71,32 +71,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node<T> node = findByIndex(index);
-        if (node.next == node.prev) {
-            head = null;
-            tail = null;
-        } else if (node.next == null) {
-            node.prev.next = null;
-            tail = node.prev;
-        } else if (node.prev == null) {
-            node.next.prev = null;
-            head = node.next;
-        } else {
-            node.next.prev = node.prev;
-            node.prev.next = node.next;
-        }
-        size--;
-        return node.value;
+        return unlink(findByIndex(index)).value;
     }
 
     @Override
     public boolean remove(T object) {
-        int index = findIndexByObject(object);
-        if (index != -1) {
-            remove(index);
-            return true;
-        }
-        return false;
+        return unlink(findByObject(object)) != null;
     }
 
     @Override
@@ -138,15 +118,36 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return element;
     }
 
-    private int findIndexByObject(T object) {
+    private Node<T> findByObject(T object) {
         Node<T> element = head;
-        for (int i = 0; i < size; i++) {
+        do {
             T value = element.value;
             if (value == object || value != null && value.equals(object)) {
-                return i;
+                return element;
             }
             element = element.next;
+        } while (element.next != null);
+        return null;
+    }
+
+    private Node<T> unlink(Node<T> node) {
+        if (node == null) {
+            return null;
         }
-        return -1;
+        if (node.next == node.prev) {
+            head = null;
+            tail = null;
+        } else if (node.next == null) {
+            node.prev.next = null;
+            tail = node.prev;
+        } else if (node.prev == null) {
+            node.next.prev = null;
+            head = node.next;
+        } else {
+            node.next.prev = node.prev;
+            node.prev.next = node.next;
+        }
+        size--;
+        return node;
     }
 }
