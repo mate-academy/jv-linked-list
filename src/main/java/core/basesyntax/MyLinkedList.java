@@ -5,7 +5,7 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> firstNode;
     private Node<T> lastNode;
-    private int size = 0;
+    private int size;
 
     private class Node<T> {
         private T currentElement;
@@ -35,9 +35,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index out of bounds");
-        }
+        checkValidationIndex(index, size);
         if (index == size) {
             add(value);
         } else {
@@ -62,14 +60,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkValidationIndex(index);
+        checkValidationIndex(index, size - 1);
         Node<T> currentNode = findByIndex(index);
         return currentNode.currentElement;
     }
 
     @Override
     public T set(T value, int index) {
-        checkValidationIndex(index);
+        checkValidationIndex(index, size - 1);
         Node<T> currentNode = findByIndex(index);
         T deletedValue = currentNode.currentElement;
         currentNode.currentElement = value;
@@ -78,7 +76,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkValidationIndex(index);
+        checkValidationIndex(index, size - 1);
         Node<T> currentNode = findByIndex(index);
         unlink(currentNode);
         return currentNode.currentElement;
@@ -109,7 +107,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findByIndex(int index) {
-        checkValidationIndex(index);
+        checkValidationIndex(index, size - 1);
         Node<T> currentNode;
         if (index < size / 2) {
             currentNode = firstNode;
@@ -149,8 +147,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private void checkValidationIndex(int index) {
-        if (index < 0 || index > size - 1) {
+    private void checkValidationIndex(int index, int size) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index out of bounds");
         }
     }
