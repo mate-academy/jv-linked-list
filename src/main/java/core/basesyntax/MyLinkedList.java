@@ -7,21 +7,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size;
 
-    public MyLinkedList() {
-        first = new Node<>();
-        last = new Node<>();
-    }
-
     @Override
     public void add(T value) {
         if (size == 0) {
-            first.value = value;
-            first.next = last;
+            first = new Node<>(null, value, null);
             size++;
         } else if (size == 1) {
-            last.value = value;
+            last = new Node<>(first, value, null);
             first.next = last;
-            last.prev = first;
             size++;
         } else {
             addNode(value);
@@ -109,7 +102,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(T value) {
         Node<T> currentNode = first;
-        while (currentNode.next != null) {
+        while (currentNode.next != null || currentNode.prev == null) {
             if ((currentNode.value == value)
                     || (currentNode != null && currentNode.value.equals(value))) {
                 return currentNode;
@@ -120,7 +113,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> node) {
-        if (node.prev == null) {
+        if (size == 1) {
+            first = null;
+        } else if (node.prev == null) {
             node.next.prev = null;
             first = node.next;
         } else if (node.next == null) {
