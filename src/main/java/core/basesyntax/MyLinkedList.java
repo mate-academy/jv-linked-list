@@ -69,9 +69,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " absent in this list");
-        }
+        indexCheck(index);
         Node<T> tempNode = first;
         for (int i = 0; i < index; i++) {
             tempNode = tempNode.next;
@@ -81,9 +79,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " absent in this list");
-        }
+        indexCheck(index);
         Node<T> node = new Node<>(value);
         T returnedValue;
         if (index == 0) {
@@ -104,9 +100,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " absent in this list");
-        }
+        indexCheck(index);
         T removedItem;
         if (index == 0) {
             if (first.next == null) {
@@ -160,6 +154,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == ZERO;
+    }
+
+    private void indexCheck(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index " + index + " absent in this list");
+        }
     }
 
     private static class Node<E> {
