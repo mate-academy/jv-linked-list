@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static class Node<T> {
+    private class Node<T> {
         private T item;
         private Node<T> prev;
         private Node<T> next;
@@ -37,32 +37,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index > size() || index < SIZE_EMPTY_LIST) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index " + index + " out of range.");
         }
         if (index == SIZE_EMPTY_LIST) {
-            Node<T> newNode = new Node<>(null, value, null);
-            if (size() == SIZE_EMPTY_LIST) {
-                tail = newNode;
-            } else {
-                head.prev = newNode;
-                newNode.next = head;
-            }
-            head = newNode;
-            size++;
-            return;
+            createHead(value);
+        } else if (index == size()) {
+            createTail(value);
+        } else {
+            createItem(value, index);
         }
-        if (index == size()) {
-            Node<T> newNode = new Node<>(tail, value, null);
-            tail.next = newNode;
-            tail = newNode;
-            size++;
-            return;
-        }
-        Node<T> currentNode = findByIndex(index);
-        Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
-        currentNode.prev.next = newNode;
-        currentNode.prev = newNode;
-        size++;
     }
 
     @Override
@@ -90,7 +73,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndexOutOfBoundsException(index);
         Node<T> currentNode = findByIndex(index);
-        removeNode(currentNode);
+        unlink(currentNode);
         return currentNode.item;
     }
 
@@ -100,7 +83,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (currentNode == null) {
             return false;
         }
-        removeNode(currentNode);
+        unlink(currentNode);
         return true;
     }
 
@@ -115,9 +98,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findByIndex(int index) {
+        return size() / 2 > index
+                ? searchingDown(index)
+                : searchingUp(index);
+    }
+
+    private Node<T> searchingDown(int index) {
         Node<T> currentNode = head;
         for (int i = 1; i <= index; i++) {
             currentNode = currentNode.next;
+        }
+        return currentNode;
+    }
+
+    private Node<T> searchingUp(int index) {
+        Node<T> currentNode = tail;
+        for (int i = size() - 2; i >= index; i--) {
+            currentNode = currentNode.prev;
         }
         return currentNode;
     }
@@ -133,7 +130,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
-    private void removeNode(Node<T> node) {
+    private void unlink(Node<T> node) {
         if (node.prev != null) {
             node.prev.next = node.next;
         } else {
@@ -149,11 +146,41 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndexOutOfBoundsException(int index) {
         if (index >= size() || index < SIZE_EMPTY_LIST) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index " + index + " out of range.");
         }
     }
 
     private boolean equals(Object first, Object second) {
         return first == second || (first != null && first.equals(second));
+    }
+
+    private void createHead(T value) {
+        Node<T> newNode = new Node<>(null, value, null);
+        if (size() == SIZE_EMPTY_LIST) {
+            tail = newNode;
+        } else {
+            head.prev = newNode;
+            newNode.next = head;
+        }
+        head = newNode;
+        size++;
+    }
+
+    private void createTail(T value) {
+        Node<T> newNode = new Node<>(null, value, null);
+        newNode.prev = tail;
+        tail.next = newNode;
+        tail = newNode;
+        size++;
+    }
+
+    private void createItem(T value, int index) {
+        Node<T> newNode = new Node<>(null, value, null);
+        Node<T> currentNode = findByIndex(index);
+        newNode.prev = currentNode.prev;
+        newNode.next = currentNode;
+        currentNode.prev.next = newNode;
+        currentNode.prev = newNode;
+        size++;
     }
 }
