@@ -48,10 +48,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        Node<T> tempNode = first;
-        for (int i = 0; i < index; i++) {
-            tempNode = tempNode.next;
-        }
+        Node<T> tempNode = findNodeByIndex(index);
         Node<T> previous = tempNode.prev;
         previous.next = node;
         tempNode.prev = node;
@@ -70,10 +67,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         indexCheck(index);
-        Node<T> tempNode = first;
-        for (int i = 0; i < index; i++) {
-            tempNode = tempNode.next;
-        }
+        Node<T> tempNode = findNodeByIndex(index);
         return tempNode.item;
     }
 
@@ -89,10 +83,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = node;
             return returnedValue;
         }
-        Node<T> tempNode = first;
-        for (int i = 0; i < index; i++) {
-            tempNode = tempNode.next;
-        }
+        Node<T> tempNode = findNodeByIndex(index);
         returnedValue = tempNode.item;
         tempNode.item = node.item;
         return returnedValue;
@@ -122,10 +113,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size--;
             return removedItem;
         }
-        Node<T> tempNode = first;
-        for (int i = 0; i < index; i++) {
-            tempNode = tempNode.next;
-        }
+        Node<T> tempNode = findNodeByIndex(index);
         removedItem = tempNode.item;
         tempNode.prev.next = tempNode.next;
         tempNode.next.prev = tempNode.prev;
@@ -154,6 +142,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == ZERO;
+    }
+
+    private Node<T> findNodeByIndex(int index) {
+        Node<T> tempNode = first;
+        for (int i = 0; i < index; i++) {
+            tempNode = tempNode.next;
+        }
+        return tempNode;
     }
 
     private void indexCheck(int index) {
