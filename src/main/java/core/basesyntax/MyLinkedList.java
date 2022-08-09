@@ -15,34 +15,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Wrong index");
+            throw new IndexOutOfBoundsException("Wrong index " + index + " for size " + size);
         }
         if (index == size) {
-            Node<T> lastNode = last;
-            Node<T> newNode = new Node<>(lastNode, value, null);
+            Node<T> newNode = new Node<>(last, value, null);
             if (first == null) {
                 first = newNode;
             } else {
                 last.next = newNode;
             }
             last = newNode;
-            size++;
         } else if (index > 0) {
-            Node<T> newNode = first;
-            for (int i = 0; i < index; i++) {
-                newNode = newNode.next;
-            }
+            Node<T> newNode = findNodeByIndex(index);
             Node<T> currentNode = new Node<>(newNode.prev, value, newNode);
             currentNode.prev.next = currentNode;
             currentNode.next.prev = currentNode;
-            size++;
         } else {
             Node<T> newNode = first;
             Node<T> currentNode = new Node<>(null, value, newNode);
             newNode.prev = currentNode;
             first = currentNode;
-            size++;
         }
+        size++;
     }
 
     @Override
@@ -111,7 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Wrong index");
+            throw new IndexOutOfBoundsException("Wrong index " + index + " for size " + size);
         }
     }
 
