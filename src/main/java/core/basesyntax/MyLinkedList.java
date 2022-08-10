@@ -7,11 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public MyLinkedList() {
-        head = null;
-        tail = null;
-    }
-
     @Override
     public void add(T value) {
         Node<T> node = tail;
@@ -34,7 +29,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            Node<T> nodeByIndex = getNodeElementByIndex(index);
+            Node<T> nodeByIndex = getNodeByIndex(index);
             Node<T> prevNodeByIndex = nodeByIndex.previous;
             Node<T> newNode = new Node<>(prevNodeByIndex, value, nodeByIndex);
             nodeByIndex.previous = newNode;
@@ -57,13 +52,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkPositionIndex(index);
-        return getNodeElementByIndex(index).value;
+        return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkPositionIndex(index);
-        Node<T> nodeByIndex = getNodeElementByIndex(index);
+        Node<T> nodeByIndex = getNodeByIndex(index);
         T oldValue = nodeByIndex.value;
         nodeByIndex.value = value;
         return oldValue;
@@ -72,7 +67,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkPositionIndex(index);
-        return unlink(getNodeElementByIndex(index));
+        return unlink(getNodeByIndex(index));
     }
 
     @Override
@@ -100,13 +95,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkPositionIndex(int index) {
-        if (index >= 0 && index < size()) {
-            return;
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds.");
         }
-        throw new IndexOutOfBoundsException("Index " + index + " is out of bounds.");
     }
 
-    private Node<T> getNodeElementByIndex(int index) {
+    private Node<T> getNodeByIndex(int index) {
         checkPositionIndex(index);
 
         if (index < (size / 2)) {
