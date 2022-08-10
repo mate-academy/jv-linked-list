@@ -22,24 +22,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(WRONG_INDEX);
-        }
         if (index == size) {
             add(value);
             return;
         }
+        checkIndex(index);
 
         Node<T> currentNode = findNodeByIndex(index);
         if (index == 0) {
-            Node<T> insertedNode = new Node<>(null, value, currentNode);
-            currentNode.prev = insertedNode;
+            Node<T> insertedNode = insertBefore(null, value, currentNode);
             head = insertedNode;
         } else {
             Node<T> prevNode = currentNode.prev;
-            Node<T> insertedNode = new Node<>(prevNode, value, currentNode);
+            Node<T> insertedNode = insertBefore(prevNode, value, currentNode);
             prevNode.next = insertedNode;
-            currentNode.prev = insertedNode;
         }
         size++;
     }
@@ -76,9 +72,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (size == 0) {
-            return false;
-        }
         Node<T> currentNode = head;
         for (int i = 0; i < size; i++) {
             if (object == currentNode.value || object != null && object.equals(currentNode.value)) {
@@ -118,7 +111,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(WRONG_INDEX);
+            throw new IndexOutOfBoundsException(WRONG_INDEX + index);
         }
     }
 
@@ -141,6 +134,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             deletedNode.next.prev = deletedNode.prev;
         }
         size--;
+    }
+
+    private Node<T> insertBefore(Node<T> prevNode, T value, Node<T> currentNode) {
+        Node<T> insertedNode = new Node<>(prevNode, value, currentNode);
+        currentNode.prev = insertedNode;
+        return insertedNode;
     }
 
     private static class Node<T> {
