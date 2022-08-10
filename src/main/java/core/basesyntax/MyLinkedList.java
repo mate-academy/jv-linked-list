@@ -121,13 +121,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNodeByIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " is invalid");
+            throw new IndexOutOfBoundsException("Invalid index: " + index);
         }
-        Node<T> node = head;
-        for (int i = 1; i <= index; i++) {
-            node = node.next;
+        Node<T> currentNode;
+        if (index < size / 2) {
+            currentNode = head;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+        } else {
+            currentNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                currentNode = currentNode.prev;
+            }
         }
-        return node;
+        return currentNode;
     }
 
     private void unLink(Node<T> node) {
