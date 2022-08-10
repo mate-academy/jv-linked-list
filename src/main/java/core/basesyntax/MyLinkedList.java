@@ -37,23 +37,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("There are no such index: " + index);
         }
         Node<T> newNode = new Node<>(null, value, null);
-        if (index == size) {
-            add(value);
-        } else if (index == 0) {
-            newNode.next = first;
-            newNode.prev = null;
-            first.prev = newNode;
-            first = newNode;
-            size++;
-        } else {
-            Node<T> current = findNodeByIndex(index);
-            Node<T> previous = current.prev;
-            newNode.next = current;
-            newNode.prev = previous;
-            previous.next = newNode;
-            current.prev = newNode;
-            size++;
-        }
+        addValueByIndex(newNode, index, value);
     }
 
     @Override
@@ -112,7 +96,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
-        Node<T> current = new Node<>(null, null, null);
+        Node<T> current;
         if (index < size * 0.5) {
             current = first;
             for (int i = 0; i < index; i++) {
@@ -120,7 +104,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         } else {
             current = last;
-            for (int i = 0; i < size - index - 1; i++) {
+            for (int i = size - 1; i > index; i--) {
                 current = current.prev;
             }
         }
@@ -151,6 +135,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             previous.next = nextNode;
             nextNode.prev = previous;
             size--;
+        }
+    }
+
+    private void addValueByIndex (Node<T> node, int index, T value) {
+        if (index == size) {
+            add(value);
+        } else if (index == 0) {
+            node.next = first;
+            node.prev = null;
+            first.prev = node;
+            first = node;
+            size++;
+        } else {
+            Node<T> current = findNodeByIndex(index);
+            Node<T> previous = current.prev;
+            node.next = current;
+            node.prev = previous;
+            previous.next = node;
+            current.prev = node;
+            size++;
         }
     }
 }
