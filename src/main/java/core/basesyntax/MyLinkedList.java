@@ -9,8 +9,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    @Override
-    public void add(T value) {
+    public MyLinkedList() {
         //инициализируем при создании
         tail = new Node<>(null, null, null);
         head = new Node<>(null, null, null);
@@ -19,7 +18,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     //при вызове метода add() создаем новый нод
     // c переданным значением и его нужно прицепить к LinkedList
-    public void add(T value, int index) {
+    public void add(T value) {
         //полюбому каждый раз у нас будет новый нод
         Node<T> node = new Node<>(null, value, null);
         //теперь этот новый узел нужно прицепить в конец LinkedList
@@ -42,6 +41,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         //элемент добавили, физический сайз +1
         size++;
+
+
+    }
+
+    @Override
+    public void add(T value, int index) {
 
     }
 
