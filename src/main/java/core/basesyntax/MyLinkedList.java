@@ -56,12 +56,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        return null;
+        checkIndex(index);
+        Node<T> temp = getNode(index);
+        T oldValue = temp.value;
+        temp.value = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIndex(index);
+        Node<T> removed = getNode(index);
+        if (removed.equals(head)) {
+            head = head.next;
+            head.prev = null;
+        } else if (removed.equals(tail)) {
+            tail = tail.prev;
+            tail.next = null;
+        } else {
+            removed.prev.next = removed.next;
+            removed.next.prev = removed.prev;
+        }
+        return removed.value;
     }
 
     @Override
@@ -102,9 +118,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
     private class Node<T>{
-        Node<T> next;
-        Node<T> prev;
-        T value;
+        private Node<T> next;
+        private Node<T> prev;
+        private T value;
 
         public Node(Node<T> prev, T value, Node<T> next) {
             this.next = next;
