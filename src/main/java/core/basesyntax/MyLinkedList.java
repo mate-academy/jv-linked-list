@@ -9,25 +9,32 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        linkLast(value);
+        final Node<T> l = last;
+        final Node<T> newNode = new Node<>(l, value, null);
+        last = newNode;
+        if (l == null) {
+            first = newNode;
+        } else {
+            l.next = newNode;
+        }
+        size++;
     }
 
     @Override
-    public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Exception, check your index " + index);
-        }
+    public T add(T value, int index) {
         if (index == size) {
             add(value);
-        } else {
-            linkBefore(value, getNode(index));
+            return value;
         }
+        checkIndex(index);
+        addBeforeNode(value, getNode(index));
+        return value;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T value : list) {
+            add(value);
         }
     }
 
@@ -75,19 +82,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    public void linkLast(T e) {
-        final Node<T> l = last;
-        final Node<T> newNode = new Node<>(l, e, null);
-        last = newNode;
-        if (l == null) {
-            first = newNode;
-        } else {
-            l.next = newNode;
-        }
-        size++;
-    }
-
-    public void linkBefore(T e, Node<T> succ) {
+    private void addBeforeNode(T e, Node<T> succ) {
         final Node<T> pred = succ.prev;
         final Node<T> newNode = new Node<>(pred, e, succ);
         succ.prev = newNode;
@@ -120,7 +115,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return deletedNode.item;
     }
 
-    public void checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Exception, check your index " + index);
         }
@@ -154,4 +149,3 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 }
-
