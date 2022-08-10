@@ -6,10 +6,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
     private int size;
+
     private static class Node<T> {
-        public Node<T> left;
-        public Node<T> right;
-        public T value;
+        private Node<T> left;
+        private Node<T> right;
+        private T value;
 
         Node(Node<T> left, T value, Node<T> right) {
             this.value = value;
@@ -93,23 +94,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         isOutOfBounds(index);
+        T deletedValue;
         if (size == 1) {
             size = 0;
             return first.value;
         }
         if (index == size - 1) {
-            T deletedElementValue = last.value;
+            deletedValue = last.value;
             last = last.left;
             last.right = null;
             size--;
-            return deletedElementValue;
+            return deletedValue;
         }
         if (index == 0) {
-            T deletedElementValue = first.value;
+            deletedValue = first.value;
             first = first.right;
             first.left = null;
             size--;
-            return deletedElementValue;
+            return deletedValue;
         }
         int i = 0;
         Node<T> currentElement = first;
