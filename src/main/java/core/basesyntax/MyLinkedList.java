@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -24,17 +23,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Node<T> indexVariable = head;
-        for (int i  = 0; i < index; i++) {
-            indexVariable = indexVariable.next;
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("LinkedList index: " + index + " out of bounds exception");
         }
-        Node<T> pred = indexVariable.prev;
-        Node<T> newNode = new Node<>(pred, value, indexVariable);
-        indexVariable.prev = newNode;
-        if (pred == null)
-            head = newNode;
-        else
-            pred.next = newNode;
+        if (index == size) {
+            add(value);
+        } else {
+            Node<T> indexVariable = head;
+            for (int i = 0; i < index; i++) {
+                indexVariable = indexVariable.next;
+            }
+            Node<T> pred = indexVariable.prev;
+            Node<T> newNode = new Node<>(pred, value, indexVariable);
+            indexVariable.prev = newNode;
+            if (pred == null) head = newNode;
+            else pred.next = newNode;
+            size++;
+        }
         //newNode.next = indexVariable.next;
         //newNode.prev = indexVariable;
         //indexVariable.next = newNode;
@@ -49,6 +54,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
+        checkIndex(index);
         Node<T> indexNode = head;
         for (int i  = 0; i < index; i++) {
             indexNode = indexNode.next;
@@ -71,26 +77,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> indexNode = head;
-        for (int i  = 0; i < index; i++) {
-            indexNode = indexNode.next;
-        }
-        T result = indexNode.item;
-        indexNode.prev.next = indexNode.next;
-        indexNode.next.prev = indexNode.prev;
-        size--;
-        return result;
+        return unlink(findIndex(index));
     }
 
     @Override
     public boolean remove(T object) {
-        for (Node<T> x = head; x != null; x = x.next) {
+        Node<T> x = head;
+        while (x != null) {
             if ((x.item == object) || (x.item != null && x.item.equals(object))) {
-                x.prev.next = x.next;
-                x.next.prev = x.prev;
-                size--;
+                unlink(x);
                 return true;
             }
+            x = x.next;
         }
         return false;
     }
@@ -111,9 +109,41 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
+    private Node<T> findIndex(int index) {
+        Node<T> indexNode = head;
+        for (int i  = 0; i < index; i++) {
+            indexNode = indexNode.next;
+        }
+        return indexNode;
+    }
+
+    private T unlink (Node<T> node) {
+        T element = node.item;
+        if (node.prev == null && node.next == null) {
+            node.item = null;
+            size--;
+        }
+        if (node.prev != null && node.next == null){
+            tail = node.prev;
+            node.prev.next = null;
+            size--;
+        }
+        if (node.prev == null && node.next != null) {
+            head = node.next;
+            node.next.prev = null;
+            size--;
+        }
+        if (node.prev != null && node.next != null){
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+            size--;
+        }
+        return element;
+    }
+
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("////////////INDEX_ERROR_MESSAGE");
+            throw new IndexOutOfBoundsException("LinkedList index: " + index + " out of bounds exception");
         }
     }
     private static class Node<T> {
