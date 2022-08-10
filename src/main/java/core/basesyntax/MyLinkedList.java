@@ -17,7 +17,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     //при вызове метода add() создаем новый нод
-    // c переданным значением и его нужно прицепить к LinkedList
+    //c переданным значением и его нужно прицепить к LinkedList
     public void add(T value) {
         //полюбому каждый раз у нас будет новый нод
         Node<T> node = new Node<>(null, value, null);
@@ -71,34 +71,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             //он стал первым в LinkedList
             head = node;
         } else if (index == size) {
-            //сценарий когда нам нужно добавить элемент в самый конец
-            //нам наш только что созданный нод пока что нужно
-            //просто прицепить на последнюю позицию в LinkedList
-            //у текущего последнего элемента сетим в next ссылку
-            //наш новый нод
-            tail.next = node;
-            //у нового нода поле prev наполняем бывшим последним нодом
-            node.prev = tail;
-            //и только что созданный нод делаем последним
-            tail = node;
+            add(value);
         } else {
             //а теперь логика как добавлять в середину LinkedList
-            //нужно дойти до индекса который будет стоять ПЕРЕД местом
+            //нужно дойти до индекса который будет стоять ПЕРЕД местом поэтому index - 1
             //куда нам нужно добавить новый элемент и установить
             //переопределив ссылки, разрываем цепь, вставляем элемент, соединяем.
-            //создадим референс на первый элемент с какого стартуем
-            Node<T> current = head;
-            //для того что бы дойти до нужного элемента юзай fori до index
-            for (int i = 0; i < index; i++) { //до элемента, который стоит перед местом куда будем вставлять
-                //на каждой итерации будем перепрыгивать наши ноды и дойдем до нашего нода
-                current = current.next;
-            }
-            //теперь работаем со ссылками
-            //цепляем вторую часть нашего "хвоста" в наш нод
-            //установив ему next на next нашего пойманного нода current
+            Node<T> current = getNodeByIndex(index - 1);
             node.next = current.next;
-            //и по идее тут мы привязали к элементу перед нашим нодом
             node.prev = current;
+            current.next = node;
         }
         //и поскольку мы добавили элемент то
         size++;
@@ -111,12 +93,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndex(index);
+        //у найденного значения по индексу вытягиваем value
+        return getNodeByIndex(index).value;
     }
 
     @Override
+    //что бы в LinkedList сменить элемент по индексу
+    //нужно только сменить значение, но нам нужно дойти до этого элемента
     public T set(T value, int index) {
-        return null;
+        checkIndex(index);
+        //достаем по индексу нужный нам элемент
+        Node<T> node = getNodeByIndex(index);
+        //просто сетим наше значение что бы его вернуть
+        T prevValue = node.value;
+        //и меняем его значение
+        node.value = value;
+        return prevValue;
     }
 
     @Override
@@ -131,22 +124,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 
     private Node<T> findNodeByIndex(int index) {
         return new Node<>(null, null, null);
-    }
-
-    private void addFirstNode(Node<T> node) {
-        head = node;
-        tail = node;
-        size++;
     }
 
     private void checkIndex(int index) {
@@ -159,6 +146,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Wrong index" + index);
         }
+    }
+
+    private Node<T> getNodeByIndex(int index) {
+        //создадим референс на первый элемент с какого стартуем
+        Node<T> current = head;
+        //для того что бы дойти до нужного элемента юзай fori до index
+        for (int i = 0; i < index; i++) { //до элемента, который стоит перед местом куда будем вставлять
+            //на каждой итерации будем перепрыгивать наши ноды и дойдем до нашего нода
+            current = current.next;
+        }
+        return current;
     }
 
     private class Node<T> {
