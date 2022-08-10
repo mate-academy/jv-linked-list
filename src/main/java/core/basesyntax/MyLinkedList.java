@@ -7,13 +7,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public MyLinkedList() {
-        head = null;
-        tail = null;
-        size = 0;
-    }
-
-    private class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node<T> prev;
         private Node<T> next;
@@ -27,14 +21,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> node = new Node<>(null, value, null);
+        Node<T> node = new Node<>(tail, value, null);
         size++;
         if (tail == null) {
             head = node;
             tail = node;
         } else {
             tail.next = node;
-            node.prev = tail;
             tail = node;
         }
     }
@@ -80,9 +73,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         validateIndex(index);
         Node<T> currentNode = findNode(index);
-        T oldValiue = currentNode.value;
+        T oldValue = currentNode.value;
         currentNode.value = value;
-        return oldValiue;
+        return oldValue;
     }
 
     @Override
@@ -143,30 +136,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void validateIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("There is no such index.");
+            throw new IndexOutOfBoundsException("There is no such index [" + index + "]");
         }
     }
 
     private Node<T> findNode(int index) {
-        int counter = 0;
         if (index < size / 2) {
             Node<T> currentNode = head;
-            while (currentNode != null) {
-                if (counter == index) {
-                    break;
-                }
-                counter++;
+            for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
             }
             return currentNode;
         }
-        index = size - index - 1;
         Node<T> currentNode = tail;
-        while (currentNode != null) {
-            if (counter == index) {
-                break;
-            }
-            counter++;
+        for (int i = 0; i < size - index - 1; i++) {
             currentNode = currentNode.prev;
         }
         return currentNode;
