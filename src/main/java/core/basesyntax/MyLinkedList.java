@@ -26,14 +26,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(value);
         if (first == null) {
             first = last = newNode;
+        } else if (index == size) {
+            add(value);
+            return;
         } else if (index == 0) {
             newNode.next = first;
             first.previous = newNode;
             first = newNode;
-        } else if (index == size) {
-            last.next = newNode;
-            newNode.previous = last;
-            last = newNode;
         } else {
             Node<T> preceding = getNodeByIndex(index - 1);
             newNode.next = preceding.next;
@@ -46,8 +45,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T element : list) {
+            add(element);
         }
     }
 
@@ -59,10 +58,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        T oldValue;
         checkIndex(index, size);
         Node<T> node = getNodeByIndex(index);
-        oldValue = node.value;
+        T oldValue = node.value;
         node.value = value;
         return oldValue;
     }
@@ -70,40 +68,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index, size);
-        T removedValue;
-        Node<T> removedNode;
-        if (index == 0) {
-            removedValue = first.value;
-            removedNode = first;
-            first = first.next;
-            if (first == null) {
-                last = null;
-            }
-        } else {
-            Node<T> preceding = getNodeByIndex(index - 1);
-            removedNode = preceding.next;
-            removedValue = preceding.next.value;
-            preceding.next = preceding.next.next;
-            if (index == size - 1) {
-                last = preceding;
-            } else {
-                preceding.next.previous = preceding;
-            }
-        }
-        unlink(removedNode);
+        Node<T> current = getNodeByIndex(index);
+        T removedValue = current.value;
+        unlink(current);
         size--;
         return removedValue;
     }
 
     @Override
     public boolean remove(T object) {
-        int nodeIndex = getIndexOfNode(object);
-        if (nodeIndex == -1) {
-            return false;
-        } else {
-            remove(nodeIndex);
+        Node<T> current = getNodeByValue(object);
+        if (current != null) {
+            unlink(current);
+            size--;
             return true;
         }
+        return false;
     }
 
     @Override
@@ -138,20 +118,32 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private int getIndexOfNode(T value) {
+    private Node<T> getNodeByValue(T value) {
         Node<T> current = first;
         for (int i = 0; i < size; i++) {
             if (current.value != null && current.value.equals(value) || current.value == value) {
-                return i;
+                return current;
             }
             current = current.next;
         }
-        return -1;
+        return null;
     }
 
     private void unlink(Node<T> node) {
-        node.next = null;
-        node.previous = null;
+        if (node == first) {
+            first = first.next;
+            if (first == null) {
+                last = null;
+            }
+        } else {
+            Node<T> preceding = node.previous;
+            preceding.next = node.next;
+            if (node.next == null) {
+                last = preceding;
+            } else {
+                node.next.previous = preceding;
+            }
+        }
     }
 
     static class Node<T> {
@@ -161,12 +153,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         public Node(T value) {
             this.value = value;
-        }
-
-        public Node(T value, Node<T> next, Node<T> previous) {
-            this.value = value;
-            this.next = next;
-            this.previous = previous;
         }
     }
 }
