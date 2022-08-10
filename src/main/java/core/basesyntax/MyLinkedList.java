@@ -15,50 +15,50 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        ListNode newnode = new ListNode<>(value);
+        ListNode newNode = new ListNode<>(value);
         if (size == 0) {
-            head = newnode;
-            tail = newnode;
+            head = newNode;
+            tail = newNode;
         } else if (size == 1) {
-            head.setNext(newnode);
-            newnode.setPrev(head);
-            tail = newnode;
+            head.setNext(newNode);
+            newNode.setPrev(head);
+            tail = newNode;
         } else {
-            tail.setNext(newnode);
-            newnode.setPrev(tail);
-            tail = newnode;
+            tail.setNext(newNode);
+            newNode.setPrev(tail);
+            tail = newNode;
         }
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        ListNode newnode = new ListNode<>(value);
+        ListNode newNode = new ListNode<>(value);
         if (size == 0 && index == 0) {
-            head = newnode;
-            tail = newnode;
+            head = newNode;
+            tail = newNode;
             size++;
             return;
         }
         if (index == 0 && size > 0) {
-            newnode.setNext(head);
-            head.setPrev(newnode);
-            head = newnode;
+            newNode.setNext(head);
+            head.setPrev(newNode);
+            head = newNode;
             size++;
             return;
         }
         if (size == index) {
-            tail.setNext(newnode);
-            newnode.setPrev(tail);
-            tail = newnode;
+            tail.setNext(newNode);
+            newNode.setPrev(tail);
+            tail = newNode;
             size++;
             return;
         }
         ListNode temp = findElementByIndex(index);
-        newnode.setNext(temp);
-        newnode.setPrev(temp.getPrev());
-        temp.setPrev(newnode);
-        newnode.getPrev().setNext(newnode);
+        newNode.setNext(temp);
+        newNode.setPrev(temp.getPrev());
+        temp.setPrev(newNode);
+        newNode.getPrev().setNext(newNode);
         size++;
     }
 
@@ -134,7 +134,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private ListNode findElementByIndex(int index) {
         if (index < 0 || index > size - 1 || isEmpty()) {
-            throw new IndexOutOfBoundsException("invalid index");
+            throw new IndexOutOfBoundsException("invalid index " + index);
         }
         if (index == 0) {
             return head;
@@ -159,26 +159,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return temp;
     }
 
-    private void unlink(ListNode<T> unlinkelement) {
-        if (unlinkelement == head && size == 1) {
+    private void unlink(ListNode<T> unlinkElement) {
+        if (unlinkElement == head && size == 1) {
             head = null;
             tail = null;
             size--;
             return;
         }
-        if (unlinkelement == tail) {
+        if (unlinkElement == tail) {
             tail.getPrev().setNext(null);
             tail = tail.getPrev();
             size--;
             return;
         }
-        if (unlinkelement == head) {
-            head = unlinkelement.getNext();
+        if (unlinkElement == head) {
+            head = unlinkElement.getNext();
             size--;
             return;
         }
-        unlinkelement.getNext().setPrev(unlinkelement.getPrev());
-        unlinkelement.getPrev().setNext(unlinkelement.getNext());
+        unlinkElement.getNext().setPrev(unlinkElement.getPrev());
+        unlinkElement.getPrev().setNext(unlinkElement.getNext());
         size--;
     }
 
