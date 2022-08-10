@@ -31,17 +31,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index > size() || index < 0) {
             throw new IndexOutOfBoundsException("Index " + index + " out of bounds.");
         }
-
         if (index == size) {
             add(value);
         } else {
-            Node<T> nodeByIndex = getNodeElementByIndex(index).previous;
-            Node<T> newNode = new Node<>(nodeByIndex, value, getNodeElementByIndex(index));
-            getNodeElementByIndex(index).previous = newNode;
-            if (nodeByIndex == null) {
+            Node<T> nodeByIndex = getNodeElementByIndex(index);
+            Node<T> prevNodeByIndex = nodeByIndex.previous;
+            Node<T> newNode = new Node<>(prevNodeByIndex, value, nodeByIndex);
+            nodeByIndex.previous = newNode;
+            if (prevNodeByIndex == null) {
                 head = newNode;
             } else {
-                nodeByIndex.next = newNode;
+                prevNodeByIndex.next = newNode;
             }
             size++;
         }
