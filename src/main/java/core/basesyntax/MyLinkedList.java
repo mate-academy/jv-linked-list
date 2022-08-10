@@ -23,7 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("The index "
-                    + index + "passed to method is invalid");
+                    + index + " passed to method is invalid");
         }
         if (size == index) {
             add(value);
@@ -43,8 +43,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T element : list) {
+            add(element);
         }
     }
 
@@ -70,20 +70,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (head == tail) {
             head = null;
             tail = null;
-            size--;
         } else if (index == 0) {
             head.next.prev = null;
             head = head.next;
-            size--;
         } else if (index == size - 1) {
             tail.prev.next = null;
             tail = tail.prev;
-            size--;
         } else {
             node.prev.next = node.next;
             node.next.prev = node.prev;
-            size--;
         }
+        size--;
         return node.item;
     }
 
@@ -123,7 +120,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void checkIndexValidation(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("The index "
-                    + index + "passed to method is invalid");
+                    + index + " passed to method is invalid");
         }
     }
 
