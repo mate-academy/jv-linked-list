@@ -78,10 +78,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         for (Node<T> i = first; i != null; i = i.next) {
-            if (i.item == null && object == null) {
-                unlink(i);
-                return true;
-            } else if (object != null && object.equals(i.item)) {
+            if ((object == null && i.item == null) || (object != null
+                    && object.equals(i.item))) {
                 unlink(i);
                 return true;
             }
