@@ -78,9 +78,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         ListNode temp = findElementByIndex(index);
-        T oldvalue = (T) temp.getValue();
+        T oldValue = (T) temp.getValue();
         temp.setValue(value);
-        return oldvalue;
+        return oldValue;
     }
 
     @Override
