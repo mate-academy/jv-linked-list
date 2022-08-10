@@ -46,7 +46,62 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
+    //тут также нужно создать новый нод,
+    //но цеплять его придется в различные места,
+    //а не только в конец(середина, начало, конец)
+    //во всех этих ситуациях будет разная логика
     public void add(T value, int index) {
+        //прежде всего нужно добавить проверку валидный ли индекс
+        checkIndex(index);
+        //при любом добавлении в LinkedList это по любому новый нод
+        Node<T> node = new Node<>(null, value, null);
+        //если LinkedList сейчас пустой, то установить значение
+        //мы можем только в первый элемент
+        //и тогда снова tail и head будут равны null
+        if (head == null) {
+            head = tail = node;
+        } else if (index == 0) {
+            //у нашего добавляемого нода в ссылку next
+            //пишем наш предыдущий первый нод
+            node.next = head;
+            //теперь бывшему первому ноду в ссылку prev добавляем
+            //наш новый node
+            head.prev = node;
+            //затем ссылке head присваиваем наш новый node
+            //он стал первым в LinkedList
+            head = node;
+        } else if (index == size) {
+            //сценарий когда нам нужно добавить элемент в самый конец
+            //нам наш только что созданный нод пока что нужно
+            //просто прицепить на последнюю позицию в LinkedList
+            //у текущего последнего элемента сетим в next ссылку
+            //наш новый нод
+            tail.next = node;
+            //у нового нода поле prev наполняем бывшим последним нодом
+            node.prev = tail;
+            //и только что созданный нод делаем последним
+            tail = node;
+        } else {
+            //а теперь логика как добавлять в середину LinkedList
+            //нужно дойти до индекса который будет стоять ПЕРЕД местом
+            //куда нам нужно добавить новый элемент и установить
+            //переопределив ссылки, разрываем цепь, вставляем элемент, соединяем.
+            //создадим референс на первый элемент с какого стартуем
+            Node<T> current = head;
+            //для того что бы дойти до нужного элемента юзай fori до index
+            for (int i = 0; i < index; i++) { //до элемента, который стоит перед местом куда будем вставлять
+                //на каждой итерации будем перепрыгивать наши ноды и дойдем до нашего нода
+                current = current.next;
+            }
+            //теперь работаем со ссылками
+            //цепляем вторую часть нашего "хвоста" в наш нод
+            //установив ему next на next нашего пойманного нода current
+            node.next = current.next;
+            //и по идее тут мы привязали к элементу перед нашим нодом
+            node.prev = current;
+        }
+        //и поскольку мы добавили элемент то
+        size++;
 
     }
 
@@ -94,12 +149,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Wrong index" + index);
+        }
+    }
+
+    private void checkEqualsIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Wrong index" + index);
+        }
+    }
+
     private class Node<T> {
         //переменная со ссылкой на след элемент
         private Node<T> next;
         //переменная со ссылкой на посл элемент
         private Node<T> prev;
-        //переменная со значением,которое хотим сохранить
+        //переменная со значением, которое хотим сохранить
         private T value;
 
         public Node(Node<T> prev, T value, Node<T> next) {
