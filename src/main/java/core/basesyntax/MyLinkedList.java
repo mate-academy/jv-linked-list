@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final String ERROR_OUT_OF_BOUNDS = "Index out of bound: ";
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -22,9 +21,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException(ERROR_OUT_OF_BOUNDS + index);
-        }
+        checkIndex(index);
         if (index == size) {
             add(value);
             return;
@@ -52,7 +49,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException(ERROR_OUT_OF_BOUNDS + index);
+            throw new IndexOutOfBoundsException("Index out of bound: " + index);
         }
         return findNodeByIndex(index).value;
     }
@@ -100,7 +97,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNodeByIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(ERROR_OUT_OF_BOUNDS + index);
+            throw new IndexOutOfBoundsException("Index out of bound: " + index);
         }
         Node<T> currentNode;
         if (index < size / 2) {
@@ -131,6 +128,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             currentNode.previous.next = currentNode.next;
             currentNode.next.previous = currentNode.previous;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index > size || index < 0) {
+            throw new IndexOutOfBoundsException("Index out of bound: " + index);
         }
     }
 
