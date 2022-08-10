@@ -27,9 +27,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         Node<T> currentNode = findNodeByIndex(index);
-        Node newNode = new Node(currentNode.previous,value,currentNode);
+        Node<T> newNode = new Node<>(currentNode.previous, value, currentNode);
         newNode.next.previous = newNode;
-        if (index != 0) {
+        if (newNode.previous != null) {
             newNode.previous.next = newNode;
         } else {
             head = newNode;
