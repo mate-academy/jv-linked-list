@@ -64,21 +64,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> removeNode = getNode(index);
-        removeNode(removeNode);
-        return removeNode.value;
+        return unlink(removeNode).value;
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> node = head;
         if (node.value == object || node.value.equals(object)) {
-            removeNode(node);
+            unlink(node);
             return true;
         } else {
             int i = 0;
             while (node.next != null) {
                 if (node.value == object || node.value.equals(object)) {
-                    removeNode(getNode(i));
+                    unlink(getNode(i));
                     return true;
                 }
                 node = node.next;
@@ -121,28 +120,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    private Node<T> removeNode(Node<T> removeNode) {
+    private Node<T> unlink(Node<T> removeNode) {
         if (removeNode == head) {
             head = removeNode.next;
             removeNode.prev = null;
-            size--;
         } else {
             if (removeNode == tail) {
                 removeNode.prev.next = null;
-                size--;
             } else {
                 removeNode.prev.next = removeNode.next;
                 removeNode.next.prev = removeNode.prev;
-                size--;
             }
         }
+        size--;
         return removeNode;
     }
 
     private class Node<T> {
-        protected T value;
-        protected Node<T> prev;
-        protected Node<T> next;
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
 
         public Node(Node<T> prev, T value, Node<T> next) {
             this.value = value;
