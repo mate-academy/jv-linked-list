@@ -33,6 +33,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("There are no such index: " + index);
+        }
+        Node<T> newNode = new Node<>(null, value, null);
+        if (index == size) {
+            add(value);
+        } else if (index == 0) {
+            newNode.next = first;
+            newNode.prev = null;
+            first.prev = newNode;
+            first = newNode;
+            size++;
+        } else {
+            Node<T> current = findNodeByIndex(index);
+            Node<T> previous = current.prev;
+            newNode.next = current;
+            newNode.prev = previous;
+            previous.next = newNode;
+            current.prev = newNode;
+            size++;
+        }
     }
 
     @Override
@@ -67,5 +88,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return false;
+    }
+
+    private Node<T> findNodeByIndex(int index) {
+        Node<T> current = new Node<>(null, null, null);
+        if (index < size * 0.5) {
+            current = first;
+            for (int i = 0; i < size; i++) {
+                current = current.next;
+            }
+        } else {
+            current = last;
+            for (int i = 0; i < size - index - 1; i++) {
+                current = current.prev;
+            }
+        }
+        return current;
     }
 }
