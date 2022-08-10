@@ -24,12 +24,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         checkIndex(index, size + 1);
         Node<T> newNode = new Node<>(value);
-        if (first == null) {
-            first = last = newNode;
-        } else if (index == size) {
+        if (index == size) {
             add(value);
             return;
-        } else if (index == 0) {
+        }
+        if (index == 0) {
             newNode.next = first;
             first.previous = newNode;
             first = newNode;
@@ -146,7 +145,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    static class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node<T> next;
         private Node<T> previous;
