@@ -68,7 +68,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        int index = 0;
         Node<T> current = head;
         while (current != null) {
             if (object == current.element || object != null && object.equals(current.element)) {
@@ -76,7 +75,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 return true;
             }
             current = current.next;
-            index++;
         }
         return false;
     }
