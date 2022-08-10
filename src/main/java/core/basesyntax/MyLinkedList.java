@@ -9,13 +9,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
+        Node<T> node = new Node<>(tail, value, null);
         if (head == null) {
-            head = new Node<>(null, value, null);
+            head = node;
             tail = head;
-        } else {
-            tail.next = new Node<>(tail, value, null);
-            tail = tail.next;
         }
+        tail.next = node;
+        tail = tail.next;
         size++;
     }
 
@@ -24,7 +24,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Invalid index: " + index);
         }
-        if (index == size()) {
+        if (index == size) {
             add(value);
         } else {
             Node<T> nodeByIndex = findElementByIndex(index);
