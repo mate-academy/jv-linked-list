@@ -10,7 +10,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public MyLinkedList() {
         head = new Node<>(null, null, null);
         tail = new Node<>(null, null, null);
-        size = 0;
     }
 
     @Override
