@@ -27,7 +27,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             Node<T> nextNode = getNode(index);
             Node<T> newNode = new Node<>(nextNode.prev, value, nextNode);
-            newNode.next.prev = newNode;
+            nextNode.prev = newNode;
             if (index == 0) {
                 head = newNode;
             } else {
