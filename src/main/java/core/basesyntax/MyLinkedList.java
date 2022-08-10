@@ -1,7 +1,7 @@
 package core.basesyntax;
 
-import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
@@ -40,12 +40,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             temp.prev.next = newNode;
             temp.prev = newNode;
         }
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         for (T elem : list) {
             add(elem);
+            size++;
         }
     }
 
@@ -77,11 +79,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             removed.prev.next = removed.next;
             removed.next.prev = removed.prev;
         }
+        size--;
         return removed.value;
     }
 
     @Override
     public boolean remove(T object) {
+        if (size == 0) {
+            throw new NoSuchElementException("No such element: " + object);
+        }
+        Node<T> current = head;
+        for (int i = 0; i < size; i++) {
+            if (current.value == object || current.value != null && current.equals(object)) {
+                remove(i);
+                return true;
+            }
+        }
         return false;
     }
 
