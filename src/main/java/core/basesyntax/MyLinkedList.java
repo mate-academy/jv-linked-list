@@ -3,16 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final String INDEX_ERROR_MESSAGE = "Index is out of list`s interval";
     private int size;
     private Node<T> first;
     private Node<T> last;
-
-    public MyLinkedList() {
-        first = new Node<>(null, null, null);
-        last = new Node<>(null, null, null);
-        size = 0;
-    }
 
     @Override
     public void add(T value) {
@@ -30,7 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(INDEX_ERROR_MESSAGE);
+            throw new IndexOutOfBoundsException("Index is out of list`s interval " + index);
         }
         Node<T> newNode = new Node<>(last, value, null);
         if (index == 0 && size == 0) {
@@ -42,7 +35,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = newNode;
             size++;
         } else if (index == size) {
-            createLastNode(newNode);
+            last.next = newNode;
+            newNode.prev = last;
+            last = newNode;
+            size++;
         } else {
             Node<T> current = findNodeByIndex(index);
             newNode.next = current;
@@ -110,15 +106,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void createLastNode(Node<T> newNode) {
-        last.next = newNode;
-        newNode.prev = last;
-        last = newNode;
-        size++;
+
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(INDEX_ERROR_MESSAGE);
+            throw new IndexOutOfBoundsException("Index is out of list`s interval " + index);
         }
     }
 
