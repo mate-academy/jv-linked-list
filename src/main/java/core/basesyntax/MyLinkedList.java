@@ -97,12 +97,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findByIndex(int index) {
         checkIndex(index);
-        if (index == 0) {
-            return head;
-        }
-        if (index == size - 1) {
-            return tail;
-        }
         Node<T> element;
         if (index < size / 2) {
             element = head;
