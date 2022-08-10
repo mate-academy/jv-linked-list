@@ -9,13 +9,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        final Node<T> l = last;
-        final Node<T> newNode = new Node<>(l, value, null);
+        final Node<T> lastNode = last;
+        final Node<T> newNode = new Node<>(lastNode, value, null);
         last = newNode;
-        if (l == null) {
+        if (lastNode == null) {
             first = newNode;
         } else {
-            l.next = newNode;
+            lastNode.next = newNode;
         }
         size++;
     }
@@ -26,8 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return value;
         }
-        checkIndex(index);
-        addBeforeNode(value, getNode(index));
+        insertNodeByIndex(value, index);
         return value;
     }
 
@@ -82,14 +81,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void addBeforeNode(T e, Node<T> succ) {
-        final Node<T> pred = succ.prev;
-        final Node<T> newNode = new Node<>(pred, e, succ);
-        succ.prev = newNode;
-        if (pred == null) {
+    private void insertNodeByIndex(T value, int index) {
+        checkIndex(index);
+        Node<T> successful = getNode(index);
+        final Node<T> previousNode = successful.prev;
+        final Node<T> newNode = new Node<>(previousNode, value, successful);
+        successful.prev = newNode;
+        if (previousNode == null) {
             first = newNode;
         } else {
-            pred.next = newNode;
+            previousNode.next = newNode;
         }
         size++;
     }
