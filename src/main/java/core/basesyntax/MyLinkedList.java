@@ -9,22 +9,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     static class Node<T> {
         T value;
+        Node<T> prev;
         Node<T> next;
 
-        public Node(T value) {
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
             this.value = value;
+            this.next = next;
         }
     }
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
-        if (first == null) {
-            first = last = newNode;
+        Node<T> newNode = new Node<>(first ,value, null);
+        if (size == 0) {
+            first = newNode;
         } else {
-            this.last.next = newNode;
-//            last = newNode;
+            last.next = newNode;
         }
+        last = newNode;
         size++;
     }
 
