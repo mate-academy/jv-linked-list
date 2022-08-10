@@ -74,7 +74,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Node<T> tempNode = findNodeByIndex(index);
         T returnedValue = tempNode.item;
-        tempNode.item = new Node<>(value).item;
+        tempNode.item = value;
         return returnedValue;
     }
 
@@ -99,28 +99,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T unlink(int index, Node<T> tempNode) {
-        T removedItem;
+        T removedItem = tempNode.item;
         if (index == 0) {
             if (first.next == null) {
-                removedItem = first.item;
                 first = null;
                 size = 0;
                 return removedItem;
             }
             first.next.prev = null;
-            removedItem = first.item;
             first = first.next;
             size--;
             return removedItem;
         }
         if (index == size - 1) {
             last.prev.next = null;
-            removedItem = last.item;
             last = last.prev;
             size--;
             return removedItem;
         }
-        removedItem = tempNode.item;
         tempNode.prev.next = tempNode.next;
         tempNode.next.prev = tempNode.prev;
         size--;
