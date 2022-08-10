@@ -38,10 +38,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list != null) {
-            for (T value : list) {
-                add(value);
-            }
+        for (T value : list) {
+            add(value);
         }
     }
 
