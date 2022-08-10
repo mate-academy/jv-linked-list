@@ -7,7 +7,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
 
-    public class Node<T> {
+    private class Node<T> {
         private T item;
         private Node<T> next;
         private Node<T> prev;
@@ -21,7 +21,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        addLast(value);
+        Node<T> newNode = new Node<>(null, value, null);
+        if (size == 0) {
+            first = newNode;
+        } else {
+            last.next = newNode;
+            newNode.prev = last;
+        }
+        last = newNode;
+        size++;
     }
 
     @Override
@@ -31,7 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     + index);
         }
         if (size == index) {
-            addLast(value);
+            add(value);
         } else {
             addBefore(value, getNodeByIndex(index));
         }
@@ -69,19 +77,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> i = first; i != null; i = i.next) {
-                if (i.item == null) {
-                    unlink(i);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> i = first; i != null; i = i.next) {
-                if (object.equals(i.item)) {
-                    unlink(i);
-                    return true;
-                }
+        for (Node<T> i = first; i != null; i = i.next) {
+            if (i.item == null && object == null) {
+                unlink(i);
+                return true;
+            } else if (object != null && object.equals(i.item)) {
+                unlink(i);
+                return true;
             }
         }
         return false;
@@ -95,18 +97,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void addLast(T value) {
-        Node<T> newNode = new Node<>(null, value, null);
-        if (size == 0) {
-            first = newNode;
-        } else {
-            last.next = newNode;
-            newNode.prev = last;
-        }
-        last = newNode;
-        size++;
     }
 
     private void addBefore(T value, Node<T> current) {
