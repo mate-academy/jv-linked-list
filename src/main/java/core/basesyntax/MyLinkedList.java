@@ -97,9 +97,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNode(int index) {
         checkIndex(index, size - 1);
         Node<T> node = head;
-            for (int i = 0; i < index; i++) {
-                node = node.next;
-            }
+        for (int i = 0; i < index; i++) {
+            node = node.next;
+        }
         return node;
     }
 
@@ -115,8 +115,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = tail.prev;
             tail.next = null;
         } else {
-                node.prev.next = node.next;
-                node.next.prev = node.prev;
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
         }
     }
 
