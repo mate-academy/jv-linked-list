@@ -10,7 +10,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         public Node(T value) {
             this.value = value;
-
         }
     }
 
