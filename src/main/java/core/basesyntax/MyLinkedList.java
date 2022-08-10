@@ -138,7 +138,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void addValueByIndex (Node<T> node, int index, T value) {
+    private void addValueByIndex(Node<T> node, int index, T value) {
         if (index == size) {
             add(value);
         } else if (index == 0) {
