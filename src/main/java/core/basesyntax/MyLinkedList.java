@@ -69,7 +69,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head.prev = node;
             //затем ссылке head присваиваем наш новый node
             //он стал первым в LinkedList
+            tail = node;
             head = node;
+            size++;
         } else if (index == size) {
             add(value);
         } else {
@@ -81,19 +83,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.next = current.next;
             node.prev = current;
             current.next = node;
+            size++;
         }
         //и поскольку мы добавили элемент то
-        size++;
+
 
     }
 
     @Override
     public void addAll(List<T> list) {
+        for (T value : list) {
+            add(value);
+        }
     }
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        checkEqualsIndex(index);
         //у найденного значения по индексу вытягиваем value
         return getNodeByIndex(index).value;
     }
@@ -102,7 +108,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     //что бы в LinkedList сменить элемент по индексу
     //нужно только сменить значение, но нам нужно дойти до этого элемента
     public T set(T value, int index) {
-        checkIndex(index);
+        //в сэт проверяем что бы индекс не был больше сайза
+        checkEqualsIndex(index);
         //достаем по индексу нужный нам элемент
         Node<T> node = getNodeByIndex(index);
         //просто сетим наше значение что бы его вернуть
@@ -114,11 +121,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        return null;
+        checkEqualsIndex(index);
+        Node<T> node = getNodeByIndex(index);
+        unlink(node);
+        return node.value;
+
     }
 
     @Override
     public boolean remove(T object) {
+//
         return false;
     }
 
@@ -132,12 +144,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node<T> findNodeByIndex(int index) {
-        return new Node<>(null, null, null);
-    }
+
 
     private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Wrong index" + index);
         }
     }
@@ -157,6 +167,58 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current = current.next;
         }
         return current;
+    }
+
+    private void unlink(Node<T> node) {
+        if (node == head && node == tail) {
+            tail = head = null;
+        } else if (node == head) {
+            head = node.next;
+            head.prev = null;
+        } else if (node == tail) {
+            tail = node.prev;
+            tail.next = null;
+        } else {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        }
+        size--;
+
+
+//        //ecли индексы первого или последнего значения, то нужно обработать
+//        T removedValue;
+//        if (index == 0) {
+//            //сэтим наше первое значение, которую будем удалять
+//            removedValue = head.value;
+//            //присваиваем хеду новый первый елемент, потому что только что удалил первый
+//            head = head.next;
+//            //мы удалили элемент и чистим ссылку хвост, что б не указывала на удаленный елемент
+//            if (head == null) {
+//                tail = null;
+//            }
+//        } else {
+//            //но если у нас был только один елемент в списке
+//
+//            //prev этот элемент который стоит перед тем, который мы хотим удалить
+//            Node<T> prev = getNodeByIndex(index - 1);
+//            //который стоит после удаляемого
+//            Node<T> next = getNodeByIndex(index + 1);
+//            //сохраняем елемент, что бы его вернуть
+//            removedValue = prev.value;
+//            //в его поле next переменной prev хранится наш нод, который хотим удалить
+//            //а у удаляемого сохраняется референс на еще следующий
+//            //на то и выходит, что в prev.next сетим значение аж на нод через один удаляемый нод
+//            prev.next = prev.next.next;
+//            //то же делаем для следующего нода после удаляемого
+//            next.prev = next.prev.prev;
+//            //если мы удаляем последний, то обращаемся к предпоследнему елементу и ставим его хвостом
+//            if (index == size - 1) {
+//                tail = prev;
+//            }
+       // }
+//
+//        size--;
+//        return removedValue;
     }
 
     private class Node<T> {
