@@ -80,6 +80,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         boolean found = false;
         ListNode temp = head;
+        if (temp.value != null && temp.value.equals(object)
+                || temp.value == object) {
+            unlink(head);
+            found = true;
+            return found;
+        }
         while (temp != tail && !found) {
             if (temp.value != null && temp.value.equals(object)
                     || temp.value == object) {
@@ -91,12 +97,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             temp = temp.next;
         }
-        if (temp.value != null && temp.value.equals(object)
-                || temp.value == object) {
-            unlink(tail);
-            return true;
-        }
-        return found;
+        return false;
     }
 
     @Override
