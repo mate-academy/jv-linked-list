@@ -105,25 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (currentNode != null) {
             if (currentNode.value == object
                     || currentNode.value != null && currentNode.value.equals(object)) {
-                if (size == 1) {
-                    size--;
-                    return true;
-                }
-                Node prevNode = currentNode.prev;
-                Node nextNode = currentNode.next;
-                if (prevNode == null) {
-                    nextNode.prev = null;
-                    head = nextNode;
-                } else {
-                    prevNode.next = nextNode;
-                }
-                if (nextNode == null) {
-                    prevNode.next = null;
-                    tail = prevNode;
-                } else {
-                    nextNode.prev = prevNode;
-                }
-                size--;
+                unlink(currentNode);
                 return true;
             }
             currentNode = currentNode.next;
@@ -162,6 +144,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return currentNode;
+    }
+
+    private T unlink(Node<T> removedElement) {
+        if (size == 1) {
+            head = null;
+            tail = null;
+        } else if (removedElement.equals(head)) {
+            head.next.prev = null;
+            head = head.next;
+        } else if (removedElement.equals(tail)) {
+            tail.prev.next = null;
+            tail = tail.prev;
+        } else {
+            Node prevNode = removedElement.prev;
+            Node nextNode = removedElement.next;
+            prevNode.next = nextNode;
+            nextNode.prev = prevNode;
+        }
+        size--;
+        return removedElement.value;
     }
 
     static class Node<T> {
