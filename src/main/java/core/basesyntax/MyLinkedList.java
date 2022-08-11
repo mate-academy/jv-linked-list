@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final double HALF_LIST = 0.5;
 
     private Node<T> head;
     private Node<T> tail;
@@ -53,7 +52,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            this.add(list.get(i));
+            add(list.get(i));
         }
     }
 
@@ -105,7 +104,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> searchNode(int index) {
         Node<T> currentNode;
-        if (index < size * HALF_LIST) {
+        if (index < size * 0.5) {
             currentNode = head;
             for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
