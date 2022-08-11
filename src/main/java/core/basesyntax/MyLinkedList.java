@@ -62,7 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNode(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException(" index out of board "  + index);
+            throw new ArrayIndexOutOfBoundsException(" index out of board " + index);
         }
         Node<T> current;
         if (index < size / 2) {
