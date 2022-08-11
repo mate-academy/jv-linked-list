@@ -12,11 +12,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(tail, value, null);
         if (isEmpty()) {
             addFirst(newNode);
-        } else {
-            tail.next = newNode;
-            tail = newNode;
-            size++;
         }
+        tail.next = newNode;
+        tail = newNode;
+        size++;
     }
 
     @Override
@@ -99,7 +98,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void addFirst(Node<T> node) {
         head = node;
         tail = node;
-        size++;
     }
 
     private Node<T> findNode(int index) {
