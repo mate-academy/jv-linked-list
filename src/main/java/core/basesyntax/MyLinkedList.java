@@ -3,6 +3,10 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private Node<T> head;
+    private Node<T> tail;
+    private int size;
+
     public class Node<T> {
         private Node<T> prev;
         private Node<T> next;
@@ -25,10 +29,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> head;
-    private Node<T> tail;
-    private int size;
-
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(tail, value);
@@ -47,7 +47,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index can`t be:" + index
                     + " for LinkedList size:" + size);
         }
-        Node<T> nodeByIndex = iterateToIndex(index);
+        Node<T> nodeByIndex = getNodeByIndex(index);
         if (nodeByIndex == null) {
             add(value);
             return;
@@ -64,34 +64,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (Object element : list) {
-            add((T) element);
+        for (T element : list) {
+            add(element);
         }
     }
 
     @Override
     public T get(int index) {
-        checkOutOfMemory(index);
-        Node<T> nodeByIndex = iterateToIndex(index);
+        checkIndex(index);
+        Node<T> nodeByIndex = getNodeByIndex(index);
         return (T) nodeByIndex.value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkOutOfMemory(index);
-        Node<T> nodeByIndex = iterateToIndex(index);
-        final Object previousValue = nodeByIndex.value;
+        checkIndex(index);
+        Node<T> nodeByIndex = getNodeByIndex(index);
+        final T previousValue = nodeByIndex.value;
         nodeByIndex.value = value;
-        return (T) previousValue;
+        return previousValue;
     }
 
     @Override
     public T remove(int index) {
-        checkOutOfMemory(index);
-        Node<T> removedNode = iterateToIndex(index);
-        final Object removedValue = removedNode.value;
+        checkIndex(index);
+        Node<T> removedNode = getNodeByIndex(index);
+        final T removedValue = removedNode.value;
         unlink(removedNode);
-        return (T) removedValue;
+        return removedValue;
     }
 
     @Override
@@ -131,15 +131,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private Node<T> iterateToIndex(int index) {
-        Node tmp = head;
-        for (int i = 0; i < index; i++) { // use head/tail
-            tmp = tmp.next;
+    private Node<T> getNodeByIndex(int index) {
+        Node tmp;
+        if (size / 2 < index) {
+            tmp = size - index == 0 ? tail.next : tail;
+            for (int i = size - index; i > 1; i--) {
+                tmp = tmp.prev;
+            }
+        } else {
+            tmp = head;
+            for (int i = 0; i < index; i++) {
+                tmp = tmp.next;
+            }
         }
         return tmp;
     }
 
-    private void checkOutOfMemory(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Index can`t be:" + index
                     + " for LinkedList size:" + size);
