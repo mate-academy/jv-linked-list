@@ -25,23 +25,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("you use invalid index "
                     + index + ", size = " + size);
-        } else if (index == size) {
+        }
+        if (index == size) {
             add(value);
-        } else if (index == 0) {
+            return;
+        }
+        if (index == 0) {
             head.prev = newNode;
             newNode.next = head;
             head = newNode;
             size++;
-        } else {
-            Node nodeByIndex = getNode(index);
-            Node prevNode = nodeByIndex.prev;
-            Node nextNode = nodeByIndex;
-            newNode.prev = prevNode;
-            newNode.next = nextNode;
-            prevNode.next = newNode;
-            nextNode.prev = newNode;
-            size++;
+            return;
         }
+        Node nodeByIndex = getNode(index);
+        Node prevNode = nodeByIndex.prev;
+        Node nextNode = nodeByIndex;
+        newNode.prev = prevNode;
+        newNode.next = nextNode;
+        prevNode.next = newNode;
+        nextNode.prev = newNode;
+        size++;
     }
 
     @Override
