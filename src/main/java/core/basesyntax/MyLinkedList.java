@@ -20,8 +20,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (size == 0) {
+        if (size == index) {
             add(value);
+            return;
         }
         validateIndex(index);
         Node<T> currentNode = nodeByIndex(index);
