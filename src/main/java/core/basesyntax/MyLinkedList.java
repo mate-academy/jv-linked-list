@@ -1,7 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
+//import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -22,7 +22,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Objects.checkIndex(index, size + 1);
+        if (index > size() || index < 0) {
+            throw new IndexOutOfBoundsException("Index out of bound: " + index);
+        }
         if (size == index) {
             add(value);
         } else {
@@ -120,20 +122,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         final T element = currentNode.element;
         Node<T> next = currentNode.next;
         Node<T> prev = currentNode.prev;
-
         if (prev == null) {
             head = next;
         } else {
             prev.next = next;
         }
-
         if (next == null) {
             tail = prev;
         } else {
             next.prev = prev;
             currentNode.next = null;
         }
-
         currentNode.prev = null;
         size--;
         return element;
@@ -151,4 +150,3 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 }
-
