@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -39,8 +38,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T value : list) {
+            add(value);
         }
     }
 
@@ -51,8 +50,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        T oldNodeValue = getNodeByIndex(index).item;
-        getNodeByIndex(index).item = value;
+        Node<T> old = getNodeByIndex(index);
+        T oldNodeValue = old.item;
+        old.item = value;
         return oldNodeValue;
     }
 
@@ -108,22 +108,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    private T unlink(Node<T> removedElement) {
+    private T unlink(Node<T> removedNode) {
         if (size == 1) {
             head = null;
             tail = null;
-        } else if (removedElement.equals(head)) {
+        } else if (removedNode.previous == null) {
             head.next.previous = null;
-            head = removedElement.next;
-        } else if (removedElement.equals(tail)) {
+            head = removedNode.next;
+        } else if (removedNode.next == null) {
             tail.previous.next = null;
-            tail = removedElement.previous;
+            tail = removedNode.previous;
         } else {
-            removedElement.next.previous = removedElement.previous;
-            removedElement.previous.next = removedElement.next;
+            removedNode.next.previous = removedNode.previous;
+            removedNode.previous.next = removedNode.next;
         }
         size--;
-        return removedElement.item;
+        return removedNode.item;
     }
 
     private static class Node<T> {
