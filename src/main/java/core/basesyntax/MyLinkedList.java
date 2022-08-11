@@ -7,7 +7,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
 
-    static class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node<T> prev;
         private Node<T> next;
@@ -37,7 +37,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("There are no such index: " + index);
         }
         Node<T> newNode = new Node<>(null, value, null);
-        addValueByIndex(newNode, index, value);
+        if (index == size) {
+            add(value);
+            return;
+        }
+        if (index == 0) {
+            newNode.next = first;
+            newNode.prev = null;
+            first.prev = newNode;
+            first = newNode;
+            size++;
+        } else {
+            Node<T> current = findNodeByIndex(index);
+            Node<T> previous = current.prev;
+            newNode.next = current;
+            newNode.prev = previous;
+            previous.next = newNode;
+            current.prev = newNode;
+            size++;
+        }
     }
 
     @Override
@@ -135,25 +153,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             nextNode.prev = previous;
         }
         size--;
-    }
-
-    private void addValueByIndex(Node<T> node, int index, T value) {
-        if (index == size) {
-            add(value);
-        } else if (index == 0) {
-            node.next = first;
-            node.prev = null;
-            first.prev = node;
-            first = node;
-            size++;
-        } else {
-            Node<T> current = findNodeByIndex(index);
-            Node<T> previous = current.prev;
-            node.next = current;
-            node.prev = previous;
-            previous.next = node;
-            current.prev = node;
-            size++;
-        }
     }
 }
