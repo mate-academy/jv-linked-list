@@ -21,7 +21,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size() || index < 0) {
+        if (index > size || index < 0) {
             throw new IndexOutOfBoundsException("Index " + index + " out of bounds.");
         }
         if (index == size) {
@@ -49,7 +49,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        uncurrectIndex(index);
+        checkIndex(index);
         Node<T> neededNode = head;
         for (int i = 0; i < index; i++) {
             neededNode = neededNode.next;
@@ -59,7 +59,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        uncurrectIndex(index);
+        checkIndex(index);
         Node<T> setNode = getNodeByIndex(index);
         T oldValue = setNode.value;
         setNode.value = value;
@@ -68,7 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        uncurrectIndex(index);
+        checkIndex(index);
         Node<T> removedNode = getNodeByIndex(index);
         unlink(removedNode);
         size--;
@@ -111,7 +111,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void uncurrectIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0) {
             throw new IndexOutOfBoundsException("Index: " + index + " less then 0");
         }
@@ -139,7 +139,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        uncurrectIndex(index);
+        checkIndex(index);
         if (index < (size / 2)) {
             Node<T> current = head;
             for (int i = 0; i < index; i++) {
