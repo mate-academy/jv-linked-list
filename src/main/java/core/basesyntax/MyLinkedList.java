@@ -26,12 +26,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         ListNode newNode = new ListNode<>(value);
-        if (size == 0 && index == 0) {
-            head = newNode;
-            tail = newNode;
-            size++;
-            return;
-        }
         if (index == 0 && size > 0) {
             newNode.next = head;
             head.prev = newNode;
