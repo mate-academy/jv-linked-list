@@ -51,7 +51,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
         if (index < 0 || index >= size) {
@@ -62,7 +61,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return (T) nodeByIndex.value;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T set(T value, int index) {
         checkIndex(index);
@@ -95,7 +93,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return (T) previousNode.value;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
         checkIndex(index);
