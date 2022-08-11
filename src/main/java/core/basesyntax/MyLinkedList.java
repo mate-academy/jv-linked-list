@@ -83,10 +83,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void insertNodeByIndex(T value, int index) {
         checkIndex(index);
-        Node<T> successful = getNode(index);
-        final Node<T> previousNode = successful.prev;
-        final Node<T> newNode = new Node<>(previousNode, value, successful);
-        successful.prev = newNode;
+        Node<T> currentNode = getNode(index);
+        Node<T> previousNode = currentNode.prev;
+        Node<T> newNode = new Node<>(previousNode, value, currentNode);
+        currentNode.prev = newNode;
         if (previousNode == null) {
             first = newNode;
         } else {
