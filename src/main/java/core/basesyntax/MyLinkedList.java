@@ -21,7 +21,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index, index > size);
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Don't have such index " + index);
+        }
         if (index == size) {
             add(value);
         } else {
@@ -47,7 +49,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, index >= size);
+        checkIndex(index);
         Node<T> node = head;
         for (int i = 0; i < index; i++) {
             node = node.next;
@@ -57,7 +59,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index, index >= size);
+        checkIndex(index);
         Node<T> nodeByIndex = searchNode(index);
         T replacedValue = nodeByIndex.value;
         nodeByIndex.value = value;
@@ -66,7 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index, index >= size);
+        checkIndex(index);
         Node<T> nodeByIndex = searchNode(index);
         unlink(nodeByIndex);
         size--;
@@ -77,7 +79,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> first = head;
         if (first == null) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Don`t have object " + object);
         }
         for (int i = 0; i < size; i++) {
             if (first != null && (first.value == object || first.value.equals(object))) {
@@ -100,8 +102,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkIndex(int index, boolean b) {
-        if (b || index < 0) {
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Don't have such index " + index);
         }
     }
