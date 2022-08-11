@@ -3,18 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static class Node<T> {
-        private T item;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T item, Node<T> next) {
-            this.item = item;
-            this.prev = prev;
-            this.next = next;
-        }
-    }
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -166,6 +154,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void checkIndex(int index, int size) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Index " + index + " out of range.");
+        }
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T item, Node<T> next) {
+            this.item = item;
+            this.prev = prev;
+            this.next = next;
         }
     }
 }
