@@ -7,26 +7,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
 
-    private class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        public Node(Node<T> prev, T item, Node<T> next) {
-            this.item = item;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(null, value, null);
+        Node<T> newNode = new Node<>(last, value, null);
         if (size == 0) {
             first = newNode;
         } else {
             last.next = newNode;
-            newNode.prev = last;
         }
         last = newNode;
         size++;
@@ -34,14 +21,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Huston we have a BAG! Index it not valid: "
-                    + index);
-        }
         if (size == index) {
             add(value);
         } else {
             addBefore(value, getNodeByIndex(index));
+        }
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Huston we have a BAG! Index it not valid: "
+                    + index);
         }
     }
 
@@ -54,13 +41,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         return getNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> node = getNodeByIndex(index);
         T oldValue = node.item;
         node.item = value;
@@ -69,7 +54,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> current = getNodeByIndex(index);
         unlink(current);
         return current.item;
@@ -110,6 +94,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
+        checkIndex(index);
         Node<T> current = first;
         if (index < size / 2) {
             for (int i = 0; i < index; i++) {
@@ -144,6 +129,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Huston we have a BAG! Index it not valid: "
                     + index);
+        }
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(Node<T> prev, T item, Node<T> next) {
+            this.item = item;
+            this.next = next;
+            this.prev = prev;
         }
     }
 }
