@@ -21,15 +21,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Index can`t be:" + index
-                    + " for LinkedList size:" + size);
-        }
-        Node<T> nodeByIndex = getNodeByIndex(index);
-        if (nodeByIndex == null) {
+        if (size == index) {
             add(value);
             return;
         }
+        checkIndex(index);
+        Node<T> nodeByIndex = getNodeByIndex(index);
         Node<T> newNode = new Node<>(nodeByIndex.prev, value, nodeByIndex);
         if (head == nodeByIndex) {
             head = newNode;
@@ -127,8 +124,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Index can`t be:" + index
-                    + " for LinkedList size:" + size);
+            throw new IndexOutOfBoundsException("Index can`t be: " + index
+                    + " for LinkedList size: " + size);
         }
     }
 
