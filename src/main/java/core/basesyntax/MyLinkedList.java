@@ -123,16 +123,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index > size / 2) {
             ListNode temp = tail;
             index = size - index - 1;
-            while (index != 0) {
+            for (int i = index; i != 0; i--) {
                 temp = temp.prev;
-                index--;
             }
             return temp;
         }
         ListNode temp = head;
-        while (index != 0) {
+        for (int i = index; i != 0; i--) {
             temp = temp.next;
-            index--;
         }
         return temp;
     }
