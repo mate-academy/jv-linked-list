@@ -40,10 +40,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         if (size == index) {
-            tail.next = newNode;
-            newNode.prev = tail;
-            tail = newNode;
-            size++;
+            add(value);
             return;
         }
         ListNode temp = findElementByIndex(index);
