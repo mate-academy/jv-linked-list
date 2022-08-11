@@ -136,5 +136,4 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current.next.prev = current.prev;
         }
     }
-
 }
