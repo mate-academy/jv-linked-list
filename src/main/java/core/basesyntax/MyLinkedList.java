@@ -59,7 +59,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> removeNode = getNode(index);
         return unlink(removeNode).value;
     }
@@ -67,17 +66,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> node = head;
-        if (node.value == object || node.value.equals(object)) {
-            unlink(node);
-            return true;
-        } else {
-            while (node.next != null) {
-                if (node.value == object || node.value.equals(object)) {
-                    unlink(node);
-                    return true;
-                }
-                node = node.next;
+        while (node != null) {
+            if (node.value == object || node.value != null && node.value.equals(object)) {
+                unlink(node);
+                return true;
             }
+            node = node.next;
         }
         return false;
     }
