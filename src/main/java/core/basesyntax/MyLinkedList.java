@@ -64,8 +64,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        Node<T> currentElement = findElement(index);
-        return currentElement.value;
+        return findElement(index).value;
     }
 
     @Override
@@ -80,24 +79,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T deletedValue;
-        if (size == 1) {
-            size = 0;
-            return first.value;
-        }
-        if (index == size - 1) {
-            deletedValue = last.value;
-            last = last.prev;
-            last.next = null;
+        Node<T> deletedElement;
+        deletedElement = checkBorderElement(index);
+        if (deletedElement != null) {
             size--;
-            return deletedValue;
-        }
-        if (index == 0) {
-            deletedValue = first.value;
-            first = first.next;
-            first.prev = null;
-            size--;
-            return deletedValue;
+            return deletedElement.value;
         }
         Node<T> currentElement = findElement(index);
         unLink(currentElement);
@@ -115,7 +101,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             i++;
         }
         if (i < size) {
-            remove(i);
+            Node<T> deletedElement = checkBorderElement(i);
+            if (deletedElement == null) {
+                unLink(currentElement);
+            }
+            size--;
             return true;
         }
         return false;
@@ -128,22 +118,32 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return (size == 0);
+        return size == 0;
     }
 
     private void checkIndex(int index) {
-        if (index >= size() || index < 0) {
+        if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Index " + index
                     + " out of List bounds with size " + size);
         }
     }
 
     private Node<T> findElement(int index) {
-        Node<T> nextElement = first;
-        int i = 0;
-        while (i < index) {
-            nextElement = nextElement.next;
-            i++;
+        Node<T> nextElement;
+        if (index < size / 2) {
+            nextElement = first;
+            int i = 0;
+            while (i < index) {
+                nextElement = nextElement.next;
+                i++;
+            }
+        } else {
+            nextElement = last;
+            int i = size - 1;
+            while (i > index) {
+                nextElement = nextElement.prev;
+                i--;
+            }
         }
         return nextElement;
     }
@@ -151,5 +151,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void unLink(Node<T> unlinkedNode) {
         unlinkedNode.prev.next = unlinkedNode.next;
         unlinkedNode.next.prev = unlinkedNode.prev;
+    }
+
+    private Node<T> checkBorderElement(int index) {
+        Node<T> deletedElement;
+        if (size == 1) {
+            return first;
+        }
+        if (index == size - 1) {
+            deletedElement = last;
+            last = last.prev;
+            last.next = null;
+            return deletedElement;
+        }
+        if (index == 0) {
+            deletedElement = first;
+            first = first.next;
+            first.prev = null;
+            return deletedElement;
+        }
+        return null;
     }
 }
