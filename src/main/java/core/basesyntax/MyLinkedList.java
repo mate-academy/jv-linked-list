@@ -11,7 +11,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value) {
         Node<T> newNode = new Node<>(tail, value, null);
         if (isEmpty()) {
-            addFirst(newNode);
+            head = newNode;
+            tail = newNode;
         }
         tail.next = newNode;
         tail = newNode;
@@ -20,24 +21,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(
-                    "LinkedList index: " + index + " out of bounds exception");
-        }
         if (index == size) {
             add(value);
-        } else {
-            Node<T> nodeForIndex = findNode(index);
-            Node<T> pred = nodeForIndex.prev;
-            Node<T> newNode = new Node<>(pred, value, nodeForIndex);
-            nodeForIndex.prev = newNode;
-            if (pred == null) {
-                head = newNode;
-            } else {
-                pred.next = newNode;
-            }
-            size++;
+            return;
         }
+        checkIndex(index);
+        Node<T> nodeForIndex = findNode(index);
+        Node<T> newNode = new Node<>(nodeForIndex.prev, value, nodeForIndex);
+        nodeForIndex.prev = newNode;
+        if (index != 0) {
+            newNode.prev.next = newNode;
+        } else {
+            head = newNode;
+        }
+        size++;
     }
 
     @Override
@@ -56,12 +53,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> indexNode = head;
-        for (int i = 0; i < index; i++) {
-            indexNode = indexNode.next;
-        }
-        T result = indexNode.item;
-        indexNode.item = value;
+        T result = findNode(index).item;
+        findNode(index).item = value;
         return result;
     }
 
@@ -93,11 +86,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void addFirst(Node<T> node) {
-        head = node;
-        tail = node;
     }
 
     private Node<T> findNode(int index) {
