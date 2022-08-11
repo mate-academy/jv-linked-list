@@ -123,10 +123,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 1) {
             head = null;
             tail = null;
-        } else if (removedElement.equals(head)) {
+        } else if (removedElement.prev == null) {
             head.next.prev = null;
             head = head.next;
-        } else if (removedElement.equals(tail)) {
+        } else if (removedElement.next == null) {
             tail.prev.next = null;
             tail = tail.prev;
         } else {
