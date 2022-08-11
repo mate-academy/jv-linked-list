@@ -25,7 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            Node<T> findNode = node(index);
+            Node<T> findNode = searchNode(index);
             Node<T> prevNode = findNode.previous;
             Node<T> toAddNode = new Node<>(prevNode, value, findNode);
             findNode.previous = toAddNode;
@@ -58,7 +58,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index, index >= size);
-        Node<T> nodeByIndex = node(index);
+        Node<T> nodeByIndex = searchNode(index);
         T replacedValue = nodeByIndex.value;
         nodeByIndex.value = value;
         return replacedValue;
@@ -67,7 +67,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index, index >= size);
-        Node<T> nodeByIndex = node(index);
+        Node<T> nodeByIndex = searchNode(index);
         unlink(nodeByIndex);
         size--;
         return nodeByIndex.value;
@@ -127,7 +127,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         nextNode.previous = node.previous;
     }
 
-    private Node<T> node(int index) {
+    private Node<T> searchNode(int index) {
         Node<T> node;
         if (index < (size / 2)) {
             node = head;
