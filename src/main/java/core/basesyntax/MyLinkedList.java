@@ -9,12 +9,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(null, value, null);
+        Node<T> newNode = new Node<>(last, value, null);
         if (isEmpty()) {
-            createFirstNode(newNode);
+            first = newNode;
+            last = newNode;
         }
-
-        newNode.prev = last;
         last.next = newNode;
         last = newNode;
         size++;
@@ -25,26 +24,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index is out of list`s interval " + index);
         }
-        Node<T> newNode = new Node<>(last, value, null);
-        if (index == 0 && size == 0) {
-            createFirstNode(newNode);
-            size++;
-        } else if (index == 0 && size > 0) {
-            newNode.next = first;
-            first.prev = newNode;
-            first = newNode;
-            size++;
-        } else if (index == size) {
-            last.next = newNode;
-            newNode.prev = last;
-            last = newNode;
-            size++;
+        if (index == size) {
+            add(value);
         } else {
             Node<T> current = findNodeByIndex(index);
-            newNode.next = current;
-            newNode.prev = current.prev;
-            current.prev = newNode;
-            newNode.prev.next = newNode;
+            Node<T> newNode = new Node<>(current.prev, value, current);
+            newNode.next.prev = newNode;
+            if (index != 0) {
+                newNode.prev.next = newNode;
+            } else {
+                first = newNode;
+            }
+
             size++;
         }
     }
@@ -58,7 +49,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         return findNodeByIndex(index).item;
     }
 
@@ -100,15 +90,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void createFirstNode(Node<T> newNode) {
-        first = newNode;
-        last = newNode;
-    }
-
-    private void createLastNode(Node<T> newNode) {
-
-    }
-
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index is out of list`s interval " + index);
@@ -116,19 +97,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
-        Node<T> current = first;
+        checkIndex(index);
+        Node<T> current;
         if (index < size / 2) {
-            int position = 0;
-            while (position < index) {
+            current = first;
+            for (int i = 0; i < index; i++) {
                 current = current.next;
-                position++;
             }
         } else {
             current = last;
-            int position = size - 1;
-            while (position > index) {
+            for (int i = size - 1; i > index; i--) {
                 current = current.prev;
-                position--;
             }
         }
         return current;
