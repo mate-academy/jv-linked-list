@@ -8,26 +8,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
 
     public MyLinkedList() {
-        head = null;
-        tail = null;
-        size = 0;
     }
 
     @Override
     public void add(T value) {
         ListNode newNode = new ListNode<>(value);
+        newNode.setPrev(tail);
         if (size == 0) {
             head = newNode;
-            tail = newNode;
-        } else if (size == 1) {
-            head.next = newNode;
-            newNode.prev = head;
-            tail = newNode;
         } else {
-            tail.next = newNode;
-            newNode.prev = tail;
-            tail = newNode;
+            tail.setNext(newNode);
         }
+        tail = newNode;
         size++;
     }
 
