@@ -12,18 +12,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> node = new Node<>(tail, value, null);
         if (head == null) {
             head = node;
-            tail = head;
+        } else {
+            tail.next = node;
         }
-        tail.next = node;
-        tail = tail.next;
+        tail = node;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Invalid index: " + index);
-        }
         if (index == size) {
             add(value);
         } else {
