@@ -27,17 +27,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
             return;
-        } else {
-            Node<T> requiredNode = searchNodeByIndex(index);
-            Node<T> newNode = new Node<>(requiredNode.prev, value, requiredNode);
-            newNode.next.prev = newNode;
-            if (index == 0) {
-                head = newNode;
-            } else {
-                newNode.prev.next = newNode;
-            }
-            size++;
         }
+        Node<T> requiredNode = searchNodeByIndex(index);
+        Node<T> newNode = new Node<>(requiredNode.prev, value, requiredNode);
+        newNode.next.prev = newNode;
+        if (index == 0) {
+            head = newNode;
+        } else {
+            newNode.prev.next = newNode;
+        }
+        size++;
     }
 
     @Override
