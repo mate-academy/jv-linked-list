@@ -94,7 +94,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (temp.value != null && temp.value.equals(object)
                 || temp.value == object) {
             unlink(tail);
-            found = true;
+            return true;
         }
         return found;
     }
