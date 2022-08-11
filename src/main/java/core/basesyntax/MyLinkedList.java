@@ -119,23 +119,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> node) {
-        if (size == 1) {
-            size--;
+        if (first == last) {
+            first = null;
+            last = null;
         } else if (node == first) {
             first = node.next;
             first.prev = null;
-            size--;
         } else if (node == last) {
             last = node.prev;
             last.next = null;
-            size--;
         } else {
             Node<T> previous = node.prev;
             Node<T> nextNode = node.next;
             previous.next = nextNode;
             nextNode.prev = previous;
-            size--;
         }
+        size--;
     }
 
     private void addValueByIndex(Node<T> node, int index, T value) {
