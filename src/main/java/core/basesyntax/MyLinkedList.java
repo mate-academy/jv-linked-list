@@ -38,8 +38,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T item : list) {
+            add(item);
         }
     }
 
@@ -115,14 +115,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlinkNode(Node<T> previous, Node<T> current, Node<T> next) {
-        if (head.equals(current)) {
+        if (head == current) {
             if (head == tail) {
                 head = null;
                 tail = null;
             } else {
                 head = head.next;
             }
-        } else if (current.equals(tail)) {
+        } else if (current == tail) {
             tail = tail.prev;
             tail.next = null;
         } else {
