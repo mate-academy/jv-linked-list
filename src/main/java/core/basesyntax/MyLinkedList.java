@@ -53,12 +53,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("you use invalid index "
-                    + index + ", size = " + size);
-        }
-        Node nodeByIndex = getNode(index);
-        return (T) nodeByIndex.value;
+        checkIndex(index);
+        return (T) getNode(index).value;
     }
 
     @Override
