@@ -25,23 +25,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Wrong index" + index);
         }
-        Node<T> node = new Node<>(null, value, null);
-        if (head == null) {
-            head = tail = node;
-            size++;
-        } else if (index == 0) {
-            node.next = head;
+        if (index == size) {
+            add(value);
+            return;
+        }
+        Node<T> current = getNodeByIndex(index);
+        Node<T> node = new Node<>(current.prev, value, current);
+        if (index == 0) {
             head.prev = node;
-            tail = node;
             head = node;
             size++;
-        } else if (index == size) {
-            add(value);
         } else {
-            Node<T> current = getNodeByIndex(index - 1);
-            node.next = current.next;
-            node.prev = current;
-            current.next = node;
+            current.prev.next = node;
+            current.prev = node;
             size++;
         }
     }
@@ -55,13 +51,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkEqualsIndex(index);
+        checkIndex(index);
         return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkEqualsIndex(index);
+        checkIndex(index);
         Node<T> node = getNodeByIndex(index);
         T prevValue = node.value;
         node.value = value;
@@ -70,7 +66,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkEqualsIndex(index);
+        checkIndex(index);
         Node<T> node = getNodeByIndex(index);
         unlink(node);
         return node.value;
@@ -99,18 +95,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkEqualsIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Wrong index" + index);
         }
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        if (index > size / 2) {
+            Node<T> node = tail;
+            for (int i = 0; i < size - index - 1; i++) {
+                node = node.prev;
+            }
+            return node;
         }
-        return current;
+        Node<T> node = head;
+        for (int i = 0; i < index; i++) {
+            node = node.next;
+        }
+        return node;
     }
 
     private void unlink(Node<T> node) {
