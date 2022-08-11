@@ -21,23 +21,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index is out of list`s interval " + index);
-        }
         if (index == size) {
             add(value);
-        } else {
-            Node<T> current = findNodeByIndex(index);
-            Node<T> newNode = new Node<>(current.prev, value, current);
-            newNode.next.prev = newNode;
-            if (index != 0) {
-                newNode.prev.next = newNode;
-            } else {
-                first = newNode;
-            }
-
-            size++;
+            return;
         }
+        checkIndex(index);
+
+        Node<T> current = findNodeByIndex(index);
+        Node<T> newNode = new Node<>(current.prev, value, current);
+        newNode.next.prev = newNode;
+        if (index != 0) {
+            newNode.prev.next = newNode;
+        } else {
+            first = newNode;
+        }
+        size++;
     }
 
     @Override
