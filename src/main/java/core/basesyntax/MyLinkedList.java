@@ -104,9 +104,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNode(int index) {
-        Node<T> indexNode = head;
-        for (int i = 0; i < index; i++) {
-            indexNode = indexNode.next;
+        Node<T> indexNode;
+        if (index < size / 2) {
+            indexNode = head;
+            for (int i = 0; i < index; i++) {
+                indexNode = indexNode.next;
+            }
+        } else {
+            indexNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                indexNode = indexNode.prev;
+            }
         }
         return indexNode;
     }
