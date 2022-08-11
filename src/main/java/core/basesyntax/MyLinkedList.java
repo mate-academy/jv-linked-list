@@ -106,13 +106,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void removeNode(Node<T> node) {
-        if (node == head) {
-            if (size == 1) {
-                head = null;
-                tail = null;
-            } else {
-                head = head.next;
-            }
+        if (size == 1) {
+            head = null;
+            tail = null;
+        } else if (node == head) {
+            head = head.next;
         } else if (node == tail) {
             tail = tail.prev;
             tail.next = null;
