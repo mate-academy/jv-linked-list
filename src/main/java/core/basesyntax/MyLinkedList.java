@@ -7,11 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public MyLinkedList() {
-        tail = new Node<>(null, null, null);
-        head = new Node<>(null, null, null);
-    }
-
     @Override
     public void add(T value) {
         Node<T> node = new Node<>(null, value, null);
@@ -27,10 +22,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Wrong index" + index);
+        }
         Node<T> node = new Node<>(null, value, null);
         if (head == null) {
             head = tail = node;
+            size++;
         } else if (index == 0) {
             node.next = head;
             head.prev = node;
@@ -99,12 +97,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Wrong index" + index);
-        }
     }
 
     private void checkEqualsIndex(int index) {
