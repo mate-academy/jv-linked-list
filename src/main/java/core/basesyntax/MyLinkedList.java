@@ -12,7 +12,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(tail, value, null);
         if (size == 0) {
             head = newNode;
-        } else { //addAsTail
+        } else {
             tail.next = newNode;
         }
         tail = newNode;
@@ -62,14 +62,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Node<T> newNode = new Node<>(null, value, null);
         Node previousNode;
-        if (index == 0) { //setAsHead
+        if (index == 0) {
             previousNode = head;
 
             newNode.next = head.next;
             head.next.prev = newNode;
 
             head = newNode;
-        } else if (index == size - 1) { //addAsTail
+        } else if (index == size - 1) {
             previousNode = tail;
 
             newNode.prev = tail.prev;
