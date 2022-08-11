@@ -20,7 +20,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.prev = prev;
             this.item = item;
             this.next = next;
-
         }
     }
 
@@ -74,11 +73,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkElementIndex(index);
-        if (getNodeByIndex(index) == head) {
-            return head.item;
-        } else if (getNodeByIndex(index) == tail) {
-            return tail.item;
-        }
         return getNodeByIndex(index).item;
     }
 
