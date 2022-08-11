@@ -32,14 +32,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index == size && size == 0) {
+        if (size == 0) {
             add(value);
         }
         validateIndex(index);
-        if (size == index) {
-            add(value);
-        }
-        Node<T> currentNode = nodeByIndex(index);;
+        Node<T> currentNode = nodeByIndex(index);
         Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
         currentNode.prev = newNode;
         if (index == 0) {
@@ -52,8 +49,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T value : list) {
+            add(value);
         }
     }
 
@@ -83,11 +80,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        for (int i = 0; i < size; i++) {
-            if (get(i) == object || get(i).equals(object)) {
-                remove(i);
+        Node<T> currentNode = head;
+        while (currentNode != null) {
+            if (currentNode.value == object || currentNode.value.equals(object)) {
+                unlink(currentNode);
+                size--;
                 return true;
             }
+            currentNode = currentNode.next;
         }
         return false;
     }
@@ -110,8 +110,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> nodeByIndex(int index) {
         Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
+        if (index < size / 2) {
+            currentNode = head;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+        } else {
+            currentNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                currentNode = currentNode.prev;
+            }
         }
         return currentNode;
     }
