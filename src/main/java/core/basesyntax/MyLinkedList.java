@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private T item;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(Node<T> prev,T item, Node<T> next) {
-            this.prev = prev;
-            this.item = item;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> node = new Node<>(tail, value, null);
@@ -33,12 +21,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexByAdd(index);
+        checkIndex(index, size + 1);
         if (index == size) {
             add(value);
             return;
         }
-        checkIndex(index);
         Node<T> node = new Node<>(null, value, null);
         if (index == 0) {
             node.next = head;
@@ -65,14 +52,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        checkIndex(index, size);
         Node<T> node = findNodeByIndex(index);
         return node.item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
+        checkIndex(index, size);
         Node<T> node = findNodeByIndex(index);
         T previousValue = node.item;
         node.item = value;
@@ -81,7 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
+        checkIndex(index, size);
         Node<T> node = findNodeByIndex(index);
         unlink(node);
         return node.item;
@@ -110,17 +97,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private static class Node<T> {
+        private T item;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev,T item, Node<T> next) {
+            this.prev = prev;
+            this.item = item;
+            this.next = next;
+        }
+    }
+
     private void unlink(Node node) {
         if (size == 1) {
             size--;
-        } else if (node == head) {
+            return;
+        }
+        if (node == head) {
             head = node.next;
             head.prev = null;
             size--;
-        } else if (node == tail) {
+            return;
+        }
+        if (node == tail) {
             tail = node.prev;
             tail.next = null;
             size--;
+            return;
         } else {
             node.prev.next = node.next;
             node.next.prev = node.prev;
@@ -128,14 +132,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void checkIndex(int index) {
+    private void checkIndex(int index, int size) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " was not found!");
-        }
-    }
-
-    private void checkIndexByAdd(int index) {
-        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index " + index + " was not found!");
         }
     }
