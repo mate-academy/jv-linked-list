@@ -139,7 +139,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return removedElement.value;
     }
 
-    static class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node<T> prev;
         private Node<T> next;
