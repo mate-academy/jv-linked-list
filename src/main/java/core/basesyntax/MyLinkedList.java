@@ -50,10 +50,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        Node<T> neededNode = head;
-        for (int i = 0; i < index; i++) {
-            neededNode = neededNode.next;
-        }
+        Node<T> neededNode = getNodeByIndex(index);
         return neededNode.value;
     }
 
@@ -68,7 +65,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> removedNode = getNodeByIndex(index);
         unlink(removedNode);
         size--;
