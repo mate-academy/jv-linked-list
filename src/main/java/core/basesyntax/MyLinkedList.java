@@ -24,17 +24,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
             return;
+        }
+        checkIndex(index);
+        Node<T> nextNode = searchByIndex(index);
+        Node<T> previousNode = nextNode.previousElement;
+        Node<T> newNode = new Node<>(previousNode, value, nextNode);
+        nextNode.previousElement = newNode;
+        if (previousNode == null) {
+            head = newNode;
         } else {
-            checkIndex(index);
-            Node<T> nextNode = searchByIndex(index);
-            Node<T> previousNode = nextNode.previousElement;
-            Node<T> newNode = new Node<>(previousNode, value, nextNode);
-            nextNode.previousElement = newNode;
-            if (previousNode == null) {
-                head = newNode;
-            } else {
-                previousNode.nextElement = newNode;
-            }
+            previousNode.nextElement = newNode;
         }
         size++;
     }
@@ -91,7 +90,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private class Node<T> {
+    private static class Node<T> {
         private Node<T> previousElement;
         private T element;
         private Node<T> nextElement;
@@ -128,9 +127,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T unlink(Node<T> node) {
-        final T element = node.element;
-        final Node<T> previousElement = node.previousElement;
-        final Node<T> nextElement = node.nextElement;
+        T element = node.element;
+        Node<T> previousElement = node.previousElement;
+        Node<T> nextElement = node.nextElement;
         if (previousElement == null) {
             head = nextElement;
         } else {
