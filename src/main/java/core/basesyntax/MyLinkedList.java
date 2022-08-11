@@ -36,26 +36,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("There are no such index: " + index);
         }
-        Node<T> newNode = new Node<>(null, value, null);
         if (index == size) {
             add(value);
             return;
         }
+        Node<T> current = findNodeByIndex(index);
+        Node<T> previous = current.prev;
+        Node<T> newNode = new Node<>(previous, value, current);
         if (index == 0) {
-            newNode.next = first;
-            newNode.prev = null;
             first.prev = newNode;
             first = newNode;
-            size++;
         } else {
-            Node<T> current = findNodeByIndex(index);
-            Node<T> previous = current.prev;
-            newNode.next = current;
-            newNode.prev = previous;
             previous.next = newNode;
             current.prev = newNode;
-            size++;
         }
+        size++;
     }
 
     @Override
