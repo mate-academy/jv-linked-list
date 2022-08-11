@@ -86,14 +86,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             found = true;
             return found;
         }
-        while (temp != tail && !found) {
+        while (temp.next != null) {
             if (temp.value != null && temp.value.equals(object)
                     || temp.value == object) {
                 unlink(temp);
-                found = true;
-            }
-            if (found) {
-                return found;
+                return true;
             }
             temp = temp.next;
         }
@@ -113,12 +110,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private ListNode findElementByIndex(int index) {
         if (index < 0 || index > size - 1 || isEmpty()) {
             throw new IndexOutOfBoundsException("invalid index " + index);
-        }
-        if (index == 0) {
-            return head;
-        }
-        if (index == size - 1) {
-            return tail;
         }
         if (index > size / 2) {
             ListNode temp = tail;
