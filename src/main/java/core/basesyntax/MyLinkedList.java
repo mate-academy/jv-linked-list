@@ -113,7 +113,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private T unlink(Node<T> node) {
         T element = node.item;
-        if (node == first && node == last) {
+        if (first == last) {
             first = null;
             last = null;
             size--;
