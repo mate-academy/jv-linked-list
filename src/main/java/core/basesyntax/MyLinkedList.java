@@ -24,11 +24,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == index) {
             add(value);
         } else {
+            checkIndex(index);
             addBefore(value, getNodeByIndex(index));
-        }
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Huston we have a BAG! Index it not valid: "
-                    + index);
         }
     }
 
