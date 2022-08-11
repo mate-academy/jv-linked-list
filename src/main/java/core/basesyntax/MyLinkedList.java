@@ -12,10 +12,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        public Node(T item) {
-            this.item = item;
-        }
-
         public Node(Node<T> prev, T item, Node<T> next) {
             this.prev = prev;
             this.item = item;
@@ -41,7 +37,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Can't find element by index " + index);
         }
         if (head == null) {
-            head = tail = new Node<>(value);
+            head = tail = new Node<>(null, value, null);
         } else if (index == 0) {
             Node<T> newNode = new Node<>(null, value, head);
             head.prev = newNode;
