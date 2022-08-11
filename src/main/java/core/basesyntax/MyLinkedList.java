@@ -160,7 +160,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    class ListNode<T> {
+    private static class ListNode<T> {
         private T value;
         private ListNode prev;
         private ListNode next;
