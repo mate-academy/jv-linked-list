@@ -21,9 +21,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            checkIndex(index);
-        }
         if (index == size) {
             add(value);
             return;
@@ -74,14 +71,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             unlink(node);
             return true;
         } else {
-            int i = 0;
             while (node.next != null) {
                 if (node.value == object || node.value.equals(object)) {
-                    unlink(getNode(i));
+                    unlink(node);
                     return true;
                 }
                 node = node.next;
-                i++;
             }
         }
         return false;
