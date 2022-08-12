@@ -87,9 +87,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (object == i.item || object != null && object.equals(i.item)) {
                 unlink(i);
                 return true;
-            } else if (i.item == null) {
-                unlink(i);
-                return true;
             }
         }
         return false;
@@ -106,19 +103,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> node(int index) {
-        Node<T> newNode;
-        if (index < (size >> 1)) {
-            newNode = head;
-            for (int i = 0; i < index; i++) {
-                newNode = newNode.next;
-            }
-        } else {
-            newNode = tail;
-            for (int i = size - 1; i > index; i--) {
-                newNode = newNode.prev;
-            }
-        }
-        return newNode;
+        return getNodeByIndex(index);
     }
 
     private T unlink(Node<T> node) {
