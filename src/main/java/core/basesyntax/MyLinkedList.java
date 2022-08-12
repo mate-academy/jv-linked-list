@@ -78,7 +78,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkElementIndex(index);
-        return unlink(node(index));
+        return unlink(getNodeByIndex(index));
     }
 
     @Override
@@ -100,10 +100,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return head == null;
-    }
-
-    private Node<T> node(int index) {
-        return getNodeByIndex(index);
     }
 
     private T unlink(Node<T> node) {
