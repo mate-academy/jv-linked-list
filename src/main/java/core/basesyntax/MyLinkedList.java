@@ -21,20 +21,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Don't have such index " + index);
-        }
         if (index == size) {
             add(value);
         } else {
+            checkIndex(index);
             Node<T> findNode = searchNode(index);
             Node<T> prevNode = findNode.previous;
-            Node<T> toAddNode = new Node<>(prevNode, value, findNode);
-            findNode.previous = toAddNode;
+            Node<T> newNode = new Node<>(prevNode, value, findNode);
+            findNode.previous = newNode;
             if (prevNode == null) {
-                head = toAddNode;
+                head = newNode;
             } else {
-                prevNode.next = toAddNode;
+                prevNode.next = newNode;
             }
             size++;
         }
