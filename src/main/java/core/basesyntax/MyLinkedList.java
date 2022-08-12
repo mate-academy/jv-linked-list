@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size;
 
-    static class Node<T> {
-        private Node<T> next;
-        private Node<T> prev;
-        private T value;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(last, value, null);
@@ -62,7 +50,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNode(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException(" index out of board " + index);
+            throw new ArrayIndexOutOfBoundsException("index out of board " + index);
         }
         Node<T> current;
         if (index < size / 2) {
@@ -136,4 +124,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current.next.prev = current.prev;
         }
     }
+
+    private static class Node<T> {
+        private Node<T> next;
+        private Node<T> prev;
+        private T value;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
+    }
+
 }
