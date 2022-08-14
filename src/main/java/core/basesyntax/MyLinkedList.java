@@ -71,7 +71,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return oldValue;
     }
 
-    private void indexCheck(int index) {
+    private void checkElementIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("index: " + index + " Out of bound size : " + size);
         }
