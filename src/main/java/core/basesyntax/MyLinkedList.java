@@ -102,7 +102,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         boolean result = false;
-        Node<T> wantedNode = head;
+        Node<T> node = head;
         for (int i = 0; i < size; i++) {
             if (Objects.equals(wantedNode.value, object)) {
                 result = true;
