@@ -6,7 +6,7 @@ import java.util.Objects;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
-    private int size;
+    private int size = 0;
 
     public MyLinkedList() {
 
