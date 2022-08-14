@@ -22,15 +22,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Node<T> newNode = new Node<>(null,value,head);
+        Node<T> newNode = new Node<>(null, value, head);
         if (index == size) {
             add(value);
             return;
         }
         checkIndex(index);
-        if (head == null) {
-            head = tail = newNode;
-        } else if (index == 0) {
+        if (index == 0) {
             newNode.next = head;
             head = newNode;
         } else {
@@ -71,17 +69,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Node<T> newNode = getNodeByIndex(index);
         unlink(newNode);
-        size--;
         return newNode.value;
     }
 
     @Override
     public boolean remove(T object) {
-        for (int i = 0; i < size; i++) {
-            if (get(i) == object || get(i) != null && get(i).equals(object)) {
-                remove(i);
+        Node<T> current = head;
+        while (current != null) {
+            if (current.value == object
+                    || (current.value != null && current.value.equals(object))) {
+                unlink(current);
                 return true;
             }
+            current = current.next;
         }
         return false;
     }
@@ -109,9 +109,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Node<T> previous = head;
-        for (int i = 0; i < index; i++) {
-            previous = previous.next;
+        Node<T> previous = index < (size / 2) ? head : tail;
+        if (previous == head) {
+            for (int i = 0; i < index; i++) {
+                previous = previous.next;
+            }
+        } else {
+            for (int i = size - 1; i > index; i--) {
+                previous = previous.prev;
+            }
         }
         return previous;
     }
@@ -129,6 +135,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.prev.next = node.next;
             node.next.prev = node.prev;
         }
+        size--;
     }
 
     private void checkIndex(int index) {
