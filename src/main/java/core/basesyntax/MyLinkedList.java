@@ -48,8 +48,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Node<T> node = findNodeByIndex(index);
-        return node.value;
+        return findNodeByIndex(index).value;
     }
 
     @Override
