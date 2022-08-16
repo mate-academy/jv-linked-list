@@ -22,13 +22,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("index: " + index + " Out of bound size : " + size);
-        }
         if (index == size) {
             add(value);
             return;
         }
+        checkElementIndex(index);
         Node<T> node = findNodeByIndex(index);
         Node<T> nodeToAdd = new Node<>(null, value, node);
         if (index == 0) {
