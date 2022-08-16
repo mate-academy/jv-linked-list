@@ -92,8 +92,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNodeByIndex(int index) {
         checkElementIndex(index);
+        Node<T> node = head;
         if (index <= size / 2) {
-            Node<T> node = head;
             for (int i = 0; i < size; i++) {
                 if (i == index) {
                     break;
@@ -101,7 +101,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 node = node.next;
             }
         } else {
-            Node<T> node = tail;
+            node = tail;
             for (int i = size - 1; i >= 0; i--) {
                 if (i == index) {
                     break;
