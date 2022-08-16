@@ -94,6 +94,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkElementIndex(index);
         Node<T> node = (index <= size / 2) ? head : tail;
         if (node == head) {
+            Node<T> node = head;
             for (int i = 0; i < size; i++) {
                 if (i == index) {
                     break;
