@@ -79,16 +79,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> deletedElement;
-        deletedElement = checkBorderElement(index);
-        if (deletedElement != null) {
-            size--;
-            return deletedElement.value;
-        }
-        Node<T> currentElement = findElement(index);
-        unLink(currentElement);
-        size--;
-        return currentElement.value;
+        Node<T> deletedElement = unLink(null, index);
+        return deletedElement.value;
     }
 
     @Override
@@ -101,11 +93,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             i++;
         }
         if (i < size) {
-            Node<T> deletedElement = checkBorderElement(i);
-            if (deletedElement == null) {
-                unLink(currentElement);
-            }
-            size--;
+            unLink(currentElement, i);
             return true;
         }
         return false;
@@ -148,12 +136,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return nextElement;
     }
 
-    private void unLink(Node<T> unlinkedNode) {
-        unlinkedNode.prev.next = unlinkedNode.next;
-        unlinkedNode.next.prev = unlinkedNode.prev;
+    private Node<T> unLink(Node<T> unlinkedNode, int index) {
+        Node<T> deletedNode = deleteBorderNode(index);
+        if (deletedNode == null) {
+            if (unlinkedNode == null) {
+                deletedNode = findElement(index);
+            } else {
+                deletedNode = unlinkedNode;
+            }
+            deletedNode.prev.next = deletedNode.next;
+            deletedNode.next.prev = deletedNode.prev;
+        }
+        size--;
+        return deletedNode;
     }
 
-    private Node<T> checkBorderElement(int index) {
+    private Node<T> deleteBorderNode(int index) {
         Node<T> deletedElement;
         if (size == 1) {
             return first;
