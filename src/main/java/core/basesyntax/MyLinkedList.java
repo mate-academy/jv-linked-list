@@ -13,7 +13,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0) {
             head = newNode;
         } else {
-            newNode = new Node<>(tail, value, null);
             tail.next = newNode;
         }
         tail = newNode;
@@ -94,18 +93,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkElementIndex(index);
         Node<T> node = head;
         if (index <= size / 2) {
-            for (int i = 0; i < size; i++) {
-                if (i == index) {
-                    break;
-                }
+            for (int i = 0; i < index; i++) {
                 node = node.next;
             }
         } else {
             node = tail;
-            for (int i = size - 1; i >= 0; i--) {
-                if (i == index) {
-                    break;
-                }
+            for (int i = size - 1; i > index; i--) {
                 node = node.prev;
             }
         }
