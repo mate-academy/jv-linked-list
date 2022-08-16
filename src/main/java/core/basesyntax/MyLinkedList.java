@@ -101,6 +101,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 node = node.next;
             }
         } else {
+            Node<T> node = tail;
             for (int i = size - 1; i >= 0; i--) {
                 if (i == index) {
                     break;
