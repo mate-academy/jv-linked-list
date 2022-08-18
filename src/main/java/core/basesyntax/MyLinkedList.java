@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size;
 
-    private static class Node<T> {
-        private Node<T> prev;
-        private Node<T> next;
-        private T value;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.value = value;
-            this.prev = prev;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> addedElement = new Node<>(null, value, null);
@@ -79,7 +67,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> deletedElement = unLink(null, index);
+        Node<T> deletedElement = unlink(null, index);
         return deletedElement.value;
     }
 
@@ -90,7 +78,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (currentElement != null) {
             if (currentElement.value == object || currentElement.value != null
                     && currentElement.value.equals(object)) {
-                unLink(currentElement, i);
+                unlink(currentElement, i);
                 return true;
             }
             i++;
@@ -107,6 +95,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private static class Node<T> {
+        private Node<T> prev;
+        private Node<T> next;
+        private T value;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.value = value;
+            this.prev = prev;
+            this.next = next;
+        }
     }
 
     private void checkIndex(int index) {
@@ -136,7 +136,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return nextElement;
     }
 
-    private Node<T> unLink(Node<T> unlinkedNode, int index) {
+    private Node<T> unlink(Node<T> unlinkedNode, int index) {
         Node<T> deletedNode = deleteBorderNode(index);
         if (deletedNode == null) {
             if (unlinkedNode == null) {
