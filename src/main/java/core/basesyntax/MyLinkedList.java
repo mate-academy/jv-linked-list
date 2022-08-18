@@ -35,8 +35,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T t : list) {
+            add(t);
         }
     }
 
@@ -116,19 +116,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> node(int index) {
+        Node<T> x;
         if (index < (size >> 1)) {
-            Node<T> x = first;
+            x = first;
             for (int i = 0; i < index; i++) {
                 x = x.next;
             }
-            return x;
         } else {
-            Node<T> x = last;
+            x = last;
             for (int i = size - 1; index < i; i--) {
                 x = x.prev;
             }
-            return x;
         }
+        return x;
     }
 
     private void linkLast(T value) {
