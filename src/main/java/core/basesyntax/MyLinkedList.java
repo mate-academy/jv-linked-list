@@ -105,13 +105,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndexPosition(int index) {
         if (!(index >= 0 && index <= size)) {
-            throw new IndexOutOfBoundsException("Index out of bounds");
+            throw new IndexOutOfBoundsException("Index out of bounds !");
         }
     }
 
     private void checkElementIndex(int index) {
         if (!(index >= 0 && index < size)) {
-            throw new IndexOutOfBoundsException("Index out of bounds");
+            throw new IndexOutOfBoundsException("Index out of bounds !");
         }
     }
 
