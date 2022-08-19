@@ -143,7 +143,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private T unlink(Node<T> x) {
+    private T unlink(Node<T> node) {
         final T element = x.item;
         final Node<T> next = x.next;
         final Node<T> prev = x.prev;
