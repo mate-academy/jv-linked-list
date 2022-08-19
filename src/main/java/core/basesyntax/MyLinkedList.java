@@ -116,7 +116,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> node(int index) {
-        Node<T> x;
+        Node<T> node;
         if (index < (size >> 1)) {
             x = first;
             for (int i = 0; i < index; i++) {
