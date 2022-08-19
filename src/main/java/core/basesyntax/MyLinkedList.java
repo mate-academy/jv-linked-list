@@ -49,7 +49,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkElementIndex(index);
-        Node<T> x = node(index);
+        Node<T> node = node(index);
         T oldVal = x.item;
         x.item = value;
         return oldVal;
