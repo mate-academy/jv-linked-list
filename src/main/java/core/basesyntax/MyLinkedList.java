@@ -14,12 +14,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (!(index >= 0 && index <= size)) {
-            throw new IndexOutOfBoundsException("Index out of bounds !");
-        }
         if (index == size) {
             linkLast(value);
-        } else {
+            return;
+        }
+        checkIndex(index);
             Node<T> current = node(index);
             final Node<T> prev = current.prev;
             final Node<T> newNode = new Node<>(prev, value, current);
