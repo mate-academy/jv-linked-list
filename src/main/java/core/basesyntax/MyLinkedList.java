@@ -111,7 +111,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Invalid index: " + index);
         }
     }
 
@@ -133,33 +133,36 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T unlinkNode(int index) {
-        Node unlinkedNode;
-        if (size == 1 && index == 0) {
-            unlinkedNode = head;
-            head = tail = null;
-            size--;
-            return (T) unlinkedNode.value;
-        }
         if (index == 0) {
-            unlinkedNode = head;
-            head = unlinkedNode.next;
-            head.previous = null;
-            size--;
-            return (T) unlinkedNode.value;
+            return unlinkFirst(head);
         }
         checkIndex(index);
         if (index == size - 1) {
-            unlinkedNode = tail;
-            tail = unlinkedNode.previous;
-            tail.next = null;
-            size--;
-            return (T) unlinkedNode.value;
+            return unlinkLast(tail);
         }
-        unlinkedNode = getNodeByIndex(index);
+        Node unlinkedNode = getNodeByIndex(index);
         unlinkedNode.previous.next = unlinkedNode.next;
         unlinkedNode.next.previous = unlinkedNode.previous;
         size--;
         return (T) unlinkedNode.value;
+    }
+
+    private T unlinkFirst(Node node) {
+        if (size == 1) {
+            head = tail = null;
+        } else {
+            head = node.next;
+            head.previous = null;
+        }
+        size--;
+        return (T) node.value;
+    }
+
+    private T unlinkLast(Node node) {
+        tail = node.previous;
+        tail.next = null;
+        size--;
+        return (T) node.value;
     }
 
     private static class Node<T> {
