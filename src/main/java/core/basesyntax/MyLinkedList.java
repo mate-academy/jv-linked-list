@@ -20,9 +20,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             linkLast(value);
         } else {
-            final Node<T> prev = node(index).prev;
-            final Node<T> newNode = new Node<>(prev, value, node(index));
-            node(index).prev = newNode;
+            Node<T> current = node(index);
+            final Node<T> prev = current.prev;
+            final Node<T> newNode = new Node<>(prev, value, current);
+            current.prev = newNode;
             if (prev == null) {
                 first = newNode;
             } else {
