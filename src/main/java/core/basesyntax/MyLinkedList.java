@@ -88,7 +88,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private static class Node<E> {
+    private static class Node<T> {
         private E item;
         private Node<E> next;
         private Node<E> prev;
