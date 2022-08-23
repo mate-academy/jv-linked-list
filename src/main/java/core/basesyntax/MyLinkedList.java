@@ -14,22 +14,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (!(index >= 0 && index <= size)) {
-            throw new IndexOutOfBoundsException("Index out of bounds !");
-        }
         if (index == size) {
             linkLast(value);
-        } else {
-            final Node<T> prev = getNode(index).prev;
-            final Node<T> newNode = new Node<>(prev, value, getNode(index));
-            getNode(index).prev = newNode;
-            if (prev == null) {
-                first = newNode;
-            } else {
-                prev.next = newNode;
-            }
-            size++;
+            return;
         }
+        checkIndex(index);
+        final Node<T> prev = getNode(index).prev;
+        final Node<T> newNode = new Node<>(prev, value, getNode(index));
+        getNode(index).prev = newNode;
+        if (prev == null) {
+            first = newNode;
+        } else {
+            prev.next = newNode;
+        }
+        size++;
     }
 
     @Override
@@ -63,16 +61,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         for (Node<T> x = first; x != null; x = x.next) {
-            if (object == null) {
-                if (x.item == null) {
-                    unlink(x);
-                    return true;
-                }
-            } else {
-                if (object.equals(x.item)) {
-                    unlink(x);
-                    return true;
-                }
+            if (object == x.item || object != null && object.equals(x.item)) {
+                unlink(x);
+                return true;
             }
         }
         return false;
