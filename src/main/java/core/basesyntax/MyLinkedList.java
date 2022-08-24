@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -9,16 +10,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        linkTail(value);
+        Node<T> newNode = new Node<>(tail, value, null);
+        if (tail == null) {
+            head = newNode;
+        } else {
+            tail.next = newNode;
+        }
+        tail = newNode;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
         if (index == size) {
-            linkTail(value);
+            add(value);
         } else {
-            linkBefore(value, getNode(index));
+            Node<T> next = getNode(index);
+            Node<T> prev = next.prev;
+            Node<T> newNode = new Node<>(prev, value, next);
+            next.prev = newNode;
+            if (prev == null) {
+                head = newNode;
+            } else {
+                prev.next = newNode;
+            }
+            size++;
         }
     }
 
@@ -31,13 +47,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         return getNode(index).element;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> node = getNode(index);
         T oldElement = node.element;
         node.element = value;
@@ -46,26 +60,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         return unlinkNode(getNode(index));
     }
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> node = head; node != null; node = node.next) {
-                if (node.element == null) {
-                    unlinkNode(node);
-                    return true;
-                }
+        Node<T> node = head;
+        while (node != null) {
+            if (Objects.equals(object, node.element)) {
+                unlinkNode(node);
+                return true;
             }
-        } else {
-            for (Node<T> node = head; node != null; node = node.next) {
-                if (object.equals(node.element)) {
-                    unlinkNode(node);
-                    return true;
-                }
-            }
+            node = node.next;
         }
         return false;
     }
@@ -78,29 +84,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void linkTail(T value) {
-        Node<T> newNode = new Node<>(tail, value, null);
-        if (tail == null) {
-            head = newNode;
-        } else {
-            tail.next = newNode;
-        }
-        tail = newNode;
-        size++;
-    }
-
-    private void linkBefore(T element, Node<T> node) {
-        Node<T> prev = node.prev;
-        Node<T> newNode = new Node<>(prev, element, node);
-        node.prev = newNode;
-        if (prev == null) {
-            head = newNode;
-        } else {
-            prev.next = newNode;
-        }
-        size++;
     }
 
     private T unlinkNode(Node<T> node) {
@@ -126,30 +109,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         if (index < 0 || index >= size) {
-            throwIndexOutOfBoundsException(index);
+            throw new IndexOutOfBoundsException("Index : " + index + "out of size: " + size);
         }
         Node<T> node = head;
         for (int i = 0; i < index; i++) {
             node = node.next;
         }
         return node;
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index > size) {
-            throwIndexOutOfBoundsException(index);
-        }
-    }
-
-    private void throwIndexOutOfBoundsException(int index) {
-        throw new IndexOutOfBoundsException(
-                new StringBuilder("Index '")
-                        .append(index)
-                        .append("' is icorrect for size '")
-                        .append(size)
-                        .append("'.")
-                        .toString()
-        );
     }
 
     private static class Node<T> {
