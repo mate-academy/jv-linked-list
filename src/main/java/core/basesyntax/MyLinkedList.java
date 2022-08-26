@@ -9,7 +9,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-//        final Node<T> last = tail;
         final Node<T> newNode = new Node<>(tail, value, null);
         if (tail == null) {
             head = newNode;
@@ -60,16 +59,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-            for (Node<T> x = head; x != null; x = x.next) {
-                if (object == null && x.item == null) {
-                    unlink(x);
-                    return true;
-                }
-                if (object != null && object.equals(x.item)) {
-                    unlink(x);
-                    return true;
-                }
+        for (Node<T> x = head; x != null; x = x.next) {
+            if (object == null && x.item == null) {
+                unlink(x);
+                return true;
             }
+            if (object != null && object.equals(x.item)) {
+                unlink(x);
+                return true;
+            }
+        }
         return false;
     }
 
