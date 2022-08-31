@@ -8,18 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node tail;
     private int size;
 
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node prev, T item, Node next) {
-            this.prev = prev;
-            this.item = item;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node newNode = new Node<>(tail, value, null);
@@ -86,20 +74,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return (T) findLink(index).item;
+        return (T) findNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        Node current = findLink(index);
-        T temp = (T) current.item;
-        findLink(index).item = value;
-        return temp;
+        Node current = findNode(index);
+        T oldItem = (T) current.item;
+        current.item = value;
+        return oldItem;
     }
 
     @Override
     public T remove(int index) {
-        Node current = findLink(index);
+        Node current = findNode(index);
         unlink(current);
         size--;
         return (T) current.item;
@@ -127,6 +115,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node prev, T item, Node next) {
+            this.prev = prev;
+            this.item = item;
+            this.next = next;
+        }
     }
 
     private void linkFirst(Node current) {
@@ -184,7 +184,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node findLink(int index) {
+    private Node findNode(int index) {
         checkIndex(index);
         if (index > size / 2) {
             Node current = tail;
