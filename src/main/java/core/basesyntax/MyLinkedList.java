@@ -1,24 +1,11 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
     private Node head;
     private Node tail;
-
-    private class Node<T> {
-        private T element;
-        private Node next;
-        private Node last;
-
-        public Node(Node last, T element, Node next) {
-            this.last = last;
-            this.element = element;
-            this.next = next;
-        }
-    }
 
     @Override
     public void add(T value) {
@@ -35,19 +22,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index out of range");
-        }
         if (index == size) {
             add(value);
             return;
         }
-        Node currentNode = findNode(index);
+        checkIndex(index);
         if (index == 0) {
-            Node newNode = new Node(null, value, currentNode);
-            currentNode.last = newNode;
+            Node newNode = new Node(null, value, head);
+            head.last = newNode;
             head = newNode;
         } else {
+            Node currentNode = findNode(index);
             Node newNode = new Node(currentNode.last, value, currentNode);
             currentNode.last.next = newNode;
             currentNode.last = newNode;
@@ -85,7 +70,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(object,findNode(i).element)) {
+            if (findNode(i).element == object
+                    || (findNode(i).element != null && findNode(i).element.equals(object))) {
                 remove(i);
                 return true;
             }
@@ -106,6 +92,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index out of range");
+        }
+    }
+
+    private class Node<T> {
+        private T element;
+        private Node next;
+        private Node last;
+
+        public Node(Node last, T element, Node next) {
+            this.last = last;
+            this.element = element;
+            this.next = next;
         }
     }
 
