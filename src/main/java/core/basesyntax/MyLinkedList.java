@@ -48,6 +48,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return findNode(index).value;
     }
 
+    private Node<T> findNode(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("Index of bounds: " + index);
+        }
+        Node<T> current;
+        if (index < size / 2) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
+        }
+        return current;
+    }
+
     @Override
     public T set(T value, int index) {
         Node<T> nodeByIndex = findNode(index);
@@ -87,25 +106,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private Node<T> findNode(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("Index of bounds: " + index);
-        }
-        Node<T> current;
-        if (index < size / 2) {
-            current = head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
-        } else {
-            current = tail;
-            for (int i = size - 1; i > index; i--) {
-                current = current.prev;
-            }
-        }
-        return current;
     }
 
     private void removeNode(Node<T> current) {
