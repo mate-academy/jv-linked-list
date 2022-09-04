@@ -1,7 +1,5 @@
 package core.basesyntax;
 
-import org.w3c.dom.Node;
-
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -40,7 +38,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for(T value: list) {
+        for (T value: list) {
             add(value);
         }
     }
@@ -109,6 +107,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return current;
     }
+
     private void removeNode(Node<T> current) {
         if (current == head) {
             if (head == tail) {
