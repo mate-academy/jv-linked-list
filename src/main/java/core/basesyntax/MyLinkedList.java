@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
