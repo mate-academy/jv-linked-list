@@ -70,8 +70,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> removeObject = head;
         for (int i = 0; i < size; i++) {
-            if (object != null && object.equals(removeObject.value)
-            || removeObject.value == object) {
+            if (object != null && object.equals(removeObject.value) || removeObject.value == object) {
                 remove(i);
                 return true;
             }
@@ -91,9 +90,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        Node<T> prev;
-        T value;
-        Node<T> next;
+        private Node<T> prev;
+        private T value;
+        private Node<T> next;
 
         public Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
