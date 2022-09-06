@@ -69,8 +69,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         for (int i = 0; i < size; i++) {
-            if (findNode(i).element == object
-                    || (findNode(i).element != null && findNode(i).element.equals(object))) {
+            T findNode = (T)findNode(i).element;
+            if (findNode == object
+                    || (findNode != null && findNode.equals(object))) {
                 remove(i);
                 return true;
             }
@@ -90,7 +91,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of range:" + index);
+            throw new IndexOutOfBoundsException("Index out of range: "
+                    + index + " for size " + size);
         }
     }
 
