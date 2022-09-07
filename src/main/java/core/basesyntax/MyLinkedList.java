@@ -9,14 +9,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> addedElement = new Node<>(null, value, null);
+        Node<T> newElement = new Node<>(null, value, null);
         if (size == 0) {
-            head = addedElement;
+            head = newElement;
         } else {
-            addedElement.prev = tail;
-            tail.next = addedElement;
+            newElement.prev = tail;
+            tail.next = newElement;
         }
-        tail = addedElement;
+        tail = newElement;
         size++;
     }
 
@@ -66,21 +66,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkPositionIndex(index);
-        Node<T> deletedElement = deletedLinks(null, index);
-        return deletedElement.value;
+        Node<T> removedElement = findElementByIndex(index);
+        return unlink(removedElement);
     }
 
     @Override
     public boolean remove(T object) {
-        int counter = 0;
         Node<T> element = head;
-        while (element != null) {
+        for (int i = 0; i < size; i++) {
             if (element.value == object || element.value != null && element.value.equals(object)) {
-                deletedLinks(element, counter);
+                unlink(element);
                 return true;
             }
             element = element.next;
-            counter++;
+            i++;
         }
         return false;
     }
@@ -115,6 +114,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findElementByIndex(int index) {
+        checkPositionIndex(index);
         Node<T> nextElementByIndex;
         if (index < size / 2) {
             nextElementByIndex = head;
@@ -134,38 +134,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return nextElementByIndex;
     }
 
-    private Node<T> deletedLinks(Node<T> deletedLinksNode, int index) {
-        Node<T> deletedNode = deletedLinksNodeByIndex(index);
-        if (deletedNode == null) {
-            if (deletedLinksNode == null) {
-                deletedNode = findElementByIndex(index);
-            } else {
-                deletedNode = deletedLinksNode;
-            }
-            deletedNode.next.prev = deletedNode.prev;
-            deletedNode.prev.next = deletedNode.next;
+    private T unlink(Node<T> node) {
+        if (size == 1) {
+            head = null;
+            tail = null;
+        } else if (node.prev == null) {
+            head = node.next;
+            head.prev = null;
+        } else if (node.next == null) {
+            tail = node.prev;
+            tail.next = null;
+        } else {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
         }
         size--;
-        return deletedNode;
-    }
-
-    private Node<T> deletedLinksNodeByIndex(int index) {
-        Node<T> deletedElement;
-        if (size == 1) {
-            return head;
-        }
-        if (index == size - 1) {
-            deletedElement = tail;
-            tail = tail.prev;
-            tail.next = null;
-            return deletedElement;
-        }
-        if (index == 0) {
-            deletedElement = head;
-            head = head.next;
-            head.prev = null;
-            return deletedElement;
-        }
-        return null;
+        return node.value;
     }
 }
