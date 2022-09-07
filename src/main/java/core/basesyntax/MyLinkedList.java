@@ -59,9 +59,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        for (Node<T> x = head; x != null; x = x.next) {
-            if (object == null && x.item == null || object != null && object.equals(x.item)) {
-                unlink(x);
+        for (Node<T> node = head; node != null; node = node.next) {
+            if (object == null && node.item == null || object != null && object.equals(node.item)) {
+                unlink(node);
                 return true;
             }
         }
@@ -80,18 +80,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkPositionIndex(int index) {
         if (!(index >= 0 && index <= size)) {
-            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+            throw new IndexOutOfBoundsException("Index: " + index + " out of bound for size: " + size);
         }
     }
 
     private void checkElementIndex(int index) {
         if (!(index >= 0 && index < size)) {
-            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+            throw new IndexOutOfBoundsException("Index: " + index + " out of bound for size: " + size);
         }
-    }
-
-    private String outOfBoundsMsg(int index) {
-        return "Index: " + index + " out of bound for size: " + size;
     }
 
     private void linkBefore(T element, Node<T> next) {
@@ -108,37 +104,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         if (index < (size >> 1)) {
-            Node<T> x = head;
+            Node<T> node = head;
             for (int i = 0; i < index; i++) {
-                x = x.next;
+                node = node.next;
             }
-            return x;
+            return node;
         } else {
-            Node<T> x = tail;
+            Node<T> node = tail;
             for (int i = size - 1; i > index; i--) {
-                x = x.prev;
+                node = node.prev;
             }
-            return x;
+            return node;
         }
     }
 
-    private T unlink(Node<T> x) {
-        final T element = x.item;
-        final Node<T> next = x.next;
-        final Node<T> prev = x.prev;
+    private T unlink(Node<T> node) {
+        final T element = node.item;
+        final Node<T> next = node.next;
+        final Node<T> prev = node.prev;
         if (prev == null) {
             head = next;
         } else {
             prev.next = next;
-            x.prev = null;
+            node.prev = null;
         }
         if (next == null) {
             tail = prev;
         } else {
             next.prev = prev;
-            x.next = null;
+            node.next = null;
         }
-        x.item = null;
+        node.item = null;
         size--;
         return element;
     }
