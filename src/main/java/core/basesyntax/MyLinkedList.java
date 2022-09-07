@@ -80,13 +80,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkPositionIndex(int index) {
         if (!(index >= 0 && index <= size)) {
-            throw new IndexOutOfBoundsException("Index: " + index + " out of bound for size: " + size);
+            throw new IndexOutOfBoundsException("Index: "
+                    + index + " out of bound for size: " + size);
         }
     }
 
     private void checkElementIndex(int index) {
         if (!(index >= 0 && index < size)) {
-            throw new IndexOutOfBoundsException("Index: " + index + " out of bound for size: " + size);
+            throw new IndexOutOfBoundsException("Index: " + index
+                    + " out of bound for size: " + size);
         }
     }
 
