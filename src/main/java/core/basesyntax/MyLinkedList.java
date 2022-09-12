@@ -3,9 +3,10 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    int size;
-    Node<T> first;
-    Node<T> last;
+    private int size;
+    private Node<T> first;
+    private Node<T> last;
+
     @Override
     public void add(T value) {
         Node<T> lastNode = last;
@@ -36,8 +37,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         Node<T> lastNode = last;
         for (Object value : arrayFromList) {
-            T tValue = (T) value;
-            Node<T> newNode = new Node<>(lastNode, tValue, null);
+            T newValue = (T) value;
+            Node<T> newNode = new Node<>(lastNode, newValue, null);
             if (lastNode == null) {
                 first = newNode;
             } else {
@@ -102,9 +103,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     static class Node<T> {
-        Node<T> prev;
-        T value;
-        Node<T> next;
+        private Node<T> prev;
+        private T value;
+        private Node<T> next;
 
         public Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
@@ -163,17 +164,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> get_node(int index) {
         if (index < (size >> 1)) {
-            Node<T> first_node = first;
+            Node<T> firstNode = first;
             for (int i = 0; i < index; i++) {
-                first_node = first_node.next;
+                firstNode = firstNode.next;
             }
-            return first_node;
+            return firstNode;
         } else {
-            Node<T> last_node = last;
+            Node<T> lastNode = last;
             for (int i = size - 1; i > index; i--) {
-                last_node = last_node.prev;
+                lastNode = lastNode.prev;
             }
-            return last_node;
+            return lastNode;
         }
     }
 }
