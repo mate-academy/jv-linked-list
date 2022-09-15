@@ -7,7 +7,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    public static class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node<T> next;
         private Node<T> prev;
@@ -21,14 +21,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        final MyLinkedList.Node<T> l = tail;
-        final MyLinkedList.Node<T> newNode = new MyLinkedList.Node<>(l, value, null);
-        tail = newNode;
-        if (l == null) {
+        final MyLinkedList.Node<T> newNode = new MyLinkedList.Node<>(tail, value, null);
+        if (tail == null) {
             head = newNode;
         } else {
-            l.next = newNode;
+            tail.next = newNode;
         }
+        tail = newNode;
         size++;
     }
 
@@ -38,49 +37,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            linkBefore(value, node(index));
+            linkBefore(value, getNode(index));
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        Object[] a = list.toArray();
+        Object[] arrayToAdd = list.toArray();
 
-        for (Object value : a) {
-            final MyLinkedList.Node<T> l = tail;
-            final MyLinkedList.Node<T> newNode = new MyLinkedList.Node<T>(l, (T) value, null);
-            tail = newNode;
-            if (l == null) {
-                head = newNode;
-            } else {
-                l.next = newNode;
-            }
-            size++;
+        for (Object value : arrayToAdd) {
+            add((T) value);
         }
     }
 
     @Override
     public T get(int index) {
         isElementIndex(index);
-        if (index < (size >> 1)) {
-            MyLinkedList.Node<T> x = head;
-            for (int i = 0; i < index; i++) {
-                x = x.next;
-            }
-            return x.value;
-        } else {
-            MyLinkedList.Node<T> x = tail;
-            for (int i = size - 1; i > index; i--) {
-                x = x.prev;
-            }
-            return x.value;
-        }
+        return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         isElementIndex(index);
-        MyLinkedList.Node<T> x = node(index);
+        MyLinkedList.Node<T> x = getNode(index);
         T oldVal = x.value;
         x.value = value;
         return oldVal;
@@ -89,24 +68,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         isElementIndex(index);
-        return unlink(node(index));
+        return unlink(getNode(index));
     }
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (MyLinkedList.Node<T> x = head; x != null; x = x.next) {
-                if (x.value == null) {
-                    unlink(x);
-                    return true;
-                }
-            }
-        } else {
-            for (MyLinkedList.Node<T> x = head; x != null; x = x.next) {
-                if (object.equals(x.value)) {
-                    unlink(x);
-                    return true;
-                }
+        for (MyLinkedList.Node<T> x = head; x != null; x = x.next) {
+            if (x.value == object || object != null && object.equals(x.value)) {
+                unlink(x);
+                return true;
             }
         }
         return false;
@@ -119,27 +89,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        }
-        return false;
+        return size == 0;
     }
 
     public void isElementIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Please enter right index from "
+            throw new IndexOutOfBoundsException("Index " + index
+                    + " OutOfBounds. Please enter right index from "
                     + "0 to " + (size - 1));
         }
     }
 
     public void isElementIndexForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Please enter right index from "
+            throw new IndexOutOfBoundsException("Index " + index
+                    + " OutOfBounds. Please enter right index from "
                     + "0 to " + (size - 1));
         }
     }
 
-    MyLinkedList.Node<T> node(int index) {
+    MyLinkedList.Node<T> getNode(int index) {
         if (index < (size >> 1)) {
             MyLinkedList.Node<T> x = head;
             for (int i = 0; i < index; i++) {
