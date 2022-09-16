@@ -43,10 +43,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] arrayToAdd = list.toArray();
-
-        for (Object value : arrayToAdd) {
-            add((T) value);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
