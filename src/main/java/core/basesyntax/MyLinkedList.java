@@ -55,10 +55,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             for (int i = 0; i < index; i++) {
                 current = current.next;
             }
-            newNode.next = current.next;
-            newNode.prev = current.prev;
+            newNode.next = current;
             current.prev.next = newNode;
-            current.next.prev = newNode;
+            newNode.prev = current.prev;
+            current.prev = newNode;
         }
         size++;
     }
@@ -111,7 +111,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             removedElement = first.element;
             first = first.next;
         }
-        if (index == (size - 1)) {
+        if (index == size - 1) {
             removedElement = last.element;
             last.prev = last;
             last.next = null;
@@ -120,10 +120,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             for (int i = 0; i < index; i++) {
                 current = current.next;
             }
-            removedElement = current.next.element;
-            current.next.prev = current;
-            current.next = current.next.next;
-
+            removedElement = current.element;
+            current.prev.next = current.next;
+            current.next.prev = current.prev;
         }
         size--;
         return removedElement;
