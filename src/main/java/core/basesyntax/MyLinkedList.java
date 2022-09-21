@@ -1,15 +1,14 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    static class Node<T> {
+    private static class Node<T> {
         private T element;
         private Node<T> next;
         private Node<T> prev;
 
-        private Node(T element) {
+        public Node(T element) {
             this.element = element;
         }
     }
@@ -60,7 +59,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         if (list.isEmpty()) {
-            throw new NoSuchElementException("The list is empty");
+            throw new RuntimeException("The list is empty");
         }
         for (T l : list) {
             add(l);
@@ -69,31 +68,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (checkIfIndexIsOutOfBounds(index)) {
-            throw new IndexOutOfBoundsException("Index is out of bounds");
-        }
+        checkIfIndexIsOutOfBounds(index);
         Node<T> current = getNodeByIndex(index);
         return current.element;
     }
 
     @Override
     public T set(T value, int index) {
-        if (checkIfIndexIsOutOfBounds(index)) {
-            throw new IndexOutOfBoundsException("Index is out of bounds");
-        }
-        T oldValue;
+        checkIfIndexIsOutOfBounds(index);
+
         Node<T> current = getNodeByIndex(index);
-        oldValue = current.element;
+        T oldValue = current.element;
         current.element = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        if (checkIfIndexIsOutOfBounds(index)) {
-            throw new IndexOutOfBoundsException("Index is out of bounds");
-        }
-        return unlink(index).element;
+        checkIfIndexIsOutOfBounds(index);
+        return unlink(getNodeByIndex(index)).element;
     }
 
     @Override
@@ -102,14 +95,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (object == null) {
             for (int i = 0; current != null; i++, current = current.next) {
                 if (current.element == null) {
-                    unlink(i);
+                    unlink(current);
                     return true;
                 }
             }
         } else {
             for (int i = 0; i < size; i++) {
                 if (current.element.equals(object)) {
-                    unlink(i);
+                    unlink(current);
                     return true;
                 }
                 current = current.next;
@@ -128,8 +121,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    public boolean checkIfIndexIsOutOfBounds(int index) {
-        return index < 0 || index >= size;
+    public void checkIfIndexIsOutOfBounds(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index is out of bounds");
+        }
     }
 
     private Node<T> getNodeByIndex(int index) {
@@ -140,26 +135,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private Node<T> unlink(int index) {
+    private Node<T> unlink(Node<T> node) {
         Node<T> removedNode = null;
         Node<T> current = head;
-        if (index == 0) {
+        if (node == head) {
             removedNode = head;
             head = head.next;
         }
-        if (index == size - 1) {
+        if (node == tail) {
             removedNode = tail;
             tail.prev = tail;
             tail.next = null;
-        }
-        if (index != 0 && index != size - 1) {
-            for (int i = 0; i < index; i++) {
+        } else {
+            for (int i = 0; i < size; i++) {
                 current = current.next;
+                if (node.equals(current)) {
+                    removedNode = current;
+                    current.prev.next = current.next;
+                    current.next.prev = current.prev;
+                }
             }
-            removedNode = current;
-            current.prev.next = current.next;
-            current.next.prev = current.prev;
-
         }
         size--;
         return removedNode;
