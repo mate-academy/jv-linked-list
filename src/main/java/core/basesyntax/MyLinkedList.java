@@ -13,7 +13,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0) {
             head = tail = newNode;
         } else {
-            newNode = new Node<>(tail, value, null);
+            newNode.prev = tail;
             tail.next = newNode;
             tail = newNode;
         }
