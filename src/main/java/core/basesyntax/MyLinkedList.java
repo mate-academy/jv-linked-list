@@ -3,15 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static class Node<T> {
-        private T element;
-        private Node<T> next;
-        private Node<T> prev;
-
-        public Node(T element) {
-            this.element = element;
-        }
-    }
 
     private Node<T> head;
     private Node<T> tail;
@@ -58,9 +49,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list.isEmpty()) {
-            throw new RuntimeException("The list is empty");
-        }
         for (T l : list) {
             add(l);
         }
@@ -124,6 +112,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void checkIfIndexIsOutOfBounds(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index is out of bounds");
+        }
+    }
+
+    private static class Node<T> {
+        private T element;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(T element) {
+            this.element = element;
         }
     }
 
