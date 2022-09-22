@@ -17,6 +17,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private Node<T> head;
+    private Node<T> tail;
+    private int size;
+
     @Override
     public void add(T value) {
         final Node<T> newNode;
@@ -96,10 +100,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean isEmpty() {
         return size == 0;
     }
-
-    private Node<T> head;
-    private Node<T> tail;
-    private int size;
 
     private void validateIndex(int index) {
         if (index < 0 || index >= size) {
