@@ -26,7 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkIndexForAdd(index);
+        checkIndex(index);
         Node<T> newNode;
         if (index == 0) {
             newNode = new Node<>(null, value, head);
@@ -49,13 +49,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> node = getNode(index);
         T oldValue = node.value;
         node.value = value;
@@ -71,7 +69,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         for (Node<T> currentNode = head; currentNode != null; currentNode = currentNode.next) {
-            if (object != null && object.equals(currentNode.value) || currentNode.value == null) {
+            if (object == currentNode.value || object != null && object.equals(currentNode.value)) {
                 unlink(currentNode);
                 return true;
             }
@@ -90,6 +88,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
+        checkIndex(index);
         Node<T> currentNode;
         if (index < (size >> 1)) {
             currentNode = head;
@@ -103,12 +102,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return currentNode;
-    }
-
-    private void checkIndexForAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index out of range: " + index);
-        }
     }
 
     private void checkIndex(int index) {
