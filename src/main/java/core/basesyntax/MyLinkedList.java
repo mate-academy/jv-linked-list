@@ -4,19 +4,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
-    private static class Node<T> {
-        private Node<T> next;
-        private Node<T> prev;
-        private T element;
-
-        public Node(Node<T> prev, T element, Node<T> next) {
-            this.next = next;
-            this.prev = prev;
-            this.element = element;
-        }
-    }
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -142,5 +129,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         size--;
         return currentNode.element;
+    }
+
+    private static class Node<T> {
+        private Node<T> next;
+        private Node<T> prev;
+        private T element;
+
+        public Node(Node<T> prev, T element, Node<T> next) {
+            this.next = next;
+            this.prev = prev;
+            this.element = element;
+        }
     }
 }
