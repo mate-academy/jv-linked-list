@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class MyLinkedListTest {
-
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
@@ -24,6 +23,7 @@ public class MyLinkedListTest {
     private static final Cat FIRST_CAT = new Cat("Fantic", "grey");
     private static final Cat SECOND_CAT = new Cat("Barsik", "black");
     private static final Cat THIRD_CAT = new Cat("Tom", "white");
+    private static final Cat FOURTH_CAT = new Cat("Leopold", "yellow");
     private static final Cat THE_SAME_SECOND_CAT = new Cat("Barsik", "black");
 
     private static final List<String> DEFAULT_LIST = new LinkedList<>(
@@ -41,7 +41,7 @@ public class MyLinkedListTest {
         myLinkedList.add(FIRST_ITEM);
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);
-        boolean actualResult = myLinkedList.add(NULL_ITEM);
+        myLinkedList.add(NULL_ITEM);
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
         String actualThird = myLinkedList.get(2);
@@ -53,7 +53,6 @@ public class MyLinkedListTest {
         Assert.assertEquals("Test failed! Third element should be " + THIRD_ITEM,
                 THIRD_ITEM, actualThird);
         Assert.assertNull("Test failed! Fourth element should be null", actualFourth);
-        Assert.assertTrue("Test failed! This method should return true ", actualResult);
     }
 
     @Test
@@ -64,7 +63,7 @@ public class MyLinkedListTest {
         }
         Assert.assertEquals("Expected size is incorrect", 1000, linkedList.size());
         for (int i = 0; i < 1000; i++) {
-            Assert.assertEquals("Test failed! Linked list can't add a lot of value correctly",
+            Assert.assertEquals("Test failed! Can't add multiple values correctly",
                     "String" + i, linkedList.get(i));
         }
     }
@@ -141,21 +140,20 @@ public class MyLinkedListTest {
     public void testAddAll() {
         myLinkedList.add(FIRST_ITEM);
         myLinkedList.add(SECOND_ITEM);
-        boolean isAddedAll = myLinkedList.addAll(DEFAULT_LIST);
+        myLinkedList.addAll(DEFAULT_LIST);
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
-        String actualLast = myLinkedList.get(DEFAULT_LIST.size() - 1);
+        String actualIndexFive = myLinkedList.get(5);
         int actualSize = myLinkedList.size();
 
-        String expectedLast = DEFAULT_LIST.get(DEFAULT_LIST.size() - 3);
+        String expectedIndexFive = DEFAULT_LIST.get(3);
         int expectedSize = 8;
-        Assert.assertTrue(isAddedAll);
         Assert.assertEquals("Test failed! First element should be " + FIRST_ITEM,
                 FIRST_ITEM, actualFirst);
         Assert.assertEquals("Test failed! Second element should be " + SECOND_ITEM,
                 SECOND_ITEM, actualSecond);
-        Assert.assertEquals("Test failed! Last element should be " + expectedLast,
-                expectedLast, actualLast);
+        Assert.assertEquals("Test failed! Element on index 5 should be " + expectedIndexFive,
+                expectedIndexFive, actualIndexFive);
         Assert.assertEquals("Test failed! Size should be  " + expectedSize,
                 expectedSize, actualSize);
     }
@@ -184,6 +182,15 @@ public class MyLinkedListTest {
         myLinkedList.get(-1);
     }
 
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testGetByIndexEqualsSize() {
+        myLinkedList.add(FIRST_ITEM);
+        myLinkedList.add(SECOND_ITEM);
+        myLinkedList.add(THIRD_ITEM);
+        Assert.assertEquals(3, myLinkedList.size());
+        myLinkedList.get(3);
+    }
+
     @Test
     public void testSetByIndex() {
         myLinkedList.add(FIRST_ITEM);
@@ -193,8 +200,8 @@ public class MyLinkedListTest {
         String oldSecondItem = myLinkedList.set(ANOTHER_NEW_ITEM, 1);
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
-        Assert.assertEquals(oldFirstItem, FIRST_ITEM);
-        Assert.assertEquals(oldSecondItem, SECOND_ITEM);
+        Assert.assertEquals(FIRST_ITEM, oldFirstItem);
+        Assert.assertEquals(SECOND_ITEM, oldSecondItem);
         Assert.assertEquals("Test failed! After setting expected element is " + NEW_ITEM,
                 NEW_ITEM, actualFirst);
         Assert.assertEquals("Test failed! After setting expected element is "
@@ -207,6 +214,15 @@ public class MyLinkedListTest {
     @Test(expected = IndexOutOfBoundsException.class)
     public void testSetByNegativeIndex() {
         myLinkedList.set(NEW_ITEM, -1);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testSetByIndexEqualsSize() {
+        myLinkedList.add(FIRST_ITEM);
+        myLinkedList.add(SECOND_ITEM);
+        myLinkedList.add(THIRD_ITEM);
+        Assert.assertEquals(3, myLinkedList.size());
+        myLinkedList.set(FIRST_ITEM, 3);
     }
 
     @Test
@@ -251,6 +267,15 @@ public class MyLinkedListTest {
         myLinkedList.remove(-1);
     }
 
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testRemoveByIndexEqualsSize() {
+        myLinkedList.add(FIRST_ITEM);
+        myLinkedList.add(SECOND_ITEM);
+        myLinkedList.add(THIRD_ITEM);
+        Assert.assertEquals(3, myLinkedList.size());
+        myLinkedList.remove(3);
+    }
+
     @Test
     public void testRemoveByItemPositive() {
         myLinkedList.add(FIRST_ITEM);
@@ -290,7 +315,6 @@ public class MyLinkedListTest {
         Assert.assertEquals("Test failed! After removing list should consist value  "
                 + THIRD_ITEM, THIRD_ITEM, actualThirdExist);
         Assert.assertEquals("Expected size is incorrect", 4, myLinkedList.size());
-
     }
 
     @Test
@@ -315,11 +339,40 @@ public class MyLinkedListTest {
         cats.add(FIRST_CAT);
         cats.add(SECOND_CAT);
         cats.add(THIRD_CAT);
-        Assert.assertEquals("Expected size is incorrect", 3, cats.size());
+        cats.add(THIRD_CAT);
+        cats.add(null);
+        cats.add(FOURTH_CAT);
+        cats.add(null);
+        Assert.assertEquals("Expected size is incorrect", 7, cats.size());
 
         boolean isSecondCatRemove = cats.remove(THE_SAME_SECOND_CAT);
         Assert.assertTrue("Test failed! Result after removing should be true", isSecondCatRemove);
-        Assert.assertEquals("Expected size is incorrect", 2, cats.size());
+        Assert.assertEquals("Expected size is incorrect", 6, cats.size());
+        Assert.assertEquals("Unexpected element found in list", FIRST_CAT, cats.get(0));
+        Assert.assertEquals("Expected size is incorrect", THIRD_CAT, cats.get(1));
+        Assert.assertEquals("Expected size is incorrect", THIRD_CAT, cats.get(2));
+        Assert.assertEquals("Expected size is incorrect", null, cats.get(3));
+
+        boolean isThirdCatRemove = cats.remove(THIRD_CAT);
+        Assert.assertTrue("Test failed! Result after removing should be true", isThirdCatRemove);
+        Assert.assertEquals("Expected size is incorrect", 5, cats.size());
+        Assert.assertEquals("Unexpected element found in list", FIRST_CAT, cats.get(0));
+        Assert.assertEquals("Expected size is incorrect", THIRD_CAT, cats.get(1));
+        Assert.assertEquals("Expected size is incorrect", null, cats.get(2));
+
+        boolean isFourthCatRemove = cats.remove(FOURTH_CAT);
+        Assert.assertTrue("Test failed! Result after removing should be true", isFourthCatRemove);
+        Assert.assertEquals("Expected size is incorrect", 4, cats.size());
+        Assert.assertEquals("Unexpected element found in list", FIRST_CAT, cats.get(0));
+        Assert.assertEquals("Expected size is incorrect", THIRD_CAT, cats.get(1));
+        Assert.assertEquals("Expected size is incorrect", null, cats.get(2));
+
+        boolean isNullRemove = cats.remove(null);
+        Assert.assertTrue("Test failed! Result after removing should be true", isNullRemove);
+        Assert.assertEquals("Expected size is incorrect", 3, cats.size());
+        Assert.assertEquals("Unexpected element found in list", FIRST_CAT, cats.get(0));
+        Assert.assertEquals("Expected size is incorrect", THIRD_CAT, cats.get(1));
+        Assert.assertEquals("Expected size is incorrect", null, cats.get(2));
     }
 
     @Test
@@ -327,11 +380,16 @@ public class MyLinkedListTest {
         MyLinkedListInterface<Cat> cats = new MyLinkedList<>();
         cats.add(FIRST_CAT);
         cats.add(SECOND_CAT);
-        Assert.assertEquals("Expected size is incorrect", 2, cats.size());
+        cats.add(THIRD_CAT);
+        Assert.assertEquals("Expected size is incorrect", 3, cats.size());
 
-        boolean isThirdCatRemove = cats.remove(THIRD_CAT);
-        Assert.assertFalse("Test failed! Result after removing should be true", isThirdCatRemove);
-        Assert.assertEquals("Expected size is incorrect", 2, cats.size());
+        boolean isFourthCatRemove = cats.remove(FOURTH_CAT);
+        Assert.assertFalse("Test failed! Result after removing non existed element should be false", isFourthCatRemove);
+        Assert.assertEquals("Expected size is incorrect", 3, cats.size());
+
+        boolean isNullRemove = cats.remove(null);
+        Assert.assertFalse("Test failed! Result after removing non existed element should be false", isNullRemove);
+        Assert.assertEquals("Expected size is incorrect", 3, cats.size());
     }
 
     @Test
