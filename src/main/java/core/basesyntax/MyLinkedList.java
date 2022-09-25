@@ -14,9 +14,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public boolean add(T value) {
+    public void add(T value) {
         linkLast(value);
-        return true;
     }
 
     @Override
@@ -30,12 +29,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public boolean addAll(List<T> list) {
-        if (list.size() == 0) {
-            return false;
-        }
+    public void addAll(List<T> list) {
         list.forEach(this::linkLast);
-        return true;
     }
 
     @Override
