@@ -37,7 +37,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
-     }
+    }
 
     @Override
     public T get(int index) {
