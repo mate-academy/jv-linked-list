@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
 
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     @Override
     public void add(T value) {
         linkLast(value);
@@ -26,43 +14,35 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkPositionIndex(index);
         if (index == size) {
             linkLast(value);
         } else {
-            linkBefore(value, node(index));
+            linkBefore(value, getNode(index));
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        @SuppressWarnings("unchecked") T[] listArray = (T[]) list.toArray();
-        if (listArray.length == 0) {
-            throw new RuntimeException("The length of input list is 0");
-        }
-        for (T l : listArray) {
+        for (T l : list) {
             add(l);
         }
     }
 
     @Override
     public T get(int index) {
-        checkElementIndex(index);
-        return node(index).item;
+        return getNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkElementIndex(index);
-        T oldValue = node(index).item;
-        node(index).item = value;
+        final T oldValue = getNode(index).item;
+        getNode(index).item = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        checkElementIndex(index);
-        return unlink(node(index));
+        return unlink(getNode(index));
     }
 
     @Override
@@ -95,7 +75,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    Node<T> node(int index) {
+    private Node<T> getNode(int index) {
+        checkElementIndex(index);
         Node<T> indexedNode;
         if (index < (size >> 1)) {
             indexedNode = first;
@@ -156,13 +137,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void checkPositionIndex(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
-        }
-    }
-
     private String outOfBoundsMsg(int index) {
         return "Index: " + index + ", Size: " + size;
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
