@@ -66,8 +66,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (getIndex(object) != -1) {
-            remove(getIndex(object));
+        int getIndex = getIndex(object);
+        if (getIndex != -1) {
+            remove(getIndex);
             return true;
         }
         return false;
@@ -120,24 +121,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private int getIndex(T object) {
         int i = 0;
-        boolean isFound = false;
         Node<T> temp = first;
         for (; i < size; i++) {
             if (object == null) {
                 if (temp.item == null) {
-                    isFound = true;
-                    break;
+                    return i;
                 }
                 temp = temp.next;
             } else {
                 if (object.equals(temp.item)) {
-                    isFound = true;
-                    break;
+                    return i;
                 }
                 temp = temp.next;
             }
         }
-        return isFound ? i : -1;
+        return -1;
     }
 
     private void linkFirst(T value) {
