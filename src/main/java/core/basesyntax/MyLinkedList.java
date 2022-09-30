@@ -78,7 +78,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         Node<T> nodeOnIndex = find(index);
-        nodeOnIndex.getPrev().setNext(new Node<>(nodeOnIndex.getPrev(), value, nodeOnIndex));
+        Node<T> newNode = new Node<>(nodeOnIndex.getPrev(), value, nodeOnIndex);
+        nodeOnIndex.getPrev().setNext(newNode);
+        nodeOnIndex.setPrev(newNode);
         size++;
     }
 
