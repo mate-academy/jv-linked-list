@@ -95,20 +95,35 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> find(int index) {
+        checkIndex(index);
+        Node<T> currentNode;
+        if (size / 2 >= index) {
+            currentNode = head;
+            for (int i = 0; i < size; i++) {
+                if (i == index) {
+                    return currentNode;
+                }
+                currentNode = currentNode.getNext();
+            }
+        } else {
+            currentNode = tail;
+            for (int i = size - 1; i > 0; i--) {
+                if (i == index) {
+                    return currentNode;
+                }
+                currentNode = currentNode.getPrev();
+            }
+        }
+        return currentNode;
+    }
+
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException(String.format(
                     "Index %d out of size %d",
                     index, size)
             );
         }
-        Node<T> currentNode = head;
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                return currentNode;
-            }
-            currentNode = currentNode.getNext();
-        }
-        return currentNode;
     }
 
     @Override
