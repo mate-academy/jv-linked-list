@@ -120,19 +120,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> nodeOnIndex = find(index);
-        if (nodeOnIndex == head && nodeOnIndex == tail) {
-            head = tail = null;
-        } else if (nodeOnIndex == head) {
-            head.getNext().setPrev(null);
-            head = head.getNext();
-        } else if (nodeOnIndex == tail) {
-            tail.getPrev().setNext(null);
-            tail = tail.getPrev();
-        } else {
-            nodeOnIndex.getNext().setPrev(nodeOnIndex.getPrev());
-            nodeOnIndex.getPrev().setNext(nodeOnIndex.getNext());
-        }
-        size--;
+        unlink(nodeOnIndex);
         return nodeOnIndex.getValue();
     }
 
@@ -142,12 +130,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < size; i++) {
             if ((currentNode.getValue() == null && object == null)
                     || (currentNode.getValue() != null && currentNode.getValue().equals(object))) {
-                remove(i);
+                unlink(currentNode);
                 return true;
             }
             currentNode = currentNode.getNext();
         }
         return false;
+    }
+
+    private void unlink(Node<T> node) {
+        if (node == head && node == tail) {
+            head = tail = null;
+        } else if (node == head) {
+            head.getNext().setPrev(null);
+            head = head.getNext();
+        } else if (node == tail) {
+            tail.getPrev().setNext(null);
+            tail = tail.getPrev();
+        } else {
+            node.getNext().setPrev(node.getPrev());
+            node.getPrev().setNext(node.getNext());
+        }
+        size--;
     }
 
     @Override
