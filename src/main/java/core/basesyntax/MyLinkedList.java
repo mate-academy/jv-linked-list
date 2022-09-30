@@ -35,8 +35,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T t : list) {
+            add(t);
         }
     }
 
@@ -56,22 +56,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        if (index == 0) {
-            return unlinkFirst();
-        } else if (index == size - 1) {
-            return unlinkLast();
-        } else {
-            Node<T> nodeToUnlink = getNode(index);
-            return unlink(nodeToUnlink);
-        }
+        Node<T> nodeToUnlink = getNode(index);
+        return unlink(nodeToUnlink);
     }
 
     @Override
     public boolean remove(T object) {
-        int getIndex = getIndex(object);
-        if (getIndex != -1) {
-            remove(getIndex);
-            return true;
+        Node<T> temp = first;
+        for (int i = 0; i < size; i++) {
+            if (object == temp.item || object != null && object.equals(temp.item)) {
+                unlink(temp);
+                return true;
+            }
+            temp = temp.next;
         }
         return false;
     }
@@ -121,17 +118,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    private int getIndex(T object) {
-        Node<T> temp = first;
-        for (int i = 0; i < size; i++) {
-            if (object == temp.item || object != null && object.equals(temp.item)) {
-                return i;
-            }
-            temp = temp.next;
-        }
-        return -1;
-    }
-
     private void linkFirst(T value) {
         final Node<T> link = first;
         final Node<T> node = new Node<>(null, value, link);
@@ -152,43 +138,43 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T unlink(Node<T> node) {
-        final T element = node.item;
-        final Node<T> prev = node.prev;
-        final Node<T> next = node.next;
 
-        node.item = null;
-        node.prev.next = next;
-        node.next.prev = prev;
-
-        size--;
-        return element;
-    }
-
-    private T unlinkFirst() {
-        final T value = first.item;
-        final Node<T> next = first.next;
-        if (next != null) {
-            first.next = null;
-            first = next;
-            next.prev = null;
-            size--;
+        if (node == first || node != null && node.equals(first)) { // unlink first
+            final T value = first.item;
+            final Node<T> next = first.next;
+            if (next != null) {
+                first.next = null;
+                first = next;
+                next.prev = null;
+                size--;
+            } else {
+                first = null;
+                last = null;
+                size--;
+            }
+            return value;
+        } else if (node == last || node != null && node.equals(last)) { // unlink last
+            final T value = last.item;
+            final Node<T> prev = last.prev;
+            if (prev != null) {
+                last.prev = null;
+                last = prev;
+                prev.next = null;
+                size--;
+            }
+            return value;
         } else {
-            first = null;
-            last = null;
+            final T element = node.item;
+            final Node<T> prev = node.prev;
+            final Node<T> next = node.next;
+
+            node.item = null;
+            node.prev.next = next;
+            node.next.prev = prev;
+
             size--;
+            return element;
         }
-        return value;
     }
 
-    private T unlinkLast() {
-        final T value = last.item;
-        final Node<T> prev = last.prev;
-        if (prev != null) {
-            last.prev = null;
-            last = prev;
-            prev.next = null;
-            size--;
-        }
-        return value;
-    }
 }
