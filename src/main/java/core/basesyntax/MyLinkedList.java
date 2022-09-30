@@ -2,19 +2,31 @@ package core.basesyntax;
 
 import java.util.List;
 
-public class MyLinkedList<T> implements MyLinkedListInterface<T>, GetNodeBy {
+public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
     private int size;
 
+    private static class Node<T> {
+        private Node<T> prev;
+        private T value;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
+    }
+
     @Override
     public void add(T value) {
-        Node<T> node = new Node<>(null, value, null);
+        Node<T> node = new Node<T>(null, value, null);
         if (head == null) {
             head = node;
         } else {
-            node.setPrev(tail);
-            tail.setNext(node);
+            node.prev = tail;
+            tail.next = node;
         }
         tail = node;
         size++;
@@ -27,13 +39,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T>, GetNodeBy {
             return;
         }
         if (index == 0) {
-            head.setPrev(new Node<>(null, value, head));
-            head = head.getPrev();
+            head.prev = new Node<>(null, value, head);
+            head = head.prev;
         } else {
-            Node<T> validNode = getNodeByIndex(index, tail, size);
-            Node<T> newNode = new Node<>(validNode.getPrev(), value, validNode);
-            validNode.setPrev(newNode);
-            newNode.getNext().setPrev(newNode);
+            Node<T> validNode = getNodeByIndex(index);
+            Node<T> newNode = new Node<T>(validNode.prev, value, validNode);
+            validNode.prev = newNode;
+            newNode.next.prev = newNode;
         }
         size++;
     }
@@ -47,27 +59,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T>, GetNodeBy {
 
     @Override
     public T get(int index) {
-        return (T) getNodeByIndex(index, tail, size).getValue();
+        return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        Node<T> node = getNodeByIndex(index, tail, size);
-        T oldValue = node.getValue();
-        node.setValue(value);
+        Node<T> node = getNodeByIndex(index);
+        T oldValue = node.value;
+        node.value = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        Node<T> target = getNodeByIndex(index, tail, size);
+        Node<T> target = getNodeByIndex(index);
         unlink(target);
-        return target.getValue();
+        return target.value;
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> targetNode = getNodeByValue(object, head);
+        Node<T> targetNode = getNodeByValue(object);
         if (targetNode == null) {
             return false;
         }
@@ -85,19 +97,42 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T>, GetNodeBy {
         return size == 0;
     }
 
-    public void unlink(Node<? extends T> target) {
-        Node prevNode = target.getPrev();
-        Node nextNode = target.getNext();
+    public void unlink(Node<T> target) {
+        Node<T> prevNode = target.prev;
+        Node<T> nextNode = target.next;
         if (prevNode == null) {
             head = nextNode;
         } else {
-            prevNode.setNext(nextNode);
+            prevNode.next = nextNode;
         }
         if (nextNode == null) {
             tail = prevNode;
         } else {
-            nextNode.setPrev(prevNode);
+            nextNode.prev = prevNode;
         }
         size--;
+    }
+
+    private Node<T> getNodeByIndex(int targetIndex) {
+        if (targetIndex < 0 || targetIndex >= size) {
+            throw new IndexOutOfBoundsException(
+                    String.format("Index incorrect! Index: %s, Size: %s", targetIndex, size));
+        }
+        Node<T> currentNode = tail;
+        for (int i = size - 1; i != targetIndex; i--) {
+            currentNode = currentNode.prev;
+        }
+        return currentNode;
+    }
+
+    private Node<T> getNodeByValue(T value) {
+        Node<T> node = head;
+        while (node != null) {
+            if (node.value == value || node.value != null && node.value.equals(value)) {
+                return node;
+            }
+            node = node.next;
+        }
+        return null;
     }
 }
