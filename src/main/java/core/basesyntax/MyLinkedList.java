@@ -3,9 +3,15 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
     private Node<T> head;
     private Node<T> tail;
+    private int size;
+
+    public MyLinkedList() {
+        this.head = null;
+        this.tail = null;
+        this.size = 0;
+    }
 
     private static class Node<T> {
         private Node<T> prev;
