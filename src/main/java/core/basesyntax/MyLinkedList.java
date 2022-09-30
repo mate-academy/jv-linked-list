@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -110,7 +109,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
+       if (object == null) {
             for (Node<T> x = first; x != last.right; x = x.right) {
                 if (x.element == null) {
                     unlink(x);
@@ -124,7 +123,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     return true;
                 }
             }
-        }
+       }
         return false;
     }
 
@@ -143,6 +142,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             last = left;
         } else {
             right.right = left;
+            x.right = null;
         }
         x.element = null;
         size--;
@@ -161,30 +161,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     Node<T> node(int index) {
         checkElementIndex(index);
-        Node<T> x;
+       // Node<T> x;
         if (index < size / 2) {
-            x = first;
+            Node<T> x = first;
             for (int i = 0; i < index; i++) {
                 x = x.right;
             }
+            return x;
         } else {
-            x = last;
+             Node<T> x = last;
             for (int i = (size - 1); i > index; i--) {
                 x = x.left;
             }
+            return x;
         }
-        return x;
     }
 
     private void checkElementIndex(int index) {
-        if (index < 0 && index >= size) {
-            throw new RuntimeException("Can't element index: " + index);
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Can't element index: " + index);
         }
     }
 
     public void checkPositionIndex(int index) {
-        if (index < 0 && index > size) {
-            throw new RuntimeException("Can't element index: " + index);
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Can't element index: " + index);
         }
     }
 }
