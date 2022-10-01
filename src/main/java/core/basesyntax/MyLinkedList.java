@@ -11,9 +11,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        T element;
-        Node<T> left;
-        Node<T> right;
+        private T element;
+        private Node<T> left;
+        private Node<T> right;
 
         Node(Node<T> left, T element, Node<T> right) {
             this.element = element;
@@ -83,7 +83,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-       if (object == null) {
+        if (object == null) {
             for (Node<T> current = first; current != last.right; current = current.right) {
                 if (current.element == null) {
                     unlink(current);
@@ -97,7 +97,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     return true;
                 }
             }
-       }
+        }
         return false;
     }
 
