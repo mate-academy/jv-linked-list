@@ -25,10 +25,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = new Node<>(null, value,null);
             tail = head;
             size++;
+            System.out.println(size);
         } else {
             tail.next = new Node<>(tail, value, null);
             tail = tail.next;
             size++;
+            System.out.println(size);
 
         }
     }
@@ -36,22 +38,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size){
+            System.out.println("index");
             throw new IndexOutOfBoundsException();
         }
         if (index  == size) {
             add(value);
+            System.out.println(size);
         } else if (index == 0) {
             head.prev = new Node<>(null, value, head);
-            head.next.prev = head;
+            head = head.prev;
             size++;
+            System.out.println(size);
         } else {
             Node<T> curentNode = head;
             for (int i = 0; i < index; i++) {
                 curentNode = curentNode.next;
             }
-            curentNode.next = new Node<>(curentNode, value, curentNode.next);
-            curentNode.next.next.prev = curentNode.next;
+            curentNode.prev = new Node<>(curentNode.prev, value, curentNode);
+            curentNode.prev.prev.next = curentNode.prev;
             size++;
+            System.out.println(size);
         }
     }
 
@@ -66,6 +72,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < index; i++) {
             curentNode = curentNode.next;
         }
+        System.out.println(curentNode.value);
         return curentNode.value;
         }
 
@@ -77,30 +84,32 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             curentNode = curentNode.next;
         }
         curentNode.value = value;
+        System.out.println(curentNode.value + " " +  index);
         return null;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        if (index == 0) {
-            head.next.prev = null;
-            head = head.next;
+        if (size == 1) {
+            head = null;
             size--;
-        } else if (index == size - 1){
+            System.out.println(size);
+        } else if (index == size){
             tail.prev.next = null;
             tail = tail.prev;
             size--;
+            System.out.println(size);
+
         } else {
             Node<T> curentNode = head;
-            for (int i = 0; i < size; i++) {
+            for (int i = 0; i < index; i++) {
                 curentNode = curentNode.next;
-                if (i == index) {
-                    curentNode.prev.next = curentNode.next;
-                    curentNode.next.prev = curentNode.prev;
-                    size--;
-                }
             }
+            curentNode.prev.next = curentNode.next;
+            curentNode.next.prev = curentNode.prev;
+            size--;
+            System.out.println(size);
         }
         return null;
     }
