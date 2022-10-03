@@ -25,18 +25,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Can't element index: " + index);
+        }
         if (index == size) {
             add(value);
         } else {
-            final Node<T> node = node(index);
-            final Node<T> left = node.prev;
-            final Node<T> newNode = new Node<>(left, value, node);
-            node.prev = newNode;
-            if (left == null) {
+            final Node<T> next = getNode(index);
+            final Node<T> prev = next.prev;
+            final Node<T> newNode = new Node<>(prev, value, next);
+            next.prev = newNode;
+            if (prev == null) {
                 first = newNode;
             } else {
-                left.next = newNode;
+                prev.next = newNode;
             }
             size++;
         }
@@ -51,23 +53,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkElementIndex(index);
-        return node(index).element;
+        //checkElementIndex(index);
+        return getNode(index).element;
     }
 
     @Override
     public T set(T value, int index) {
-        checkElementIndex(index);
-        Node<T> current = node(index);
-        T oldVal = current.element;
+        //checkElementIndex(index);
+        Node<T> current = getNode(index);
+        T oldValue = current.element;
         current.element = value;
-        return oldVal;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        checkElementIndex(index);
-        return unlink(node(index));
+        //checkElementIndex(index);
+        return unlink(getNode(index));
     }
 
     @Override
@@ -112,7 +114,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    Node<T> node(int index) {
+    Node<T> getNode(int index) {
         checkElementIndex(index);
         Node<T> current;
         if (index < size / 2) {
@@ -143,13 +145,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkElementIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Can't element index: " + index);
+            throw new IndexOutOfBoundsException("Index " + index + " out of bounds");
         }
     }
 
-    public void checkIndex(int index) {
+   /* public void checkIndex(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Can't element index: " + index);
         }
-    }
+    }*/
 }
