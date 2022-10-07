@@ -93,7 +93,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> tempNode = head;
         for (int i = 0; i < size; i++) {
             T value = tempNode.value;
-            if (value == null || value.equals(object)) {
+            if ((object == null && value == null) || (value != null && value.equals(object))) {
                 unlinkAndRemove(tempNode);
                 return true;
             }
