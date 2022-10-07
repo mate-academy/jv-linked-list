@@ -3,12 +3,60 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final String INDEX_OUT_OF_ARRAY_MESSAGE = "Index less than 0 or more than size";
+    private int size = 0;
+    private Node<T> head;
+    private Node<T> tail;
+
     @Override
     public void add(T value) {
+        if (head == null) {
+            head = new Node<>(null, value, null);
+            tail = head;
+            size++;
+            return;
+        }
+        Node<T> newNode = new Node<>(tail, value, null);
+        Node<T> temp = tail;
+        temp.next = newNode;
+        tail = newNode;
+        if (head.next == null) {
+            head.next = temp;
+        }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException(INDEX_OUT_OF_ARRAY_MESSAGE);
+        }
+        if (head == null || head == tail) {
+            add(value);
+            return;
+        }
+        Node<T> node = getNode(index);
+        if (node == head) {
+            Node<T> newNode = new Node<>(null, value, node);
+            node.previous = newNode;
+            head = newNode;
+            size++;
+            return;
+        }
+        if (node == tail && index == size) {
+            Node<T> newNode = new Node<>(node, value, null);
+            node.next = newNode;
+            tail = newNode;
+            size++;
+            return;
+        }
+        Node<T> newNode = new Node<>(node.previous, value, node);
+        node.previous.next = newNode;
+        node.previous = newNode;
+        if (node.next != null) {
+            node.next = node.next.previous;
+        }
+        size++;
     }
 
     @Override
@@ -17,7 +65,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return null;
+        rangeCheck(index);
+        return getNode(index).value;
+    }
+
+    private Node<T> getNode(int index) {
+        int middle = size >> 1;
+        if (index <= middle) {
+            Node<T> headEl = head;
+            for (int i = 0; i < index; i++) {
+                headEl = headEl.next;
+            }
+            return headEl;
+        }
+        Node<T> tailEl = tail;
+        for (int i = size - 1; i > index; i--) {
+            tailEl = tailEl.previous;
+        }
+        return tailEl;
+    }
+
+    private void rangeCheck(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException(INDEX_OUT_OF_ARRAY_MESSAGE);
+        }
     }
 
     @Override
@@ -37,11 +108,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private static class Node<T> {
+        private Node<T> previous;
+        private T value;
+        private Node<T> next;
+
+        public Node(Node<T> previous, T value, Node<T> next) {
+            this.previous = previous;
+            this.value = value;
+            this.next = next;
+        }
     }
 }
