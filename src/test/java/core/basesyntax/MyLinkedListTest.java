@@ -25,6 +25,8 @@ public class MyLinkedListTest {
     private static final Cat THIRD_CAT = new Cat("Tom", "white");
     private static final Cat FOURTH_CAT = new Cat("Leopold", "yellow");
     private static final Cat THE_SAME_SECOND_CAT = new Cat("Barsik", "black");
+    private static final Cat THE_SAME_THIRD_CAT = new Cat("Tom", "white");
+    private static final Cat THE_SAME_FOURTH_CAT = new Cat("Leopold", "yellow");
 
     private static final List<String> DEFAULT_LIST = new LinkedList<>(
             Arrays.asList("First", "Second", "Third", "Fourth", "Fifth", "Sixth"));
@@ -347,32 +349,45 @@ public class MyLinkedListTest {
 
         boolean isSecondCatRemove = cats.remove(THE_SAME_SECOND_CAT);
         Assert.assertTrue("Test failed! Result after removing should be true", isSecondCatRemove);
-        Assert.assertEquals("Expected size is incorrect", 6, cats.size());
-        Assert.assertEquals("Unexpected element found in list", FIRST_CAT, cats.get(0));
-        Assert.assertEquals("Expected size is incorrect", THIRD_CAT, cats.get(1));
-        Assert.assertEquals("Expected size is incorrect", THIRD_CAT, cats.get(2));
-        Assert.assertEquals("Expected size is incorrect", null, cats.get(3));
+        Assert.assertEquals("Expected size is incorrect. Expected: 6, but was: " + cats.size(), 6, cats.size());
+        Assert.assertEquals("Unexpected element found in list on 0 position. Expected: " + FIRST_CAT +", but was: " + cats.get(0),
+                FIRST_CAT, cats.get(0));
+        Assert.assertEquals("Unexpected element found in list on 1 position. Expected: " + THIRD_CAT +", but was: " + cats.get(1),
+                THIRD_CAT, cats.get(1));
+        Assert.assertEquals("Unexpected element found in list on 2 position. Expected: " + THIRD_CAT +", but was: " + cats.get(2),
+                THIRD_CAT, cats.get(2));
+        Assert.assertEquals("Unexpected element found in list on 3 position. Expected: null, but was: " + cats.get(3),
+                null, cats.get(3));
 
-        boolean isThirdCatRemove = cats.remove(THIRD_CAT);
+        boolean isThirdCatRemove = cats.remove(THE_SAME_THIRD_CAT);
         Assert.assertTrue("Test failed! Result after removing should be true", isThirdCatRemove);
-        Assert.assertEquals("Expected size is incorrect", 5, cats.size());
-        Assert.assertEquals("Unexpected element found in list", FIRST_CAT, cats.get(0));
-        Assert.assertEquals("Expected size is incorrect", THIRD_CAT, cats.get(1));
-        Assert.assertEquals("Expected size is incorrect", null, cats.get(2));
+        Assert.assertEquals("Expected size is incorrect. Expected: 5, but was: " + cats.size(), 5, cats.size());
+        Assert.assertEquals("Unexpected element found in list on 0 position. Expected: " + FIRST_CAT +", but was: " + cats.get(0),
+                FIRST_CAT, cats.get(0));
+        Assert.assertEquals("Unexpected element found in list on 1 position. Expected: " + THIRD_CAT +", but was: " + cats.get(1),
+                THIRD_CAT, cats.get(1));
+        Assert.assertEquals("Unexpected element found in list on 2 position. Expected: null, but was: " + cats.get(2),
+                null, cats.get(2));
 
-        boolean isFourthCatRemove = cats.remove(FOURTH_CAT);
+        boolean isFourthCatRemove = cats.remove(THE_SAME_FOURTH_CAT);
         Assert.assertTrue("Test failed! Result after removing should be true", isFourthCatRemove);
-        Assert.assertEquals("Expected size is incorrect", 4, cats.size());
-        Assert.assertEquals("Unexpected element found in list", FIRST_CAT, cats.get(0));
-        Assert.assertEquals("Expected size is incorrect", THIRD_CAT, cats.get(1));
-        Assert.assertEquals("Expected size is incorrect", null, cats.get(2));
+        Assert.assertEquals("Expected size is incorrect. Expected: 4, but was: " + cats.size(), 4, cats.size());
+        Assert.assertEquals("Unexpected element found in list on 0 position. Expected: " + FIRST_CAT +", but was: " + cats.get(0),
+                FIRST_CAT, cats.get(0));
+        Assert.assertEquals("Unexpected element found in list on 1 position. Expected: " + THIRD_CAT +", but was: " + cats.get(1),
+                THIRD_CAT, cats.get(1));
+        Assert.assertEquals("Unexpected element found in list on 2 position. Expected: null, but was: " + cats.get(2),
+                null, cats.get(2));
 
         boolean isNullRemove = cats.remove(null);
         Assert.assertTrue("Test failed! Result after removing should be true", isNullRemove);
-        Assert.assertEquals("Expected size is incorrect", 3, cats.size());
-        Assert.assertEquals("Unexpected element found in list", FIRST_CAT, cats.get(0));
-        Assert.assertEquals("Expected size is incorrect", THIRD_CAT, cats.get(1));
-        Assert.assertEquals("Expected size is incorrect", null, cats.get(2));
+        Assert.assertEquals("Expected size is incorrect. Expected: 3, but was: " + cats.size(), 3, cats.size());
+        Assert.assertEquals("Unexpected element found in list on 0 position. Expected: " + FIRST_CAT +", but was: " + cats.get(0),
+                FIRST_CAT, cats.get(0));
+        Assert.assertEquals("Unexpected element found in list on 1 position. Expected: " + THIRD_CAT +", but was: " + cats.get(1),
+                THIRD_CAT, cats.get(1));
+        Assert.assertEquals("Unexpected element found in list on 2 position. Expected: null, but was: " + cats.get(2),
+                null, cats.get(2));
     }
 
     @Test
