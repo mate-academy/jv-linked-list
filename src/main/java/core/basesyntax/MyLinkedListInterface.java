@@ -3,11 +3,11 @@ package core.basesyntax;
 import java.util.List;
 
 public interface MyLinkedListInterface<T> {
-    void add(T value);
+    boolean add(T value);
 
     void add(T value, int index);
 
-    void addAll(List<T> list);
+    boolean addAll(List<T> list);
 
     T get(int index);
 
