@@ -33,6 +33,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > numberOfElements) {
             throw new IndexOutOfBoundsException("Wrong index");
         }
+        Node<T> result;
+        if (index > numberOfElements / 2) {
+            result = giveNodeByIndexFromTail(index);
+        } else {
+            result = giveNodeByIndexFromHead(index);
+        }
+        return result;
+    }
+
+    private Node<T> giveNodeByIndexFromTail(int index) {
+        Node<T> node = tail;
+        int counter = numberOfElements;
+
+        while (node != null) {
+            counter--;
+            if (counter == index) {
+                return node;
+            }
+            node = node.previous;
+
+        }
+        throw new IndexOutOfBoundsException("Wrong index");
+    }
+
+    private Node<T> giveNodeByIndexFromHead(int index) {
         Node<T> node = head;
         int counter = 0;
 
@@ -62,20 +87,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void connectNodeBeforeIndex(Node<T> node, int index) {
         Node<T> oldNode = giveNodeByIndex(index);
 
+
+
         node.previous = oldNode.previous;
-        node.next = oldNode;
         if (oldNode.previous != null) {
             oldNode.previous.next = node;
         }
         oldNode.previous = node;
+
+        node.next = oldNode;
+
+
         checkAndSwitchHeadAndTail(oldNode, node);
     }
 
     private void checkAndSwitchHeadAndTail(Node<T> oldNode, Node<T> newNode) {
-        if (oldNode == head) {
+        if (oldNode == head && newNode.previous == null) {
             head = newNode;
-        }
-        if (oldNode == tail) {
+        } else if (oldNode == tail && newNode.next == null) {
             tail = newNode;
         }
     }
@@ -103,6 +132,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void changeConnectionFromToNode(Node<T> from, Node<T> to) {
         to.next = from.next;
+        to.previous = from.previous;
         if (from.previous != null) {
             from.previous.next = to;
         }
