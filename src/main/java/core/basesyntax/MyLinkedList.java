@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -32,10 +31,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> giveNodeByIndex(int index) {
         if (index < 0 || index > numberOfElements) {
-            throw new IndexOutOfBoundsException("Wrond index");
+            throw new IndexOutOfBoundsException("Wrong index");
         }
         Node<T> node = head;
         int counter = 0;
+
         while (node != null) {
             if (counter == index) {
                 return node;
@@ -43,34 +43,40 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node = node.next;
             counter++;
         }
-        throw new IndexOutOfBoundsException("Wrond index");
+        throw new IndexOutOfBoundsException("Wrong index");
     }
 
     @Override
     public void add(T value, int index) {
-        Node<T> newNode = null;
-        Node<T> oldNode = null;
+        Node<T> newNode;
+
         if (index == numberOfElements) {
             add(value);
         } else {
-            oldNode = giveNodeByIndex(index);
             newNode = new Node<>(null, value, null);
-            if (oldNode != null) {
-                newNode.previous = oldNode.previous;
-                newNode.next = oldNode;
-                if (oldNode.previous != null) {
-                    oldNode.previous.next = newNode;
-                }
-                oldNode.previous = newNode;
-                if (oldNode == head) {
-                    head = newNode;
-                }
-                if (oldNode == tail) {
-                    tail = newNode;
-                }
-
-            }
+            connectNodeBeforeIndex(newNode, index);
             numberOfElements++;
+        }
+    }
+
+    private void connectNodeBeforeIndex(Node<T> node, int index) {
+        Node<T> oldNode = giveNodeByIndex(index);
+
+        node.previous = oldNode.previous;
+        node.next = oldNode;
+        if (oldNode.previous != null) {
+            oldNode.previous.next = node;
+        }
+        oldNode.previous = node;
+        checkAndSwitchHeadAndTail(oldNode, node);
+    }
+
+    private void checkAndSwitchHeadAndTail(Node<T> oldNode, Node<T> newNode) {
+        if (oldNode == head) {
+            head = newNode;
+        }
+        if (oldNode == tail) {
+            tail = newNode;
         }
     }
 
@@ -84,85 +90,49 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         Node<T> result = giveNodeByIndex(index);
-        return result == null ? null : result.item;
+        return result.item;
     }
 
     @Override
     public T set(T value, int index) {
         Node<T> oldNode = giveNodeByIndex(index);
-
         Node<T> newNode = new Node<>(null, value, null);
-        newNode.next = oldNode.next;
-        if (oldNode.previous != null) {
-            oldNode.previous.next = newNode;
-        }
-        if (oldNode.next != null) {
-            oldNode.next.previous = newNode;
-        }
-        if (oldNode == tail) {
-            tail = newNode;
-        }
-        if (oldNode == head) {
-            head = newNode;
-        }
-        return oldNode == null ? null : oldNode.item;
+        changeConnectionFromToNode(oldNode, newNode);
+        return oldNode.item;
     }
 
-//    @Override
-    /* сука, стільки часу витратив на реалізацію, а воно не так повинно працювати */
-    public T addOnPosition(T value, int index) {
-        Node<T> newNode = null;
-        Node<T> oldNode = null;
-        if (head == null && index == 0) {
-            add(value);
-        } else {
-            oldNode = giveNodeByIndex(index);
-            newNode = new Node<>(null, value, null);
-            if (oldNode != null) {
-                newNode.previous = oldNode.previous;
-                newNode.next = oldNode;
-                if (oldNode.previous != null) {
-                    oldNode.previous.next = newNode;
-                }
-                oldNode.previous = newNode;
-                if (oldNode == head) {
-                    head = newNode;
-                }
-                if (oldNode == tail) {
-                    tail = newNode;
-                }
-
-            }
+    private void changeConnectionFromToNode(Node<T> from, Node<T> to) {
+        to.next = from.next;
+        if (from.previous != null) {
+            from.previous.next = to;
         }
-        numberOfElements++;
-        return oldNode.item;
+        if (from.next != null) {
+            from.next.previous = to;
+        }
+        checkAndSwitchHeadAndTail(from, to);
     }
 
     @Override
     public T remove(int index) {
         Node<T> node = giveNodeByIndex(index);
+        disconnectNode(node);
+        numberOfElements--;
+        return node.item;
+    }
+
+    private void disconnectNode(Node<T> node) {
         if (node.previous != null) {
             node.previous.next = node.next;
         }
         if (node.next != null) {
             node.next.previous = node.previous;
         }
-        if (node == tail || index == numberOfElements - 1) {
+        if (node == tail) {
             tail = node.previous;
         }
         if (node == head) {
             head = node.next;
         }
-        numberOfElements--;
-        return node.item;
-    }
-
-    private void setHead() {
-        head = giveNodeByIndex(0);
-    }
-
-    private void setTail() {
-        tail = giveNodeByIndex(numberOfElements);
     }
 
     @Override
@@ -190,16 +160,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return numberOfElements == 0;
     }
 
-    // ToDo: it`s not working(
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("[ ");
-        Node<T> node = head;
+        Node<T> node;
         int counter = 0;
         while (counter < size()) {
             node = giveNodeByIndex(counter);
-            stringBuilder.append(node == null ? "'null'" : node.toString());
+            stringBuilder.append(node);
             if (counter + 1 < size()) {
                 stringBuilder.append(", ");
             }
@@ -210,7 +179,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<E> {
-        private E item;
+        private final E item;
         private Node<E> previous;
         private Node<E> next;
 
@@ -220,23 +189,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
         }
 
-        public void setPrevious(Node<E> node) {
-            previous = node;
-        }
-
-        private void setNext(Node<E> node) {
-            next = node;
-        }
-
-        private void setItem(E value) {
-            item = value;
-        }
-
         @Override
         public String toString() {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(item == null ? null : item.toString());
-            return stringBuilder.toString();
+            return (item == null ? null : item.toString());
         }
 
     }
