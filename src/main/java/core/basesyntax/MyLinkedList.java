@@ -18,10 +18,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             addFirst(value);
             return;
         }
-        if (size() == 1) {
-            secondElementAsLast(value);
-            return;
-        }
         addLast(value);
     }
 
@@ -34,27 +30,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         if (index == DEFAULT_INDEX) {
             current = first;
-            first = new Node<>(null, value, null);
+            first = new Node<>(value);
             first.nextElement = current;
             current.prevElement = first;
             size++;
-            return;
-        }
-        if (size() == 1) {
-            secondElementAsLast(value);
             return;
         }
         if (index == size()) {
             addLast(value);
             return;
         }
-        counter = DEFAULT_INDEX;
-        current = first;
-        while (counter < index) {
-            current = current.nextElement;
-            counter++;
-        }
-        temp = new Node<>(null, value, null);
+        current = getNodeByIndex(index);
+        temp = new Node<>(value);
         secondTemp = current.prevElement;
         temp.prevElement = secondTemp;
         temp.nextElement = current;
@@ -65,9 +52,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
+        for (T t : list) {
             current = last;
-            last = new Node<>(null,list.get(i),null);
+            last = new Node<>(t);
             last.prevElement = current;
             current.nextElement = last;
             size++;
@@ -75,20 +62,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addFirst(T value) {
-        first = new Node<>(null,value,null);
-        size++;
-    }
-
-    private void secondElementAsLast(T value) {
-        last = new Node<>(null, value, null);
-        last.prevElement = first;
-        first.nextElement = last;
+        first = new Node<>(value);
+        last = first;
         size++;
     }
 
     private void addLast(T value) {
         current = last;
-        last = new Node<>(null,value,null);
+        last = new Node<>(value);
         current.nextElement = last;
         last.prevElement = current;
         size++;
@@ -97,29 +78,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         indexChecker(index);
-        if (size() == 1) {
-            return first.value;
-        }
-        counter = DEFAULT_INDEX;
-        current = first;
-        while (counter < index) {
-            current = current.nextElement;
-            counter++;
-        }
-        return current.value;
+        return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         indexChecker(index);
-        counter = DEFAULT_INDEX;
-        current = first;
-        while (counter < index) {
-            current = current.nextElement;
-            counter++;
-        }
+        current = getNodeByIndex(index);
+        T removedValue = current.value;
         current.value = value;
-        return value;
+        return removedValue;
     }
 
     @Override
@@ -133,34 +101,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             removeLast();
             return temp.value;
         }
-        counter = DEFAULT_INDEX;
-        current = first;
-        while (counter < index) {
-            current = current.nextElement;
-            counter++;
-        }
-        removeInTheMiddle();
+        current = getNodeByIndex(index);
+        removeInTheMiddle(current);
         return current.value;
     }
 
     @Override
     public boolean remove(T object) {
         current = first;
-        counter = DEFAULT_INDEX;
         while (current != null) {
             if ((current.value == null && object == null) || (current.value.equals(object))) {
-                if (counter == DEFAULT_INDEX) {
+                if (current == first) {
                     removeFirst();
+                } else if (current == last) {
+                    removeLast();
                 } else {
-                    if (counter == size() - 1) {
-                        removeLast();
-                    } else {
-                        removeInTheMiddle();
-                    }
+                    removeInTheMiddle(current);
                 }
                 return true;
             }
-            counter++;
             current = current.nextElement;
         }
         return false;
@@ -190,7 +149,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private void removeInTheMiddle() {
+    private void removeInTheMiddle(Node<T> current) {
         temp = current.prevElement;
         secondTemp = current.nextElement;
         temp.nextElement = current.nextElement;
@@ -214,15 +173,41 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private Node<T> getNodeByIndex(int index) {
+        if (index <= size() / 2) {
+            return countFromFirst(index);
+        } else {
+            return countFromLast(index);
+        }
+    }
+
+    private Node<T> countFromFirst(int index) {
+        counter = DEFAULT_INDEX;
+        current = first;
+        while (counter < index) {
+            current = current.nextElement;
+            counter++;
+        }
+        return current;
+    }
+
+    private Node<T> countFromLast(int index) {
+        counter = size() - 1;
+        current = last;
+        while (counter > index) {
+            current = current.prevElement;
+            counter--;
+        }
+        return current;
+    }
+
     private static class Node<T> {
         private T value;
         private Node<T> prevElement;
         private Node<T> nextElement;
 
-        private Node(Node<T> prevElement,T value, Node<T> nextElement) {
+        Node(T value) {
             this.value = value;
-            this.prevElement = prevElement;
-            this.nextElement = nextElement;
         }
     }
 }
