@@ -107,7 +107,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         current = first;
         while (current != null) {
-            if ((current.value == null && object == null) || (current.value.equals(object))) {
+            if ((current.value == null && object == null)
+                    || (current.value != null && (current.value.equals(object)))) {
                 if (current == first) {
                     removeFirst();
                 } else if (current == last) {
