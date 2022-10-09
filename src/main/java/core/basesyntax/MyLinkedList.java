@@ -4,6 +4,7 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final int DEFAULT_INDEX = 0;
+    private static final int DIVIDER = 2;
     private Node<T> first;
     private Node<T> last;
     private Node<T> current;
@@ -53,11 +54,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         for (T t : list) {
-            current = last;
-            last = new Node<>(t);
-            last.prevElement = current;
-            current.nextElement = last;
-            size++;
+            addLast(t);
         }
     }
 
@@ -174,7 +171,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        if (index <= size() / 2) {
+        if (index <= size() / DIVIDER) {
             return countFromFirst(index);
         } else {
             return countFromLast(index);
