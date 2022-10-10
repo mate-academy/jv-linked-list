@@ -3,22 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private int size;
     private Node<T> first;
     private Node<T> last;
-
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
 
     public MyLinkedList() {
         size = 0;
@@ -56,8 +43,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T element : list) {
+            add(element);
         }
     }
 
@@ -107,9 +94,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Index entered incorrectly");
         }
-        Node<T> node = first;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
+        Node<T> node = (index >= (size / 2) ? last : first);
+        int countIter = (index >= (size / 2) ? size - index - 1 : index);
+        for (int i = 0; i < countIter; i++) {
+            node = (index >= (size / 2) ? node.prev : node.next);
         }
         return node;
     }
@@ -134,5 +122,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> node = new Node<>(null, value, null);
         first = node;
         last = node;
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
