@@ -3,19 +3,19 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node<T> first;
-    private Node<T> last;
+    private Node<T> head;
+    private Node<T> tail;
     private int size;
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(last, value, null);
+        Node<T> newNode = new Node<>(tail, value, null);
         if (size == 0) {
-            first = newNode;
+            head = newNode;
         } else {
-            last.next = newNode;
+            tail.next = newNode;
         }
-        last = newNode;
+        tail = newNode;
         size++;
     }
 
@@ -26,9 +26,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == size) {
             add(value);
         } else if (index == 0) {
-            Node<T> newNode = new Node<>(null, value, first);
+            Node<T> newNode = new Node<>(null, value, head);
             newNode.prev = newNode;
-            first = newNode;
+            head = newNode;
             size++;
         } else {
             Node<T> searchIndex = findIndex(index);
@@ -69,7 +69,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> node = first;
+        Node<T> node = head;
         for (int i = 0; i < size; i++) {
             if (object == node.value || object != null && object.equals(node.value)) {
                 unlink(node);
@@ -91,7 +91,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findIndex(int index) {
-        Node<T> foundNode = first;
+        Node<T> foundNode = head;
         int i = 0;
         while (i < index) {
             foundNode = foundNode.next;
@@ -110,12 +110,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> previous = node.prev;
         Node<T> next = node.next;
         if (previous == null && next == null) {
-            first = last = null;
+            head = tail = null;
         } else if (previous == null) {
-            first = next;
+            head = next;
             next.prev = null;
         } else if (next == null) {
-            last = previous;
+            tail = previous;
             previous.next = null;
         } else {
             previous.next = next;
