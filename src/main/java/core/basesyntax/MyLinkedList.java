@@ -167,7 +167,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
-    public void addTopBottom(Node<T> node, int index) {
+    private void addTopBottom(Node<T> node, int index) {
         if (index > 0) {
             tail.next = node;
             node.prev = tail;
@@ -189,7 +189,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    public void removeBottom() {
+    private void removeBottom() {
         if (size == 1) {
             head = null;
             tail = null;
