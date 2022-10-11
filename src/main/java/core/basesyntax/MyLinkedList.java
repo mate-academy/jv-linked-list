@@ -3,6 +3,8 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final int DEFAULT_SIZE = 0;
+    private static final int HALF_DIVIDER = 2;
     private int size;
     private Node<T> head;
     private Node<T> tail;
@@ -22,9 +24,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNodeByIndex(int index) {
         checkBoundsExclusive(index);
         Node<T> currentNode;
-        if (index < size / 2) {
+        if (index < size / HALF_DIVIDER) {
             currentNode = head;
-            while (index-- > 0) {
+            while (index-- > DEFAULT_SIZE) {
                 currentNode = currentNode.next;
             }
         } else {
@@ -37,14 +39,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkBoundsInclusive(int index) {
-        if (index < 0 || index > size) {
+        if (index < DEFAULT_SIZE || index > size) {
             throw new IndexOutOfBoundsException("Index: " + index
                     + ", Size:" + size);
         }
     }
 
     private void checkBoundsExclusive(int index) {
-        if (index < 0 || index >= size) {
+        if (index < DEFAULT_SIZE || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index
                     + ", Size:" + size);
         }
@@ -52,7 +54,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void removeNode(Node<T> node) {
         size--;
-        if (size == 0) {
+        if (size == DEFAULT_SIZE) {
             head = tail = null;
         } else {
             if (node == head) {
@@ -146,6 +148,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0;
+        return size == DEFAULT_SIZE;
     }
 }
