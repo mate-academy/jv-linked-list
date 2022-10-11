@@ -121,13 +121,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Index out of bounds");
+            throw new IndexOutOfBoundsException("Index" + index + " out of bounds");
         }
     }
 
     private void checkIndexGetSet(int index) {
         if (index + 1 > size || index < 0) {
-            throw new IndexOutOfBoundsException("Index out of bounds");
+            throw new IndexOutOfBoundsException("Index" + index + " out of bounds");
         }
     }
 
@@ -146,6 +146,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             for (int i = 0; i < index; i++) {
                 node = node.next;
             }
+            return node;
         }
         node = tail;
         for (int i = size - 1; i > index; i--) {
