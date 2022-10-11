@@ -140,14 +140,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getIndexNode(int index) {
-        Node<T> node = head;
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                return node;
+        Node<T> node;
+        if (index < (size >> 1)) {
+            node = head;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
             }
-            node = node.next;
         }
-        return null;
+        node = tail;
+        for (int i = size - 1; i > index; i--) {
+            node = node.prev;
+        }
+        return node;
     }
 
     private Node<T> getNode(T element) {
