@@ -26,25 +26,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index == 0) {
-            if (head == null) {
-                add(value);
-            } else {
-                Node<T> newNode = new Node<>(null, value, head);
-                head.prev = newNode;
-                head = newNode;
-                size++;
-            }
-            return;
-        }
         if (index == size) {
             add(value);
             return;
         }
         Node<T> nodeOnIndex = find(index);
         Node<T> newNode = new Node<>(nodeOnIndex.prev, value, nodeOnIndex);
-        nodeOnIndex.prev.next = newNode;
-        nodeOnIndex.prev = newNode;
+        if (nodeOnIndex == head) {
+            head.prev = newNode;
+            head = newNode;
+        } else {
+            nodeOnIndex.prev.next = newNode;
+            nodeOnIndex.prev = newNode;
+        }
         size++;
     }
 
