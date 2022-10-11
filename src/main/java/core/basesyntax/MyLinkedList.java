@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
@@ -77,7 +76,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> node;
         while (count < numberOfElements) {
             node = giveNodeByIndex(count);
-            if (Objects.equals(node.item, object)) {
+            if (node.item == null
+                    ? node.item == object : node.item.equals(object)) {
                 remove(count);
                 return true;
             }
@@ -158,14 +158,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void connectNodeBeforeIndex(Node<T> node, int index) {
         Node<T> oldNode = giveNodeByIndex(index);
-
         node.previous = oldNode.previous;
         if (oldNode.previous != null) {
             oldNode.previous.next = node;
         }
         oldNode.previous = node;
         node.next = oldNode;
-
         checkAndSwitchHeadAndTail(oldNode, node);
     }
 

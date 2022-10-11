@@ -113,14 +113,12 @@ public class MyLinkedListTest {
         myLinkedList.add(THIRD_ITEM);
         myLinkedList.add(FIRST_ITEM, 2);
         myLinkedList.add(THIRD_ITEM, 1);
-        System.out.println(myLinkedList);
 
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
         String actualThird = myLinkedList.get(2);
         String actualFourth = myLinkedList.get(3);
         String actualFifth = myLinkedList.get(4);
-        System.out.println(myLinkedList);
 
         Assert.assertEquals(FIRST_ITEM, actualFirst);
         Assert.assertEquals(THIRD_ITEM, actualSecond);
