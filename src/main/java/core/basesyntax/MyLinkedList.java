@@ -147,10 +147,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 node = node.next;
             }
             return node;
-        }
-        node = tail;
-        for (int i = size - 1; i > index; i--) {
-            node = node.prev;
+        } else {
+            node = tail;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
         }
         return node;
     }
