@@ -3,18 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static class Node<T> {
-        protected T value;
-        protected Node<T> prev;
-        protected Node<T> next;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
     private int size = 0;
     private Node<T> first;
     private Node<T> last;
@@ -65,19 +53,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> i = first; i != null; i = i.next) {
-                if (i.value == null) {
-                    unlink(i);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> i = first; i != null; i = i.next) {
-                if (object.equals(i.value)) {
-                    unlink(i);
-                    return true;
-                }
+        for (Node<T> i = first; i != null; i = i.next) {
+            if (i.value == object || i.value != null && i.value.equals(object)) {
+                unlink(i);
+                return true;
             }
         }
         return false;
@@ -106,8 +85,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> node(int index) {
-        // assert isElementIndex(index);
-
         if (index < (size >> 1)) {
             Node<T> x = first;
             for (int i = 0; i < index; i++) {
@@ -163,5 +140,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         size--;
         return element;
+    }
+
+    private static class Node<T> {
+        protected T value;
+        protected Node<T> prev;
+        protected Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
     }
 }
