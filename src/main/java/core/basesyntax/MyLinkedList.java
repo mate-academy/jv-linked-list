@@ -3,16 +3,16 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    public static final String WRONG_INDEX_MESSAGE = "Wrong index";
-    public static final String INPUT_IS_NULL_MESSAGE = "The list is null";
+    public static final String MESSAGE_WRONG_INDEX = "Wrong index";
+    public static final String MESSAGE_INPUT_IS_NULL = "The list is null";
     private transient int size = 0;
     private transient Node<T> first;
     private transient Node<T> last;
 
     private static class Node<T> {
-        Node<T> prev;
-        Node<T> next;
-        T element;
+        private Node<T> prev;
+        private Node<T> next;
+        private T element;
 
         public Node(Node<T> prev, T element, Node<T> next) {
             this.prev = prev;
@@ -37,14 +37,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
+        checkAddIndex(index);
         if (index == size) {
             add(value);
         } else {
-            Node<T> nextNode = getNodeBy(index);
-            Node<T> prevNode = nextNode.prev;
-            Node<T> newNode = new Node<>(prevNode, value, nextNode);
-            prevNode.next = newNode;
+            final Node<T> nextNode = getNodeBy(index);
+            final Node<T> prevNode = nextNode.prev;
+            final Node<T> newNode = new Node<>(prevNode, value, nextNode);
+            if (prevNode != null) {
+                prevNode.next = newNode;
+            } else {
+                first = newNode;
+            }
             nextNode.prev = newNode;
             size++;
         }
@@ -57,20 +61,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 add(element);
             }
         } else {
-            throw new NullPointerException(INPUT_IS_NULL_MESSAGE);
+            throw new NullPointerException(MESSAGE_INPUT_IS_NULL);
         }
     }
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        checkSearchIndex(index);
         return getNodeBy(index).element;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
-        Node<T> oldNode = getNodeBy(index);
+        checkSearchIndex(index);
+        final Node<T> oldNode = getNodeBy(index);
         T oldValue = oldNode.element;
         oldNode.element = value;
         return oldValue;
@@ -78,11 +82,50 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        return null;
+        checkSearchIndex(index);
+        final Node<T> node = getNodeBy(index);
+        final Node<T> prevNode = node.prev;
+        final Node<T> nextNode = node.next;
+        final T value = node.element;
+
+        if (prevNode == null) {
+            first = nextNode;
+        } else {
+            prevNode.next = nextNode;
+            node.prev = null;
+        }
+
+        if (nextNode == null) {
+            last = prevNode;
+        } else {
+            nextNode.prev = prevNode;
+            node.next = null;
+        }
+        node.element = null;
+        size--;
+        return value;
     }
 
     @Override
     public boolean remove(T object) {
+        Node<T> startNode = first;
+        if (object != null) {
+            for (int i = 0; i < size; i++) {
+                if (object.equals(startNode.element)) {
+                    remove(i);
+                    return true;
+                }
+                startNode = startNode.next;
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (startNode.element == null) {
+                    remove(i);
+                    return true;
+                }
+                startNode = startNode.next;
+            }
+        }
         return false;
     }
 
@@ -112,9 +155,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return requiredNode;
     }
 
-    private void checkIndex(int index) {
-        if (!(index >= 0 && index < size)) {
-            throw new IndexOutOfBoundsException(WRONG_INDEX_MESSAGE);
+    private void checkAddIndex(int index) {
+        if (!(index >= 0 && index <= size)) {
+            showOutOfBounds();
         }
+    }
+
+    private void checkSearchIndex(int index) {
+        if (!(index >= 0 && index < size)) {
+            showOutOfBounds();
+        }
+    }
+
+    private void showOutOfBounds() {
+        throw new IndexOutOfBoundsException(MESSAGE_WRONG_INDEX);
     }
 }
