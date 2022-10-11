@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    public class Node<T> {
+    private static class Node<T> {
         protected T value;
         protected Node<T> prev;
         protected Node<T> next;
@@ -18,81 +18,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size = 0;
     private Node<T> first;
     private Node<T> last;
-
-    private void checkPositionIndex(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Invalid index");
-        }
-    }
-
-    private void checkElementIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index");
-        }
-    }
-
-    Node<T> node(int index) {
-        // assert isElementIndex(index);
-
-        if (index < (size >> 1)) {
-            Node<T> x = first;
-            for (int i = 0; i < index; i++) {
-                x = x.next;
-            }
-            return x;
-        } else {
-            Node<T> x = last;
-            for (int i = size - 1; i > index; i--) {
-                x = x.prev;
-            }
-            return x;
-        }
-    }
-
-    private void linkLast(T value) {
-        final Node<T> l = last;
-        final Node<T> newNode = new Node<>(l, value, null);
-        last = newNode;
-        if (l == null) {
-            first = newNode;
-        } else {
-            l.next = newNode;
-        }
-        size++;
-    }
-
-    private void linkBefore(T value, Node<T> node) {
-        final Node<T> previous = node.prev;
-        final Node<T> newNode = new Node<>(previous, value, node);
-        node.prev = newNode;
-        if (previous == null) {
-            first = newNode;
-        } else {
-            previous.next = newNode;
-        }
-        size++;
-    }
-
-    T unlink(Node<T> removedElement) {
-        final T element = removedElement.value;
-        final Node<T> next = removedElement.next;
-        final Node<T> prev = removedElement.prev;
-        if (prev == null) {
-            first = next;
-        } else {
-            prev.next = next;
-            removedElement.prev = null;
-        }
-        if (next == null) {
-            last = prev;
-        } else {
-            next.prev = prev;
-            removedElement.next = null;
-        }
-        removedElement.value = null;
-        size--;
-        return element;
-    }
 
     @Override
     public void add(T value) {
@@ -112,29 +37,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         Object[] array = list.toArray();
-        int numNew = array.length;
-        if (numNew != 0) {
-            Node<T> firstNode;
-            Node<T> lastNode;
-            lastNode = null;
-            firstNode = last;
-            for (Object o : array) {
-                T value = (T) o;
-                Node<T> newNode = new Node<>(firstNode, value, null);
-                if (firstNode == null) {
-                    first = newNode;
-                } else {
-                    firstNode.next = newNode;
-                }
-                firstNode = newNode;
-            }
-            if (lastNode == null) {
-                last = firstNode;
-            } else {
-                firstNode.next = lastNode;
-                lastNode.prev = firstNode;
-            }
-            size += numNew;
+        for (Object element : array) {
+            add((T) element);
         }
     }
 
@@ -187,5 +91,77 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkPositionIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Invalid index");
+        }
+    }
+
+    private void checkElementIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Invalid index");
+        }
+    }
+
+    private Node<T> node(int index) {
+        // assert isElementIndex(index);
+
+        if (index < (size >> 1)) {
+            Node<T> x = first;
+            for (int i = 0; i < index; i++) {
+                x = x.next;
+            }
+            return x;
+        } else {
+            Node<T> x = last;
+            for (int i = size - 1; i > index; i--) {
+                x = x.prev;
+            }
+            return x;
+        }
+    }
+
+    private void linkLast(T value) {
+        final Node<T> l = last;
+        final Node<T> newNode = new Node<>(l, value, null);
+        last = newNode;
+        if (l == null) {
+            first = newNode;
+        } else {
+            l.next = newNode;
+        }
+        size++;
+    }
+
+    private void linkBefore(T value, Node<T> node) {
+        final Node<T> previous = node.prev;
+        final Node<T> newNode = new Node<>(previous, value, node);
+        node.prev = newNode;
+        if (previous == null) {
+            first = newNode;
+        } else {
+            previous.next = newNode;
+        }
+        size++;
+    }
+
+    private T unlink(Node<T> removedElement) {
+        final T element = removedElement.value;
+        final Node<T> next = removedElement.next;
+        final Node<T> prev = removedElement.prev;
+        if (prev == null) {
+            first = next;
+        } else {
+            prev.next = next;
+        }
+        if (next == null) {
+            last = prev;
+        } else {
+            next.prev = prev;
+        }
+        size--;
+        return element;
     }
 }
