@@ -98,12 +98,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] a = list.toArray();
-        if (a.length == 0) {
-            return;
-        }
-        for (Object object : a) {
-            linkLast((T) object);
+        for (T object : list) {
+            linkLast(object);
         }
     }
 
