@@ -133,7 +133,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         for (int index = 0; index < size; index++) {
-            if (object == findNode(index).item || object != null && object.equals(findNode(index).item)) {
+            if (object == findNode(index).item
+                    || object != null && object.equals(findNode(index).item)) {
                 unlink(findNode(index));
                 return true;
             }
