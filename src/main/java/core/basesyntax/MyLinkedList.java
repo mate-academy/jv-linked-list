@@ -79,22 +79,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
+        boolean remove = false;
         if (object == null) {
             for (Node<T> i = head; i != null; i = i.next) {
                 if (i.value == null) {
                     unlink(i);
-                    return true;
+                    remove = true;
                 }
             }
         } else {
             for (Node<T> i = head; i != null; i = i.next) {
                 if (equalsObjects(object, i.value)) {
                     unlink(i);
-                    return true;
+                    remove = true;
                 }
             }
         }
-        return false;
+        return remove;
     }
 
     @Override
@@ -108,19 +109,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
+        Node<T> node;
         if (index < (size >> 1)) {
-            Node<T> node = head;
+            node = head;
             for (int i = 0; i < index; i++) {
                 node = node.next;
             }
-            return node;
         } else {
-            Node<T> node = tail;
+            node = tail;
             for (int i = size - 1; i > index; i--) {
                 node = node.prev;
             }
-            return node;
         }
+        return node;
     }
 
     private T unlink(Node<T> node) {
@@ -146,7 +147,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkElementIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("\"Element is not exists by index " + index);
+            throw new IndexOutOfBoundsException("Element is not exists by index " + index);
         }
     }
 
