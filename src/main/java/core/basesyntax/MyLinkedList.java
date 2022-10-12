@@ -93,7 +93,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> tempNode = head;
         for (int i = 0; i < size; i++) {
             T value = tempNode.value;
-            if ((object == null && value == null) || (value != null && value.equals(object))) {
+            if (object == null && value == null || value != null && value.equals(object)) {
                 unlinkAndRemove(tempNode);
                 return true;
             }
@@ -110,18 +110,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private static class Node<T> {
-        private Node<T> previous;
-        private T value;
-        private Node<T> next;
-
-        public Node(Node<T> previous, T value, Node<T> next) {
-            this.previous = previous;
-            this.value = value;
-            this.next = next;
-        }
     }
 
     private Node<T> getNode(int index) {
@@ -175,5 +163,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         node = null;
         size--;
         return temp.value;
+    }
+
+    private static class Node<T> {
+        private Node<T> previous;
+        private T value;
+        private Node<T> next;
+
+        public Node(Node<T> previous, T value, Node<T> next) {
+            this.previous = previous;
+            this.value = value;
+            this.next = next;
+        }
     }
 }
