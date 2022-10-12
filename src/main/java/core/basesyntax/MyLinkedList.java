@@ -110,8 +110,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> startNode = first;
         for (int i = 0; i < size; i++) {
-            if (object != null && object.equals(startNode.element)
-                    || object == null && startNode.element == null) {
+            if (object == startNode.element
+                    || object != null && object.equals(startNode.element)) {
                 remove(i);
                 return true;
             }
