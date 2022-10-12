@@ -59,8 +59,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Node<T> newNode = getNodeByIndex(index);
-        return newNode.value;
+        return getNodeByIndex(index).value;
     }
 
     @Override
@@ -103,13 +102,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public Node<T> getNodeByIndex(int index) {
-        if (index < 0 && index >= size) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index is not correct: "
                             + index + ", for Size: " + size);
-        }
-        if (!(index >= 0 && index < size)) {
-            throw new IndexOutOfBoundsException("Index is not correct: "
-                    + index + ", for Size: " + size);
         }
         Node<T> currentNode = head;
         for (int i = 0; i < index; i++) {
