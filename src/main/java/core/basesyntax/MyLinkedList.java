@@ -89,6 +89,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean isEmpty() {
         return size == 0;
     }
+    
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index " + index + " is not valid, "
+                    + "for size: " + size);
+        }
+    }
 
     private Node<T> findByIndex(int index) {
         checkIndex(index);
@@ -130,13 +137,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node.value;
     }
     
-     private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " is not valid, "
-                    + "for size: " + size);
-        }
-    }
-
     private static class Node<T> {
         private T value;
         private Node<T> next;
