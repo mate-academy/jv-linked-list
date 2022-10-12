@@ -98,7 +98,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         newNode.prev = currentNode.prev;
         currentNode.prev = newNode;
         currentNode.prev.prev.next = newNode;
-        //1,2,1,3
     }
 
     @Override
