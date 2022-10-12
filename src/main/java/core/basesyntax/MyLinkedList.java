@@ -3,19 +3,20 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private static final String EXCEPTION_MESSAGE = "This index is out of bound ";
+    private int size;
     private Node<T> first;
     private Node<T> last;
 
     private void checkPositionIndex(int index) {
         if (!(index >= 0 && index <= size)) {
-            throw new IndexOutOfBoundsException("This index is out of bound " + index);
+            throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE + index);
         }
     }
 
     private void checkElementIndex(int index) {
         if (!(index >= 0 && index < size)) {
-            throw new IndexOutOfBoundsException("This index is out of bound " + index);
+            throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE + index);
         }
     }
 
@@ -98,29 +99,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         Object[] a = list.toArray();
-        int numNew = a.length;
-        if (numNew == 0) {
+        if (a.length == 0) {
             return;
         }
-        Node<T> pred = last;
-        Node<T> succ = null;
-        for (Object o : a) {
-            T e = (T) o;
-            Node<T> newNode = new Node<>(pred, e, null);
-            if (pred == null) {
-                first = newNode;
-            } else {
-                pred.next = newNode;
-            }
-            pred = newNode;
+        for (Object object : a) {
+            linkLast((T) object);
         }
-        if (succ == null) {
-            last = pred;
-        } else {
-            pred.next = succ;
-            succ.prev = pred;
-        }
-        size += numNew;
     }
 
     @Override
