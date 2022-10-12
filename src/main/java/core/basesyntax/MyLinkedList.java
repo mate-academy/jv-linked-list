@@ -91,10 +91,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findByIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " is not valid, "
-                    + "for size: " + size);
-        }
+        checkIndex(index);
         int currentIndex;
         Node<T> currentNode;
         if (index < size / 2) {
@@ -131,6 +128,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         size--;
         return node.value;
+    }
+    
+     private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index " + index + " is not valid, "
+                    + "for size: " + size);
+        }
     }
 
     private static class Node<T> {
