@@ -5,9 +5,10 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
-    private int size = 0;
+    private int size;
 
     public MyLinkedList() {
+        size = 0;
     }
 
     private static class Node<T> {
@@ -24,28 +25,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        final Node<T> l = last;
-        final Node<T> newNode = new Node<>(l, value, null);
+        final Node<T> previous = last;
+        final Node<T> newNode = new Node<>(previous, value, null);
         last = newNode;
-        if (l == null) {
+        if (previous == null) {
             first = newNode;
         } else {
-            l.next = newNode;
+            previous.next = newNode;
         }
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (!(index >= 0 && index <= size)) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
         if (index == size) {
             add(value);
         } else {
-            final Node<T> previous = node(index).prev;
-            final Node<T> newNode = new Node<>(previous, value, node(index));
-            node(index).prev = newNode;
+            final Node<T> previous = findNode(index).prev;
+            final Node<T> newNode = new Node<>(previous, value, findNode(index));
+            findNode(index).prev = newNode;
             if (previous == null) {
                 first = newNode;
             } else {
@@ -63,12 +64,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkElementIndex(int index) {
-        if (!(index >= 0 && index < size)) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
 
-    Node<T> node(int index) {
+    Node<T> findNode(int index) {
         Node<T> indexNode;
         if (index < (size >> 1)) {
             indexNode = first;
@@ -88,13 +89,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkElementIndex(index);
-        return node(index).item;
+        return findNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         checkElementIndex(index);
-        Node<T> oldNode = node(index);
+        Node<T> oldNode = findNode(index);
         T oldVal = oldNode.item;
         oldNode.item = value;
         return oldVal;
@@ -126,24 +127,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkElementIndex(index);
-        return unlink(node(index));
+        return unlink(findNode(index));
     }
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> needRemove = first; needRemove != null; needRemove = needRemove.next) {
-                if (needRemove.item == null) {
-                    unlink(needRemove);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> needRemove = first; needRemove != null; needRemove = needRemove.next) {
-                if (object.equals(needRemove.item)) {
-                    unlink(needRemove);
-                    return true;
-                }
+        for (int index = 0; index < size; index++) {
+            if (object == findNode(index).item || object != null && object.equals(findNode(index).item)) {
+                unlink(findNode(index));
+                return true;
             }
         }
         return false;
