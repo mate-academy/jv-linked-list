@@ -8,6 +8,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
+    private static class Node<T> {
+        private Node<T> prev;
+        private Node<T> next;
+        private T value;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.next = next;
+            this.value = value;
+        }
+    }
+
     @Override
     public void add(T value) {
         linkTail(value);
@@ -156,7 +168,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void isValidIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("No such Index:" + index);
+            throw new IndexOutOfBoundsException("No such index:" + index);
         }
     }
 
@@ -175,17 +187,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return foundNode;
-    }
-
-    private class Node<T> {
-        private Node<T> prev;
-        private Node<T> next;
-        private T value;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.next = next;
-            this.value = value;
-        }
     }
 }
