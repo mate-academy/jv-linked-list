@@ -3,6 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    public static final int DIVIDER = 2;
 
     private int numberOfElements;
     private Node<T> head;
@@ -50,8 +51,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Node<T> result = giveNodeByIndex(index);
-        return result.item;
+        return giveNodeByIndex(index).item;
     }
 
     @Override
@@ -119,7 +119,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Wrong index");
         }
         Node<T> result;
-        if (index > numberOfElements / 2) {
+        if (index > numberOfElements / DIVIDER) {
             result = giveNodeByIndexFromTail(index);
         } else {
             result = giveNodeByIndexFromHead(index);
@@ -137,7 +137,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 return node;
             }
             node = node.previous;
-
         }
         throw new IndexOutOfBoundsException("Wrong index");
     }
@@ -217,6 +216,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         public String toString() {
             return (item == null ? null : item.toString());
         }
-
     }
 }
