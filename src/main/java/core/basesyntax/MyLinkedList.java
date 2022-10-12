@@ -5,7 +5,7 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
-    private int size = 0;
+    private int size;
     private Node<T> currentNode;
 
     public MyLinkedList() {
@@ -146,9 +146,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             currentNode = findNode(i);
             if (currentNode.value == object
                     || currentNode.value != null && currentNode.value.equals(object)) {
-                deleteItem(findNode(i));
+                remove(i);
                 isItemRemoved = true;
-                size--;
                 break;
             }
         }
