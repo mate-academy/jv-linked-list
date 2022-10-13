@@ -12,6 +12,86 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size = 0;
     }
 
+    @Override
+    public void add(T value) {
+        Node<T> newNode = new Node<>(tail, value, null);
+        if (size == 0) {
+            setFirstItem(newNode);
+        } else {
+            tail.next = newNode;
+            tail = newNode;
+        }
+        size++;
+    }
+
+    @Override
+    public void add(T value, int index) {
+        isInRangeExcludive(index);
+        Node<T> newNode = new Node<>(null, value, null);
+        if (head == null || tail == null) {
+            setFirstItem(newNode);
+        } else if (index == 0) {
+            newNode.next = head;
+            head.prev = newNode;
+            head = newNode;
+        } else if (index == size) {
+            newNode.prev = tail;
+            tail.next = newNode;
+            tail = newNode;
+        } else {
+            insertNode(findNode(index), newNode);
+        }
+        size++;
+    }
+
+    @Override
+    public void addAll(List<T> list) {
+        for (T item : list) {
+            add(item);
+        }
+    }
+
+    @Override
+    public T get(int index) {
+        return findNode(index).value;
+    }
+
+    @Override
+    public T set(T value, int index) {
+        T oldIem = findNode(index).value;
+        findNode(index).value = value;
+        return oldIem;
+    }
+
+    @Override
+    public T remove(int index) {
+        currentNode = findNode(index);
+        T removedItem = currentNode.value;
+        deleteItem(currentNode);
+        size--;
+        return removedItem;
+    }
+
+    @Override
+    public boolean remove(T object) {
+        boolean isItemRemoved = false;
+        for (int i = 0; i < size; i++) {
+            currentNode = findNode(i);
+            if (currentNode.value == object
+                    || currentNode.value != null && currentNode.value.equals(object)) {
+                remove(i);
+                isItemRemoved = true;
+                break;
+            }
+        }
+        return isItemRemoved;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
     private static class Node<E> {
         private E value;
         private Node<E> next;
@@ -62,61 +142,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public void add(T value) {
-        Node<T> newNode = new Node<>(tail, value, null);
-        if (size == 0) {
-            setFirstItem(newNode);
-        } else {
-            tail.next = newNode;
-            tail = newNode;
-        }
-        size++;
-    }
-
-    @Override
-    public void add(T value, int index) {
-        isInRangeExcludive(index);
-        Node<T> newNode = new Node<>(null, value, null);
-        if (head == null || tail == null) {
-            setFirstItem(newNode);
-        } else if (index == 0) {
-            newNode.next = head;
-            head.prev = newNode;
-            head = newNode;
-        } else if (index == size) {
-            newNode.prev = tail;
-            tail.next = newNode;
-            tail = newNode;
-        } else {
-            insertNode(findNode(index), newNode);
-        }
-        size++;
-    }
-
-    private void insertNode(Node<T> currentNode, Node<T> newNode) {
-        newNode.next = currentNode;
-        newNode.prev = currentNode.prev;
-        currentNode.prev = newNode;
-        currentNode.prev.prev.next = newNode;
-    }
-
-    @Override
-    public void addAll(List<T> list) {
-        for (T item : list) {
-            add(item);
-        }
-    }
-
-    @Override
-    public T get(int index) {
-        return findNode(index).value;
-    }
-
-    @Override
-    public T set(T value, int index) {
-        T oldIem = findNode(index).value;
-        findNode(index).value = value;
-        return oldIem;
+    public boolean isEmpty() {
+        return size == 0;
     }
 
     private void deleteItem(Node<T> node) {
@@ -130,37 +157,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    @Override
-    public T remove(int index) {
-        currentNode = findNode(index);
-        T removedItem = currentNode.value;
-        deleteItem(currentNode);
-        size--;
-        return removedItem;
-    }
-
-    @Override
-    public boolean remove(T object) {
-        boolean isItemRemoved = false;
-        for (int i = 0; i < size; i++) {
-            currentNode = findNode(i);
-            if (currentNode.value == object
-                    || currentNode.value != null && currentNode.value.equals(object)) {
-                remove(i);
-                isItemRemoved = true;
-                break;
-            }
-        }
-        return isItemRemoved;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
+    private void insertNode(Node<T> currentNode, Node<T> newNode) {
+        newNode.next = currentNode;
+        newNode.prev = currentNode.prev;
+        currentNode.prev = newNode;
+        currentNode.prev.prev.next = newNode;
     }
 }
