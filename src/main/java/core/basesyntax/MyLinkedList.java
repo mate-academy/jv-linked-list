@@ -7,23 +7,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<E> {
-        private E item;
-        private Node<E> next;
-        private Node<E> prev;
-
-        Node(Node<E> prev, E element, Node<E> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> node = new Node<>(tail, value, null);
         if (size == 0) {
-            addFirstElement(node);
+            head = node;
+            tail = node;
+            size++;
             return;
         }
         tail.next = node;
@@ -36,12 +26,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Node<T> newNode = new Node<>(null, value, null);
         Node<T> oldNode = getIndexNode(index);
-        if (size == 0) {
-            addFirstElement(newNode);
+        if (size == 0 || index == size) {
+            add(value);
             return;
         }
-        if (index == size || index == 0) {
-            addTopBottom(newNode, index);
+        if (index == 0) {
+            newNode.next = head;
+            head.prev = newNode;
+            head = newNode;
+            size++;
             return;
         }
         newNode.prev = oldNode.prev;
@@ -79,12 +72,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndexGetSet(index);
         Node<T> node = getIndexNode(index);
         T removedItem = node.item;
-        if (index == 0) {
-            removeBottom();
-            return removedItem;
-        }
-        if (index == size - 1) {
-            removeTop();
+        if (size == 1) {
+            head = null;
+            tail = null;
+            size--;
             return removedItem;
         }
         removeNode(node);
@@ -93,19 +84,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> node = getNode(object);
-        if (node == null) {
+        Integer index = getNodeIndex(object);
+        if (index == null) {
             return false;
         }
-        if (node.prev == null) {
-            removeByObject();
-            return true;
-        }
-        if (node.next == null) {
-            removeTop();
-            return true;
-        }
-        removeNode(node);
+        remove(index);
         return true;
     }
 
@@ -131,14 +114,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void addFirstElement(Node<T> newNode) {
-        if (size == 0) {
-            head = newNode;
-            tail = newNode;
-            size++;
-        }
-    }
-
     private Node<T> getIndexNode(int index) {
         Node<T> node;
         if (index < (size >> 1)) {
@@ -156,32 +131,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    private Node<T> getNode(T element) {
+    private Integer getNodeIndex(T element) {
         Node<T> node = head;
         for (int i = 0; i < size; i++) {
             if (node.item == element || node.item != null && node.item.equals(element)) {
-                return node;
+                return i;
             }
             node = node.next;
         }
         return null;
     }
 
-    private void addTopBottom(Node<T> node, int index) {
-        if (index > 0) {
-            tail.next = node;
-            node.prev = tail;
-            tail = node;
-            size++;
+    private void removeNode(Node<T> node) {
+        if (node.prev == null) {
+            node.next.prev = null;
+            head = node.next;
+            size--;
+            return;
+        } else if (node.next == null) {
+            node.prev.next = null;
+            tail = node.prev;
+            size--;
             return;
         }
-        head.prev = node;
-        node.next = head;
-        head = node;
-        size++;
-    }
-
-    private void removeNode(Node<T> node) {
         node.prev.next = node.next;
         node.next.prev = node.prev;
         node.prev = null;
@@ -189,33 +161,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private void removeBottom() {
-        if (size == 1) {
-            head = null;
-            tail = null;
-            size--;
-            return;
-        }
-        head.next.prev = null;
-        head = head.next;
-        size--;
-    }
+    private static class Node<E> {
+        private E item;
+        private Node<E> next;
+        private Node<E> prev;
 
-    private void removeByObject() {
-        if (size == 1) {
-            head = null;
-            tail = null;
-            size--;
-            return;
+        Node(Node<E> prev, E element, Node<E> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
         }
-        head.next.prev = null;
-        head = head.next;
-        size--;
-    }
-
-    private void removeTop() {
-        tail.prev.next = null;
-        tail = tail.prev;
-        size--;
     }
 }
