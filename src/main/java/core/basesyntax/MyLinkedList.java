@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    public static final int DIVIDER = 2;
+    private static final int DIVIDER = 2;
 
     private int numberOfElements;
     private Node<T> head;
@@ -11,8 +11,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     public MyLinkedList() {
         numberOfElements = 0;
-        head = null;
-        tail = null;
     }
 
     @Override
@@ -57,9 +55,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         Node<T> oldNode = giveNodeByIndex(index);
-        Node<T> newNode = new Node<>(null, value, null);
-        changeConnectionFromToNode(oldNode, newNode);
-        return oldNode.item;
+        T oldValue = oldNode.item;
+        oldNode.item = value;
+        return oldValue;
     }
 
     @Override
@@ -94,24 +92,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return numberOfElements == 0;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("[ ");
-        Node<T> node;
-        int counter = 0;
-        while (counter < size()) {
-            node = giveNodeByIndex(counter);
-            stringBuilder.append(node);
-            if (counter + 1 < size()) {
-                stringBuilder.append(", ");
-            }
-            counter++;
-        }
-        stringBuilder.append(" ]");
-        return stringBuilder.toString();
     }
 
     private Node<T> giveNodeByIndex(int index) {
@@ -157,33 +137,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void connectNodeBeforeIndex(Node<T> node, int index) {
         Node<T> oldNode = giveNodeByIndex(index);
-        node.previous = oldNode.previous;
-        if (oldNode.previous != null) {
-            oldNode.previous.next = node;
-        }
-        oldNode.previous = node;
-        node.next = oldNode;
-        checkAndSwitchHeadAndTail(oldNode, node);
-    }
+        Node<T> prev= oldNode.previous;
 
-    private void checkAndSwitchHeadAndTail(Node<T> oldNode, Node<T> newNode) {
-        if (oldNode == head && newNode.previous == null) {
+        Node<T> newNode = new Node<>(prev, node.item, oldNode);
+        if (oldNode.previous == null) {
             head = newNode;
-        } else if (oldNode == tail && newNode.next == null) {
-            tail = newNode;
+        } else {
+            prev.next = newNode;
         }
-    }
-
-    private void changeConnectionFromToNode(Node<T> from, Node<T> to) {
-        to.next = from.next;
-        to.previous = from.previous;
-        if (from.previous != null) {
-            from.previous.next = to;
-        }
-        if (from.next != null) {
-            from.next.previous = to;
-        }
-        checkAndSwitchHeadAndTail(from, to);
+        oldNode.previous = newNode;
     }
 
     private void disconnectNode(Node<T> node) {
@@ -202,7 +164,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<E> {
-        private final E item;
+        private E item;
         private Node<E> previous;
         private Node<E> next;
 
@@ -210,11 +172,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.item = item;
             this.previous = previous;
             this.next = next;
-        }
-
-        @Override
-        public String toString() {
-            return (item == null ? null : item.toString());
         }
     }
 }
