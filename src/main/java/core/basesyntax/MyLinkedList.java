@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> head;
     private Node<T> tail;
 
@@ -18,7 +18,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             linkLast(value);
         } else {
-            linkBefore(value, node(index));
+            linkBefore(value, findNode(index));
         }
     }
 
@@ -32,13 +32,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkElementIndex(index);
-        return node(index).item;
+        return findNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         checkElementIndex(index);
-        Node<T> locale = node(index);
+        Node<T> locale = findNode(index);
         T oldValue = locale.item;
         locale.item = value;
         return oldValue;
@@ -47,7 +47,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkElementIndex(index);
-        return unlink(node(index));
+        return unlink(findNode(index));
     }
 
     @Override
@@ -96,28 +96,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkElementIndex(int index) {
-        if (!isElementIndex(index)) {
+        if (isElementIndex(index)) {
             throw new IndexOutOfBoundsException("Index " + index
                     + " out of bound for length " + size);
         }
     }
 
     private void checkPositionIndex(int index) {
-        if (!isPositionIndex(index)) {
+        if (isPositionIndex(index)) {
             throw new IndexOutOfBoundsException("Index " + index
                     + " out of bound for length " + size);
         }
     }
 
     private boolean isPositionIndex(int index) {
-        return index >= 0 && index <= size;
+        return index < 0 || index > size;
     }
 
     private boolean isElementIndex(int index) {
-        return index >= 0 && index < size;
+        return index < 0 || index >= size;
     }
 
-    private Node<T> node(int index) {
+    private Node<T> findNode(int index) {
         if (index < (size >> 1)) {
             Node<T> locale = head;
             for (int i = 0; i < index; i++) {
