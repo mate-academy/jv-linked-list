@@ -88,10 +88,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNode(int index) {
         chekIndex(index);
-        Node<T> node = (index >= (size / 2) ? last : first);
-        int middleIndex = (index >= (size / 2) ? size - index - 1 : index);
+        boolean choosePartOfList = index >= (size / 2);
+        Node<T> node = choosePartOfList ? last : first;
+        int middleIndex = choosePartOfList ? size - index - 1 : index;
         for (int i = 0; i < middleIndex; i++) {
-            node = (index >= (size / 2) ? node.prev : node.next);
+            node = choosePartOfList ? node.prev : node.next;
         }
         return node;
     }
