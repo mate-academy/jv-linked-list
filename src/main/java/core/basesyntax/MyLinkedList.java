@@ -137,9 +137,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void connectNodeBeforeIndex(Node<T> node, int index) {
         Node<T> oldNode = giveNodeByIndex(index);
-        Node<T> prev= oldNode.previous;
-
+        Node<T> prev = oldNode.previous;
         Node<T> newNode = new Node<>(prev, node.item, oldNode);
+
         if (oldNode.previous == null) {
             head = newNode;
         } else {
