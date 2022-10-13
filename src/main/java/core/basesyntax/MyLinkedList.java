@@ -7,15 +7,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public MyLinkedList() {
-    }
-
     @Override
     public void add(T value) {
         if (head == null) {
             linkHead(value);
         } else {
-            linkTail(value);
+            linkNewNode(value, size);
         }
     }
 
@@ -23,11 +20,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         if (index == 0) {
             linkHead(value);
-        } else if (index == size) {
-            linkTail(value);
         } else {
             checkIndexToAdd(index);
-            linkBefore(value, findNode(index));
+            linkNewNode(value, index);
         }
     }
 
@@ -41,11 +36,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        if (index == 0) {
-            return head.item;
-        } else if (index == size - 1) {
-            return tail.item;
-        }
         return findNode(index).item;
     }
 
@@ -69,19 +59,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> x = head; x != null; x = x.next) {
-                if (x.item == null) {
-                    unlink(x);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> x = head; x != null; x = x.next) {
-                if (object.equals(x.item)) {
-                    unlink(x);
-                    return true;
-                }
+        for (Node<T> x = head; x != null; x = x.next) {
+            if (x.item == object || x.item != null && x.item.equals(object)) {
+                unlink(x);
+                return true;
             }
         }
         return false;
@@ -109,19 +90,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void linkTail(T value) {
-        Node<T> newNode = new Node<>(tail, value, null);
-        tail.next = newNode;
-        newNode.prev = tail;
-        tail = newNode;
-        size++;
-    }
-
-    private void linkBefore(T value, Node<T> before) {
-        Node<T> newNode = new Node<>(before.prev, value, before);
-        newNode.prev.next = newNode;
-        before.prev = newNode;
-        newNode.next = before;
+    private void linkNewNode(T value, int index) {
+        Node<T> newNode = new Node<>(null, value, null);
+        if (index == size) {
+            newNode.prev = tail;
+            tail.next = newNode;
+            tail = newNode;
+        } else {
+            Node<T> nodeAtIndex = findNode(index);
+            newNode.prev = nodeAtIndex.prev;
+            newNode.prev.next = newNode;
+            newNode.next = nodeAtIndex;
+            nodeAtIndex.prev = newNode;
+        }
         size++;
     }
 
@@ -148,7 +129,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndexToAdd(int index) {
-        if (index <= 0 || index >= size) {
+        if (index <= 0 || index > size) {
             throw new IndexOutOfBoundsException("Invalid index " + index);
         }
     }
