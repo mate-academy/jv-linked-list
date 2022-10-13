@@ -24,26 +24,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        checkPositionIndex(size);
-        Object[] obj = list.toArray();
-        int length = obj.length;
-        if (length == 0) {
-            return;
+        for (T value : list) {
+            add(value);
         }
-        Node<T> prev;
-        prev = tail;
-        for (Object object : obj) {
-            T value = (T) object;
-            Node<T> newNode = new Node<>(prev, value, null);
-            if (prev == null) {
-                head = newNode;
-            } else {
-                prev.next = newNode;
-            }
-            prev = newNode;
-        }
-        tail = prev;
-        size += length;
     }
 
     @Override
@@ -70,13 +53,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         for (Node<T> node = head; node != null; node = node.next) {
-            if (object == null && node.element == null) {
-                unlink(node);
-                return true;
-            }
-        }
-        for (Node<T> node = head; node != null; node = node.next) {
-            if (object != null && object.equals(node.element)) {
+            if (node.element == object || node.element != null && node.element.equals(object)) {
                 unlink(node);
                 return true;
             }
