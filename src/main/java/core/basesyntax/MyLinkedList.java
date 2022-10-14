@@ -3,9 +3,13 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> first;
     private Node<T> last;
+
+    public MyLinkedList() {
+        this.size = 0;
+    }
 
     @Override
     public void add(T value) {
@@ -24,8 +28,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] array = list.toArray();
-        for (Object element : array) {
+        for (Object element : list) {
             add((T) element);
         }
     }
@@ -39,9 +42,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkElementIndex(index);
-        Node<T> x = node(index);
-        T oldVal = x.value;
-        x.value = value;
+        Node<T> element = node(index);
+        T oldVal = element.value;
+        element.value = value;
         return oldVal;
     }
 
@@ -86,28 +89,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> node(int index) {
         if (index < (size >> 1)) {
-            Node<T> x = first;
+            Node<T> first = this.first;
             for (int i = 0; i < index; i++) {
-                x = x.next;
+                first = first.next;
             }
-            return x;
+            return first;
         } else {
-            Node<T> x = last;
+            Node<T> last = this.last;
             for (int i = size - 1; i > index; i--) {
-                x = x.prev;
+                last = last.prev;
             }
-            return x;
+            return last;
         }
     }
 
     private void linkLast(T value) {
-        final Node<T> l = last;
-        final Node<T> newNode = new Node<>(l, value, null);
-        last = newNode;
-        if (l == null) {
+        final Node<T> last = this.last;
+        final Node<T> newNode = new Node<>(last, value, null);
+        this.last = newNode;
+        if (last == null) {
             first = newNode;
         } else {
-            l.next = newNode;
+            last.next = newNode;
         }
         size++;
     }
@@ -143,9 +146,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        protected T value;
-        protected Node<T> prev;
-        protected Node<T> next;
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
 
         public Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
