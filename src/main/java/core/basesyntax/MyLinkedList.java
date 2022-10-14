@@ -3,72 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final int DEFAULT_SIZE = 0;
-    private static final int HALF_DIVIDER = 2;
     private int size;
     private Node<T> head;
     private Node<T> tail;
-
-    private static class Node<E> {
-        private E item;
-        private Node<E> next;
-        private Node<E> prev;
-
-        Node(Node<E> prev, E element, Node<E> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
-    private Node<T> getNodeByIndex(int index) {
-        checkBoundsExclusive(index);
-        Node<T> currentNode;
-        if (index < size / HALF_DIVIDER) {
-            currentNode = head;
-            while (index-- > DEFAULT_SIZE) {
-                currentNode = currentNode.next;
-            }
-        } else {
-            currentNode = tail;
-            while (++index < size) {
-                currentNode = currentNode.prev;
-            }
-        }
-        return currentNode;
-    }
-
-    private void checkBoundsInclusive(int index) {
-        if (index < DEFAULT_SIZE || index > size) {
-            throw new IndexOutOfBoundsException("Index: " + index
-                    + ", Size:" + size);
-        }
-    }
-
-    private void checkBoundsExclusive(int index) {
-        if (index < DEFAULT_SIZE || index >= size) {
-            throw new IndexOutOfBoundsException("Index: " + index
-                    + ", Size:" + size);
-        }
-    }
-
-    private void removeNode(Node<T> node) {
-        size--;
-        if (size == DEFAULT_SIZE) {
-            head = tail = null;
-        } else {
-            if (node == head) {
-                head = node.next;
-                node.next.prev = null;
-            } else if (node == tail) {
-                tail = node.prev;
-                node.prev.next = node.next;
-            } else {
-                node.next.prev = node.prev;
-                node.prev.next = node.next;
-            }
-        }
-    }
 
     @Override
     public void add(T value) {
@@ -121,7 +58,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkBoundsExclusive(index);
         Node<T> nodeByIndex = getNodeByIndex(index);
         removeNode(nodeByIndex);
         return nodeByIndex.item;
@@ -148,6 +84,69 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == DEFAULT_SIZE;
+        return size == 0;
+    }
+
+    private Node<T> getNodeByIndex(int index) {
+        checkBoundsExclusive(index);
+        Node<T> currentNode;
+        if (index < size / 2) {
+            currentNode = head;
+            while (index > 0) {
+                currentNode = currentNode.next;
+                index--;
+            }
+        } else {
+            currentNode = tail;
+            while (index < size - 1) {
+                currentNode = currentNode.prev;
+                index++;
+            }
+        }
+        return currentNode;
+    }
+
+    private void checkBoundsInclusive(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index: " + index
+                    + ", Size:" + size);
+        }
+    }
+
+    private void checkBoundsExclusive(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index
+                    + ", Size:" + size);
+        }
+    }
+
+    private void removeNode(Node<T> node) {
+        size--;
+        if (size == 0) {
+            head = tail = null;
+        } else {
+            if (node == head) {
+                head = node.next;
+                head.prev = null;
+            } else if (node == tail) {
+                tail = node.prev;
+                tail.next = null;
+            } else {
+                node.next.prev = node.prev;
+                node.prev.next = node.next;
+            }
+        }
+    }
+
+    private static class Node<E> {
+        private E item;
+        private Node<E> next;
+        private Node<E> prev;
+
+        Node(Node<E> prev, E element, Node<E> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
