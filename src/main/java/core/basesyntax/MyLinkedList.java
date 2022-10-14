@@ -19,7 +19,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void throwException(int index){
+    private void throwException(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Index out of bounds for length");
         }
@@ -33,6 +33,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return currentNode;
     }
+
     private Node<T> getNodeByValue(T value) {
         Node<T> node = head;
         while (node != null) {
@@ -43,6 +44,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return null;
     }
+
     public void unlink(Node<T> removeNode) {
         Node<T> nodePrev = removeNode.previous;
         Node<T> nodeNext = removeNode.next;
@@ -136,5 +138,4 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean isEmpty() {
         return size == 0;
     }
-
 }
