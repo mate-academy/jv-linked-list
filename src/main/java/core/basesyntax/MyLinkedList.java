@@ -11,9 +11,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value) {
         if (head == null) {
             head = new Node<>(null, value, null);
-        } else if (tail == null) {
-            tail = new Node<>(head, value, null);
-            head.next = tail;
+            tail = head;
         } else {
             Node<T> element = new Node<>(tail, value, null);
             tail.next = element;
@@ -27,17 +25,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException();
         }
-        if (index == 0 && size == 0 || index == size) {
+        Node<T> nodeByIndex = getNode(index);
+        if (index == size) {
             add(value);
         } else if (index == 0) {
-            head = new Node<>(null, value, getNode(index));
-            getNode(index).prev = head;
+            head = new Node<>(null, value, nodeByIndex);
+            getNodeAndCheckIndex(index).prev = head;
             size++;
         } else {
-            Node<T> previous = getNode(index).prev;
-            Node<T> newNode = new Node<>(previous, value, getNode(index));
+            Node<T> previous = getNodeAndCheckIndex(index).prev;
+            Node<T> newNode = new Node<>(previous, value, nodeByIndex);
             previous.next = newNode;
-            getNode(index).prev = newNode;
+            nodeByIndex.prev = newNode;
             size++;
         }
     }
@@ -51,61 +50,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndexOfNode(index);
-        return getNode(index).item;
+        Node<T> nodeByIndex = getNodeAndCheckIndex(index);
+        return nodeByIndex.item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndexOfNode(index);
-        Node<T> removedNode = getNode(index);
-        if (index == size - 1) {
-            Node<T> prevNode = tail.prev;
-            tail = new Node<>(prevNode, value, null);
-            prevNode.next = tail;
-        } else if (index == 0) {
-            Node<T> nextNode = head.next;
-            head = new Node<T>(null, value, nextNode);
-            nextNode.prev = head;
-        } else {
-            Node<T> prevNode = getNode(index).prev;
-            Node<T> nextNode = getNode(index).next;
-            Node<T> element = new Node<>(prevNode, value, nextNode);
-            prevNode.next = element;
-            nextNode.prev = element;
-        }
-        return removedNode.item;
+        Node<T> nodeByIndex = getNodeAndCheckIndex(index);
+        T oldValue = nodeByIndex.item;
+        nodeByIndex.item = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        checkIndexOfNode(index);
-        Node<T> removedNote = getNode(index);
-        if (index == 0) {
-            head = head.next;
-        } else if (index == size - 1) {
-            tail = tail.prev;
-        } else {
-            Node<T> previousNode = getNode(index).prev;
-            Node<T> nextNode = getNode(index).next;
-            unlink(getNode(index));
-            previousNode.next = nextNode;
-            nextNode.prev = previousNode;
-        }
+        Node<T> removedNote = getNodeAndCheckIndex(index);
+        unlink(removedNote, index);
         size--;
         return removedNote.item;
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> target = head;
+        Node<T> removedNote = head;
         int counter = 0;
         while (counter < size) {
-            if (target.item == object || target.item != null && target.item.equals(object)) {
+            if (removedNote.item == object
+                    || removedNote.item != null && removedNote.item.equals(object)) {
                 remove(counter);
                 return true;
             }
-            target = target.next;
+            removedNote = removedNote.next;
             counter++;
         }
         return false;
@@ -139,18 +114,67 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private Node<T> getNodeAndCheckIndex(int index) {
+        checkIndexOfNode(index);
+        Node<T> target = new Node<>(null,null,null);
+        int counter;
+        if (index <= (size / 2)) {
+            target = head;
+            counter = 0;
+            while (counter < index) {
+                target = target.next;
+                counter++;
+            }
+        } else if (index > (size / 2)) {
+            target = tail;
+            counter = size - 1;
+            while (counter > index) {
+                target = target.prev;
+                counter--;
+            }
+        }
+
+        return target;
+    }
+
     private Node<T> getNode(int index) {
-        Node<T> target = head;
-        int counter = 0;
-        while (counter < index) {
-            target = target.next;
-            counter++;
+        Node<T> target = new Node<>(null,null,null);
+        int counter;
+        if (index < (size / 2)) {
+            target = head;
+            counter = 0;
+            while (counter < index) {
+                target = target.next;
+                counter++;
+            }
+        } else if (index > (size / 2)) {
+            target = tail;
+            counter = size - 1;
+            while (counter > index) {
+                target = target.prev;
+                counter--;
+            }
         }
         return target;
     }
 
-    private void unlink(Node<T> node) {
-        node.next = null;
-        node.prev = null;
+    private void unlink(Node<T> removedNote, int index) {
+        if (index == 0 && size == 1) {
+            head = null;
+            tail = null;
+        } else if (index == 0) {
+            head = head.next;
+            head.prev = null;
+        } else if (index == size - 1) {
+            tail = tail.prev;
+            tail.next = null;
+        } else {
+            Node<T> previousNode = removedNote.prev;
+            Node<T> nextNode = removedNote.next;
+            removedNote.next = null;
+            removedNote.prev = null;
+            previousNode.next = nextNode;
+            nextNode.prev = previousNode;
+        }
     }
 }
