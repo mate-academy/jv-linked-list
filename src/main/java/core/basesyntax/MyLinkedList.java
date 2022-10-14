@@ -10,44 +10,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        if (head == null) {
-            head = new Node<>(null, value, null);
-            tail = head;
-            size++;
-            return;
-        }
         Node<T> newNode = new Node<>(tail, value, null);
-        Node<T> tempNode = tail;
-        tempNode.next = newNode;
-        tail = newNode;
-        if (head.next == null) {
-            head.next = tempNode;
+        if (size == 0) {
+            head = newNode;
+        } else {
+            tail.next = newNode;
         }
+        tail = newNode;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index != size) {
-            rangeCheck(index);
-        }
-        Node<T> node = getNode(index);
-        if (head == null || index == size) {
+        if (index == size) {
             add(value);
             return;
         }
-        if (node == head) {
-            Node<T> newNode = new Node<>(null, value, node);
-            node.previous = newNode;
+        rangeCheck(index);
+        Node<T> node = getNode(index);
+        Node<T> newNode = new Node<>(node.previous, value, node);
+        if (node.previous == null) {
             head = newNode;
         } else {
-            Node<T> newNode = new Node<>(node.previous, value, node);
             node.previous.next = newNode;
-            node.previous = newNode;
-            if (node.next != null) {
-                node.next = node.next.previous;
-            }
         }
+        node.previous = newNode;
         size++;
     }
 
