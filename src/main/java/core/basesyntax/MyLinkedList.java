@@ -3,6 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final String INDEX_EXCEPTION = "Index is incorrect";
     private Node<T> node;
     private Node<T> tail;
     private Node<T> head;
@@ -25,23 +26,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("index is incorrect");
+            throw new IndexOutOfBoundsException(INDEX_EXCEPTION);
         }
         Node<T> newNode = new Node<>(null, value, null);
         node = findByIndex(index);
         if (node == null) {
             add(value);
+            return;
         } else if (node.prev == null) {
             head.prev = new Node<>(null, value, head);
             head = head.prev;
-            size++;
         } else {
             newNode.next = node;
             newNode.prev = node.prev;
             newNode.prev.next = newNode;
             newNode.next.prev = newNode;
-            size++;
         }
+        size++;
     }
 
     @Override
@@ -102,16 +103,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkPositionIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("index is incorrect");
+            throw new IndexOutOfBoundsException(INDEX_EXCEPTION);
         }
     }
 
     private Node<T> findByIndex(int index) {
-        Node<T> current = new Node<>(null, null, head);
+        node = new Node<>(null, null, head);
         for (int i = 0; i <= index; i++) {
-            current = current.next;
+            node = node.next;
         }
-        return current;
+        return node;
     }
 
     private void unlink(Node node) {
