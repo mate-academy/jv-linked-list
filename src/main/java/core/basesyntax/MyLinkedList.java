@@ -97,9 +97,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size && head != null) {
             throw new IndexOutOfBoundsException("Invalid index " + index);
         }
-        Node<T> removedNode = getNode(index);
-        T removedValue = removedNode.value;
-        removedNode.value = value;
+        T removedValue = getNode(index).value;
+        getNode(index).value = value;
         return removedValue;
     }
 
@@ -176,8 +175,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             result = head;
             for (int i = 0; i < index; i++) {
                 result = result.next;
-                return result;
             }
+            return result;
         } else {
             result = tail;
             for (int i = size - 1; i > index; i--) {
