@@ -3,15 +3,13 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final int DEFAULT_INDEX = 0;
-    private static final int DIVIDER = 2;
     private Node<T> first;
     private Node<T> last;
     private int size = 0;
 
     @Override
     public void add(T value) {
-        Node<T> current = new Node<>(value);
+        Node<T> current = new Node<>(null, value, null);
         if (first == null) {
             first = current;
         } else {
@@ -25,15 +23,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         indexCheckerForAdding(index);
-        if (size() == DEFAULT_INDEX) {
+        if (size() == 0) {
             add(value);
             return;
         }
-        if (index == DEFAULT_INDEX) {
-            Node<T> current = first;
-            first = new Node<>(value);
-            first.nextElement = current;
-            current.prevElement = first;
+        if (index == 0) {
+            Node<T> newNode = new Node<>(null, value, null);
+            newNode.nextElement = first;
+            first.prevElement = newNode;
+            first = newNode;
             size++;
             return;
         }
@@ -42,7 +40,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         Node<T> current = getNodeByIndex(index);
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(null, value, null);
         newNode.prevElement = current.prevElement;
         newNode.nextElement = current;
         current.prevElement.nextElement = newNode;
@@ -59,13 +57,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexChecker(index);
         return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        indexChecker(index);
         Node<T> current = getNodeByIndex(index);
         T removedValue = current.value;
         current.value = value;
@@ -74,7 +70,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexChecker(index);
         Node<T> current = getNodeByIndex(index);
         unlink(current);
         return current.value;
@@ -101,25 +96,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size() == DEFAULT_INDEX;
+        return size() == 0;
     }
 
     private void indexChecker(int index) {
-        if (index < DEFAULT_INDEX || index >= size()) {
+        if (index < 0 || index >= size()) {
             throw new IndexOutOfBoundsException("Index is out of bounds for size "
                     + size() + " with element " + index);
         }
     }
 
     private void indexCheckerForAdding(int index) {
-        if (index < DEFAULT_INDEX || index > size()) {
+        if (index < 0 || index > size()) {
             throw new IndexOutOfBoundsException("Index is out of bounds for size "
                     + size() + " with element " + index);
         }
     }
 
     private Node<T> getNodeByIndex(int index) {
-        if (index <= size() / DIVIDER) {
+        indexChecker(index);
+        if (index <= size() / 2) {
             return countFromFirst(index);
         } else {
             return countFromLast(index);
@@ -127,7 +123,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> countFromFirst(int index) {
-        int counter = DEFAULT_INDEX;
+        int counter = 0;
         Node<T> current = first;
         while (counter < index) {
             current = current.nextElement;
@@ -153,11 +149,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = nextNode;
         } else {
             prevNode.nextElement = nextNode;
+            removedNode.prevElement = null;
         }
         if (nextNode == null) {
             last = prevNode;
         } else {
             nextNode.prevElement = prevNode;
+            removedNode.nextElement = null;
         }
         size--;
     }
@@ -167,8 +165,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> prevElement;
         private Node<T> nextElement;
 
-        Node(T value) {
+        Node(Node<T> prevElement, T value, Node<T> nextElement) {
+            this.prevElement = prevElement;
             this.value = value;
+            this.nextElement = nextElement;
         }
     }
 }
