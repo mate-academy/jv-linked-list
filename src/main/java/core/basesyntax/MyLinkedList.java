@@ -9,10 +9,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    public MyLinkedList() {
-        numberOfElements = 0;
-    }
-
     @Override
     public void add(T value) {
         if (numberOfElements == 0) {
@@ -95,9 +91,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> giveNodeByIndex(int index) {
-        if (index < 0 || index > numberOfElements) {
-            throw new IndexOutOfBoundsException("Wrong index");
-        }
         Node<T> result;
         if (index > numberOfElements / DIVIDER) {
             result = giveNodeByIndexFromTail(index);
