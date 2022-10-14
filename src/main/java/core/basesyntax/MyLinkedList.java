@@ -28,10 +28,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         checkInRange(index);
-        if (size == 0) {
-            firstAdd(value);
-            return;
-        }
         if (index == 0) {
             MyLinkedList.Node<T> newNode = new MyLinkedList.Node<>(null, value, head);
             head.prev = newNode;
@@ -157,7 +153,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        Node(MyLinkedList.Node<T> prev, T value, MyLinkedList.Node<T> next) {
+        Node(Node<T> prev, T value, Node<T> next) {
             this.item = value;
             this.next = next;
             this.prev = prev;
