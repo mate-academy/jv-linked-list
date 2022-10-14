@@ -7,22 +7,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    class Node<T> {
-        private Node<T> prev;
-        private T value;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(null, value, null);
-        if (head == null) {
+        if (size == 0) {
             head = newNode;
         } else {
             newNode.prev = tail;
@@ -36,16 +24,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         if (index == size) {
             add(value);
-        } else if (index == 0) {
-            Node<T> newNode = new Node<>(null, value, head);
-            head.prev = newNode;
-            head = newNode;
-            size++;
         } else {
-            Node<T> node = getNodeByIndex(index);
-            Node<T> newNode = new Node<>(node.prev, value, node);
-            node.prev.next = newNode;
-            node.prev = newNode;
+            final Node<T> previous = getNodeByIndex(index).prev;
+            final Node<T> newNode = new Node<>(previous, value, getNodeByIndex(index));
+            getNodeByIndex(index).prev = newNode;
+            if (previous == null) {
+                head = newNode;
+            } else {
+                previous.next = newNode;
+            }
             size++;
         }
     }
@@ -107,24 +94,44 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index is not correct: "
                             + index + ", for Size: " + size);
         }
-        Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
+        if (index < (size >> 1)) {
+            Node<T> head = this.head;
+            for (int i = 0; i < index; i++) {
+                head = head.next;
+            }
+            return head;
+        } else {
+            Node<T> tail = this.tail;
+            for (int i = size - 1; i > index; i--) {
+                tail = tail.prev;
+            }
+            return tail;
         }
-        return currentNode;
     }
 
     public void unlink(Node node) {
-        if (node.prev == null) {
+        if (node == head) {
             head = node.next;
         } else {
             node.prev.next = node.next;
         }
-        if (node.next == null) {
+        if (node == tail) {
             tail = node.prev;
         } else {
             node.next.prev = node.prev;
         }
         size--;
+    }
+
+    private class Node<T> {
+        private Node<T> prev;
+        private T value;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
     }
 }
