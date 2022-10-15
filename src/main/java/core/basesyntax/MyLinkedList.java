@@ -38,8 +38,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             prev.next = newNode;
         }
-            size++;
-        }
+        size++;
+    }
 
     @Override
     public void addAll(List<T> list) {
