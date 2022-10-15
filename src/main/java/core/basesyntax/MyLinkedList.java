@@ -77,7 +77,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return false;
     }
 
-    T unlink(Node<T> current) {
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    private void checkElementIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index " + index + " is not exist");
+        }
+    }
+
+    private T unlink(Node<T> current) {
         final T element = current.element;
         final Node<T> prev = current.prev;
         final Node<T> next = current.next;
@@ -98,7 +114,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return element;
     }
 
-    Node<T> getNode(int index) {
+    private Node<T> getNode(int index) {
         checkElementIndex(index);
         Node<T> current;
         if (index < size / 2) {
@@ -113,22 +129,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return current;
-    }
-
-    private void checkElementIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " is not exist");
-        }
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
     }
 
     private static class Node<T> {
