@@ -22,19 +22,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        throwException(index);
         if (index == size) {
             add(value);
             return;
         }
-        if (index == 0) {
-            head.previous = new Node<>(null, value, head);
-            head = head.previous;
+        Node<T> valueNode = getNodeByIndex(index);
+        Node<T> newNode = new Node<>(valueNode.previous, value, valueNode);
+        if (valueNode.previous == null) {
+            head = newNode;
         } else {
-            Node<T> validNode = getNodeByIndex(index);
-            Node<T> node = new Node<T>(validNode.previous, value, validNode);
-            validNode.previous = node;
-            node.next.previous = node;
+            valueNode.previous.next = newNode;
         }
+        valueNode.previous = newNode;
         size++;
     }
 
@@ -47,11 +47,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
+        throwException(index);
         return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
+        throwException(index);
         Node<T> node = getNodeByIndex(index);
         T oldVal = node.value;
         node.value = value;
@@ -60,6 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
+        throwException(index);
         Node<T> removeTarget = getNodeByIndex(index);
         unlink(removeTarget);
         return removeTarget.value;
@@ -98,16 +101,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void throwException(int index) {
-        if (index >= size || index < 0) {
+        if (index > size || index < 0) {
             throw new IndexOutOfBoundsException("Index out of bounds for length");
         }
     }
 
     private Node<T> getNodeByIndex(int targetIndex) {
-        throwException(targetIndex);
-        Node<T> currentNode = tail;
-        for (int i = size - 1; i != targetIndex; i--) {
-            currentNode = currentNode.previous;
+        throwException(targetIndex + 1);
+        Node<T> currentNode;
+        if (targetIndex < size >> 1) {
+            currentNode = head;
+            while (targetIndex > 0) {
+                currentNode = currentNode.next;
+                targetIndex--;
+            }
+        } else {
+            currentNode = tail;
+            while (targetIndex < size - 1) {
+                currentNode = currentNode.previous;
+                targetIndex++;
+            }
         }
         return currentNode;
     }
