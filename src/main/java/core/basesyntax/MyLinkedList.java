@@ -7,20 +7,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private class Node<T> {
-        private Node<T> prev;
-        private T value;
-        private Node<T> next;
-
-        public Node(T value) {
-            this.value = value;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> node = new Node<>(value);
-        if (head == null) {
+        if (size == 0) {
             head = node;
         } else {
             node.prev = tail;
@@ -63,7 +53,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-
         Node<T> node = findByIndex(index);
         T oldValue = node.value;
         node.value = value;
@@ -72,25 +61,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-
         return unlink(findByIndex(index)).value;
     }
 
     @Override
     public boolean remove(T object) {
-
         return unlink(findByObject(object)) != null;
     }
 
     @Override
     public int size() {
-
         return size;
     }
 
     @Override
     public boolean isEmpty() {
-
         return size == 0;
     }
 
@@ -133,20 +118,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (node == null) {
             return null;
         }
-        if (node.next == node.prev) {
-            head = null;
-            tail = null;
-        } else if (node.next == null) {
-            node.prev.next = null;
-            tail = node.prev;
-        } else if (node.prev == null) {
-            node.next.prev = null;
+        if (node.prev == null) {
             head = node.next;
         } else {
-            node.next.prev = node.prev;
             node.prev.next = node.next;
+        }
+        if (node.next == null) {
+            tail = node.prev;
+        } else {
+            node.next.prev = node.prev;
         }
         size--;
         return node;
+    }
+
+    private class Node<T> {
+        private Node<T> prev;
+        private T value;
+        private Node<T> next;
+
+        public Node(T value) {
+            this.value = value;
+        }
     }
 }
