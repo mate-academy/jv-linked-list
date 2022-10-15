@@ -37,7 +37,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkElementIndex(index);
         Node<T> prevCurrent = getNode(index).prev;
         Node<T> newNode = new Node<>(prevCurrent, value, getNode(index));
         getNode(index).prev = newNode;
@@ -58,13 +57,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkElementIndex(index);
         return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkElementIndex(index);
         Node<T> current = getNode(index);
         T oldValue = current.value;
         current.value = value;
@@ -73,7 +70,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkElementIndex(index);
         return unlink(getNode(index));
     }
 
@@ -109,6 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
+        checkIndex(index);
         Node<T> node;
         if (index < (size >> 1)) {
             node = head;
@@ -145,7 +142,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return element;
     }
 
-    private void checkElementIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Element is not exists by index " + index);
         }
