@@ -11,7 +11,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        node = new Node<>(null, value, null);
+        final Node<T> node = new Node<>(null, value, null);
         if (head == null) {
             head = node;
         }
@@ -29,7 +29,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException(INDEX_EXCEPTION);
         }
         node = findByIndex(index);
-        if (node.prev == null & node.next == null) {
+        if (node == null) {
             add(value);
             return;
         } else if (node.prev == null) {
@@ -109,7 +109,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findByIndex(int index) {
         if (size == index) {
-            return new Node<>();
+            return node;
         }
         node = new Node<>(tail, null, head);
         int half = size % 2 == 0 ? size >> 1 : size >> 1 + 1;
@@ -151,9 +151,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.value = value;
             this.next = next;
             this.prev = prev;
-        }
-        public Node() {
-
         }
     }
 }
