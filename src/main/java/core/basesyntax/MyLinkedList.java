@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private Node<T> prev;
-        private Node<T> next;
-        private T value;
-
-        public Node(Node<T> prev, Node<T> next, T value) {
-            this.prev = prev;
-            this.next = next;
-            this.value = value;
-        }
-    }
-
     private Node<T> getNodeByIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index " + index
@@ -52,15 +40,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void removeNode(Node<T> currentNode) {
-        if (currentNode.next != null) {
-            currentNode.next.prev = currentNode.prev;
-        } else {
+        if (currentNode == tail) {
             tail = currentNode.prev;
-        }
-        if (currentNode.prev != null) {
-            currentNode.prev.next = currentNode.next;
         } else {
+            currentNode.next.prev = currentNode.prev;
+        }
+        if (currentNode == head) {
             head = currentNode.next;
+        } else {
+            currentNode.prev.next = currentNode.next;
         }
     }
 
@@ -84,14 +72,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         if (index == 0) {
-            Node<T> newNode = new Node<T>(null, head, value);
-            head.prev = newNode;
-            head = newNode;
+            head.prev = new Node<>(null, head, value);
+            head = head.prev;
         } else {
             Node<T> currentNode = getNodeByIndex(index);
             Node<T> newNode = new Node<T>(currentNode.prev, currentNode, value);
-            currentNode.prev.next = newNode;
             currentNode.prev = newNode;
+            newNode.prev.next = newNode;
         }
         size++;
     }
@@ -144,5 +131,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private static class Node<T> {
+        private Node<T> prev;
+        private Node<T> next;
+        private T value;
+
+        public Node(Node<T> prev, Node<T> next, T value) {
+            this.prev = prev;
+            this.next = next;
+            this.value = value;
+        }
     }
 }
