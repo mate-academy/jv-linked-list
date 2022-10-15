@@ -8,8 +8,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
 
     private static class Node<T> {
-        private T value;
         private Node<T> previous;
+        private T value;
         private Node<T> next;
 
         public Node(Node<T> previous, T value, Node<T> next) {
@@ -17,48 +17,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.value = value;
             this.next = next;
         }
-    }
-
-    private void throwException(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Index out of bounds for length");
-        }
-    }
-
-    private Node<T> getNodeByIndex(int targetIndex) {
-        throwException(targetIndex);
-        Node<T> currentNode = tail;
-        for (int i = size - 1; i != targetIndex; i--) {
-            currentNode = currentNode.previous;
-        }
-        return currentNode;
-    }
-
-    private Node<T> getNodeByValue(T value) {
-        Node<T> node = head;
-        while (node != null) {
-            if (node.value == value || node.value != null && node.value.equals(value)) {
-                return node;
-            }
-            node = node.next;
-        }
-        return null;
-    }
-
-    public void unlink(Node<T> removeNode) {
-        Node<T> nodePrev = removeNode.previous;
-        Node<T> nodeNext = removeNode.next;
-        if (nodePrev == null) {
-            head = nodeNext;
-        } else {
-            nodePrev.next = nodeNext;
-        }
-        if (nodeNext == null) {
-            tail = nodePrev;
-        } else {
-            nodeNext.previous = nodePrev;
-        }
-        size--;
     }
 
     @Override
@@ -137,5 +95,47 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void throwException(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Index out of bounds for length");
+        }
+    }
+
+    private Node<T> getNodeByIndex(int targetIndex) {
+        throwException(targetIndex);
+        Node<T> currentNode = tail;
+        for (int i = size - 1; i != targetIndex; i--) {
+            currentNode = currentNode.previous;
+        }
+        return currentNode;
+    }
+
+    private Node<T> getNodeByValue(T value) {
+        Node<T> newNode = head;
+        while (newNode != null) {
+            if (newNode.value == value || newNode.value != null && newNode.value.equals(value)) {
+                return newNode;
+            }
+            newNode = newNode.next;
+        }
+        return null;
+    }
+
+    private void unlink(Node<T> removeNode) {
+        Node<T> nodePrev = removeNode.previous;
+        Node<T> nodeNext = removeNode.next;
+        if (nodePrev == null) {
+            head = nodeNext;
+        } else {
+            nodePrev.next = nodeNext;
+        }
+        if (nodeNext == null) {
+            tail = nodePrev;
+        } else {
+            nodeNext.previous = nodePrev;
+        }
+        size--;
     }
 }
