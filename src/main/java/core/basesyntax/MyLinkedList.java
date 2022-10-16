@@ -33,22 +33,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException();
-        } else if (index == size) {
+        if (index == size) {
             add(value);
-        } else if (index == 0) {
-            Node<T> newNode = new Node<>(null, value, head);
-            newNode.prev = newNode;
-            head = newNode;
-            size++;
-        } else {
-            Node<T> searchIndex = findNode(index);
-            Node<T> newNode = new Node<>(searchIndex.prev, value, searchIndex);
-            searchIndex.prev.next = newNode;
-            searchIndex.prev = newNode;
-            size++;
+            return;
         }
+        checkIndex(index);
+        Node<T> next = findNode(index);
+        Node<T> prev = next.prev;
+        Node<T> newNode = new Node<>(prev, value, next);
+        if (prev == null) {
+            head = newNode;
+        } else {
+            prev.next = newNode;
+        }
+        next.prev = newNode;
+        size++;
     }
 
     @Override
@@ -100,14 +99,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNode(int index) {
-        Node<T> foundNode = head;
         checkIndex(index);
-        int i = 0;
-        while (i < index) {
-            foundNode = foundNode.next;
-            i++;
+        int middle = size >> 1;
+        Node<T> currentNode;
+        if (index <= middle) {
+            currentNode = head;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+        } else {
+            currentNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                currentNode = currentNode.prev;
+            }
         }
-        return foundNode;
+        return currentNode;
     }
 
     private void checkIndex(int index) {
