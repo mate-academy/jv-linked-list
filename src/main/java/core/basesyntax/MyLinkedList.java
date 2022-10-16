@@ -3,15 +3,15 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final String INVALID_INDEX_MSG = "The index is invalid";
     private Node<T> head;
     private Node<T> tail;
     private int size;
-    private static final String INVALID_INDEX_MSG = "The index is invalid";
 
     private class Node<T> {
-        T val;
-        Node<T> prev;
-        Node<T> next;
+        private T val;
+        private Node<T> prev;
+        private Node<T> next;
 
         public Node(T val, Node<T> prev) {
             this.val = val;
