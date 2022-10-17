@@ -6,7 +6,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
     private int size;
-    private Node<T> currentNode;
 
     public MyLinkedList() {
         size = 0;
@@ -28,16 +27,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         isInRangeExcludive(index);
         Node<T> newNode = new Node<>(null, value, null);
-        if (head == null || tail == null) {
-            setFirstItem(newNode);
+        if (size == 0) {
+            add(value);
+            return;
         } else if (index == 0) {
             newNode.next = head;
             head.prev = newNode;
             head = newNode;
         } else if (index == size) {
-            newNode.prev = tail;
-            tail.next = newNode;
-            tail = newNode;
+            add(value);
+            return;
         } else {
             insertNode(findNode(index), newNode);
         }
@@ -65,9 +64,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
+        Node<T> currentNode;
         currentNode = findNode(index);
         T removedItem = currentNode.value;
-        deleteItem(currentNode);
+        unlinkNode(currentNode);
         size--;
         return removedItem;
     }
@@ -75,6 +75,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         boolean isItemRemoved = false;
+        Node<T> currentNode;
         for (int i = 0; i < size; i++) {
             currentNode = findNode(i);
             if (currentNode.value == object
@@ -106,6 +107,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNode(int index) {
         isInRangeIncludive(index);
+        Node<T> currentNode;
         if (index > (size / 2)) {
             currentNode = tail;
             int desiredIndex = size - 1;
@@ -146,7 +148,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void deleteItem(Node<T> node) {
+    private void unlinkNode(Node<T> node) {
         if (node == head) {
             head = head.next;
         } else if (node == tail) {
