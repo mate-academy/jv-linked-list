@@ -4,9 +4,13 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public static final int DEFAULT_SIZE = 0;
-    private int size = DEFAULT_SIZE;
+    private int size;
     private Node<T> head;
     private Node<T> tail;
+
+    public MyLinkedList() {
+        this.size = DEFAULT_SIZE;
+    }
 
     @Override
     public void add(T value) {
