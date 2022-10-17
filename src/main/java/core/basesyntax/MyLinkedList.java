@@ -4,7 +4,6 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String INDEX_EXCEPTION = "Index is incorrect";
-    private Node<T> node;
     private Node<T> tail;
     private Node<T> head;
     private int size;
@@ -28,17 +27,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException(INDEX_EXCEPTION);
         }
-        node = findByIndex(index);
-        if (node == null) {
+        Node<T> node = findByIndex(index);
+        if (index == size) {
             add(value);
             return;
         } else if (node.prev == null) {
             head.prev = new Node<>(null, value, head);
             head = head.prev;
         } else {
-            Node<T> newNode = new Node<>(null, value, null);
-            newNode.next = node;
-            newNode.prev = node.prev;
+            Node<T> newNode = new Node<>(node.prev, value, node);
             newNode.prev.next = newNode;
             newNode.next.prev = newNode;
         }
@@ -61,8 +58,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkPositionIndex(index);
-        T oldValue = findByIndex(index).value;
-        node = findByIndex(index);
+        Node<T> node = findByIndex(index);
+        T oldValue = node.value;
         node.value = value;
         return oldValue;
     }
@@ -70,8 +67,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkPositionIndex(index);
-        T oldValue = findByIndex(index).value;
-        node = findByIndex(index);
+        Node<T> node = findByIndex(index);
+        T oldValue = node.value;
         unlink(node);
         return oldValue;
     }
@@ -108,10 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findByIndex(int index) {
-        if (size == index) {
-            return node;
-        }
-        node = new Node<>(tail, null, head);
+        Node<T> node = new Node<>(tail, null, head);
         int half = size % 2 == 0 ? size >> 1 : size >> 1 + 1;
         if (index <= half) {
             for (int i = 0; i <= index; i++) {
