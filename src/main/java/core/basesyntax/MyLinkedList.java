@@ -7,52 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private class Node<T> {
-        private Node<T> prev;
-        private Node<T> next;
-        private T value;
-
-        private Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.next = next;
-            this.value = value;
-        }
-    }
-
-    private Node<T> getNodeByIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Wrong index: " + index
-                    + " should be between 0 and size: " + size);
-        }
-        if (index < (size / 2)) {
-            Node<T> nearHead = head;
-            for (int i = 0; i < index; i++) {
-                nearHead = nearHead.next;
-            }
-            return nearHead;
-        } else {
-            Node<T> nearTail = tail;
-            for (int i = size - 1; i > index; i--) {
-                nearTail = nearTail.prev;
-            }
-            return nearTail;
-        }
-    }
-
-    private void removeNodeLink(Node<T> node) {
-        if (node == head) {
-            head = node.next;
-        } else {
-            node.prev.next = node.next;
-        }
-        if (node == tail) {
-            tail = node.prev;
-        } else {
-            node.next.prev = node.prev;
-        }
-        size--;
-    }
-
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(null, value, null);
@@ -132,5 +86,51 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private class Node<T> {
+        private Node<T> prev;
+        private Node<T> next;
+        private T value;
+
+        private Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.next = next;
+            this.value = value;
+        }
+    }
+
+    private Node<T> getNodeByIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Wrong index: " + index
+                    + " should be between 0 and size: " + size);
+        }
+        if (index < (size / 2)) {
+            Node<T> nearHead = head;
+            for (int i = 0; i < index; i++) {
+                nearHead = nearHead.next;
+            }
+            return nearHead;
+        } else {
+            Node<T> nearTail = tail;
+            for (int i = size - 1; i > index; i--) {
+                nearTail = nearTail.prev;
+            }
+            return nearTail;
+        }
+    }
+
+    private void removeNodeLink(Node<T> node) {
+        if (node == head) {
+            head = node.next;
+        } else {
+            node.prev.next = node.next;
+        }
+        if (node == tail) {
+            tail = node.prev;
+        } else {
+            node.next.prev = node.prev;
+        }
+        size--;
     }
 }
