@@ -3,23 +3,37 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private final Node falseHead;
+    private Node head;
+    private Node tail;
     private int size;
-
-    public MyLinkedList() {
-        falseHead = new Node(null, null, null);
-        falseHead.next = falseHead.prev = falseHead;
-    }
 
     @Override
     public void add(T value) {
-        insert(falseHead.prev, falseHead, value);
+        Node oldTail = tail;
+        tail = new Node(value, null, tail);
+        if (oldTail == null) {
+            head = tail;
+        } else {
+            oldTail.next = tail;
+        }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
+        if (index == size) {
+            add(value);
+            return;
+        }
         Node node = getNode(index);
-        insert(node.prev, node, value);
+        Node newNode = new Node(value, node, node.prev);
+        if (newNode.prev != null) {
+            newNode.prev.next = newNode;
+        } else {
+            head = newNode;
+        }
+        node.prev = newNode;
+        size++;
     }
 
     @Override
@@ -33,7 +47,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T get(int index) {
         checkIndexBounds(index + 1, "Cannot get node with index equals size."
                 + " Current size: " + index
-                + ", list size: " + size);
+                + ", list size: " + size
+        );
         return getNode(index).val;
     }
 
@@ -60,8 +75,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node runner = falseHead.next;
-        for (int i = 0; i != size; i++) {
+        if (head == null) {
+            return false;
+        }
+        Node runner = head;
+        while (runner != null) {
             if (runner.val == object || object != null && object.equals(runner.val)) {
                 unlink(runner);
                 return true;
@@ -82,32 +100,32 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node getNode(int index) {
-        checkIndexBounds(index, "Cannot get node with index: " + index
-                + ", list size: " + size);
+        checkIndexBounds(index, "Cannot get node with index: " + index + ", list size: " + size);
         if (size - index > size >> 1) {
-            Node runnerFromHead = falseHead.next;
-            for (int i = 0; i != index && i != size; i++) {
+            Node runnerFromHead = head;
+            for (int i = 0; i != index; i++) {
                 runnerFromHead = runnerFromHead.next;
             }
             return runnerFromHead;
         } else {
             int indexFromEnd = size - index - 1;
-            Node runnerFromTail = falseHead.prev;
-            for (int i = 0; i != indexFromEnd && i != size; i++) {
+            Node runnerFromTail = tail;
+            for (int i = 0; i != indexFromEnd; i++) {
                 runnerFromTail = runnerFromTail.prev;
             }
             return runnerFromTail;
         }
     }
 
-    private void insert(Node prev, Node next, T val) {
-        prev.next = next.prev = new Node(val, next, prev);
-        size++;
-    }
-
     private void unlink(Node node) {
-        node.next.prev = node.prev;
-        node.prev.next = node.next;
+        if ((node.next != null) & (node.prev != null)) {
+            node.next.prev = node.prev;
+            node.prev.next = node.next;
+        } else if ((node.prev == null) & (node.next != null)) {
+            head = node.next;
+        } else if (node.prev != null) {
+            tail = node.prev;
+        }
         size--;
     }
 
