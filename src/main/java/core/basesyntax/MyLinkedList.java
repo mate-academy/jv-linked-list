@@ -8,27 +8,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> currentNode;
     private int size;
 
-    public MyLinkedList() {
-        this.head = null;
-        this.tail = null;
-        size = 0;
-    }
-
     @Override
     public void add(T value) {
         currentNode = new Node<>(value);
         if (size == 0) {
-            head = currentNode;
-        } else if (tail == null) {
-            tail = currentNode;
-            head.next = tail;
-            tail.prev = head;
+            head = tail = currentNode;
         } else {
-            Node<T> lastNode = tail;
+            currentNode.prev = tail;
+            tail.next = currentNode;
             tail = currentNode;
-            tail.prev = lastNode;
-            tail.prev.prev.next = lastNode;
-            lastNode.next = tail;
         }
         size++;
     }
@@ -82,19 +70,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> n = head; n != null; n = n.next) {
-                if (n.value == null) {
-                    unLink(n);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> n = head; n != null; n = n.next) {
-                if (n.value == object || n.value != null && n.value.equals(object)) {
-                    unLink(n);
-                    return true;
-                }
+        for (Node<T> n = head; n != null; n = n.next) {
+            if (n.value == object || n.value != null && n.value.equals(object)) {
+                unLink(n);
+                return true;
             }
         }
         return false;
@@ -111,13 +90,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkPositionIndex(int index) {
-        if (index < 0 || index > size()) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Invalid index " + index);
         }
     }
 
     private void checkElementIndex(int index) {
-        if (index < 0 || index >= size && head != null) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Invalid index " + index);
         }
     }
@@ -150,9 +129,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 result = result.next;
             }
             return result;
-        } else if (index == size) {
-            throw new IndexOutOfBoundsException("Invalid index " + index);
         } else {
+            checkElementIndex(index);
             Node<T> result = tail;
             for (int i = size - 1; i > index; i--) {
                 result = result.prev;
