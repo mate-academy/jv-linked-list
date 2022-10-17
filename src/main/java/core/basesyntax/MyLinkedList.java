@@ -3,63 +3,12 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final int STANDART_LIST_SIZE = 0;
     private Node<T> head;
     private Node<T> tail;
     private int size;
 
     public MyLinkedList() {
-        size = STANDART_LIST_SIZE;
-    }
-
-    public void isIndexExist(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Index " + index + " dosen't exist");
-        }
-    }
-
-    public Node<T> findByIndex(int index) {
-        isIndexExist(index);
-        if (head == null) {
-            return null;
-        }
-        Node<T> currentNode = head;
-        int i = 0;
-        while (i != index) {
-            currentNode = currentNode.next;
-            i++;
-        }
-        return currentNode;
-    }
-
-    private Node<T> findByObject(T object) {
-        Node<T> element = head;
-        do {
-            T value = element.item;
-            if (value == object || value != null && value.equals(object)) {
-                return element;
-            }
-            element = element.next;
-        } while (element.next != null);
-        return null;
-    }
-
-    private Node<T> checkNode(Node<T> node) {
-        if (node == null) {
-            return null;
-        }
-        if (node.prev == null) {
-            head = node.next;
-        } else {
-            node.prev.next = node.next;
-        }
-        if (node.next == null) {
-            tail = node.prev;
-        } else {
-            node.next.prev = node.prev;
-        }
-        size--;
-        return node;
+        size = 0;
     }
 
     @Override
@@ -136,7 +85,58 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    public void isIndexExist(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Index " + index + " dosen't exist");
+        }
+    }
+
+    public Node<T> findByIndex(int index) {
+        isIndexExist(index);
+        if (head == null) {
+            return null;
+        }
+        Node<T> currentNode = head;
+        int i = 0;
+        while (i != index) {
+            currentNode = currentNode.next;
+            i++;
+        }
+        return currentNode;
+    }
+
+    private Node<T> findByObject(T object) {
+        Node<T> element = head;
+        do {
+            T value = element.item;
+            if (value == object || value != null && value.equals(object)) {
+                return element;
+            }
+            element = element.next;
+        } while (element.next != null);
+        return null;
+    }
+
+    private Node<T> checkNode(Node<T> node) {
+        if (node == null) {
+            return null;
+        }
+        if (node.prev == null) {
+            head = node.next;
+        } else {
+            node.prev.next = node.next;
+        }
+        if (node.next == null) {
+            tail = node.prev;
+        } else {
+            node.next.prev = node.prev;
+        }
+        size--;
+        return node;
+    }
+
     private static class Node<T> {
+
         private T item;
         private Node<T> next;
         private Node<T> prev;
