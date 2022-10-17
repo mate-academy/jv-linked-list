@@ -60,8 +60,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Node<T> node = getNodeByIndex(index);
-        return node.value;
+        return getNodeByIndex(index).value;
     }
 
     @Override
@@ -108,9 +107,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("index " + index + " out of bounds " + size);
         }
-        Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
+        Node<T> currentNode = tail;
+        for (int i = size - 1; i != index; i--) {
+            currentNode = currentNode.prev;
         }
         return currentNode;
     }
