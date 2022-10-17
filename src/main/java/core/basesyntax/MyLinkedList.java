@@ -12,19 +12,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index " + index
                     + " out of bound, size is " + size);
         }
+        Node<T> currentNode;
         if (index < size / 2) {
-            Node<T> currentNode = head;
+            currentNode = head;
             for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
             }
-            return currentNode;
         } else {
-            Node<T> currentNode = tail;
+            currentNode = tail;
             for (int i = size - 1; i > index; i--) {
                 currentNode = currentNode.prev;
             }
-            return currentNode;
         }
+        return currentNode;
     }
 
     private Node<T> getNodeByValue(T value) {
@@ -39,7 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
-    private void removeNode(Node<T> currentNode) {
+    private void unlink(Node<T> currentNode) {
         if (currentNode == tail) {
             tail = currentNode.prev;
         } else {
@@ -54,7 +54,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<T>(null, null, value);
+        Node<T> newNode = new Node<>(null, null, value);
         if (head == null) {
             head = newNode;
         } else {
@@ -76,7 +76,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = head.prev;
         } else {
             Node<T> currentNode = getNodeByIndex(index);
-            Node<T> newNode = new Node<T>(currentNode.prev, currentNode, value);
+            Node<T> newNode = new Node<>(currentNode.prev, currentNode, value);
             currentNode.prev = newNode;
             newNode.prev.next = newNode;
         }
@@ -106,7 +106,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> currentNode = getNodeByIndex(index);
-        removeNode(currentNode);
+        unlink(currentNode);
         size--;
         return currentNode.value;
     }
@@ -117,7 +117,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (currentNode == null) {
             return false;
         } else {
-            removeNode(currentNode);
+            unlink(currentNode);
             size--;
         }
         return true;
