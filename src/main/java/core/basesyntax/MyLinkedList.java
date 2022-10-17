@@ -21,7 +21,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-         if (index == size) {
+        if (index == size) {
             add(value);
             return;
         }
@@ -86,7 +86,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean isEmpty() {
         return size == 0;
     }
-    
+
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index " + index + " is not valid, "
@@ -133,7 +133,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
         return node.value;
     }
-    
+
     private static class Node<T> {
         private T value;
         private Node<T> next;
