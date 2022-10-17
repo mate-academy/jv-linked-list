@@ -7,10 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public MyLinkedList() {
-        this.size = size;
-    }
-
     @Override
     public void add(T value) {
         if (head == null) {
