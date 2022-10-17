@@ -3,8 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final int ONE = 1;
-    private static final int ZERO = 0;
 
     private Node<T> head;
     private Node<T> tail;
@@ -28,17 +26,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (size == ZERO && index == ZERO || index == size) {
+        if (size == 0 && index == 0 || index == size) {
             add(value);
             return;
         }
-        if (index == size - ONE) {
-            T last = remove(size - ONE);
+        if (index == size - 1) {
+            T last = remove(size - 1);
             add(value);
             add(last);
             return;
         }
-        if (index == ZERO && size != ZERO) {
+        if (index == 0 && size != 0) {
             Node<T> node = new Node(null, value, head);
             head.prev = node;
             head = node;
@@ -72,13 +70,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Node<T> current = getNode(index);
         T oldValue = current.value;
-        if (index == ZERO) {
+        if (index == 0) {
             Node<T> node = new Node(null, value, head.next);
             head.next.prev = node;
             head = node;
             return oldValue;
         }
-        if (index == size - ONE) {
+        if (index == size - 1) {
             Node<T> node = new Node(tail.prev, value, null);
             tail.prev.next = node;
             tail = node;
@@ -93,19 +91,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> current = getNode(index);
-        if (index == ZERO && size == ONE) {
+        if (index == 0 && size == 0) {
             head = null;
             tail = null;
             size--;
             return current.value;
         }
-        if (index == ZERO && size != ZERO) {
+        if (index == 0 && size != 0) {
             head = current.next;
             current.next.prev = null;
             size--;
             return current.value;
         }
-        if (index == size - ONE) {
+        if (index == size - 1) {
             tail = current.prev;
             current.prev.next = null;
             size--;
@@ -121,7 +119,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> current = head;
-        int index = ZERO;
+        int index = 0;
         do {
             if ((current.value == object)
                     || current.value != null && current.value.equals(object)) {
@@ -149,7 +147,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Node<T> current = head;
         int i = index;
-        while (current.next != null && i != ZERO) {
+        while (current.next != null && i != 0) {
             current = current.next;
             i--;
         }
@@ -171,6 +169,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.prev = prev;
             this.value = value;
             this.next = next;
+        }
+
+        public static void main(String[] args) {
+            System.out.println(16 % 10);
         }
     }
 }
