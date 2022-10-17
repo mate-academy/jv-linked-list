@@ -114,11 +114,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index >= this.size || index < 0) {
             throw new IndexOutOfBoundsException("Index is out of bounds");
         }
-        Node<T> node = this.head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
+        if (index < (size / 2)) {
+            Node<T> node = this.head;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+            return node;
+        } else {
+            Node<T> nearTail = tail;
+            for (int i = size - 1; i > index; i--) {
+                nearTail = nearTail.previous;
+            }
+            return nearTail;
         }
-        return node;
+
     }
 
     private void removeNode(Node<T> node) {
