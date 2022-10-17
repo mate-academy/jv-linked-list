@@ -10,15 +10,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        final Node<T> node = new Node<>(null, value, null);
+        final Node<T> addNode = new Node<>(null, value, null);
         if (head == null) {
-            head = node;
+            head = addNode;
         }
-        node.prev = tail;
+        addNode.prev = tail;
         if (tail != null) {
-            tail.next = node;
+            tail.next = addNode;
         }
-        tail = node;
+        tail = addNode;
         size++;
     }
 
@@ -27,17 +27,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException(INDEX_EXCEPTION);
         }
-        Node<T> node = findByIndex(index);
+        Node<T> addNodeByIndex = findByIndex(index);
         if (index == size) {
             add(value);
             return;
-        } else if (node.prev == null) {
+        } else if (addNodeByIndex.prev == null) {
             head.prev = new Node<>(null, value, head);
             head = head.prev;
         } else {
-            Node<T> newNode = new Node<>(node.prev, value, node);
-            newNode.prev.next = newNode;
-            newNode.next.prev = newNode;
+            addNodeByIndex = new Node<>(addNodeByIndex.prev, value, addNodeByIndex);
+            addNodeByIndex.prev.next = addNodeByIndex;
+            addNodeByIndex.next.prev = addNodeByIndex;
         }
         size++;
     }
@@ -58,18 +58,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkPositionIndex(index);
-        Node<T> node = findByIndex(index);
-        T oldValue = node.value;
-        node.value = value;
+        Node<T> setNode = findByIndex(index);
+        T oldValue = setNode.value;
+        setNode.value = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
         checkPositionIndex(index);
-        Node<T> node = findByIndex(index);
-        T oldValue = node.value;
-        unlink(node);
+        Node<T> removeNode = findByIndex(index);
+        T oldValue = removeNode.value;
+        unlink(removeNode);
         return oldValue;
     }
 
