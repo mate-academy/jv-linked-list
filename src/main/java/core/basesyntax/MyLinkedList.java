@@ -23,18 +23,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
          if (index == size) {
             add(value);
-        } else if (index == 0) {
-            Node<T> newNode = new Node<>(null, value, head);
-            head.prev = newNode;
-            head = newNode;
-            size++;
-        } else {
-            Node<T> node = findByIndex(index);
-            Node<T> newNode = new Node<>(node.prev, value, node);
-            node.prev.next = newNode;
-            node.prev = newNode;
-            size++;
+            return;
         }
+        checkIndex(index);
+        Node<T> next = findByIndex(index);
+        Node<T> prev = next.prev;
+        Node<T> newNode = new Node<>(prev, value, next);
+        if (prev == null) {
+            head = newNode;
+        } else {
+            prev.next = newNode;
+        }
+        next.prev = newNode;
+        size++;
     }
 
     @Override
