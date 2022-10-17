@@ -119,7 +119,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        checkPositionIndex(index);
+        checkElementIndex(index);
         if (size == 1) {
             return head;
         }
@@ -130,7 +130,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             return result;
         } else {
-            checkElementIndex(index);
             Node<T> result = tail;
             for (int i = size - 1; i > index; i--) {
                 result = result.prev;
