@@ -9,7 +9,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> currentNode = new Node<>(head, value, tail);
+        Node<T> currentNode = new Node<>(null, value, null);
         if (size == 0) {
             head = currentNode;
             tail = head;
@@ -29,14 +29,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         isIndexExist(index);
         Node<T> currentNode = findByIndex(index);
-        Node<T> node = new Node<>(head, value, tail);
+        Node<T> node = new Node<>(currentNode.prev, value, currentNode);
         if (head == currentNode) {
             head = node;
         } else {
             currentNode.prev.next = node;
         }
-        node.prev = currentNode.prev;
-        node.next = currentNode;
         currentNode.prev = node;
         size++;
     }
@@ -89,9 +87,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     public Node<T> findByIndex(int index) {
         isIndexExist(index);
-        if (head == null) {
-            return null;
-        }
         Node<T> currentNode;
         if (index > (size / 2)) {
             currentNode = tail;
@@ -109,13 +104,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findByObject(T object) {
         Node<T> element = head;
-        do {
+        while (element != null) {
             T value = element.item;
             if (value == object || value != null && value.equals(object)) {
                 return element;
             }
             element = element.next;
-        } while (element.next != null);
+        }
         return null;
     }
 
@@ -123,15 +118,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (node == null) {
             return null;
         }
-        if (node.prev == null) {
-            head = node.next;
-        } else {
-            node.prev.next = node.next;
-        }
-        if (node.next == null) {
-            tail = node.prev;
+        if (node.next == null || node.prev == null) {
+            if (node.prev == null) {
+                head = node.next;
+            }
+            if (node.next == null) {
+                tail = node.prev;
+            }
         } else {
             node.next.prev = node.prev;
+            node.prev.next = node.next;
         }
         size--;
         return node;
