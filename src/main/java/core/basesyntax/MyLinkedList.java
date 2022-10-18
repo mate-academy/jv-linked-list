@@ -4,17 +4,17 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
-    private Node head;
-    private Node tail;
-    private Node currentNode;
+    private Node<T> head;
+    private Node<T> tail;
     private int size = 0;
 
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(null, value, null);
-        if (size == 0) {
+        if (head == null) {
             head = newNode;
         } else {
+            newNode.prev = tail;
             tail.next = newNode;
         }
         tail = newNode;
@@ -25,23 +25,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         if (index == size) {
             add(value);
-            size++;
             return;
         }
 
         if (index == 0) {
             Node<T> newNode = new Node<>(null, value, head);
-            head = newNode;
+            head.prev = newNode;
+            head = head.prev;
             size++;
             return;
         }
 
         Node<T> iteratorNode = iterator(index);
         Node<T> newNode = new Node<>(iteratorNode.prev, value, iteratorNode);
-        newNode.prev.next = newNode;
-        newNode.next.prev = newNode;
-        size++;
 
+        iteratorNode.next.prev = newNode;
+        iteratorNode.prev = newNode;
+
+        size++;
     }
 
     @Override
@@ -53,40 +54,33 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkCorrectIndex(index);
         return iterator(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
+        T currentValue = iterator(index).value;
         iterator(index).value = value;
-        return value;
+        return currentValue;
     }
 
     @Override
     public T remove(int index) {
-        checkCorrectIndex(index);
+        T currentValue = iterator(index).value;
         unlink(iterator(index));
-        size--;
-        return iterator(index).value;
+        return currentValue;
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> currentNode;
-        int i = size;
+        Node<T> currentNode = head;
 
-        currentNode = head;
-        while (i > 0) {
-            if (currentNode.value == object || object != null && currentNode.value.equals(object)) {
+        while (currentNode.next != null) {
+            if ((currentNode.value == object) || currentNode.value != null
+                    && currentNode.value.equals(object)) {
                 unlink(currentNode);
-                size--;
                 return true;
             }
-            i--;
             currentNode = currentNode.next;
         }
         return false;
@@ -104,16 +98,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> iterator(int index) {
         checkCorrectIndex(index);
-        Node<T> currentNode;
+        Node<T> currentNode = head;
 
-        currentNode = head;
-        while (index > 0) {
-            if (currentNode.next == tail) {
-                return currentNode;
-            }
+        for (int i = 0; i != index; i++) {
             currentNode = currentNode.next;
-            index--;
         }
+
         return currentNode;
     }
 
@@ -129,10 +119,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             node.next.prev = node.prev;
         }
+        size--;
     }
 
     private void checkCorrectIndex(int index) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
     }
