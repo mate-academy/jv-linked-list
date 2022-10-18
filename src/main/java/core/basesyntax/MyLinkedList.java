@@ -38,10 +38,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         Node<T> iteratorNode = iterator(index);
         Node<T> newNode = new Node<>(iteratorNode.prev, value, iteratorNode);
-
         iteratorNode.prev.next = newNode;
         iteratorNode.prev = newNode;
-
         size++;
     }
 
@@ -108,7 +106,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> node) {
-
         if (node.prev == null) {
             head = node.next;
         } else {
