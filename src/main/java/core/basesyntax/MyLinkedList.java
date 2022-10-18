@@ -39,7 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> iteratorNode = iterator(index);
         Node<T> newNode = new Node<>(iteratorNode.prev, value, iteratorNode);
 
-        iteratorNode.next.prev = newNode;
+        iteratorNode.prev.next = newNode;
         iteratorNode.prev = newNode;
 
         size++;
@@ -75,7 +75,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> currentNode = head;
 
-        while (currentNode.next != null) {
+        while (currentNode != null) {
             if ((currentNode.value == object) || currentNode.value != null
                     && currentNode.value.equals(object)) {
                 unlink(currentNode);
