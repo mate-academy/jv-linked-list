@@ -57,15 +57,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        T currentValue = iterator(index).value;
-        iterator(index).value = value;
+        Node<T> currentNode = iterator(index);
+        T currentValue = currentNode.value;
+        currentNode.value = value;
         return currentValue;
     }
 
     @Override
     public T remove(int index) {
-        T currentValue = iterator(index).value;
-        unlink(iterator(index));
+        Node<T> currentNode = iterator(index);
+        T currentValue = currentNode.value;
+        unlink(currentNode);
         return currentValue;
     }
 
@@ -74,7 +76,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode = head;
 
         while (currentNode != null) {
-            if ((currentNode.value == object) || currentNode.value != null
+            if (currentNode.value == object || currentNode.value != null
                     && currentNode.value.equals(object)) {
                 unlink(currentNode);
                 return true;
