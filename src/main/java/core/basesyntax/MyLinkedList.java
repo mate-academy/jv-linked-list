@@ -100,16 +100,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeByIndex(int index) {
         exceptionCheckIncludeIndex(index);
-        Node<T> currentNode = head;
-        Node<T> newNode = currentNode;
-        for (int i = 0; i < size; i++) {
-            if (index == i) {
-                newNode = currentNode;
-                return newNode;
+        Node<T> current = head;
+        if (index < size / 2) {
+            current = head;
+            while (index > 0) {
+                current = current.next;
+                index--;
             }
-            currentNode = currentNode.next;
+        } else {
+            current = tail;
+            while (index < size - 1) {
+                current = current.prev;
+                index++;
+            }
         }
-        return newNode;
+        return current;
     }
 
     private void removeNode(Node<T> node) {
