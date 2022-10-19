@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -23,7 +22,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index, size + 1);
+        if (index < 0 || index >= size + 1) {
+            throw new IndexOutOfBoundsException("Invalid Index");
+        }
         Node<T> node = new Node<>(null, value, null);
         Node<T> firstNode = head;
         if (size == 0 || index == size) {
@@ -54,24 +55,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, size);
         return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index, size);
-        T prevValue = getNodeByIndex(index).value;
-        getNodeByIndex(index).value = value;
-
-        return prevValue;
+        Node<T> node = getNodeByIndex(index);
+        T parameter = node.value;
+        node.value = value;
+        return parameter;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index, size);
         Node<T> node = getNodeByIndex(index);
-        unlink(getNodeByIndex(index));
+        unlink(node);
         return node.value;
     }
 
@@ -108,32 +106,44 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void unlink(Node<T> node) {
         if (node == head) {
             head = node.next;
-            size--;
         } else if (node == tail) {
             tail = node.prev;
-            size--;
         } else {
             node.next.prev = node.prev;
             node.prev.next = node.next;
-            size--;
         }
+        size--;
     }
 
-    private void checkIndex(int index, int size) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Invalid Index");
         }
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Node<T> countNode = head;
-        int count = 0;
-        while (countNode != null) {
-            if (count == index) {
-                return countNode;
+        checkIndex(index);
+        int divList = size / 2;
+        if (index <= divList) {
+            Node<T> countNode = head;
+            int count = 0;
+            while (count <= divList) {
+                if (count == index) {
+                    return countNode;
+                }
+                count++;
+                countNode = countNode.next;
             }
-            count++;
-            countNode = countNode.next;
+        } else {
+            Node<T> countNode = tail;
+            int count = size - 1;
+            while (count > divList) {
+                if (count == index) {
+                    return countNode;
+                }
+                count--;
+                countNode = countNode.prev;
+            }
         }
         return null;
     }
