@@ -15,33 +15,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             tail.next = node;
             tail = node;
-
         }
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index >= size + 1) {
-            throw new IndexOutOfBoundsException("Invalid Index");
-        }
         Node<T> node = new Node<>(null, value, null);
-        Node<T> firstNode = head;
-        if (size == 0 || index == size) {
+        if (index == size) {
             add(value);
-        } else if (index == 0) {
+            return;
+        }
+        checkIndex(index);
+        if (index == 0) {
             node = new Node<>(null, value, head);
             node.next = head;
             head = node;
             size++;
         } else {
-            for (int i = 0; i < index - 1; i++) {
-                firstNode = firstNode.next;
-            }
-            node.next = firstNode.next;
-            node.prev = firstNode;
-            firstNode.next.prev = node;
-            firstNode.next = node;
+            Node<T> currNode = getNodeByIndex(index - 1);
+            node.next = currNode.next;
+            node.prev = currNode;
+            currNode.next.prev = node;
+            currNode.next = node;
             size++;
         }
     }
@@ -76,13 +72,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> node = head;
-        if (head.value == object && size == 1) {
-            unlink(node);
-            return true;
-        } else if (node.prev == null && head.value == object) {
-            unlink(node);
-            return true;
-        }
         for (int i = 0; i < size; i++) {
             if (node.value != null && node.value.equals(object) || node.value == object) {
                 unlink(node);
@@ -117,7 +106,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid Index");
+            throw new IndexOutOfBoundsException("Invalid Index: " + index + ", size: " + size);
         }
     }
 
