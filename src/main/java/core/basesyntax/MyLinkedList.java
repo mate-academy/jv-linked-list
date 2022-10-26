@@ -7,40 +7,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    static class Node<T> {
-        private Node<T> prev;
-        private T value;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
-    public Node findByIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
-        Node<T> currentNode;
-        if (index < size / 2) {
-            currentNode = head;
-            for (int i = 0; i < index; i++) {
-                currentNode = currentNode.next;
-            }
-        } else {
-            currentNode = tail;
-            for (int i = size - 1; i > index; i--) {
-                currentNode = currentNode.prev;
-            }
-        }
-        return currentNode;
-    }
-
     @Override
     public void add(T value) {
-
         Node<T> newNode = new Node<T>(null, value, null);
         if (head == null) {
             head = newNode;
@@ -69,38 +37,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (currentNode.prev == null) {
             head = newNode;
         } else {
-
             currentNode.prev.next = newNode;
         }
         currentNode.prev = newNode;
-
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T node:list) {
+            add(node);
         }
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
-        int counter = 0;
-        Node<T> currentNode = head;
-
-        while (currentNode != null) {
-            if (counter == index) {
-                return currentNode.value;
-            }
-            counter++;
-            currentNode = currentNode.next;
-        }
-        return null;
+        return (T) findByIndex(index).value;
     }
 
     @Override
@@ -108,11 +60,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
-        Node<T> temp = findByIndex(index);
-        T prevValue = temp.value;
-        temp.value = value;
-
-        return prevValue;
+        T oldValue = (T) findByIndex(index).value;
+        findByIndex(index).value = value;
+        return oldValue;
     }
 
     public void unlink(Node currentNode) {
@@ -132,7 +82,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException();
         }
         Node<T> currentNode = findByIndex(index);
-
         if (currentNode.prev == null) {
             head = currentNode.next;
             size--;
@@ -143,6 +92,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             unlink(currentNode);
             size--;
         }
+
         return currentNode.value;
     }
 
@@ -172,5 +122,36 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private Node findByIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        Node<T> currentNode;
+        if (index < size / 2) {
+            currentNode = head;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+        } else {
+            currentNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                currentNode = currentNode.prev;
+            }
+        }
+        return currentNode;
+    }
+
+    static class Node<T> {
+        private Node<T> prev;
+        private T value;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
     }
 }
