@@ -57,7 +57,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        Node<T> node =  findByIndex(index);
+        Node<T> node = findByIndex(index);
         T oldValue = node.value;
         node.value = value;
         return oldValue;
@@ -115,7 +115,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node node) {
-         if (head == node) {
+        if (head == node) {
             head = node.next;
         } else if (tail == node) {
             tail = node.prev;
