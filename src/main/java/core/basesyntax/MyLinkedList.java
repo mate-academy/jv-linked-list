@@ -4,22 +4,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        public Node(T item) {
-            this.item = item;
-        }
-
-        public Node(Node<T> next, T item, Node<T> prev) {
-            this.item = item;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -90,8 +74,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> elementByIndex = removeElement(index);
-        return elementByIndex.item;
+        Node<T> elementByIndex = takeElementByIndex(index);
+        return unLink(elementByIndex).item;
     }
 
     @Override
@@ -101,7 +85,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (current == null) {
                 return false;
             } else if (Objects.equals(object, current.item)) {
-                removeElement(index);
+                unLink(current);
                 return true;
             }
             current = current.next;
@@ -119,6 +103,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return (head == null);
     }
 
+    private class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(T item) {
+            this.item = item;
+        }
+
+        public Node(Node<T> next, T item, Node<T> prev) {
+            this.item = item;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+
     private Node<T> takeElementByIndex(int index) {
         Node<T> current = head;
         for (int i = 0; i < index; i++) {
@@ -131,21 +131,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private Node<T> removeElement(int index) {
-        Node<T> elementByIndexWhichDelete = takeElementByIndex(index);
-        if (index == 0) {
-            head = elementByIndexWhichDelete.next;
-            if (head == null) {
-                tail = null;
-            }
-        } else if (index == size - 1) {
-            tail = tail.prev;
+    private Node<T> unLink(Node<T> node) {
+        final Node<T> next = node.next;
+        final Node<T> prev = node.prev;
+        if (prev == null) {
+            head = next;
         } else {
-            elementByIndexWhichDelete.next.prev = elementByIndexWhichDelete.prev;
-            elementByIndexWhichDelete.prev.next = elementByIndexWhichDelete.next;
+            prev.next = next;
+        }
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.prev = prev;
         }
         size--;
-        return elementByIndexWhichDelete;//removedElement;
+        return node;
     }
 
     private void checkIndex(int index) {
