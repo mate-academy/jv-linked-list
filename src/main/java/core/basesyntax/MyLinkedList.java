@@ -120,12 +120,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> takeElementByIndex(int index) {
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            if (current == null) {
-                return null;
+        Node<T> current;
+        if (index == 0) {
+            return head;
+        } else if (index == size - 1) {
+            return tail;
+        } else {
+            if (index <= (size >> 1)) {
+                current = head;
+                for (int i = 0; i < index; i++) {
+                    if (current == null) {
+                        return null;
+                    } else {
+                        current = current.next;
+                    }
+                }
             } else {
-                current = current.next;
+                current = tail;
+                for (int i = size - 1; i > index;i--) {
+                    if (current == null) {
+                        return null;
+                    } else {
+                        current = current.prev;
+                    }
+                }
             }
         }
         return current;
