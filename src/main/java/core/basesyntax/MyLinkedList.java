@@ -23,10 +23,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Index " + index + "out of size " + size);
+            throw new IndexOutOfBoundsException("Index " + index + " out of size " + size);
         } else {
+            if (index == size) {
+                add(value);
+                return;
+            }
             Node<T> next = takeElementByIndex(index);
-            if (next == null || index == size) {
+            if (next == null) {
                 add(value);
                 return;
             }
@@ -51,14 +55,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         Node<T> elementByIndex = takeElementByIndex(index);
         return (elementByIndex == null) ? null : elementByIndex.item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> elementByIndex = takeElementByIndex(index);
         if (elementByIndex == null) {
             return null;
@@ -70,7 +72,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> elementByIndex = takeElementByIndex(index);
         return (elementByIndex == null) ? null : unLink(elementByIndex).item;
     }
@@ -81,7 +82,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int index = 0; index < size; index++) {
             if (object == current.item || object != null && object.equals(current.item)) {
                 unLink(current);
-                return (object == current.item || object != null && object.equals(current.item));
+                return true;
             }
             current = current.next;
         }
@@ -99,12 +100,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> takeElementByIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Index " + index + " out of size " + size);
+        }
         Node<T> current;
         if (index == 0) {
             return head;
-        }
-        if (index == size) {
-            return tail;
         }
         if (index <= (size >> 1)) {
             current = head;
@@ -125,7 +126,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 }
             }
         }
-
         return current;
     }
 
@@ -145,13 +145,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
         return node;
     }
-
-    private void checkIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Index" + index + "out of size" + size);
-        }
-    }
-
     private class Node<T> {
         private T item;
         private Node<T> next;
