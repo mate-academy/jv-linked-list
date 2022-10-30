@@ -67,10 +67,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         Objects.checkIndex(index, size);
-        Node<T> node = first;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
-        }
+        Node<T> node = getNodeByIndex(index);
         T changeNode = node.value;
         node.value = value;
         return changeNode;
@@ -79,10 +76,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Objects.checkIndex(index, size);
-        Node<T> node = first;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
-        }
+        Node<T> node = getNodeByIndex(index);
         return unlink(node);
     }
 
@@ -107,6 +101,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private Node<T> getNodeByIndex(int index) {
+        Node<T> node;
+        if (index < size / 2) {
+            node = first;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+        } else {
+            node = last;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
+        }
+        return node;
     }
 
     private T unlink(Node<T> node) {
