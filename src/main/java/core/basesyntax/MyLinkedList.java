@@ -145,6 +145,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
         return node;
     }
+
     private class Node<T> {
         private T item;
         private Node<T> next;
