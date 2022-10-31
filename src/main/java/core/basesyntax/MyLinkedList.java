@@ -79,6 +79,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
+        unlink(Node<T> node);
+
         return null;
     }
 
@@ -113,5 +115,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Size " + size + "! Index " + index + " wrong");
         }
+    }
+
+    private void unlink(Node<T> node) {
+        node.item = null;
+        node.prev = node.next = null;
     }
 }
