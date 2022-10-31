@@ -22,58 +22,47 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Index " + index + " out of size " + size);
-        } else {
-            if (index == size) {
-                add(value);
-                return;
-            }
-            Node<T> next = takeElementByIndex(index);
-            if (next == null) {
-                add(value);
-                return;
-            }
-            Node<T> prev = next.prev;
-            Node<T> newNode = new Node<>(prev, value, next);
-            next.prev = newNode;
-            if (prev == null) {
-                head = newNode;
-            } else {
-                prev.next = newNode;
-            }
-            size++;
+        if (index == size) {
+            add(value);
+            return;
         }
+        Node<T> next = takeElementByIndex(index);
+        Node<T> prev = next.prev;
+        Node<T> newNode = new Node<>(prev, value, next);
+        next.prev = newNode;
+        if (prev == null) {
+            head = newNode;
+        } else {
+            prev.next = newNode;
+        }
+        size++;
+
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (T values : list) {
-            add(values);
+        for (T value : list) {
+            add(value);
         }
     }
 
     @Override
     public T get(int index) {
-        Node<T> elementByIndex = takeElementByIndex(index);
-        return (elementByIndex == null) ? null : elementByIndex.item;
+        return takeElementByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        Node<T> elementByIndex = takeElementByIndex(index);
-        if (elementByIndex == null) {
-            return null;
-        }
-        T valueToReturn = elementByIndex.item;
-        elementByIndex.item = value;
+        Node<T> element = takeElementByIndex(index);
+        T valueToReturn = element.item;
+        element.item = value;
         return valueToReturn;
     }
 
     @Override
     public T remove(int index) {
-        Node<T> elementByIndex = takeElementByIndex(index);
-        return (elementByIndex == null) ? null : unLink(elementByIndex).item;
+        Node<T> element = takeElementByIndex(index);
+        return unLink(element).item;
     }
 
     @Override
@@ -104,26 +93,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index " + index + " out of size " + size);
         }
         Node<T> current;
-        if (index == 0) {
-            return head;
-        }
         if (index <= (size >> 1)) {
             current = head;
             for (int i = 0; i < index; i++) {
-                if (current == null) {
-                    return null;
-                } else {
                     current = current.next;
-                }
             }
         } else {
             current = tail;
             for (int i = size - 1; i > index; i--) {
-                if (current == null) {
-                    return null;
-                } else {
                     current = current.prev;
-                }
             }
         }
         return current;
