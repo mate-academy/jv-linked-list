@@ -8,7 +8,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
 
-    static public class Node<T> {
+    public static class Node<T> {
         private T item;
         private Node<T> prev;
         private Node<T> next;
@@ -71,7 +71,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         checkIndex(index);
         Node<T> newNode = searchByIndex(index);
-        T oldValue = (T) newNode.item;
+        T oldValue = newNode.item;
         newNode.item = value;
         return oldValue;
     }
@@ -79,13 +79,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        unlink(Node<T> node);
-
-        return null;
+        Node<T> node = searchByIndex(index);
+        unlink(node);
+        return node.item;
     }
 
     @Override
     public boolean remove(T object) {
+        for (Node<T> i = first; i != null; i = i.next) {
+            if (i.item == object || i.item != null && i.item.equals(object)) {
+                unlink(i);
+                return true;
+            }
+        }
         return false;
     }
 
@@ -102,11 +108,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> searchByIndex(int index) {
         Node<T> node;
         if (index <= size / 2) {
-            node = (Node<T>) this.first;
-            for (int i = 0; i < index; node = node.next, ++i);
+            node = this.first;
+            for (int i = 0; i < index; node = node.next, ++i) {}
         } else {
-            node = (Node<T>) this.last;
-            for (int i = size - 1; i > index ; node = node.prev , --i);
+            node = this.last;
+            for (int i = size - 1; i > index ; node = node.prev , --i) {}
         }
         return node;
     }
@@ -118,7 +124,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> node) {
-        node.item = null;
-        node.prev = node.next = null;
+        if (node == first && node == last) {
+            first = last = null;
+        } else if (node == first) {
+            first = first.next;
+            node.next.prev = node.prev;
+        } else if (node == last) {
+            last = last.prev;
+            node.prev.next = node.next;
+        } else {
+            node.next.prev = node.prev;
+            node.prev.next = node.next;
+        }
+        --size;
     }
 }
