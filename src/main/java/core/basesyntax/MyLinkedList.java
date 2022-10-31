@@ -96,12 +96,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index <= (size >> 1)) {
             current = head;
             for (int i = 0; i < index; i++) {
-                    current = current.next;
+                current = current.next;
             }
         } else {
             current = tail;
             for (int i = size - 1; i > index; i--) {
-                    current = current.prev;
+                current = current.prev;
             }
         }
         return current;
