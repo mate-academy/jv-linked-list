@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import org.w3c.dom.Node;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
@@ -109,10 +108,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> node;
         if (index <= size / 2) {
             node = this.first;
-            for (int i = 0; i < index; node = node.next, ++i) {}
+            for (int i = 0; i < index; node = node.next, ++i) {
+            }
         } else {
             node = this.last;
-            for (int i = size - 1; i > index ; node = node.prev , --i) {}
+            for (int i = size - 1; i > index; node = node.prev, --i) {
+            }
         }
         return node;
     }
