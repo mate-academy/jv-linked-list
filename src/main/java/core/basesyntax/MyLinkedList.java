@@ -23,29 +23,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value) {
         if (size == 0) {
             first = last = new Node<>(value, null, null);
+            ++size;
         } else {
-            Node<T> newNode = new Node<>(value, last, null);
-            last.next = newNode;
-            last = newNode;
+            addInEnd(value);
         }
-        ++size;
     }
 
     @Override
     public void add(T value, int index) {
         if (index > 0 && index < size) {
-            Node<T> searched = searchByIndex(index);
-            Node<T> newNode = new Node<>(value, searched.prev, searched);
-            searched.prev.next = newNode;
-            searched.prev = newNode;
-            ++size;
+            addInMiddle(value, index);
         } else if (index == size) {
             add(value);
         } else if (index == 0) {
-            Node<T> newNode = new Node<>(value, null, first);
-            first.prev = newNode;
-            first = newNode;
-            ++size;
+            addInBegin(value);
         } else {
             checkIndex(index);
         }
@@ -116,6 +107,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return node;
+    }
+
+    private void addInBegin(T value) {
+        Node<T> newNode = new Node<>(value, null, first);
+        first.prev = newNode;
+        first = newNode;
+        ++size;
+    }
+
+    private void addInMiddle(T value, int index) {
+        Node<T> searched = searchByIndex(index);
+        Node<T> newNode = new Node<>(value, searched.prev, searched);
+        searched.prev.next = newNode;
+        searched.prev = newNode;
+        ++size;
+    }
+
+    private void addInEnd(T value) {
+        Node<T> newNode = new Node<>(value, last, null);
+        last.next = newNode;
+        last = newNode;
+        ++size;
     }
 
     private void checkIndex(int index) {
