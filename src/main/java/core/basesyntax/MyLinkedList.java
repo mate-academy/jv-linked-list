@@ -124,17 +124,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> node) {
-        if (node == first && node == last) {
-            first = last = null;
-        } else if (node == first) {
-            first = first.next;
-            node.next.prev = node.prev;
-        } else if (node == last) {
-            last = last.prev;
+        if (node.prev == null) {
+            first = node.next;
+        } else {
             node.prev.next = node.next;
+        }
+
+        if (node.next == null) {
+            last = node.prev;
         } else {
             node.next.prev = node.prev;
-            node.prev.next = node.next;
         }
         --size;
     }
