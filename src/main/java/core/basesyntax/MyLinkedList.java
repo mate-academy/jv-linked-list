@@ -19,23 +19,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > 0 && index < size) {
-            addAtIndex(value, index);
-        } else if (index == size) {
+        if (index == size) {
             add(value);
         } else if (index == 0) {
             addFirst(value);
         } else {
-            checkIndex(index);
+            addAtIndex(value, index);
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (list != null) {
-            for (T t: list) {
-                add(t);
-            }
+        for (T t: list) {
+            add(t);
         }
     }
 
