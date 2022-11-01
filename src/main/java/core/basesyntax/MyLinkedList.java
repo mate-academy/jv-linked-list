@@ -3,22 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size;
-    private Node<T> first;
-    private Node<T> last;
-
-    private static class Node<T> {
-        private T item;
-        private Node<T> prev;
-        private Node<T> next;
-
-        private Node(T item, Node<T> prev, Node<T> next) {
-            this.item = item;
-            this.prev = prev;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         if (size == 0) {
@@ -53,14 +37,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-        return searchByIndex(index).item;
+        return getByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
-        Node<T> newNode = searchByIndex(index);
+        Node<T> newNode = getByIndex(index);
         T oldValue = newNode.item;
         newNode.item = value;
         return oldValue;
@@ -68,8 +50,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        Node<T> node = searchByIndex(index);
+        Node<T> node = getByIndex(index);
         unlink(node);
         return node.item;
     }
@@ -95,7 +76,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node<T> searchByIndex(int index) {
+    //---------------PRIVATE---------------\\
+    private int size;
+    private Node<T> first;
+    private Node<T> last;
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> prev;
+        private Node<T> next;
+
+        private Node(T item, Node<T> prev, Node<T> next) {
+            this.item = item;
+            this.prev = prev;
+            this.next = next;
+        }
+    }
+
+    private Node<T> getByIndex(int index) {
+        checkIndex(index);
         Node<T> node;
         if (index <= size / 2) {
             node = this.first;
@@ -117,7 +116,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addInMiddle(T value, int index) {
-        Node<T> searched = searchByIndex(index);
+        Node<T> searched = getByIndex(index);
         Node<T> newNode = new Node<>(value, searched.prev, searched);
         searched.prev.next = newNode;
         searched.prev = newNode;
