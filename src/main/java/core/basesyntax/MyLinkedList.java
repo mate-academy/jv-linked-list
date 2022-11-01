@@ -13,18 +13,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = last = new Node<>(value, null, null);
             ++size;
         } else {
-            addInEnd(value);
+            addLast(value);
         }
     }
 
     @Override
     public void add(T value, int index) {
         if (index > 0 && index < size) {
-            addInMiddle(value, index);
+            addAtIndex(value, index);
         } else if (index == size) {
             add(value);
         } else if (index == 0) {
-            addInBegin(value);
+            addFirst(value);
         } else {
             checkIndex(index);
         }
@@ -103,20 +103,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             node = this.last;
             for (int i = size - 1; i > index; --i) {
-                node = node.prev,
+                node = node.prev;
             }
         }
         return node;
     }
 
-    private void addInBegin(T value) {
+    private void addFirst(T value) {
         Node<T> newNode = new Node<>(value, null, first);
         first.prev = newNode;
         first = newNode;
         ++size;
     }
 
-    private void addInMiddle(T value, int index) {
+    private void addAtIndex(T value, int index) {
         Node<T> searched = getByIndex(index);
         Node<T> newNode = new Node<>(value, searched.prev, searched);
         searched.prev.next = newNode;
@@ -124,7 +124,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         ++size;
     }
 
-    private void addInEnd(T value) {
+    private void addLast(T value) {
         Node<T> newNode = new Node<>(value, last, null);
         last.next = newNode;
         last = newNode;
