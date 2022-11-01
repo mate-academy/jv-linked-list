@@ -6,12 +6,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private int size;
     private Node<T> first;
-
     private Node<T> last;
-
-    public MyLinkedList() {
-        size = 0;
-    }
 
     @Override
     public void add(T value) {
