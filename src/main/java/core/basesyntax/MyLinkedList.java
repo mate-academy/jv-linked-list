@@ -21,10 +21,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(
-                    "Can't element index " + index);
-        }
         if (index == size) {
             add(value);
             return;
