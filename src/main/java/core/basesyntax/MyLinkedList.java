@@ -23,7 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size()) {
-            throw new IndexOutOfBoundsException("Index is incorrect");
+            throw new IndexOutOfBoundsException("Index is more or less than list size");
         }
         Node<T> newNode = new Node(value);
         if (head == null) {
@@ -31,9 +31,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == 0) {
             newNode.next = head;
             head = newNode;
-        } else if (index == size) {
-            tail.next = newNode;
-            tail = newNode;
         } else {
             Node<T> current = getNodeByIndex(index - 1);
             newNode.next = current.next;
@@ -123,11 +120,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private boolean checkIndex(int index) {
-        if (index >= 0 && index < size()) {
-            return true;
-        } else {
-            throw new IndexOutOfBoundsException("Index is incorrect");
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException(
+                    "Index " + index + " is incorrect for size " + size);
         }
     }
 
