@@ -60,19 +60,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> position = first; position != null; position = position.next) {
-                if (position.element == object) {
-                    unlink(position);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> position = first; position != null; position = position.next) {
-                if (object.equals(position.element)) {
-                    unlink(position);
-                    return true;
-                }
+        for (Node<T> position = first; position != null; position = position.next) {
+            if (position.element == object
+                    || object != null && object.equals(position.element)) {
+                unlink(position);
+                return true;
             }
         }
         return false;
@@ -142,15 +134,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = next;
         } else {
             prev.next = next;
-            node.prev = null;
         }
         if (next == null) {
             last = prev;
         } else {
             next.prev = prev;
-            node.next = null;
         }
-        node.element = null;
         size--;
         return element;
     }
