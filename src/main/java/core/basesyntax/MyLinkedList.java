@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    Node<T> headPrevFirst;
-    Node<T> tailNextLast;
+    private Node<T> headPrevFirst;
+    private Node<T> tailNextLast;
     private int size;
 
     @Override
@@ -131,14 +131,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         int index = 0;
         if (o == null) {
             for (Node<T> newNode = headPrevFirst; newNode != null; newNode = newNode.next) {
-                if (newNode.value == null)
+                if (newNode.value == null) {
                     return index;
+                }
                 index++;
+
             }
         } else {
             for (Node<T> newNode = headPrevFirst; newNode != null; newNode = newNode.next) {
-                if (o.equals(newNode.value))
+                if (o.equals(newNode.value)) {
                     return index;
+                }
                 index++;
             }
         }
@@ -146,8 +149,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     static class Node<T> {
-        T value;
-        Node<T> next;
+        private T value;
+        private Node<T> next;
 
         public Node(T value) {
             this.value = value;
