@@ -31,6 +31,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode = getNodeByIndex(index);
         if (index == 0) {
             head = new Node<>(null, value, currentNode);
+            currentNode.prev = head;
             size++;
             return;
         }
@@ -126,7 +127,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             next.prev = prev;
             removedNode.next = null;
         }
-        removedNode.value = null;
         size--;
         return removedValue;
     }
