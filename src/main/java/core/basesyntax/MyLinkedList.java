@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    
     private int size;
     private Node first;
     private Node last;
@@ -15,9 +14,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     
     @Override
     public void add(T value, int index) {
-        if (!(index >= 0 && index <= size)) {
-            throw new IndexOutOfBoundsException("index is out of array " + index);
-        }
+        checkPosition(index);
         if (index == size) {
             linkLast(value);
         } else {
@@ -34,19 +31,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     
     @Override
     public T get(int index) {
-        checkElementIndex(index);
+        checkIndex(index);
         return node(index).item;
-    }
-    
-    private void checkElementIndex(int index) {
-        if (!(index >= 0 && index < size)) {
-            throw new IndexOutOfBoundsException("index is out of array " + index);
-        }
     }
     
     @Override
     public T set(T value, int index) {
-        checkElementIndex(index);
+        checkIndex(index);
         Node<T> x = node(index);
         T oldVal = x.item;
         x.item = value;
@@ -55,25 +46,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     
     @Override
     public T remove(int index) {
-        checkElementIndex(index);
+        checkIndex(index);
         return unlink(node(index));
     }
     
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> x = first; x != null; x = x.next) {
-                if (x.item == null) {
-                    unlink(x);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> x = first; x != null; x = x.next) {
-                if (object.equals(x.item)) {
-                    unlink(x);
-                    return true;
-                }
+        for (Node<T> x = first; x != null; x = x.next) {
+            if ((object == null && x.item == null) || (object != null && object.equals(x.item))) {
+                unlink(x);
+                return true;
             }
         }
         return false;
@@ -87,6 +69,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+    
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("index is out of array " + index);
+        }
+    }
+
+    private void checkPosition(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("index is out of array " + index);
+        }
     }
     
     private Node<T> node(int index) {
