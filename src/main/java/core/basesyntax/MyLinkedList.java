@@ -3,13 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> head;
     private Node<T> tail;
-
-    public MyLinkedList() {
-
-    }
 
     @Override
     public void add(T value) {
@@ -22,19 +18,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexElement(index);
-        if (size == 0) {
+        if (index < 0) {
+            throw new IndexOutOfBoundsException("The index out of bounds!");
+        }
+        if (size == 0 || index == 0) {
             linkHead(value);
-        } else if (size > 0 && index == 0) {
-            linkHead(value);
-        } else if (index > 0 && index < size) {
+        } else if (index == size) {
+            linkTail(value);
+        } else {
             Node<T> currentNode = getElement(index);
             Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
             currentNode.prev.next = newNode;
             currentNode.prev = newNode;
             size++;
-        } else if (index == size) {
-            linkTail(value);
         }
 
     }
@@ -42,23 +38,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            if (size == 0) {
-                linkHead(list.get(i));
-            } else {
-                linkTail(list.get(i));
-            }
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         return getElement(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         T oldValue = getElement(index).value;
         getElement(index).value = value;
         return oldValue;
@@ -66,8 +56,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        return removeByIndex(index);
+        Node<T> current = getElement(index);
+        final T value = current.value;
+        if (index == 0 && size == 1) {
+            current = null;
+            head = current;
+        } else if (index == 0 && size > 1) {
+            current.next.prev = null;
+            head = current.next;
+        } else if (index > 0 && index < size - 1) {
+            current.next.prev = current.prev;
+            current.prev.next = current.next;
+        } else if (index > 0 && index == size - 1) {
+            current.prev.next = null;
+            tail = current.prev;
+        }
+        size--;
+        return value;
     }
 
     @Override
@@ -76,8 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == -1) {
             return false;
         }
-        checkIndex(index);
-        removeByIndex(index);
+        remove(index);
         return true;
     }
 
@@ -127,12 +131,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void checkIndexElement(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("The index out of bounds!");
-        }
-    }
-
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("The index out of bounds!");
@@ -140,6 +138,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getElement(int index) {
+        checkIndex(index);
         if (index < size >> 1) {
             Node<T> current = head;
             for (int i = 0; i < index; i++) {
@@ -167,25 +166,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current = current.next;
         }
         return index;
-    }
-
-    private T removeByIndex(int index) {
-        Node<T> current = getElement(index);
-        final T value = current.value;
-        if (index == 0 && size == 1) {
-            current = null;
-            head = current;
-        } else if (index == 0 && size > 1) {
-            current.next.prev = null;
-            head = current.next;
-        } else if (index > 0 && index < size - 1) {
-            current.next.prev = current.prev;
-            current.prev.next = current.next;
-        } else if (index > 0 && index == size - 1) {
-            current.prev.next = null;
-            tail = current.prev;
-        }
-        size--;
-        return value;
     }
 }
