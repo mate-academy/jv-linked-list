@@ -6,6 +6,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
     private Node<T> head;
     private Node<T> tail;
+
     public static class Node<T> {
         private Node<T> prev;
         private T value;
@@ -107,6 +108,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index out of range");
         }
     }
+
     private Node<T> getNodeByIndex(int index) {
         Node<T> node;
         if (index < (size >> 1)) {
