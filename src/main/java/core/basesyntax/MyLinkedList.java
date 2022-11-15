@@ -60,11 +60,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         for (T elem : list) {
-            Node<T> newNode = new Node<>(elem);
-            tail.next = newNode;
-            newNode.prev = tail;
-            tail = newNode;
-            size++;
+            add(element);
         }
     }
 
