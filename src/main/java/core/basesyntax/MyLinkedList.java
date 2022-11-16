@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -33,8 +32,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Objects.checkIndex(index, size + 1);
         Node<T> newNode = new Node<>(value);
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index " + index + " is out of list bound");
+        }
 
         if (head == null) {
             head = tail = newNode;
@@ -66,13 +67,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Objects.checkIndex(index, size);
+        checkIndexRange(index);
         return getNodeByIndex(index).element;
     }
 
     @Override
     public T set(T value, int index) {
-        Objects.checkIndex(index, size);
+        checkIndexRange(index);
         Node<T> currentNode = getNodeByIndex(index);
         T changedElement = currentNode.element;
         currentNode.element = value;
@@ -81,7 +82,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Objects.checkIndex(index, size);
+        checkIndexRange(index);
         Node<T> removedNode = getNodeByIndex(index);
         T value = null;
 
@@ -137,5 +138,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current = current.next;
         }
         return current;
+    }
+
+    private void checkIndexRange(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index " + index + " is out of list bound");
+        }
     }
 }
