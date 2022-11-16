@@ -27,12 +27,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         if (index == 0) {
-            Node newNode = new Node(null, value, head);
+            Node<T> newNode = new Node<>(null, value, head);
             head.prev = newNode;
             head = newNode;
         } else {
-            checkIndex(index);
-            Node currentNode = findNode(index);
+            Node<T> currentNode = findNode(index);
             Node newNode = new Node(currentNode.prev, value, currentNode);
             currentNode.prev.next = newNode;
             currentNode.prev = newNode;
