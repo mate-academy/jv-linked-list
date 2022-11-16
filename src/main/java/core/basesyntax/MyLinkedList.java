@@ -40,6 +40,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
             return;
+        } else if (index == 0) {
+            newNode.next = head;
+            head.prev = newNode;
+            head = newNode;
         } else {
             Node<T> currentNode = getNodeByIndex(index);
             Node<T> prevNode = currentNode.prev;
@@ -77,27 +81,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndexRange(index);
         Node<T> removedNode = getNodeByIndex(index);
-        T value = null;
-
-        if (index == 0) {
-            value = removedNode.element;
-            head = removedNode.next;
-            if (head == null) {
-                tail = null;
-            }
-        } else if (index == size - 1) {
-            value = removedNode.element;
-            tail = removedNode.prev;
-            removedNode.prev = null;
-            tail.next = null;
-        } else {
-            value = removedNode.element;
-            Node<T> prevNode = removedNode.prev;
-            Node<T> nextNode = removedNode.next;
-            prevNode.next = nextNode;
-            nextNode.prev = prevNode;
-        }
-        size--;
+        T value = removedNode.element;
+        unlink(removedNode);
         return value;
     }
 
@@ -137,5 +122,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index " + index + " is out of list bound");
         }
+    }
+
+    private void unlink(Node<T> node) {
+        Node<T> prevNode = node.prev;
+        Node<T> nextNode = node.next;
+
+        if (prevNode != null && nextNode != null) {
+            prevNode.next = nextNode;
+            nextNode.prev = prevNode;
+        } else if (prevNode == null && nextNode != null) {
+            nextNode.prev = prevNode;
+            head = nextNode;
+        } else if (prevNode != null && nextNode == null) {
+            prevNode.next = nextNode;
+            tail = prevNode;
+        }
+        node.prev = node.next = null;
+        size--;
     }
 }
