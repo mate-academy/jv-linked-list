@@ -7,30 +7,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    class Node<T> {
-        private T value;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.value = value;
-            this.prev = prev;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> node;
         if (isEmpty()) {
             node = new Node<>(null, value, null);
             head = node;
-            tail = node;
         } else {
             node = new Node<>(tail, value, null);
             tail.next = node;
-            tail = node;
         }
+        tail = node;
         size++;
     }
 
@@ -43,7 +30,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        Node<T> nodeFromArrayByIndex = node(index);
+        Node<T> nodeFromArrayByIndex = getNodeByIndex(index);
         Node<T> newElement = new Node<>(nodeFromArrayByIndex.prev, value,
                 nodeFromArrayByIndex);
         nodeFromArrayByIndex.prev = newElement;
@@ -64,8 +51,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (checkIndex(index) && node(index) != null) {
-            return node(index).value;
+        if (checkIndex(index) && getNodeByIndex(index) != null) {
+            return getNodeByIndex(index).value;
         }
         return null;
     }
@@ -73,21 +60,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         if (checkIndex(index)) {
-            T result = get(index);
-            node(index).value = value;
-            return result;
+            T oldValue = get(index);
+            getNodeByIndex(index).value = value;
+            return oldValue;
         }
         return null;
     }
 
     @Override
     public T remove(int index) {
-        T removedElement = null;
+        Node<T> node = getNodeByIndex(index);
         if (checkIndex(index)) {
-            removedElement = unlink(index);
+            unlink(node);
+            size--;
         }
-        size--;
-        return removedElement;
+        return node.value;
     }
 
     @Override
@@ -122,31 +109,47 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         throw new IndexOutOfBoundsException("Index is not valid");
     }
 
-    private Node<T> node(int index) {
+    private Node<T> getNodeByIndex(int index) {
         Node<T> node = head;
-        while (index > 0) {
-            node = node.next;
-            index--;
+        if (index <= size / 2) {
+            while (index > 0) {
+                node = node.next;
+                index--;
+            }
+        } else {
+            node = tail;
+            while (index < size - 1) {
+                node = node.prev;
+                index++;
+            }
         }
         return node;
     }
 
-    private T unlink(int index) {
-        T removedElement;
-        if (index == 0) {
-            removedElement = head.value;
-            head = head.next;
-            if (head == null) {
-                tail = null;
-            }
+    private void unlink(Node<T> node) {
+        if (node.prev != null) {
+            node.prev.next = node.next;
         } else {
-            Node<T> prev = node(index - 1);
-            removedElement = prev.next.value;
-            prev.next = prev.next.next;
-            if (index == size - 1) {
-                tail = prev;
-            }
+            head = node.next;
         }
-        return removedElement;
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        } else {
+            tail = node.prev;
+        }
+        node.next = null;
+        node.prev = null;
+    }
+
+    private class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.value = value;
+            this.prev = prev;
+            this.next = next;
+        }
     }
 }
