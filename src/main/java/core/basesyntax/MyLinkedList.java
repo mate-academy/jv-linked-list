@@ -44,9 +44,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head.prev = newNode;
             head = newNode;
         } else if (index == size) {
-            tail.next = newNode;
-            newNode.prev = tail;
-            tail = newNode;
+            add(value);
+            return;
         } else {
             Node<T> currentNode = getNodeByIndex(index);
             Node<T> prevNode = currentNode.prev;
