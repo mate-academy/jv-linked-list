@@ -53,7 +53,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        Node current = findNode(index);
+        Node<T> current = findNode(index);
         T oldValue = (T) current.element;
         current.element = value;
         return oldValue;
@@ -61,7 +61,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node current = findNode(index);
+        Node<T> current = findNode(index);
         return unlink(current);
     }
 
@@ -108,7 +108,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node findNode(int index) {
         checkIndex(index);
-        Node currentNode;
+        Node<T> currentNode;
         if (index < (size / 2)) {
             currentNode = head;
             for (int i = 0; i < index; i++) {
@@ -123,7 +123,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    private T unlink(Node currentNode) {
+    T unlink(Node<T> currentNode) {
         if (size == 1) {
             head = null;
             tail = null;
