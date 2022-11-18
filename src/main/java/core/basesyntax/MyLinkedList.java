@@ -109,7 +109,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Objects.checkIndex(index, size);
+        checkIndex(index);
         Node<T> node = tail;
         for (int i = size - 1; i != index; i--) {
             node = node.prev;
@@ -117,8 +117,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    private Node<T> getNode(int index) {
-        return getNodeByIndex(index);
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of bounds: "
+                    + index + " for size " + size);
+        }
     }
 
     private static class Node<T> {
