@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    private static class Node<T> {
-        private T item;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T item, Node<T> next) {
-            this.prev = prev;
-            this.item = item;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> tailNode = tail;
@@ -38,7 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        Node<T> currentNode = getIndex(index);
+        Node<T> currentNode = getNode(index);
         Node<T> newNode = new Node<T>(currentNode.prev, value, currentNode);
         if (currentNode.prev == null) {
             head = newNode;
@@ -58,13 +46,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return getIndex(index).item;
+        return getNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
-        Node<T> setNode = getIndex(index);
+        Node<T> setNode = getNode(index);
         T setResult = setNode.item;
         setNode.item = value;
         return setResult;
@@ -72,8 +59,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        Node<T> removeNode = getIndex(index);
+        Node<T> removeNode = getNode(index);
         T removeValue = removeNode.item;
         unlink(removeNode);
         return removeValue;
@@ -108,7 +94,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> getIndex(int index) {
+    private Node<T> getNode(int index) {
         checkIndex(index);
         Node<T> newlingNode;
         if (index < (size << 1)) {
@@ -135,5 +121,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             removeNode.prev.next = removeNode.next;
         }
         size--;
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T item, Node<T> next) {
+            this.prev = prev;
+            this.item = item;
+            this.next = next;
+        }
     }
 }
