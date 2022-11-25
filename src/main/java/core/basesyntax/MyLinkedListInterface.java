@@ -7,7 +7,7 @@ public interface MyLinkedListInterface<T> {
 
     void add(T value, int index);
 
-    void addAll(List<T> list);
+    List<T> addAll(List<T> list);
 
     T get(int index);
 
