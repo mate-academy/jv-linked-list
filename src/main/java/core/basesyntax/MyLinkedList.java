@@ -3,9 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size;
     private Node<T> head;
     private Node<T> tail;
+    private int size;
 
     @Override
     public void add(T value) {
@@ -22,14 +22,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
-        if (index == size) {
-            add(value);
-        }
+        checkIndex(index, size);
         Node<T> newNode = new Node<>(getNode(index).prev, value, getNode(index));
-        getNode(index).prev.next = newNode;
-        getNode(index).prev = newNode;
-        size++;
+        if (index == 0) {
+            //Node<T> firstNode = new Node<>(null, value, head);
+            //head.prev = firstNode;
+            head = newNode;
+            size++;
+        } else if (index == size) {
+            add(value);
+        } else {
+            getNode(index).prev.next = newNode;
+            getNode(index).prev = newNode;
+            size++;
+        }
     }
 
     @Override
@@ -41,13 +47,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        checkIndex(index, size);
         return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
+        checkIndex(index, size);
         T temp = getNode(index).value;
         getNode(index).value = value;
         return temp;
@@ -55,7 +61,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
+        checkIndex(index, size);
         T temp = get(index);
         if (index == 0) {
             head = head.next;
@@ -104,8 +110,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void checkIndex(int index) {
-        if (index > size - 1 || index < 0) {
+    private void checkIndex(int index, int size) {
+        if (index != 0 && index > size - 1 || index < 0) {
            throw new IndexOutOfBoundsException("Index is out of bounds " + index + "!");
         }
     }
