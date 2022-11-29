@@ -47,13 +47,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, size - 1);
+        checkIndex(index, size -1);
         return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index, size - 1);
+        checkIndex(index, size -1);
         T replacedValue = getNode(index).value;
         getNode(index).value = value;
         return replacedValue;
@@ -61,27 +61,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index, size - 1);
+        checkIndex(index, size);
         T removedValue = get(index);
             unlink(getNode(index));
         size--;
         return removedValue;
     }
 
-    @Override
-    public boolean remove(T object) {
-        Node<T> currentNode = head;
-        while (currentNode.next != null || size == 1) {
-            if (currentNode.value == null && object == null
-                    || currentNode.value != null && currentNode.value.equals(object)) {
-                    unlink(currentNode);
-                size--;
-                return true;
-            }
-            currentNode = currentNode.next;
-        }
-        return false;
-    }
+   @Override
+   public boolean remove(T object) {
+       Node<T> currentNode = head;
+       do {
+           if (currentNode.value == null && object == null
+                   || currentNode.value != null && currentNode.value.equals(object)) {
+               unlink(currentNode);
+               size--;
+               return true;
+           }
+           currentNode = currentNode.next;
+       }
+       while (currentNode.next != null);
+       return false;
+   }
 
     @Override
     public int size() {
@@ -113,8 +114,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addLastNode(T value) {
-        Node<T> lastNode = new Node<>(null, value, null);
-        lastNode.prev = tail;
+        Node<T> lastNode = new Node<>(tail, value, null);
         tail.next = lastNode;
         tail = lastNode;
     }
