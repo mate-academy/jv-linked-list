@@ -21,8 +21,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        indexAddValidatorForAddElement(index);
-        if (size > index) {
+        if (size == index) {
+            add(value);
+        } else {
             Node<T> currentNode = getNode(index);
             if (currentNode == first) {
                 first = currentNode.prev = new Node<>(null, value, currentNode);
@@ -34,8 +35,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 currentNode.prev = newNode;
                 size++;
             }
-        } else {
-            add(value);
         }
     }
 
@@ -50,13 +49,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexValidation(index);
         return getNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        indexValidation(index);
         Node<T> currentNode = getNode(index);
         T temp = currentNode.item;
         currentNode.item = value;
@@ -65,29 +62,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexValidation(index);
-        Node<T> currentNode = getNode(index);
-        Node<T> temp = currentNode;
-        if (currentNode == first) {
-            return deleteFirstElementInList(currentNode, temp);
-        }
-
-        if (currentNode == last) {
-            return deleteElementFromEnd(currentNode);
-        }
-        return deleteElementFromMiddleOfList(currentNode);
+        Node<T> target = getNode(index);
+        unlink(target);
+        return target.item;
     }
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            return deleteWhenElementIsNull(object);
+        for (Node<T> node = first; node != null; node = node.next) {
+            if (node.item == object || node.item != null && node.item.equals(object)) {
+                unlink(node);
+                return true;
+            }
         }
-
-        if (findIndex(object) < 0) {
-            return false;
-        }
-        return remove(findIndex(object)).equals(object);
+        return false;
     }
 
     @Override
@@ -100,30 +88,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void indexAddValidatorForAddElement(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index out of bounds List");
-        }
-    }
-
-    private void indexValidation(int index) {
+    private void validateIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index out of bounds List");
         }
     }
 
-    private int findIndex(T object) {
-        Node<T> currentNode = first;
-        for (int i = 0; i < size; i++) {
-            if (object.equals(currentNode.item)) {
-                return i;
-            }
-            currentNode = currentNode.next;
-        }
-        return -1;
-    }
-
     private Node<T> getNode(int index) {
+        validateIndex(index);
         Node<T> currentNode;
         if (index > size / 2) {
             currentNode = last;
@@ -139,55 +111,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    private void unlink(Node<T> node) {
-        node.prev = null;
-        node.next = null;
-    }
-
-    private T deleteElementFromMiddleOfList(Node<T> currentNode) {
-        Node<T> nextNode = currentNode.next;
-        Node<T> prevNode = currentNode.prev;
-        prevNode.next = nextNode;
-        nextNode.prev = prevNode;
-        size--;
-        unlink(currentNode);
-        return currentNode.item;
-    }
-
-    private T deleteFirstElementInList(Node<T> currentNode, Node<T> temp) {
-        if (currentNode.next == null) {
-            first = last = null;
-            size--;
-            unlink(currentNode);
-            return currentNode.item;
+    private void unlink(Node<T> target) {
+        if (size == 1) {
+            target.prev = null;
+            target.next = null;
+        } else if (target == first) {
+            first = target.next;
+            target.next = null;
+        } else if (target == last) {
+            last = target.prev;
+            target.prev = null;
+        } else {
+            Node<T> next = target.next;
+            Node<T> prev = target.prev;
+            next.prev = prev;
+            prev.next = next;
+            target.next = target.prev = null;
         }
-        Node nextNode = currentNode.next;
-        nextNode.prev = null;
-        first = nextNode;
         size--;
-        unlink(currentNode);
-        return temp.item;
-    }
-
-    private T deleteElementFromEnd(Node<T> currentNode) {
-        Node prevNode = currentNode.prev;
-        prevNode.next = null;
-        last = prevNode;
-        size--;
-        unlink(currentNode);
-        return currentNode.item;
-    }
-
-    private boolean deleteWhenElementIsNull(T object) {
-        Node<T> currentNode = first;
-        for (int i = 0; i < size; i++) {
-            if (currentNode.item == object) {
-                remove(i);
-                return true;
-            }
-            currentNode = currentNode.next;
-        }
-        return false;
     }
 
     private static class Node<E> {
