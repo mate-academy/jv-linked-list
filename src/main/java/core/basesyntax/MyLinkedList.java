@@ -110,10 +110,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Node<T> current = head;
         checkIndex(index);
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        Node<T> current = tail;
+        for (int i = size - 1; i > index; i--) {
+            current = current.prev;
         }
         return current;
     }
