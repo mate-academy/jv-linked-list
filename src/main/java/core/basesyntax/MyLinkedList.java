@@ -20,7 +20,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index, size);
+        checkIndex(index, size + 1);
         Node<T> newNode = new Node<>(null, value, null);
         if (isEmpty()) {
             addFirstNode(value);
@@ -29,6 +29,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = newNode;
         } else if (index == size) {
             addLastNode(value);
+        } else if (index == size - 1) {
+            newNode.next = getNode(index);
+            newNode.prev = getNode(index).prev;
+            getNode(index).prev.next = newNode;
+            getNode(index).next = null;
         } else {
             newNode.next = getNode(index);
             newNode.prev = getNode(index).prev;
@@ -47,13 +52,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, size -1);
+        checkIndex(index, size);
         return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index, size -1);
+        checkIndex(index, size);
         T replacedValue = getNode(index).value;
         getNode(index).value = value;
         return replacedValue;
@@ -103,7 +108,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndex(int index, int size) {
-        if (index > size || index < 0) {
+        if (index > size - 1 || index < 0) {
            throw new IndexOutOfBoundsException("Index is out of bounds " + index + "!");
         }
     }
@@ -120,14 +125,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
+        checkIndex(index, size);
+        double size1 = size;
+        double index1 = index;
         if (index == 0) {
             return head;
         }
-        Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
+        if (index1 == size1 - 1) {
+            return tail;
         }
-        return currentNode;
+        Node<T> currentNode;
+        if (index1 < size1 / 2) {
+            currentNode = head;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+            return currentNode;
+        }
+        if (index1 > (size1 - 1) / 2) {
+            currentNode = tail.prev;
+            for (int i = size - 2; i > index; i--) {
+                currentNode = currentNode.prev;
+            }
+            return currentNode;
+        }
+        throw new NoSuchElementException("Item not found!");
     }
 
     private void unlink(Node<T> node) {
