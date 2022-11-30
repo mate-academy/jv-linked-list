@@ -112,9 +112,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private class Node<E> {
-        E value;
-        Node<E> prev;
-        Node<E> next;
+        private E value;
+        private Node<E> prev;
+        private Node<E> next;
 
         Node(Node<E> prev, E value, Node<E> next) {
             this.prev = prev;
@@ -130,8 +130,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             for (int i = 0; i < index; i++) {           
                 currentNode = currentNode.next;
             }
-        }
-        else {
+        } else {
             currentNode = tail;
             for (int i = size - 1; i > index; i--) {           
                 currentNode = currentNode.prev;
