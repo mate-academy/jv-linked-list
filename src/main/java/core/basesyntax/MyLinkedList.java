@@ -39,7 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T element: list) {
+        for (T element : list) {
             add(element);
         }
     }
@@ -113,13 +113,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (removeNode == head) {
             head = removeNode.next;
             removeNode.prev = null;
+        } else if (removeNode == tail) {
+            removeNode.prev.next = null;
         } else {
-            if (removeNode == tail) {
-                removeNode.prev.next = null;
-            } else {
-                removeNode.prev.next = removeNode.next;
-                removeNode.next.prev = removeNode.prev;
-            }
+            removeNode.prev.next = removeNode.next;
+            removeNode.next.prev = removeNode.prev;
         }
         size--;
         return removeNode;
