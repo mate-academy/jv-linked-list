@@ -52,9 +52,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         Node<T> setNode = getNode(index);
-        T previousNodeValue = setNode.value;
+        T oldValue = setNode.value;
         setNode.value = value;
-        return previousNodeValue;
+        return oldValue;
     }
 
     @Override
