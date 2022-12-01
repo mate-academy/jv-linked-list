@@ -44,26 +44,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            Node<T> newNode = new Node<>(list.get(i));
-            last.next = newNode;
-            last = newNode;
+            add(list.get(i));
         }
-        size = size + list.size();
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of range: " + index);
-        }
         return findNodeIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of range: " + index);
-        }
         Node<T> newNode = findNodeIndex(index);
         T element = newNode.value;
         newNode.value = value;
@@ -72,9 +63,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of range: " + index);
-        }
+        findNodeIndex(index);
         T deleteElement;
         if (index == 0) {
             deleteElement = first.value;
@@ -104,7 +93,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             size--;
             return true;
-        } else if (index != -1) {
+        } else if (index > 0 && index < size) {
             Node<T> newNode = findNodeIndex(index - 1);
             newNode.next = newNode.next.next;
             if (index == size - 1) {
@@ -126,7 +115,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return first == null;
     }
 
-    public Node<T> findNodeIndex(int index) {
+    private Node<T> findNodeIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of range: " + index);
+        }
         Node<T> newNode = first;
         for (int i = 0; i < index; i++) {
             newNode = newNode.next;
@@ -134,7 +126,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return newNode;
     }
 
-    public int findIndexObject(Object o) {
+    private int findIndexObject(Object o) {
         int index = 0;
         if (o == null) {
             for (Node<T> newNode = first; newNode != null; newNode = newNode.next) {
@@ -154,8 +146,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return -1;
     }
 
-    static class Node<T> {
+    private static class Node<T> {
         private T value;
+        private Node<T> previous;
         private Node<T> next;
 
         public Node(T value) {
