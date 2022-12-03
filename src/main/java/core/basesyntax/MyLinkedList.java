@@ -10,7 +10,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        if (isEmpty()){
+        if (isEmpty()) {
             addFirstNode(value);
         } else {
             addLastNode(value);
@@ -68,26 +68,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index, size);
         T removedValue = get(index);
-            unlink(getNode(index));
+        unlink(getNode(index));
         size--;
         return removedValue;
     }
 
-   @Override
+    @Override
    public boolean remove(T object) {
-       Node<T> currentNode = head;
-       do {
-           if (currentNode.value == null && object == null
-                   || currentNode.value != null && currentNode.value.equals(object)) {
-               unlink(currentNode);
-               size--;
-               return true;
-           }
-           currentNode = currentNode.next;
-       }
-       while (currentNode.next != null);
-       return false;
-   }
+        Node<T> currentNode = head;
+        do {
+            if (currentNode.value == null && object == null
+                    || currentNode.value != null && currentNode.value.equals(object)) {
+                unlink(currentNode);
+                size--;
+                return true;
+            }
+            currentNode = currentNode.next;
+
+        } while (currentNode.next != null);
+        return false;
+    }
 
     @Override
     public int size() {
@@ -98,18 +98,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean isEmpty() {
         return size == 0;
     }
-    ////////////// DELETE PRINT ////////////
-    public void print() {
-        Node<T> currentNode = head;
-        while (currentNode != null) {
-            System.out.println(currentNode.value);
-            currentNode = currentNode.next;
-        }
-    }
 
     private void checkIndex(int index, int size) {
         if (index > size - 1 || index < 0) {
-           throw new IndexOutOfBoundsException("Index is out of bounds " + index + "!");
+            throw new IndexOutOfBoundsException("Index is out of bounds " + index + "!");
         }
     }
 
