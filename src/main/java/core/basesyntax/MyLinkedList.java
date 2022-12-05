@@ -18,12 +18,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (isEmpty() && index == 0) {
+        if (index == 0 && isEmpty()) {
             addFirstNode(value);
             return;
         }
-        if (index == size && !isEmpty()) {
-            addLastNode(value);
+        if (index == size) {
+            add(value);
             return;
         }
         Node<T> newNode = new Node<>(null, value, null);
@@ -37,7 +37,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             currentNode.prev.next = newNode;
             currentNode.next = null;
         } else {
-            checkIndex(index);
             Node<T> currentNode = getNode(index);
             newNode.next = currentNode;
             newNode.prev = currentNode.prev;
@@ -56,23 +55,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
-        T replacedValue = getNode(index).value;
-        getNode(index).value = value;
+        Node<T> currentNode = getNode(index);
+        T replacedValue = currentNode.value;
+        currentNode.value = value;
         return replacedValue;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        T removedValue = get(index);
-        unlink(getNode(index));
+        Node<T> removedNode = getNode(index);
+        T removedValue = removedNode.value;
+        unlink(removedNode);
         return removedValue;
     }
 
@@ -97,7 +95,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0;
+        return head == null;
     }
 
     private void checkIndex(int index) {
