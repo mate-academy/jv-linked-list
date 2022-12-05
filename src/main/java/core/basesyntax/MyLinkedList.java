@@ -18,30 +18,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index == 0 && isEmpty()) {
-            addFirstNode(value);
-            return;
-        }
         if (index == size) {
             add(value);
             return;
         }
-        Node<T> newNode = new Node<>(null, value, null);
-        if (index == 0 && !isEmpty()) {
-            newNode.next = head;
+        if (index == 0) {
+            Node<T> newNode = new Node<>(null, value, head);
+            head.prev = newNode;
             head = newNode;
-        } else if (index == size - 1) {
-            Node<T> currentNode = getNode(index);
-            newNode.next = currentNode;
-            newNode.prev = currentNode.prev;
-            currentNode.prev.next = newNode;
-            currentNode.next = null;
         } else {
             Node<T> currentNode = getNode(index);
-            newNode.next = currentNode;
-            newNode.prev = currentNode.prev;
+            Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
             currentNode.prev.next = newNode;
-            currentNode.next.prev = newNode;
+            currentNode.prev = newNode;
         }
         size++;
     }
@@ -119,26 +108,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         checkIndex(index);
-        if (index == 0) {
-            return head;
-        }
-        if (index == size - 1) {
-            return tail;
-        }
         Node<T> currentNode;
-        if (index <= size / 2 + 1) {
+        if (index <= size / 2) {
             currentNode = head;
             for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
             }
-            return currentNode;
         } else {
-            currentNode = tail.prev;
-            for (int i = size - 1; i > index + 1; i--) {
+            currentNode = tail;
+            for (int i = size - 1; i > index; i--) {
                 currentNode = currentNode.prev;
             }
-            return currentNode;
         }
+        return currentNode;
     }
 
     private void unlink(Node<T> node) {
