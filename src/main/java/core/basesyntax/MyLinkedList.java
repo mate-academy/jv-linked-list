@@ -3,8 +3,8 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node<T> head = null;
-    private Node<T> tail = null;
+    private Node<T> head;
+    private Node<T> tail;
     private int size;
 
     private static class Node<T> {
@@ -39,8 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkIndex(index);
-        Node<T> requiredIndex = getIndex(index);
+        Node<T> requiredIndex = getNode(index);
         Node<T> inputValue = new Node<>(requiredIndex.prev, value, requiredIndex);
         if (requiredIndex.prev == null) {
             head = inputValue;
@@ -60,15 +59,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-        Node<T> requiredNode = getIndex(index);
+        Node<T> requiredNode = getNode(index);
         return requiredNode.value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
-        Node<T> requiredNode = getIndex(index);
+        Node<T> requiredNode = getNode(index);
         T replaceValue = requiredNode.value;
         requiredNode.value = value;
         return replaceValue;
@@ -76,8 +73,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        Node<T> getIndexNode = getIndex(index);
+        Node<T> getIndexNode = getNode(index);
         unlink(getIndexNode);
         return getIndexNode.value;
     }
@@ -111,7 +107,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public Node<T> getIndex(int index) {
+    public Node<T> getNode(int index) {
         checkIndex(index);
         Node<T> node;
         if (index < size << 1) {
@@ -141,33 +137,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             nextNode.prev = previousNode;
         }
-        size--;
-    }
-
-    public void displayList() {
-        Node<T> node = head;
-        if (node == null) {
-            System.out.println("no elements to display");
-            return;
-        }
-        while (node != null) {
-            System.out.println(node.value + " ");
-            node = node.next;
-        }
-    }
-
-    public void removeHead() {
-        head = head.next;
-        size--;
-    }
-
-    public void removeTail() {
-        Node<T> node = head;
-        for (int i = 0; i < size - 2; i++) {
-            node = node.next;
-        }
-        tail = node;
-        tail.next = null;
         size--;
     }
 }
