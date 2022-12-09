@@ -9,14 +9,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(null, value, null);
+        Node<T> newNode = new Node<>(tail, value, null);
         if (size == 0) {
             head = newNode;
             tail = newNode;
         }
         if (size > 0) {
             tail.next = newNode;
-            newNode.prev = tail;
             tail = newNode;
         }
         size++;
@@ -48,27 +47,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        T oldValue = returnNode(index).value;
-        returnNode(index).value = value;
+        Node<T> node = returnNode(index);
+        T oldValue = node.value;
+        node.value = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        Node<T> nodeDeleted = returnNode(index);
+        Node<T> nodeDeleted = getNode(index);
         unlink(nodeDeleted);
         return nodeDeleted.value;
     }
 
     @Override
     public boolean remove(T object) {
+        Node<T> nodeDeleted = head;
         for (int i = 0; i < size; i++) {
-            Node<T> nodeDeleted = getNode(i);
             T nodeValue = nodeDeleted.value;
             if (nodeValue != null && nodeValue.equals(object) || nodeValue == object) {
                 unlink(nodeDeleted);
                 return true;
             }
+            nodeDeleted = nodeDeleted.next;
         }
         return false;
     }
@@ -119,9 +120,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void linkBefore(T value, Node<T> target) {
-        if (target == null) {
-            throw new NullPointerException("Node cannot be null!");
-        }
         Node<T> nodeToLink = new Node<>(target.prev, value, target);
         if (target.prev == null) {
             head = nodeToLink;
@@ -152,7 +150,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> returnNode(int index) {
-        checkIndex(index);
         return getNode(index);
     }
 }
