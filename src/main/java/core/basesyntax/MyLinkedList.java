@@ -3,10 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final String IOOB_MESSAGE = "IndexOutOfBoundsException exception!";
+    private static final String NPE_MESSAGE = "NullPointerException exception!";
     private int size;
-    static private final String IOOB_MESSAGE = "IndexOutOfBoundsException exception!";
-    static private final String NPE_MESSAGE = "NullPointerException exception!";
-
     private Node<T> first;
     private Node<T> last;
 
