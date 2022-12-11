@@ -4,8 +4,8 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
-    private final static String IOOB_MESSAGE = "IndexOutOfBoundsException exception!";
-    private final static String NPE_MESSAGE = "NullPointerException exception!";
+    static private final String IOOB_MESSAGE = "IndexOutOfBoundsException exception!";
+    static private final String NPE_MESSAGE = "NullPointerException exception!";
 
     private Node<T> first;
     private Node<T> last;
