@@ -15,11 +15,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0) {
             first = new Node<>(null, value, null);
             last = first;
-            size++;
-            return;
+        } else {
+            last.next = new Node<>(last, value, null);
+            last = last.next;
         }
-        last.next = new Node<>(last, value, null);
-        last = last.next;
         size++;
     }
 
@@ -28,18 +27,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
             return;
-        }
-        checkIndex(index);
-        if (index == 0) {
+        } else if (index == 0) {
+            checkIndex(index);
             first.prev = new Node<>(null, value, first);
             first = first.prev;
-            size++;
-            return;
+        } else {
+            Node<T> nodeByIndex = getNodeByIndex(index);
+            Node<T> newNode = new Node<>(nodeByIndex.prev, value, nodeByIndex);
+            nodeByIndex.prev.next = newNode;
+            nodeByIndex.prev = newNode;
         }
-        Node<T> nodeByIndex = getNodeByIndex(index);
-        Node<T> newNode = new Node<>(nodeByIndex.prev, value, nodeByIndex);
-        nodeByIndex.prev.next = newNode;
-        nodeByIndex.prev = newNode;
         size++;
     }
 
@@ -75,7 +72,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> node = first;
         for (int i = 0; i < size; i++) {
             if (object == null && node.item == null
-                    || object != null && node.item != null && node.item.equals(object)) {
+                    || node.item != null && node.item.equals(object)) {
                 unlink(node);
                 return true;
             }
@@ -107,31 +104,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T unlink(Node<T> node) {
+        final Node<T> oldNode;
         if (size == 1) {
-            final Node<T> oldFirstNode = first;
+            oldNode = first;
             first = null;
             last = null;
             size--;
-            return oldFirstNode.item;
-        }
-        if (node.equals(first)) {
-            final Node<T> oldFirstNode = first;
+        } else if (node.equals(first)) {
+            oldNode = first;
             first.next.prev = null;
             first = first.next;
             size--;
-            return oldFirstNode.item;
-        }
-        if (node.equals(last)) {
-            final Node<T> oldLastNode = last;
+        } else if (node.equals(last)) {
+            oldNode = last;
             last.prev.next = null;
             last = last.prev;
             size--;
-            return oldLastNode.item;
+        } else {
+            node.next.prev = node.prev;
+            node.prev.next = node.next;
+            size--;
+            return node.item;
         }
-        node.next.prev = node.prev;
-        node.prev.next = node.next;
-        size--;
-        return node.item;
+        return oldNode.item;
     }
 
     private void checkIndex(int index) {
