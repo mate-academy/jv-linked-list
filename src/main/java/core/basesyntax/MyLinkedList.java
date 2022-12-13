@@ -19,6 +19,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + " ,is out of range.");
+        }
+    }
+
     private Node findNode(int index) {
         checkIndex(index);
         Node currentNode;
@@ -34,12 +40,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return currentNode;
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index: " + index + " ,is out of range.");
-        }
     }
 
     private T unlinkNode(Node currentNode) {
@@ -102,12 +102,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
+        checkIndex(index);
         Node currentNode = findNode(index);
         return (T) currentNode.element;
     }
 
     @Override
     public T set(T value, int index) {
+        checkIndex(index);
         Node currentNode = findNode(index);
         T oldValue = (T) currentNode.element;
         currentNode.element = value;
@@ -116,6 +118,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
+        checkIndex(index);
         Node currentNode = findNode(index);
         return unlinkNode(currentNode);
     }
