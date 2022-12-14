@@ -106,17 +106,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == 0 && size == 1) {
             first = null;
             last = null;
-        } else {
-            if (index == 0) {
-                currentNode.next.prev = null;
-                first = currentNode.next;
-            } else if (index == size - 1) {
-                currentNode.prev.next = null;
-                last = currentNode.prev;
-            } else {
-                currentNode.prev.next = currentNode.next;
-                currentNode.next.prev = currentNode.prev;
-            }
+        }
+        if (index == 0 && size != 1) {
+            currentNode.next.prev = null;
+            first = currentNode.next;
+        } else if (index == size - 1 && size != 1) {
+            currentNode.prev.next = null;
+            last = currentNode.prev;
+        } else if (size != 1) {
+            currentNode.prev.next = currentNode.next;
+            currentNode.next.prev = currentNode.prev;
         }
         size--;
     }
