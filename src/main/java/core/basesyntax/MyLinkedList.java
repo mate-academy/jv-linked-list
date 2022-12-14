@@ -53,13 +53,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void linkBefore(T value, Node<T> target) {
         Node<T> newNode = new Node<>(value, null, null);
-        Node<T> previousNode = target.prev;
         if (target == head) {
             newNode.next = target;
             target.prev = newNode;
             head = newNode;
             return;
         }
+        Node<T> previousNode = target.prev;
         newNode.next = target;
         target.prev = newNode;
         previousNode.next = newNode;
