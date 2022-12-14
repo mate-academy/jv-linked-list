@@ -75,20 +75,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        int currentIndex = -1;
         Node<T> currentNode = first;
         for (int i = 0; i < size; i++) {
             if (Objects.equals(currentNode.value, object)) {
-                currentIndex = i;
-                break;
+                int currentIndex = i;
+                unlink(currentIndex);
+                return true;
             }
             currentNode = currentNode.next;
         }
-        if (currentIndex == -1) {
-            return false;
-        }
-        unlink(currentIndex);
-        return true;
+        return false;
     }
 
     @Override
@@ -144,7 +140,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index > size || index == size) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("IndexOutOfBoundsException: index "
                     + index + " with size " + size);
         }
