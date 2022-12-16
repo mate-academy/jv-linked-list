@@ -9,14 +9,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        linkLast(value);
+        Node<T> oldLast = last;
+        Node<T> newLast = new Node<>(oldLast, value, null);
+        last = newLast;
+        if (oldLast == null) {
+            first = newLast;
+        } else {
+            oldLast.next = newLast;
+        }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexPossibility(index);
         if (index == size) {
-            linkLast(value);
+            add(value);
         } else {
             linkBefore(value, getNodeByIndex(index));
         }
@@ -107,18 +115,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Incorrect index: " + index
                     + " The size is: " + size);
         }
-    }
-
-    private void linkLast(T value) {
-        Node<T> oldLast = last;
-        Node<T> newLast = new Node<>(oldLast, value, null);
-        last = newLast;
-        if (oldLast == null) {
-            first = newLast;
-        } else {
-            oldLast.next = newLast;
-        }
-        size++;
     }
 
     private void linkBefore(T value, Node<T> node) {
