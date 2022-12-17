@@ -3,6 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private final String errorMassage = "Index: %d , Size: %s";
     private int size = 0;
     private Node<T> head;
     private Node<T> tail;
@@ -31,17 +32,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void addAll(List<T> list) {
-        Object[] items = list.toArray();
-        int numNew = items.length;
+        int numNew = list.size();
         if (numNew == 0) {
             return;
         }
         Node<T> beforeCurrent;
         beforeCurrent = tail;
-        for (Object item : items) {
-            Node<T> newNode = new Node<>(beforeCurrent, (T) item, null);
+        for (T item : list) {
+            Node<T> newNode = new Node<>(beforeCurrent, item, null);
             if (beforeCurrent == null) {
                 head = newNode;
             } else {
@@ -111,19 +110,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkPositionIndex(int index) {
-        if (!(index >= 0 && index <= size)) {
-            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException(String.format(errorMassage, index, size));
         }
     }
 
     private void checkElementIndex(int index) {
-        if (!(index >= 0 && index < size)) {
-            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(String.format(errorMassage, index, size));
         }
-    }
-
-    private String outOfBoundsMsg(int index) {
-        return "Index: " + index + ", Size: " + size;
     }
 
     private Node<T> searchNode(int index) {
