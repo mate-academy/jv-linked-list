@@ -22,10 +22,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexPossibility(index);
         if (index == size) {
             add(value);
         } else {
+            checkIndexExistence(index);
             linkBefore(value, getNodeByIndex(index));
         }
     }
@@ -80,13 +80,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void checkIndexPossibility(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Incorrect index: " + index
-                    + " The size is: " + size);
-        }
     }
 
     private T unlink(Node<T> node) {
