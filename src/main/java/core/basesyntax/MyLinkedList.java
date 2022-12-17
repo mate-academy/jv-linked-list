@@ -108,30 +108,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
             this.prev = prev;
         }
-
-        public T getItem() {
-            return item;
-        }
-
-        public void setItem(T item) {
-            this.item = item;
-        }
-
-        public Node<T> getNext() {
-            return next;
-        }
-
-        public void setNext(Node<T> next) {
-            this.next = next;
-        }
-
-        public Node<T> getPrev() {
-            return prev;
-        }
-
-        public void setPrev(Node<T> prev) {
-            this.prev = prev;
-        }
     }
 
     private void checkPositionIndex(int index) {
@@ -195,10 +171,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             next.prev = prev;
         }
-
-        node.item = null;
-        node.prev = null;
-        node.next = null;
         size--;
         return element;
     }
