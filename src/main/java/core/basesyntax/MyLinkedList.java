@@ -32,11 +32,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null) {
-            throw new RuntimeException("The list is empty!");
-        }
-        for (var i : list) {
-            this.add(i);
+        for (var listElement : list) {
+            add(listElement);
         }
     }
 
@@ -63,11 +60,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        for (Node<T> x = first; x != null; x = x.next) {
-            if ((x.value == object) || (x.value != null && x.value.equals(object))) {
-                unlink(x);
+        Node<T> searchNode = first;
+        while (searchNode != null) {
+            if ((searchNode.value == object)
+                    || (searchNode.value != null && searchNode.value.equals(object))) {
+                unlink(searchNode);
                 return true;
             }
+            searchNode = searchNode.next;
         }
         return false;
     }
@@ -118,9 +118,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void linkBefore(T value, Node<T> node) {
-        if (node == null) {
-            throw new RuntimeException("There is no such element to link before!");
-        }
         Node<T> newNode = new Node<>(node.prev, value, node);
         if (node.prev == null) {
             first = newNode;
