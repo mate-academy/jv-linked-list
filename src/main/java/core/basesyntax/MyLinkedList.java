@@ -151,7 +151,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index >= size) {
-            throw new IndexOutOfBoundsException("index: " + index + " is bigger than or equals size: " + size);
+            throw new IndexOutOfBoundsException("index: "
+                    + index
+                    + " is bigger than or equals size: "
+                    + size);
         }
         if (index < 0) {
             throw new IndexOutOfBoundsException("Index:" + index + " is less than 0");
