@@ -39,14 +39,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         checkIndex(index);
-        Node<T> theNode = getNode(index);
-        Node<T> newNode = new Node<T>(theNode.prev, value, theNode);
-        if (theNode.prev == null) {
+        Node<T> node = getNode(index);
+        Node<T> newNode = new Node<T>(node.prev, value, node);
+        if (node.prev == null) {
             first = newNode;
         } else {
-            theNode.prev.next = newNode;
+            node.prev.next = newNode;
         }
-        theNode.prev = newNode;
+        node.prev = newNode;
         size++;
     }
 
@@ -65,30 +65,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> replaceNode = getNode(index);
-        T removeElement = replaceNode.item;
-        replaceNode.item = value;
-        return removeElement;
+        Node<T> nodeByIndex = getNode(index);
+        T removedElement = nodeByIndex.item;
+        nodeByIndex.item = value;
+        return removedElement;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> removeNode = getNode(index);
-        T removeElement = removeNode.item;
-        unlink(removeNode);
-        return removeElement;
+        Node<T> removedNode = getNode(index);
+        T removedElement = removedNode.item;
+        unlink(removedNode);
+        return removedElement;
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> theNode = first;
-        while (theNode != null) {
-            if (object == theNode.item || object != null && object.equals(theNode.item)) {
-                unlink(theNode);
+        Node<T> node = first;
+        while (node != null) {
+            if (object == node.item || object != null && object.equals(node.item)) {
+                unlink(node);
                 return true;
             }
-            theNode = theNode.next;
+            node = node.next;
         }
         return false;
     }
