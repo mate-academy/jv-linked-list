@@ -109,14 +109,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void unlink(Node<T> removeNode) {
-        if (removeNode == first) {
-            first = removeNode.next;
-        } else if (removeNode == last) {
-            last = removeNode.prev;
+    private void unlink(Node<T> removedNode) {
+        if (removedNode == first) {
+            first = removedNode.next;
+        } else if (removedNode == last) {
+            last = removedNode.prev;
         } else {
-            removeNode.next.prev = removeNode.prev;
-            removeNode.prev.next = removeNode.next;
+            removedNode.next.prev = removedNode.prev;
+            removedNode.prev.next = removedNode.next;
         }
         size--;
     }
