@@ -80,9 +80,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         checkIndex(index);
         Node<T> currentNode = getNode(index);
-        T currentItem = currentNode.item;
+        T previousItem = currentNode.item;
         currentNode.item = value;
-        return currentItem;
+        return previousItem;
     }
 
     @Override
@@ -97,9 +97,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> node = getNode(object);
-        if (node != null) {
-            unlink(node);
+        Node<T> currentNode = getNode(object);
+        if (currentNode != null) {
+            unlink(currentNode);
             size--;
             return true;
         }
