@@ -55,9 +55,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         checkIndex(index);
         Node<T> node = getNode(index);
-        T oldData = node.value;
+        T oldValue = node.value;
         node.value = value;
-        return oldData;
+        return oldValue;
     }
 
     @Override
@@ -71,7 +71,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        //ListNode<T> node = head;
         for (Node<T> node = head; node != null; node = node.next) {
             if (node.value == null && object == null
                     || node.value != null && node.value.equals(object)) {
@@ -128,7 +127,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public static class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node<T> next;
         private Node<T> prev;
