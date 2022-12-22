@@ -100,19 +100,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
+        Node<T> node;
         if (index < (size / 2)) {
-            Node<T> node = head;
+            node = head;
             for (int i = 0; i < index; i++) {
                 node = node.next;
             }
-            return node;
         } else {
-            Node<T> node = tail;
+            node = tail;
             for (int i = size - 1; i > index; i--) {
                 node = node.prev;
             }
-            return node;
         }
+        return node;
     }
 
     private void unlink(Node<T> node) {
