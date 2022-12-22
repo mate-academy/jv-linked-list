@@ -22,56 +22,57 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkPositionIndex(index);
         if (index == size) {
             add(value);
             return;
         }
-        Node<T> node = getNode(index).prev;
-        Node<T> newNode = new Node<T>(node, value, getNode(index));
-        if (node == null) {
+        checkPositionIndex(index);
+        Node<T> node = getNode(index);
+        Node<T> newNode = new Node<T>(node.prev, value, node);
+        if (node.prev == null) {
             first = newNode;
         } else {
-            node.next = newNode;
+            node.prev.next = newNode;
         }
+        node.prev = newNode;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (T oneElement : list) {
-            add(oneElement);
+        for (T t : list) {
+            add(t);
         }
     }
 
     @Override
     public T get(int index) {
         checkElementIndex(index);
-        return getNode(index).item;
+        return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkElementIndex(index);
         Node<T> node = getNode(index);
-        T oldNode = node.item;
-        node.item = value;
-        return oldNode;
+        T oldValue = node.value;
+        node.value = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
         checkElementIndex(index);
         Node<T> node = getNode(index);
-        unlink(getNode(index));
-        return node.item;
+        unlink(node);
+        return node.value;
     }
 
     @Override
     public boolean remove(T object) {
         for (Node<T> node = first; node != null; node = node.next) {
-            if (node.item == null && object == null
-                    || node.item != null && node.item.equals(object)) {
+            if (node.value == null && object == null
+                    || node.value != null && node.value.equals(object)) {
                 unlink(node);
                 return true;
             }
@@ -90,9 +91,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        Node<T> node = first;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
+        Node<T> node;
+        if (index < (size >> 1)) {
+            node = first;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+        } else {
+            node = last;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
         }
         return node;
     }
@@ -124,13 +133,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        private T item;
+        private T value;
         private Node<T> next;
         private Node<T> prev;
 
-        public Node(Node<T> prev, T item, Node<T> next) {
+        public Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
-            this.item = item;
+            this.value = value;
             this.next = next;
         }
     }
