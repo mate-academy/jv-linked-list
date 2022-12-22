@@ -3,14 +3,14 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private ListNode<T> head;
-    private ListNode<T> tail;
+    private Node<T> head;
+    private Node<T> tail;
     private int size;
 
     @Override
     public void add(T value) {
-        ListNode<T> node = tail;
-        ListNode<T> newNode = new ListNode<>(node, value, null);
+        Node<T> node = tail;
+        Node<T> newNode = new Node<>(node, value, null);
         tail = newNode;
         if (head == null) {
             head = newNode;
@@ -27,8 +27,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         checkIndex(index);
-        ListNode<T> node = getNode(index);
-        ListNode<T> newNode = new ListNode<>(node.prev, value, node);
+        Node<T> node = getNode(index);
+        Node<T> newNode = new Node<>(node.prev, value, node);
         if (node.prev != null) {
             node.prev.next = newNode;
         } else {
@@ -48,49 +48,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return getNode(index).data;
+        return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        ListNode<T> node = getNode(index);
-        T oldData = node.data;
-        node.data = value;
+        Node<T> node = getNode(index);
+        T oldData = node.value;
+        node.value = value;
         return oldData;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
+        Node<T> node = getNode(index);
+        unlink(node);
         size--;
-        ListNode<T> node = getNode(index);
-        if (size == 0 && index == 0) {
-            head = null;
-            tail = null;
-        } else if (index == 0) {
-            head = head.next;
-            head.prev = null;
-        } else if (index == size) {
-            tail = tail.prev;
-            tail.next = null;
-        } else {
-            node.prev.next = node.next;
-            node.next.prev = node.prev;
-        }
-        return node.data;
+        return node.value;
     }
 
     @Override
     public boolean remove(T object) {
-        ListNode<T> node = head;
-        for (int i = 0; i < size; i++) {
-            if (node.data == null && object == null
-                    || node.data != null && node.data.equals(object)) {
-                remove(i);
+        //ListNode<T> node = head;
+        for (Node<T> node = head; node != null; node = node.next) {
+            if (node.value == null && object == null
+                    || node.value != null && node.value.equals(object)) {
+                unlink(node);
+                size--;
                 return true;
             }
-            node = node.next;
         }
         return false;
     }
@@ -111,21 +99,42 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private ListNode<T> getNode(int index) {
-        ListNode<T> node = head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
+    private Node<T> getNode(int index) {
+        if (index < (size / 2)) {
+            Node<T> node = head;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+            return node;
+        } else {
+            Node<T> node = tail;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
+            return node;
         }
-        return node;
     }
 
-    public static class ListNode<T> {
-        private T data;
-        private ListNode<T> next;
-        private ListNode<T> prev;
+    private void unlink(Node<T> node) {
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        } else {
+            head = node.next;
+        }
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        } else {
+            tail = node.prev;
+        }
+    }
 
-        ListNode(ListNode<T> prev, T data, ListNode<T> next) {
-            this.data = data;
+    public static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T value, Node<T> next) {
+            this.value = value;
             this.prev = prev;
             this.next = next;
         }
