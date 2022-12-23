@@ -52,9 +52,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> replacedNode = getNodeByIndex(index);
-        T removedItem = replacedNode.value;
-        replacedNode.value = value;
+        Node<T> replasedNode = getNodeByIndex(index);
+        T removedItem = replasedNode.value;
+        replasedNode.value = value;
         return removedItem;
     }
 
@@ -105,8 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index "
-                    + index + " is not valid for size "
-                    + size + ".");
+                    + index + " is not valid for size " + size + ".");
         }
     }
 
