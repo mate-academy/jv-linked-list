@@ -19,19 +19,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    MyLinkedList() {
-        first = new Node<T>(null, null, null);
-        last = new Node<T>(null, null,null);
-    }
-
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<T>(last, value, null);
-        if (size == 0) {
+        Node<T> newNode = new Node<T>(null, value, null);
+        if (first == null) {
             first = newNode;
-            first.prev = null;
+        } else {
+            newNode.prev = last;
+            last.next = newNode;
         }
-        last.next = newNode;
         last = newNode;
         size++;
     }
@@ -45,13 +41,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Node<T> currentNode = findNode(index);
         Node<T> newNode = new Node<T>(currentNode.prev, value, currentNode);
-        if (index == 0) {
+        if (currentNode.prev == null) {
             first = newNode;
-            newNode.next.prev = newNode;
-            size++;
-            return;
+        } else {
+            newNode.prev.next = newNode;
         }
-        newNode.prev.next = newNode;
         newNode.next.prev = newNode;
         size++;
     }
@@ -59,10 +53,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         for (T value : list) {
-            Node<T> newNode = new Node<T>(last, value, null);
-            last.next = newNode;
-            last = newNode;
-            size++;
+            add(value);
         }
     }
 
@@ -114,18 +105,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node node) {
-        if (size == 1) {
-            first = new Node<T>(null, null, null);
-            last = new Node<T>(null, null, null);
-        } else if (node.prev == null) {
-            node.next.prev = null;
-            first = node.next;
-        } else if (node.next == null) {
-            node.prev.next = null;
-            last = node.prev;
-        } else {
-            node.prev.next = node.next;
+        if (node.next != null) {
             node.next.prev = node.prev;
+        } else {
+            last = node.prev;
+        }
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        } else {
+            first = node.next;
         }
         size--;
     }
