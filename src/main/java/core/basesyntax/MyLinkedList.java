@@ -3,22 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final int HALF_OF_LIST = 2;
     private Node<T> head;
     private Node<T> tail;
     private int size;
-
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        public Node(Node<T> prev, T item, Node<T> next) {
-            this.item = item;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
 
     @Override
     public void add(T value) {
@@ -112,7 +99,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNode(int index) {
         checkIndex(index);
         Node<T> node;
-        if (index < size / HALF_OF_LIST) {
+        if (index < size / 2) {
             node = head;
             for (int i = 0; i < index; i++) {
                 node = node.next;
@@ -136,6 +123,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.next.prev = node.prev;
         } else {
             tail = node.prev;
+        }
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(Node<T> prev, T item, Node<T> next) {
+            this.item = item;
+            this.next = next;
+            this.prev = prev;
         }
     }
 }
