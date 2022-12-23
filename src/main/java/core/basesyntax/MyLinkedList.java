@@ -3,10 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final int INITIAL_LIST_SIZE = 10;
-    private static final int FIRST_INDEX = 1;
     private int size;
-    private T[] elementData;
     private Node<T> first;
     private Node<T> last;
 
@@ -154,5 +151,3 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 }
-
-
