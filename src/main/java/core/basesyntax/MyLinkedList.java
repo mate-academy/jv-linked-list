@@ -34,8 +34,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node getElement(int index) {
-        MyLinkedList.Node<T> first = firstNode;
+    private Node<T> getElement(int index) {
+        Node first = firstNode;
         for (int i = 0; i < size; i++) {
             if (i == index) {
                 return first;
@@ -81,7 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node node = getElement(index);
         if (node == null) {
             add(value);
-        } else if (node != null) {
+        } else {
             Node newNode = new Node<>(node.prev, value, node);
             if (node.prev != null) {
                 node.prev.next = newNode;
