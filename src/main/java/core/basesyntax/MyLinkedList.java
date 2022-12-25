@@ -64,8 +64,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        MyLinkedList.Node<T> last = lastNode;
-        MyLinkedList.Node<T> newNode = new Node<>(last, value, null);
+        Node last = lastNode;
+        Node newNode = new Node<>(last, value, null);
         lastNode = newNode;
         if (last == null) {
             firstNode = newNode;
@@ -82,7 +82,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (node == null) {
             add(value);
         } else if (node != null) {
-            MyLinkedList.Node<T> newNode = new Node<>(node.prev, value, node);
+            Node newNode = new Node<>(node.prev, value, node);
             if (node.prev != null) {
                 node.prev.next = newNode;
                 node.prev = newNode;
