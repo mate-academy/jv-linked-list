@@ -13,14 +13,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-
     private Node<T> getNode(int index) {
-        Node first = top;
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                return first;
+        Node node;
+        if (index > (size / 2)) {
+            node = bottom;
+            for (int i = size - 1; i > 0; i--) {
+                if (i == index) {
+                    return node;
+                }
+                node = node.prev;
             }
-            first = first.next;
+        } else {
+            node = top;
+            for (int i = 0; i < size; i++) {
+                if (i == index) {
+                    return node;
+                }
+                node = node.next;
+            }
         }
         return null;
     }
@@ -63,18 +73,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node node = getNode(index);
         if (node == null) {
             add(value);
-        } else {
-            Node newNode = new Node<>(node.prev, value, node);
-            if (node.prev != null) {
-                node.prev.next = newNode;
-                node.prev = newNode;
-            } else {
-                newNode.prev = null;
-                node.prev = newNode;
-                top = newNode;
-            }
-            size++;
+            return;
         }
+        Node newNode = new Node<>(node.prev, value, node);
+        if (node.prev != null) {
+            node.prev.next = newNode;
+            node.prev = newNode;
+        } else {
+            newNode.prev = null;
+            node.prev = newNode;
+            top = newNode;
+        }
+        size++;
     }
 
     @Override
