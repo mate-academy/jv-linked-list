@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private final static int DEFAULT_SIZE = 0;
+    private static final int DEFAULT_SIZE = 0;
     private Node<T> head;
     private Node<T> tail;
     private int size;
