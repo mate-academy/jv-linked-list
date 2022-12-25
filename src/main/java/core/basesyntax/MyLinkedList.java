@@ -78,17 +78,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkElementPosition(index);
-        if (getElement(index) == null) {
+        Node node = getElement(index);
+        if (node == null) {
             add(value);
-        } else if (getElement(index) != null) {
-            MyLinkedList.Node<T> newNode = new Node<>(getElement(index).prev, value,
-                    getElement(index));
-            if (getElement(index).prev != null) {
-                getElement(index).prev.next = newNode;
-                getElement(index).prev = newNode;
+        } else if (node != null) {
+            MyLinkedList.Node<T> newNode = new Node<>(node.prev, value, node);
+            if (node.prev != null) {
+                node.prev.next = newNode;
+                node.prev = newNode;
             } else {
                 newNode.prev = null;
-                getElement(index).prev = newNode;
+                node.prev = newNode;
                 firstNode = newNode;
             }
             size++;
