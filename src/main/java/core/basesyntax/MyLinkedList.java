@@ -66,8 +66,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkBounds(index);
-        T value = getNodeByIndex(index).value;
-        unlink(getNodeByIndex(index));
+        Node<T> node = getNodeByIndex(index);
+        T value = node.value;
+        unlink(node);
         return value;
     }
 
@@ -146,15 +147,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 node = node.prev;
             }
             return node;
-        }
-        if (index < (double) size / 2) {
+        } else {
             node = head;
             for (int i = 0; i < index; i++) {
                 node = node.next;
             }
             return node;
         }
-        return null;
     }
 
     private static class Node<T> {
