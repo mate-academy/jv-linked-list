@@ -67,46 +67,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         currentNode = findNode(index);
-        final Node<T> current = currentNode;
-        if (index == 0) {
-            head = currentNode.next;
-        }
-        if (index == size - 1) {
-            tail = currentNode.prev;
-        }
-        if (currentNode.prev != null) {
-            currentNode.prev.next = currentNode.next;
-        }
-        if (currentNode.next != null) {
-            currentNode.next.prev = currentNode.prev;
-        }
-        size--;
-        return current.value;
+        unlink(currentNode.prev, currentNode.next, index);
+        return currentNode.value;
     }
 
     @Override
     public boolean remove(T object) {
-        if (size == 1 && Objects.equals(object, head.value)) {
-            head.value = null;
-            size--;
-            return true;
-        }
         currentNode = head;
-        if (Objects.equals(currentNode.value, object)) {
-            currentNode.next.prev = null;
-            head = currentNode.next;
-            size--;
-            return true;
-        }
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(currentNode.value, object)) {
-                currentNode.prev.next = currentNode.next;
-                currentNode.next.prev = currentNode.prev;
-                size--;
+            if (Objects.equals(object, currentNode.value)) {
+                unlink(currentNode.prev, currentNode.next, i);
                 return true;
-            } else {
-                currentNode = currentNode.next;
             }
+            currentNode = currentNode.next;
         }
         return false;
     }
@@ -153,5 +126,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
+    }
+
+    private void unlink(Node<T> prev, Node<T> next, int index) {
+        if (index == 0) {
+            head = currentNode.next;
+        }
+        if (index == size - 1) {
+            tail = currentNode.prev;
+        }
+        if (currentNode.prev != null) {
+            currentNode.prev.next = currentNode.next;
+        }
+        if (currentNode.next != null) {
+            currentNode.next.prev = currentNode.prev;
+        }
+        size--;
     }
 }
