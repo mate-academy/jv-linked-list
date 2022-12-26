@@ -134,7 +134,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     remove(i);
                     return true;
                 }
-                if (get(i).equals(object)) {
+                if (Objects.equals(get(i), object)) {
                     remove(i);
                     return true;
                 }
@@ -159,31 +159,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             return nodeAt(index);
         }
-    }
-
-    public void unlink(Node<T> x) {
-        if (size == 1) {
-            first = null;
-            last = null;
-        } else if (x.prev == null) {
-            first = x.next;
-            last.prev = null;
-        } else if (x.next == null) {
-            first = x.prev;
-            last.next = null;
-        } else {
-            x.prev.next = x.next;
-            x.next.prev = x.prev;
-        }
-        size--;
-    }
-
-    private boolean isElementIndex(int index) {
-        return index >= 0 && index < size;
-    }
-
-    private void checkElementIndex(int index) {
-        if (!isElementIndex(index))
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
     }
 }
