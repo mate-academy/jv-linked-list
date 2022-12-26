@@ -41,19 +41,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T element : list) {
+            add(element);
         }
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
-        currentNode = head;
-        currentNode = findNode(index);
-        return currentNode.value;
+        checkIndex(index);
+        return findNode(index).value;
     }
 
     @Override
@@ -124,22 +120,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("This index is incorrect " + index);
         }
     }
 
     private void unlink(Node<T> prev, Node<T> next, int index) {
         if (index == 0) {
-            head = currentNode.next;
-        }
-        if (index == size - 1) {
-            tail = currentNode.prev;
-        }
-        if (currentNode.prev != null) {
-            currentNode.prev.next = currentNode.next;
-        }
-        if (currentNode.next != null) {
-            currentNode.next.prev = currentNode.prev;
+            head = next;
+        } else if (index == size - 1) {
+            tail = prev;
+        } else {
+            prev.next = next;
+            next.prev = prev;
         }
         size--;
     }
