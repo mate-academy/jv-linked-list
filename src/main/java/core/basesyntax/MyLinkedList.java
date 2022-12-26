@@ -4,12 +4,12 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size = 0;
-    private MyLinkedList.Node<T> first;
-    private MyLinkedList.Node<T> last;
+    private Node<T> first;
+    private Node<T> last;
 
     @Override
     public void add(T value) {
-        final MyLinkedList.Node<T> newNode = new MyLinkedList.Node<>(last, value, null);
+        final Node<T> newNode = new Node<>(last, value, null);
         if (last == null) {
             first = newNode;
         } else {
@@ -21,7 +21,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkPositionIndex(index);
+        checkIndex(index, false);
         if (index == size) {
             add(value);
         } else {
@@ -38,34 +38,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkElementIndex(index);
-        return getNodeByIndex(index).item;
+        checkIndex(index, true);
+        return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkElementIndex(index);
-        MyLinkedList.Node<T> newValue = getNodeByIndex(index);
-        T oldValue = newValue.item;
-        newValue.item = value;
+        checkIndex(index, true);
+        Node<T> newValue = getNodeByIndex(index);
+        T oldValue = newValue.value;
+        newValue.value = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        checkElementIndex(index);
+        checkIndex(index, true);
         Node<T> currentNode = getNodeByIndex(index);
-        T oldValue = currentNode.item;
+        T oldValue = currentNode.value;
         unlink(currentNode);
         return oldValue;
     }
 
     @Override
     public boolean remove(T element) {
-        for (MyLinkedList.Node<T> removedNode = first; removedNode
+        for (Node<T> removedNode = first; removedNode
                 != null; removedNode = removedNode.next) {
-            if (removedNode.item == element
-                    || (element != null && element.equals(removedNode.item))) {
+            if (removedNode.value == element
+                    || (element != null && element.equals(removedNode.value))) {
                 unlink(removedNode);
                 return true;
             }
@@ -83,7 +83,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private MyLinkedList.Node<T> getNodeByIndex(int index) {
+    private Node<T> getNodeByIndex(int index) {
         Node<T> foundedNode;
         if (index < (size / 2)) {
             foundedNode = first;
@@ -100,8 +100,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> removedNode) {
-        MyLinkedList.Node<T> next = removedNode.next;
-        MyLinkedList.Node<T> prev = removedNode.prev;
+        Node<T> next = removedNode.next;
+        Node<T> prev = removedNode.prev;
         if (prev == null) {
             first = next;
         } else {
@@ -114,13 +114,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             next.prev = prev;
             removedNode.next = null;
         }
-        removedNode.item = null;
+        removedNode.value = null;
         size--;
     }
 
     private void linkBefore(T element, MyLinkedList.Node<T> afterNode) {
-        final MyLinkedList.Node<T> prev = afterNode.prev;
-        final MyLinkedList.Node<T> newNode = new MyLinkedList.Node<>(prev, element, afterNode);
+        Node<T> prev = afterNode.prev;
+        Node<T> newNode = new MyLinkedList.Node<>(prev, element, afterNode);
         if (prev == null) {
             first = newNode;
         } else {
@@ -130,25 +130,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void checkElementIndex(int index) {
-        if (!(index >= 0 && index < size)) {
+    private void checkIndex(int index, boolean isElement) {
+        if (isElement && !(index >= 0 && index < size)) {
             throw new IndexOutOfBoundsException("Index: " + index + " is more then size " + size);
-        }
-    }
-
-    private void checkPositionIndex(int index) {
-        if (!(index >= 0 && index <= size)) {
+        } else if (!isElement && !(index >= 0 && index <= size)) {
             throw new IndexOutOfBoundsException("Index: " + index + " is more then size " + size);
         }
     }
 
     private static class Node<T> {
-        private T item;
-        private MyLinkedList.Node<T> next;
-        private MyLinkedList.Node<T> prev;
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
 
         public Node(Node<T> prev, T item, Node<T> next) {
-            this.item = item;
+            this.value = item;
             this.next = next;
             this.prev = prev;
         }
