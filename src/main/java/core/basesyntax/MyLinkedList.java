@@ -115,7 +115,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkElementIndex(index);
-        return unlink(node(index));
+        Node<T> current = findNodeByIndex(index);
+        unlink(current);
+        return current.value;
     }
 
     private void removeHead() {
@@ -127,19 +129,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (MyLinkedList.Node<T> x = first; x != null; x = x.next) {
-                if (x.value == null) {
-                    unlink(x);
-                    return true;
-                }
-            }
-        } else {
-            for (MyLinkedList.Node<T> x = first; x != null; x = x.next) {
-                if (object.equals(x.value)) {
-                    unlink(x);
-                    return true;
-                }
+        for (Node<T> node = first; node != null; node = node.next) {
+            if (node.value == object || object != null && object.equals(node.value)) {
+                unlink(node);
+                return true;
             }
         }
         return false;
@@ -155,29 +148,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    T unlink(MyLinkedList.Node<T> x) {
-        // assert x != null;
-        final T element = x.value;
-        final MyLinkedList.Node<T> next = x.next;
-        final MyLinkedList.Node<T> prev = x.prev;
-
-        if (prev == null) {
-            first = next;
+    public void unlink(Node<T> x) {
+        if (size == 1) {
+            first = null;
+            last = null;
+        } else if (x.prev == null) {
+            first = x.next;
+            last.prev = null;
+        } else if (x.next == null) {
+            first = x.prev;
+            last.next = null;
         } else {
-            prev.next = next;
-            x.prev = null;
+            x.prev.next = x.next;
+            x.next.prev = x.prev;
         }
-
-        if (next == null) {
-            last = prev;
-        } else {
-            next.prev = prev;
-            x.next = null;
-        }
-
-        x.value = null;
         size--;
-        return element;
     }
 
     private boolean isElementIndex(int index) {
