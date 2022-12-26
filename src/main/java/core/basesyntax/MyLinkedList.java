@@ -6,7 +6,7 @@ import java.util.Objects;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
-    int size;
+    private int size;
 
     static class Node<T> {
         private T value;
@@ -15,10 +15,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         private Node(T value) {
             this.value = value;
-        }
-
-        public static <T> Node<T> valueOf(T value) {
-            return new Node<>(value);
         }
     }
 
@@ -36,44 +32,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Node<T> newNode = Node.valueOf(value);
+        Node<T> newNode = new Node<>(value);
         if (index == 0) {
-            addAsHead(newNode);
+            newNode.next = first;
+            first = newNode;
+            if (first.next == null) {
+                last = first;
+            }
         } else if (index == size) {
-            addAsTail(newNode);
+            last.next = newNode;
+            last = newNode;;
         } else {
-            add(index, newNode);
+            Node<T> node = findNodeByIndex(index - 1);
+            newNode.next = node.next;
+            node.next = newNode;
         }
         size++;
     }
-
-    private void addAsHead(Node<T> newNode) {
-        newNode.next = first;
-        first = newNode;
-        if (first.next == null) {
-            last = first;
-        }
-    }
-
-    private void addAsTail(Node<T> newNode) {
-        last.next = newNode;
-        last = newNode;
-    }
-
-    private void add(int index, Node<T> newNode) {
-        Node<T> node = findNodeByIndex(index - 1);
-        newNode.next = node.next;
-        node.next = newNode;
-    }
-
-    private Node<T> nodeAt(int index) {
-        Node<T> currentNode = first;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
-        return currentNode;
-    }
-
 
     @Override
     public void addAll(List<T> list) {
@@ -94,14 +69,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         T oldVal = x.value;
         x.value = value;
         return oldVal;
-    }
-
-    private Node<T> getNodeByIndex (int index) {
-        Node<T> current = first;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
-        return current;
     }
 
     @Override
@@ -126,19 +93,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return removedElement;
     }
 
-
     @Override
     public boolean remove(T object) {
-            for (int i = 0; i < size; i++) {
-                if (object == null && get(i) == null){
-                    remove(i);
-                    return true;
-                }
-                if (Objects.equals(get(i), object)) {
-                    remove(i);
-                    return true;
-                }
+        for (int i = 0; i < size; i++) {
+            if (object == null && get(i) == null) {
+                remove(i);
+                return true;
             }
+            if (Objects.equals(get(i), object)) {
+                remove(i);
+                return true;
+            }
+        }
         return false;
     }
 
@@ -152,6 +118,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private Node<T> getNodeByIndex(int index) {
+        Node<T> current = first;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        return current;
+    }
+
     private Node<T> findNodeByIndex(int index) {
         Objects.checkIndex(index, size);
         if (index == size - 1) {
@@ -159,5 +133,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             return nodeAt(index);
         }
+    }
+
+    private Node<T> nodeAt(int index) {
+        Node<T> currentNode = first;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
+        }
+        return currentNode;
     }
 }
