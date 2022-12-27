@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
@@ -65,16 +64,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> node = getNodeByIndex(index);
-        T element = node.item;
+        T item = node.item;
         unlink(node);
-        return element;
+        return item;
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> currentNode = first;
         while (currentNode != null) {
-            if (Objects.equals(currentNode.item, object)) {
+            if (object == null && currentNode.item == null
+                    || currentNode.item != null && currentNode.item.equals(object)) {
                 unlink(currentNode);
                 return true;
             }
@@ -99,6 +99,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private Node<T> getNodeByIndex(int index) {
+        if (index < (size >> 1)) {
+            Node<T> node = first;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+            return node;
+        } else {
+            Node<T> node = last;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
+            return node;
+        }
+    }
+
     private static class Node<T> {
         private T item;
         private Node<T> prev;
@@ -111,38 +127,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    Node<T> getNodeByIndex(int index) {
-        if (index < (size >> 1)) {
-            Node<T> x = first;
-            for (int i = 0; i < index; i++) {
-                x = x.next;
-            }
-            return x;
-        } else {
-            Node<T> x = last;
-            for (int i = size - 1; i > index; i--) {
-                x = x.prev;
-            }
-            return x;
-        }
-    }
-
-    private void unlink(Node<T> x) {
-        final Node<T> next = x.next;
-        final Node<T> prev = x.prev;
+    private void unlink(Node<T> node) {
+        final Node<T> next = node.next;
+        final Node<T> prev = node.prev;
         if (prev == null) {
-            first = x.next;
+            first = node.next;
         } else {
             prev.next = next;
-            x.prev = null;
+            node.prev = null;
         }
         if (next == null) {
             last = prev;
         } else {
             next.prev = prev;
-            x.next = null;
+            node.next = null;
         }
-        x.item = null;
+        node.item = null;
         size--;
     }
 }
