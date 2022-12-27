@@ -33,7 +33,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             last.next = newNode;
             last = newNode;;
         } else {
-            Node<T> node = findNodeByIndex(index - 1);
+            Node<T> node = getNodeByIndex(index - 1);
             newNode.next = node.next;
             node.next = newNode;
         }
@@ -49,12 +49,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return findNodeByIndex(index).value;
+        return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        MyLinkedList.Node<T> current = findNodeByIndex(index);
+        MyLinkedList.Node<T> current = getNodeByIndex(index);
         T oldVal = current.value;
         current.value = value;
         return oldVal;
@@ -62,19 +62,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node<T> nodeByIndex = findNodeByIndex(index);
-        return nodeByIndex.value;
+        indexOfBoundException(index);
+        return unlink(index);
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> currentNode = first;
-        while (currentNode != null){
-            if (currentNode.value == object || currentNode.value != null && currentNode.value.equals(object)){
-                unlink(currentNode);
+        for (int i = 0; i < size; i++) {
+            if (object == get(i) || object != null && object.equals(get(i))) {
+                unlink(i);
                 return true;
             }
-            currentNode = currentNode.next;
         }
         return false;
     }
@@ -89,54 +87,49 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private Node<T> getNodeByIndex(int index) {
+        indexOfBoundException(index);
+        if (index == size - 1) {
+            return last;
+        } else {
+            Node<T> currentNode = first;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+            return currentNode;
+        }
+    }
 
-    private Node<T> findNodeByIndex(int index) {
+    private T unlink(int index) {
+        T removedElement;
+        if (index == 0) {
+            removedElement = first.value;
+            first = first.next;
+            if (first == null) {
+                last = null;
+            }
+        } else {
+            Node<T> prev = getNodeByIndex(index - 1);
+            removedElement = new Node<T>(get(index)).value;
+            prev.next = prev.next.next;
+            if (index == size - 1) {
+                last = prev;
+            }
+        }
+        size--;
+        return removedElement;
+    }
+
+    private void indexOfBoundException(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Incorrect index " + index);
         }
-        if (first == null){
-            return null;
-        }
-        Node<T> currentNode = first;
-        for (int i = 0; i <= index; i++) {
-            currentNode = currentNode.next;
-        }
-        return currentNode;
-
     }
 
-    private T unlink(Node<T> node) {
-        T value = node.value;
-        Node<T> prev = node.prev;
-        Node<T> next = node.next;
-        if (prev == null) {
-            first = next;
-        } else {
-            prev.next = next;
-            node.next = null;
-        }
-        if (next == null) {
-            last = prev;
-        } else {
-            next.prev = prev;
-            node.prev = null;
-        }
-        node.value = null;
-        size--;
-        return value;
-    }
-
-    static class Node<T> {
-
+    private static class Node<T> {
         private T value;
         private Node<T> next;
         private Node<T> prev;
-
-        public Node(T value, Node<T> next, Node<T> prev) {
-            this.value = value;
-            this.next = next;
-            this.prev = prev;
-        }
 
         private Node(T value) {
             this.value = value;
