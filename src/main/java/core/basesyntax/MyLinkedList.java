@@ -8,21 +8,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size;
 
-    static class Node<T> {
-        private T value;
-        private Node<T> next;
-        private Node<T> prev;
-
-        private Node(T value) {
-            this.value = value;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(value);
         if (size == 0) {
-            first = last = newNode;
+            first = newNode;
+            last = newNode;
         } else {
             last.next = newNode;
             last = newNode;
@@ -52,22 +43,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T element : list) {
+            add(element);
         }
     }
 
     @Override
     public T get(int index) {
-        Node<T> node = findNodeByIndex(index);
-        return node.value;
+        return findNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        MyLinkedList.Node<T> x = findNodeByIndex(index);
-        T oldVal = x.value;
-        x.value = value;
+        MyLinkedList.Node<T> current = findNodeByIndex(index);
+        T oldVal = current.value;
+        current.value = value;
         return oldVal;
     }
 
@@ -96,11 +86,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         for (int i = 0; i < size; i++) {
-            if (object == null && get(i) == null) {
-                remove(i);
-                return true;
-            }
-            if (Objects.equals(get(i), object)) {
+            if (object == get(i) || object != null && object.equals(get(i))) {
                 remove(i);
                 return true;
             }
@@ -141,5 +127,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             currentNode = currentNode.next;
         }
         return currentNode;
+    }
+
+    static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        private Node(T value) {
+            this.value = value;
+        }
     }
 }
