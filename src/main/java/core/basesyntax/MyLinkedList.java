@@ -65,30 +65,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Incorrect index " + index);
         }
-        T removedElement;
-        if (index == 0) {
-            removedElement = first.value;
-            first = first.next;
-            if (first == null) {
-                last = null;
-            }
-        } else {
-            Node<T> prev = getNodeByIndex(index - 1);
-            removedElement = new Node<T>(get(index)).value;
-            prev.next = prev.next.next;
-            if (index == size - 1) {
-                last = prev;
-            }
-        }
-        size--;
-        return removedElement;
+        return unlink(index);
     }
 
     @Override
     public boolean remove(T object) {
         for (int i = 0; i < size; i++) {
             if (object == get(i) || object != null && object.equals(get(i))) {
-                remove(i);
+                unlink(i);
                 return true;
             }
         }
@@ -120,7 +104,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private T unlink(int index) {
+        T removedElement;
+        if (index == 0) {
+            removedElement = first.value;
+            first = first.next;
+            if (first == null) {
+                last = null;
+            }
+        } else {
+            Node<T> prev = getNodeByIndex(index - 1);
+            removedElement = new Node<T>(get(index)).value;
+            prev.next = prev.next.next;
+            if (index == size - 1) {
+                last = prev;
+            }
+        }
+        size--;
+        return removedElement;
+    }
+
     static class Node<T> {
+
         private T value;
         private Node<T> next;
         private Node<T> prev;
