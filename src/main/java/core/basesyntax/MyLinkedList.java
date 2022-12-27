@@ -2,19 +2,8 @@ package core.basesyntax;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    static class Node<T> {
-        private T element;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(T element) {
-            this.element = element;
-        }
-    }
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -34,18 +23,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Objects.checkIndex(index, size + 1);
         Node<T> newNode = new Node<>(value);
-        if (size == 0) {
+        if (index == size) {
+            add(value);
+            return;
+        }
+        checkPositionIndex(index);
+        if (head == null) {
             head = tail = newNode;
         } else if (index == 0) {
             newNode.next = head;
             head.prev = newNode;
             head = newNode;
-        } else if (index == size) {
-            tail.next = newNode;
-            newNode.prev = tail;
-            tail = newNode;
         } else {
             Node<T> nodeByIndex = getNodeByIndex(index - 1);
             newNode.next = nodeByIndex.next;
@@ -68,13 +57,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Objects.checkIndex(index, size);
+        checkPositionIndex(index);
         return getNodeByIndex(index).element;
     }
 
     @Override
     public T set(T value, int index) {
-        Objects.checkIndex(index, size);
+        checkPositionIndex(index);
         Node<T> newNode = getNodeByIndex(index);
         T oldElement = newNode.element;
         newNode.element = value;
@@ -83,9 +72,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Objects.checkIndex(index, size);
-        T removedElement = getRemovedElement(index);
-        return removedElement;
+        checkPositionIndex(index);
+        return getRemovedElement(index);
     }
 
     @Override
@@ -95,8 +83,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             Node<T> current = head;
             for (int i = 0; i < size; i++) {
-                if ((current.element != null && current.element.equals(object))
-                        || (current.element == null && object == null)) {
+                if (current.element == object || current.element != null
+                        && current.element.equals(object)) {
                     remove(i);
                     return true;
                 }
@@ -117,11 +105,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        checkPositionIndex(index);
+        Node<T> node;
+        if (index < size / 2) {
+            node = head;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+        } else {
+            node = tail;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
         }
-        return current;
+        return node;
     }
 
     private T getRemovedElement(int index) {
@@ -140,5 +137,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         size--;
         return removedElement;
+    }
+
+    private void checkPositionIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("This index is incorrect: " + index);
+        }
+    }
+
+    private static class Node<T> {
+        private T element;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(T element) {
+            this.element = element;
+        }
     }
 }
