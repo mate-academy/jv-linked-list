@@ -6,12 +6,11 @@ import java.util.Objects;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private Node<T> head;
-    private Node<T> currentNode;
     private int size;
 
     @Override
     public void add(T value) {
-        currentNode = new Node<>(tail, value, null);
+        Node<T> currentNode = new Node<>(tail, value, null);
         if (size < 1) {
             head = currentNode;
         } else {
@@ -27,7 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        currentNode = findNode(index);
+        Node<T> currentNode = findNode(index);
         Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
         if (currentNode.prev != null) {
             currentNode.prev.next = newNode;
@@ -48,13 +47,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         return findNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        currentNode = findNode(index);
+        Node<T> currentNode = findNode(index);
         T currentValue = currentNode.value;
         currentNode.value = value;
         return currentValue;
@@ -62,14 +60,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        currentNode = findNode(index);
+        Node<T> currentNode = findNode(index);
         unlink(currentNode.prev, currentNode.next, index);
         return currentNode.value;
     }
 
     @Override
     public boolean remove(T object) {
-        currentNode = head;
+        Node<T> currentNode = head;
         for (int i = 0; i < size; i++) {
             if (Objects.equals(object, currentNode.value)) {
                 unlink(currentNode.prev, currentNode.next, i);
@@ -103,6 +101,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNode(int index) {
+        Node<T> currentNode;
         checkIndex(index);
         if (size / 2 > index) {
             currentNode = head;
