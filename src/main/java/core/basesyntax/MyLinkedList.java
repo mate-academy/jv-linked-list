@@ -66,21 +66,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> x = first; x != null; x = x.next) {
-                if (x.value == null) {
-                    unlink(x);
-                    return true;
-                }
+    public boolean remove(T value) {
+        Node<T> currentNode = first;
+        while (currentNode != null) {
+            if (currentNode.value == value
+                    || currentNode.value != null && currentNode.value.equals(value)) {
+                unlink(currentNode);
+                return true;
             }
-        } else {
-            for (Node<T> x = first; x != null; x = x.next) {
-                if (object.equals(x.value)) {
-                    unlink(x);
-                    return true;
-                }
-            }
+            currentNode = currentNode.next;
         }
         return false;
     }
@@ -114,26 +108,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    T unlink(Node<T> x) {
-        final T element = x.value;
-        final Node<T> next = x.next;
-        final Node<T> prev = x.prev;
+    private T unlink(Node<T> node) {
+        final T element = node.value;
+        final Node<T> next = node.next;
+        final Node<T> prev = node.prev;
 
         if (prev == null) {
             first = next;
         } else {
             prev.next = next;
-            x.prev = null;
+            node.prev = null;
         }
 
         if (next == null) {
             last = prev;
         } else {
             next.prev = prev;
-            x.next = null;
+            node.next = null;
         }
 
-        x.value = null;
+        node.value = null;
         size--;
         return element;
     }
