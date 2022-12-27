@@ -93,7 +93,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        if (index < (size / 2)) {
+        if (index < size / 2) {
             Node<T> node = first;
             for (int i = 0; i < index; i++) {
                 node = node.next;
