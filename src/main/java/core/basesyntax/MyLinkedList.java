@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
@@ -63,33 +62,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Objects.checkIndex(index, size);
-        T removedElement;
-        if (index == 0) {
-            removedElement = first.value;
-            first = first.next;
-            if (first == null) {
-                last = null;
-            }
-        } else {
-            Node<T> prev = getNodeByIndex(index - 1);
-            removedElement = new Node<T>(get(index)).value;
-            prev.next = prev.next.next;
-            if (index == size - 1) {
-                last = prev;
-            }
-        }
-        size--;
-        return removedElement;
+        return unlink(findNodeByIndex(index));
     }
 
     @Override
     public boolean remove(T object) {
-        for (int i = 0; i < size; i++) {
-            if (object == get(i) || object != null && object.equals(get(i))) {
-                remove(i);
+        Node<T> currentNode = first;
+        while (currentNode != null){
+            if (currentNode.value == object || currentNode.value != null && currentNode.value.equals(object)){
+                unlink(currentNode);
                 return true;
             }
+            currentNode = currentNode.next;
         }
         return false;
     }
@@ -113,26 +97,52 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
-        Objects.checkIndex(index, size);
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Incorrect index " + index);
+        }
         if (index == size - 1) {
             return last;
         } else {
-            return nodeAt(index);
+            Node<T> currentNode = first;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+            return currentNode;
         }
     }
 
-    private Node<T> nodeAt(int index) {
-        Node<T> currentNode = first;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
+    private T unlink(Node<T> node) {
+        T value;
+        Node<T> prev = node.prev;
+        Node<T> next = node.next;
+        if (prev == null) {
+            first = next;
+        } else {
+            prev.next = next;
+            node.next = null;
         }
-        return currentNode;
+        if (next == null) {
+            first = prev;
+        } else {
+            next.prev = prev;
+            node.prev = null;
+        }
+        node.value = null;
+        size--;
+        return node.value;
     }
 
     static class Node<T> {
+
         private T value;
         private Node<T> next;
         private Node<T> prev;
+
+        public Node(T value, Node<T> next, Node<T> prev) {
+            this.value = value;
+            this.next = next;
+            this.prev = prev;
+        }
 
         private Node(T value) {
             this.value = value;
