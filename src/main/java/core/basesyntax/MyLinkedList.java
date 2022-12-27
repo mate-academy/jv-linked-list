@@ -9,37 +9,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        if (size == 0) {
-            tail = new Node<>(null, value, null);
-            head = tail;
-        } else if (size == 1) {
-            tail = new Node<T>(head, value, null);
-            head.next = tail;
-        } else if (size >= 2) {
-            Node<T> penultimateNode = new Node<>(tail.preview, tail.item, null);
-            tail.preview.next = penultimateNode;
-            tail = new Node<>(penultimateNode, value, null);
-            penultimateNode.next = tail;
+        Node<T> newNode = new Node<>(null, value, null);
+        if (head == null) {
+            head = tail = newNode;
+        } else {
+            tail.next = newNode;
+            newNode.preview = tail;
+            tail = newNode;
         }
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (size < index || index < 0) {
-            throw new IndexOutOfBoundsException("index " + index + " out of bound");
-        } else if (size == index) {
+        if (size == index) {
             add(value);
-        } else if (index == 0) {
-            Node<T> insertion = new Node<>(null, head.item, head.next);
-            head = new Node<>(null, value, insertion);
-            insertion.preview = head;
-            size++;
         } else {
-            Node<T> foundNode = findNodeByIndex(index);
-            Node<T> insertion = new Node<>(foundNode.preview, value, foundNode);
-            foundNode.preview.next = insertion;
-            foundNode.preview = insertion;
+            Node<T> fond = findNodeByIndex(index);
+            Node<T> insertion = new Node<>(fond.preview, value, fond);
+            fond.preview = insertion;
+            if (insertion.preview == null) {
+                head = insertion;
+            } else {
+                insertion.preview.next = insertion;
+            }
             size++;
         }
     }
@@ -53,51 +46,51 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        T oldValue = get(index);
-        findNodeByIndex(index).item = value;
+        Node foundNode = findNodeByIndex(index);
+        T oldValue = (T) foundNode.item;
+        foundNode.item = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> nodeByIndex = findNodeByIndex(index);
-        if (index == 0 && size != 1) {
-            head = head.next;
-            nodeByIndex.preview = null;
-        } else if (index == size - 1) {
-            tail = tail.preview;
-            nodeByIndex.next = null;
-        } else {
-            nodeByIndex.preview.next = nodeByIndex.next;
-            nodeByIndex.next.preview = nodeByIndex.preview;
-        }
+        unlink(nodeByIndex);
         size--;
         return nodeByIndex.item;
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> head = this.head;
-        int objectIndex = -1;
+        Node<T> foundNode = this.head;
         for (int i = 0; i < size; i++) {
-            objectIndex++;
-            if (object == null && head.item == null) {
-                remove(objectIndex);
-                return true;
-            } else if (object != null && object.equals(head.item)) {
-                remove(objectIndex);
+            if (object == null && foundNode.item == null
+                    || object != null && object.equals(foundNode.item)) {
+                unlink(foundNode);
+                size--;
                 return true;
             }
-            head = head.next;
+            foundNode = foundNode.next;
         }
         return false;
+    }
+
+    private void unlink(Node node) {
+        if (node.preview == null) {
+            head = head.next;
+            node.preview = null;
+        } else if (node.next == null) {
+            tail = tail.preview;
+            node.next = null;
+        } else {
+            node.preview.next = node.next;
+            node.next.preview = node.preview;
+        }
     }
 
     @Override
@@ -117,6 +110,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int elementIndex) {
+        checkIndex(elementIndex);
         Node<T> search = null;
         if (size / 2 >= elementIndex) {
             int index = 0;
