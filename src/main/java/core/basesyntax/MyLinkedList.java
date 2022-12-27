@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final int DEFAULT_SIZE = 0;
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -12,7 +11,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(tail, value, null);
-        if (size == DEFAULT_SIZE) {
+        if (size == 0) {
             head = newNode;
         } else {
             tail.next = newNode;
@@ -23,27 +22,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < DEFAULT_SIZE || index > size) {
-            throw new IndexOutOfBoundsException("IndexOutOfBoundsException: index "
-                    + index + " with size " + size);
-        }
-        if (size == index) {
+        if (index == size) {
             add(value);
-        } else {
-            Node<T> newNode = new Node<>(null, value, null);
-            Node<T> currentNode = getNodeByIndex(index);
-            if (index == DEFAULT_SIZE) {
-                newNode.next = currentNode;
-                currentNode.prev = newNode;
-                head = newNode;
-            } else {
-                currentNode.prev.next = newNode;
-                newNode.prev = currentNode.prev;
-                newNode.next = currentNode;
-                currentNode.prev = newNode;
-            }
-            size++;
+            return;
         }
+        checkIndex(index);
+        Node<T> node = getNodeByIndex(index);
+        Node<T> newNode = new Node<>(node.prev, value, node);
+        if (node.prev == null) {
+            head = newNode;
+        } else {
+            node.prev.next = newNode;
+        }
+        node.prev = newNode;
+        size++;
     }
 
     @Override
@@ -76,7 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> currentNode = head;
-        for (int i = DEFAULT_SIZE; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             if (Objects.equals(currentNode.value, object)) {
                 unlinkNode(currentNode);
                 return true;
@@ -93,34 +85,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == DEFAULT_SIZE;
+        return size == 0;
     }
 
     private T unlinkNode(Node<T> currentNode) {
-        if (size == 1) {
-            head = null;
-            tail = null;
-            size--;
-        } else if (currentNode.equals(head)) {
-            head = currentNode.next;
-            currentNode.next.prev = null;
-            currentNode.next = null;
-            size--;
-        } else if (currentNode.equals(tail)) {
-            tail = currentNode.prev;
-            currentNode.prev.next = null;
-            currentNode.prev = null;
-            size--;
+        if (currentNode.prev == null) {
+            head = head.next;
+        } else {
+            currentNode.prev.next = currentNode.next;
+        }
+        if (currentNode.next == null) {
+            tail = tail.prev;
         } else {
             currentNode.next.prev = currentNode.prev;
-            currentNode.prev.next = currentNode.next;
-            size--;
         }
+        size--;
         return currentNode.value;
     }
 
     private void checkIndex(int index) {
-        if (index < DEFAULT_SIZE || index >= size) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("There's no element at index " + index);
         }
     }
@@ -134,7 +118,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         } else {
             currentNode = head;
-            for (int i = DEFAULT_SIZE; i < index; i++) {
+            for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
             }
         }
