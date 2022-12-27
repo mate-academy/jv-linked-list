@@ -3,9 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private transient int size;
-    private transient Node<T> head;
-    private transient Node<T> tail;
+    private int size;
+    private Node<T> head;
+    private Node<T> tail;
 
     @Override
     public void add(T value) {
