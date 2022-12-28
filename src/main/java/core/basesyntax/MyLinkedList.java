@@ -47,7 +47,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() == 0) {
+        if (list == null) {
             throw new NullPointerException("This list is empty" + list);
         }
         for (T element : list) {
@@ -78,18 +78,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (size == 0) {
+        if (head == null) {
             throw new NoSuchElementException();
-        } else {
-            Node<T> current = head;
-            for (int i = 0; i < size; i++) {
-                if (current.element == object || current.element != null
-                        && current.element.equals(object)) {
-                    remove(i);
-                    return true;
-                }
-                current = current.next;
+        }
+        Node<T> current = head;
+        for (int i = 0; i < size; i++) {
+            if (current.element == object || current.element != null
+                    && current.element.equals(object)) {
+                remove(i);
+                return true;
             }
+            current = current.next;
         }
         return false;
     }
