@@ -94,7 +94,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return head == null;
     }
 
-    public void unlink(Node<T> currentNode) {
+    private void unlink(Node<T> currentNode) {
         if (size == 1) {
             head = null;
             tail = null;
@@ -111,7 +111,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    public Node<T> getNodeByIndex(int index) {
+    private Node<T> getNodeByIndex(int index) {
         Node<T> currentNode;
         checkPositionIndex(index);
         if (index < (size >> 1)) {
