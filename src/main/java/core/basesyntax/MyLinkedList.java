@@ -3,18 +3,18 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node<T> tail;
     private Node<T> head;
+    private Node<T> tail;
     private int size;
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(null, value, null);
+        Node<T> newNode = new Node<>(tail, value, null);
         if (head == null) {
+            newNode.preview = null;
             head = tail = newNode;
         } else {
             tail.next = newNode;
-            newNode.preview = tail;
             tail = newNode;
         }
         size++;
@@ -46,14 +46,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return findNodeByIndex(index).item;
+        return findNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         Node foundNode = findNodeByIndex(index);
-        T oldValue = (T) foundNode.item;
-        foundNode.item = value;
+        T oldValue = (T) foundNode.value;
+        foundNode.value = value;
         return oldValue;
     }
 
@@ -61,18 +61,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Node<T> nodeByIndex = findNodeByIndex(index);
         unlink(nodeByIndex);
-        size--;
-        return nodeByIndex.item;
+        return nodeByIndex.value;
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> foundNode = this.head;
         for (int i = 0; i < size; i++) {
-            if (object == null && foundNode.item == null
-                    || object != null && object.equals(foundNode.item)) {
+            if (object == null && foundNode.value == null
+                    || object != null && object.equals(foundNode.value)) {
                 unlink(foundNode);
-                size--;
                 return true;
             }
             foundNode = foundNode.next;
@@ -91,6 +89,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.preview.next = node.next;
             node.next.preview = node.preview;
         }
+        size--;
     }
 
     @Override
@@ -138,12 +137,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private static class Node<T> {
         private Node<T> preview;
-        private T item;
+        private T value;
         private Node<T> next;
 
-        public Node(Node<T> preview, T item, Node<T> next) {
+        public Node(Node<T> preview, T value, Node<T> next) {
             this.preview = preview;
-            this.item = item;
+            this.value = value;
             this.next = next;
         }
     }
