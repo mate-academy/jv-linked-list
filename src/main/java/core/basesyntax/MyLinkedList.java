@@ -9,33 +9,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(null,value,null);
-        if (head == null) {
-            head = tail = newNode;
-        } else {
-            tail.next = newNode;
-            tail = newNode;
+        Node<T> newNode = new Node<>(tail, value, null);
+        if (size == 0) {
+            head = newNode;
         }
+        if (tail != null) {
+            tail.next = newNode;
+        }
+        tail = newNode;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        Node<T> newNode = new Node<>(null,value,null);
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("size = " + size + " Index= " + index);
-        } else if (index > 0 && index < size) {
-            Node<T> nodeTemp = getNodeByIndex(index - 1);
-            newNode.next = nodeTemp.next;
-            nodeTemp.next = newNode;
-        } else if (index == 0 && size != 0) {
-            newNode.next = head;
-            head.prev = newNode;
-            head = newNode;
-        } else {
+            throw new IndexOutOfBoundsException(index);
+        }
+        if (size == 0 || index == size) {
             add(value);
             return;
         }
+        Node<T> nodeTemp = getNodeByIndex(index);
+        Node<T> newNode = new Node<>(nodeTemp.prev, value, nodeTemp);
+        if (index > 0) {
+            nodeTemp.prev.next = newNode;
+        } else {
+            head = newNode;
+        }
+        nodeTemp.prev = newNode;
         size++;
     }
 
@@ -49,11 +50,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        if (index == 0) {
-            return head.value;
-        }
-        Node<T> newNode = getNodeByIndex(index);
-        return newNode.value;
+        return getNodeByIndex(index).value;
     }
 
     @Override
@@ -74,9 +71,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         T removedValue = null;
-        if (head == null) {
-            throw new IndexOutOfBoundsException();
-        }
         if (index == 0) {
             removedValue = head.value;
             head = head.next;
@@ -86,15 +80,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size--;
             return removedValue;
         }
-        Node<T> nodeTemp = getNodeByIndex(index - 1);
-        if (nodeTemp.next != null) {
-            removedValue = nodeTemp.next.value;
-            nodeTemp.next = nodeTemp.next.next;
-            if (nodeTemp.next != null && nodeTemp.next.next != null) {
-                nodeTemp.next.next.prev = nodeTemp;
+        Node<T> nodeTemp = getNodeByIndex(index);
+        if (nodeTemp.prev != null) {
+            removedValue = nodeTemp.value;
+            nodeTemp.prev.next = nodeTemp.next;
+            if (nodeTemp.next != null) {
+                nodeTemp.next.prev = nodeTemp.prev;
             }
             if (index == size - 1) {
-                tail = nodeTemp;
+                tail = nodeTemp.prev;
             }
         }
         size--;
@@ -113,7 +107,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             nodeTemp = nodeTemp.next;
         }
         return false;
-        //throw new NoSuchElementException("Object " + object + " doesn't exist.");
     }
 
     @Override
@@ -126,26 +119,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return head == null;
     }
 
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(index);
+        }
+    }
+
     private Node<T> getNodeByIndex(int index) {
-        Node<T> nodeTemp = head;
-        for (int i = 0; i < index; i++) {
-            nodeTemp = nodeTemp.next;
+        Node<T> nodeTemp;
+        if (size / 2 > index) {
+            nodeTemp = head;
+            for (int i = 0; i < index; i++) {
+                nodeTemp = nodeTemp.next;
+            }
+        } else {
+            nodeTemp = tail;
+            for (int i = size - 1; i > index; i--) {
+                nodeTemp = nodeTemp.prev;
+            }
         }
         return nodeTemp;
     }
 
-    private void checkIndex(int index) {
-        if (index < 0) {
-            throw new IndexOutOfBoundsException("Index = " + index
-                    + ". Index can't be negative");
-        }
-        if (index >= size) {
-            throw new IndexOutOfBoundsException("Element with index " + index
-                    + " doesn't exist. Size of array is only " + size);
-        }
-    }
-
-    private class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node<T> prev;
         private Node<T> next;
