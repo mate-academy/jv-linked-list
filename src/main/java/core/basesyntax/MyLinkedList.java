@@ -11,7 +11,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(value);
-
         if (size == 0) {
             head = newNode;
             tail = newNode;
@@ -110,6 +109,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
+        checkIndex(index);
         Node<T> currentNode = head;
         for (int i = 0; i < index; i++) {
             if (currentNode == null || currentNode.next == null) {
@@ -123,13 +123,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void unlink(Node<T> node) {
         Node<T> prev = node.prev;
         Node<T> next = node.next;
-
         if (prev != null) {
             prev.next = next;
         } else {
             head = next;
         }
-
         if (next != null) {
             next.prev = prev;
         } else {
