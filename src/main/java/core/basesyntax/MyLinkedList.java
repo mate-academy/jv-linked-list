@@ -9,13 +9,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> lastNode = last;
-        Node<T> newNode = new Node<>(lastNode, value, null);
+        Node<T> previousNode = last;
+        Node<T> newNode = new Node<>(previousNode, value, null);
         last = newNode;
-        if (lastNode == null) {
+        if (previousNode == null) {
             first = newNode;
         } else {
-            lastNode.next = newNode;
+            previousNode.next = newNode;
         }
         size++;
     }
@@ -26,12 +26,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkIndex(index);
-        Node<T> next = node(index);
+        Node<T> next = getNode(index);
         Node<T> prev = next.prev;
         if (prev == null) {
             first = new Node<>(null, value, next);
-            next.prev = last;
+            next.prev = first;
         } else {
             Node<T> newNode = new Node<>(prev, value, next);
             next.prev = newNode;
@@ -49,23 +48,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-        return node(index).item;
+        return getNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
-        Node<T> oldNode = node(index);
-        T oldValue = oldNode.item;
-        node(index).item = value;
+        Node<T> node = getNode(index);
+        T oldValue = node.item;
+        node.item = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        return unlink(node(index));
+        return unlink(getNode(index));
     }
 
     @Override
@@ -109,7 +105,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> node(int index) {
+    private Node<T> getNode(int index) {
+        checkIndex(index);
         Node<T> node;
         if (index < size / 2) {
             node = first;
