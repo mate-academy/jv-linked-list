@@ -10,38 +10,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public MyLinkedList() {
     }
 
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
-    private Node<T> getNode(int index) {
-        Node<T> node;
-        if (index <= size / 2) {
-            node = head;
-            for (int i = 0; i < index; i++) {
-                node = node.next;
-            }
-        } else {
-            node = tail;
-            for (int i = size - 1; i > index; i--) {
-                node = node.prev;
-            }
-        }
-        return node;
-    }
-
     @Override
     public void add(T value) {
         Node<T> node = tail;
-        Node<T> newNode = new Node<>(node, value, null);
+        Node<T> newNode = new Node<>(node, value);
         tail = newNode;
         if (node == null) {
             head = newNode;
@@ -122,6 +94,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
+
+        Node(Node<T> prev, T element) {
+            this.item = element;
+            this.prev = prev;
+        }
+    }
+
     private void checkElementIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(indexOutOfBoundsMessage(index));
@@ -150,5 +139,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = node.prev;
         }
         size--;
+    }
+
+    private Node<T> getNode(int index) {
+        Node<T> node;
+        if (index <= size / 2) {
+            node = head;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+        } else {
+            node = tail;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
+        }
+        return node;
     }
 }
