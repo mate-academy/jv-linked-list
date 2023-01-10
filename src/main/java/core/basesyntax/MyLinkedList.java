@@ -3,58 +3,19 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size;
     private Node<T> head;
     private Node<T> tail;
+    private int size;
 
-    static class Node<T> {
-        private T value;
+    public static class Node<T> {
         private Node<T> prev;
         private Node<T> next;
+        private T value;
 
         public Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
             this.value = value;
             this.next = next;
-        }
-    }
-
-    private Node<T> getNode(int index) {
-        Node<T> pointer;
-        if (index < size / 2) {
-            pointer = head;
-            for (int i = 0; i < index; i++) {
-                pointer = pointer.next;
-            }
-        } else {
-            pointer = tail;
-            for (int i = size - 1; i > index; i--) {
-                pointer = pointer.prev;
-            }
-        }
-        return pointer;
-    }
-
-    private void unlink(Node<T> node) {
-        if (size == 1) {
-            head = null;
-            tail = null;
-        } else if (node.prev == null) {
-            head = node.next;
-            head.prev = null;
-        } else if (node.next == null) {
-            tail = node.prev;
-            tail.next = null;
-        } else {
-            node.prev.next = node.next;
-            node.next.prev = node.prev;
-        }
-        size--;
-    }
-
-    private void checkIndex(int index) {
-        if ((index >= size) || (index < 0)) {
-            throw new IndexOutOfBoundsException("This index " + index + " is incorrect!");
         }
     }
 
@@ -108,9 +69,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         checkIndex(index);
         Node<T> node = getNode(index);
-        T setValue = node.value;
+        T oldValue = node.value;
         node.value = value;
-        return setValue;
+        return oldValue;
     }
 
     @Override
@@ -136,13 +97,50 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-
         return size;
     }
 
     @Override
         public boolean isEmpty() {
+        return size == 0;
+    }
 
-        return size() == 0;
+    private void checkIndex(int index) {
+        if ((index >= size) || (index < 0)) {
+            throw new IndexOutOfBoundsException("This index " + index + " is incorrect!");
+        }
+    }
+
+    private void unlink(Node<T> node) {
+        if (size == 1) {
+            head = null;
+            tail = null;
+        } else if (node.prev == null) {
+            head = node.next;
+            head.prev = null;
+        } else if (node.next == null) {
+            tail = node.prev;
+            tail.next = null;
+        } else {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        }
+        size--;
+    }
+
+    private Node<T> getNode(int index) {
+        Node<T> pointer;
+        if (index < size / 2) {
+            pointer = head;
+            for (int i = 0; i < index; i++) {
+                pointer = pointer.next;
+            }
+        } else {
+            pointer = tail;
+            for (int i = size - 1; i > index; i--) {
+                pointer = pointer.prev;
+            }
+        }
+        return pointer;
     }
 }
