@@ -6,7 +6,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    private int size = 0;
+    private int size;
 
     public MyLinkedList() {
         head = new Node<>(null, null, null);
@@ -17,7 +17,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        if (head.item == null) {
+        if (size == 0) {
             head.item = value;
             size++;
             return;
@@ -77,7 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Node<T> node;
         node = getNode(index);
-        linkAfter(node);
+        unLink(node);
         return node.item;
     }
 
@@ -86,7 +86,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> node = head;
         for (int i = 0; i < size; i++) {
             if (object == null ? node.item == null : object.equals(node.item)) {
-                linkAfter(node);
+                unLink(node);
                 return true;
             }
             node = node.next;
@@ -104,7 +104,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void linkAfter(Node<T> node) {
+    private void unLink(Node<T> node) {
         if (size == 1) {
             head = new Node<>(null, null, null);
             size--;
@@ -159,13 +159,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndex(int index) {
-        if (index >= size) {
-            throw new
-                    IndexOutOfBoundsException("index is bigger than or equals size " + size);
-        }
-        if (index < 0) {
-            throw new
-                    IndexOutOfBoundsException("Index:" + index + " is less than 0");
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Invalid index: " + index);
         }
     }
 
