@@ -3,14 +3,14 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> head;
     private Node<T> tail;
 
     @Override
     public void add(T value) {
         Node<T> temp = tail;
-        Node<T> newNode = new Node<>(temp, value, null);
+        final Node<T> newNode = new Node<>(temp, value, null);
         tail = newNode;
         if (temp == null) {
             head = newNode;
@@ -29,6 +29,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         final Node<T> curNode = getNode(index);
         final Node<T> prevNode = curNode.prev;
         final Node<T> newNode = new Node<>(prevNode, value, curNode);
+        curNode.prev = newNode;
         if (prevNode == null) {
             head = newNode;
         } else {
@@ -59,31 +60,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        final Node<T> curNode = getNode(index);
-        final Node<T> next = curNode.next;
-        final Node<T> prev = curNode.prev;
-        if (prev == null) {
-            head = next;
-        } else {
-            prev.next = next;
-        }
-        if (next == null) {
-            tail = prev;
-        } else {
-            next.prev = prev;
-        }
-        size--;
-        return curNode.value;
+        return unlink(getNode(index));
     }
 
     @Override
     public boolean remove(T object) {
-        final int index = getIndex(object);
-        if (index == -1) {
-            return false;
+        Node<T> curNode = head;
+        for (int i = 0; i < size; i++) {
+            if (curNode.value == null ? object == null : curNode.value.equals(object)) {
+                unlink(curNode);
+                return true;
+            }
+            curNode = curNode.next;
         }
-        remove(index);
-        return true;
+        return false;
     }
 
     @Override
@@ -104,22 +94,36 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         checkIndex(index);
-        Node<T> curNode = head;
-        for (int i = 0; i < index; i++) {
-            curNode = curNode.next;
+        Node<T> curNode;
+        if (index < (size >> 1)) {
+            curNode = head;
+            for (int i = 0; i < index; i++) {
+                curNode = curNode.next;
+            }
+        } else {
+            curNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                curNode = curNode.prev;
+            }
         }
         return curNode;
     }
 
-    private int getIndex(T object) {
-        Node<T> curNode = head;
-        for (int i = 0; i < size; i++) {
-            if (curNode.value == null ? object == null : curNode.value.equals(object)) {
-                return i;
-            }
-            curNode = curNode.next;
+    private T unlink(Node<T> node) {
+        final Node<T> next = node.next;
+        final Node<T> prev = node.prev;
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
         }
-        return -1;
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.prev = prev;
+        }
+        size--;
+        return node.value;
     }
 
     private static class Node<T> {
