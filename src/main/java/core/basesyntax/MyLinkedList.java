@@ -3,18 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static class Node<T> {
-        private Node<T> next;
-        private T value;
-        private Node<T> prev;
-
-        Node(T value, Node<T> prev, Node<T> next) {
-            this.value = value;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -22,7 +10,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (tail == null) {
-            this.head = this.tail = new Node(value, null, null);
+            head = tail = new Node<>(value, null, null);
             size++;
             return;
         }
@@ -34,16 +22,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException(
-              "index: " + index + " is more than list size: " + size + "."
-            );
-        }
-
-        if (index == size || size == 0) {
+        if (index == size) {
             add(value);
             return;
         }
+
+        checkIndex(index);
 
         Node<T> movedNode = getNode(index);
         Node<T> newNode = new Node(value, movedNode.prev, movedNode);
@@ -104,6 +88,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private static class Node<T> {
+        private Node<T> next;
+        private T value;
+        private Node<T> prev;
+
+        Node(T value, Node<T> prev, Node<T> next) {
+            this.value = value;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 
     private boolean isFromTailCount(int index) {
