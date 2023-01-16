@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
@@ -114,14 +115,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         checkIndexCorrectness(index);
-        Node<T> checkNode = head;
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                return checkNode;
+        try {
+            Node<T> checkNode = head;
+            for (int i = 0; i < size; i++) {
+                if (i == index) {
+                    return checkNode;
+                }
+                checkNode = checkNode.next;
             }
-            checkNode = checkNode.next;
+        } catch (RuntimeException e) {
+            throw new NoSuchElementException("Value was not found with index - " + index, e);
         }
-        return checkNode;
+        return null;
     }
 
     private static class Node<T> {
