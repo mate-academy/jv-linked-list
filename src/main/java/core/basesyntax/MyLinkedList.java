@@ -6,28 +6,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> head;
     private Node<T> tail;
-    private int size = 0;
-
-    public MyLinkedList() {
-        head = null;
-        tail = null;
-    }
-
-    public static class Node<T> {
-        private T value;
-        private Node prev;
-        private Node next;
-
-        public Node(T value) {
-            this.value = value;
-        }
-
-        public Node(Node prev, T value, Node next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
+    private int size;
 
     @Override
     public void add(T value) {
@@ -44,14 +23,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 && index > size) {
-            throw new IndexOutOfBoundsException("No such index exception: index "
-                    + index + " for size " + size);
-        }
         if (index == size) {
             add(value);
             return;
         }
+        checkIndex(index);
         Node<T> oldNode = getNode(index);
         Node<T> newNode = new Node<>(value);
         if (oldNode.prev == null) {
@@ -81,13 +57,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndexExeption(index);
+        checkIndex(index);
         return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndexExeption(index);
+        checkIndex(index);
         Node<T> node = getNode(index);
         T oldValue = node.value;
         node.value = value;
@@ -96,7 +72,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndexExeption(index);
+        checkIndex(index);
         T result = getNode(index).value;
         unlink(getNode(index));
         return result;
@@ -104,14 +80,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        for (int i = 0; i < size; i++) {
-            if (object == null) {
-                if (getNode(i).value == null) {
-                    remove(i);
-                    return true;
-                }
-            } else if (object.equals(getNode(i).value)) {
-                remove(i);
+        for (Node<T> node = head; node != null; node = node.next) {
+            if (node.value == object || object != null && object.equals(node.value)) {
+                unlink(node);
                 return true;
             }
         }
@@ -128,8 +99,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return (size == 0);
     }
 
+    private static class Node<T> {
+        private T value;
+        private Node prev;
+        private Node next;
+
+        public Node(T value) {
+            this.value = value;
+        }
+
+        public Node(Node prev, T value, Node next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
+    }
+
     private Node<T> getNode(int index) {
-        checkIndexExeption(index);
+        checkIndex(index);
         Node<T> pointer;
         if (index <= size / 2) {
             pointer = head;
@@ -171,8 +158,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private void checkIndexExeption(int index) {
-        if (index >= size && index != 0 || index < 0) {
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("No such index exception: index "
                     + index + " for size " + size);
         }
