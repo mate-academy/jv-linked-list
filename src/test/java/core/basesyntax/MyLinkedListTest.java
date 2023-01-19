@@ -229,7 +229,7 @@ public class MyLinkedListTest {
 
     @Test
     public void testRemoveByIndex() {
-        myLinkedList.add(FIRST_ITEM);
+        myLinkedList.add(FIRST_ITEM); //
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);
         myLinkedList.add(NULL_ITEM);
