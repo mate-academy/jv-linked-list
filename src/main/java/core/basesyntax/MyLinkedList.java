@@ -14,7 +14,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = new Node<>(value);
             tail = head;
             head.next = tail;
-            //tail.prev = head;} else if (size == 1) {
+            tail.prev = head;
+        } else if (size == 1) {
             Node insertedElement = new Node(value);
             head.next = insertedElement;
             tail = insertedElement;
@@ -45,11 +46,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (isEmpty() || index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("incorrect index: " + index);
         } else {
-            Node<T> element = head;
-            for (int i = 0; i < index; i++) {
-                element = element.next;
+            if (index > size / 2) {
+                Node<T> element = tail;
+                for (int i = size - 1; i > index; i--) {
+                    element = element.prev;
+                }
+                return element.value;
+            } else {
+                Node<T> element = head;
+                for (int i = 0; i < index; i++) {
+                    element = element.next;
+                }
+                return element.value;
             }
-            return element.value;
         }
     }
 
@@ -57,7 +66,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         if (isEmpty() || index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("incorrect index: " + index);
-        } else if (index > 0 || index < size) {
+        } else if (index == 0) {
+            T oldValue = head.value;
+            Node<T> insertedElement = new Node<>(value);
+            insertedElement.next = head.next;
+            head.next.prev = insertedElement;
+            head = insertedElement;
+            return oldValue;
+        } else if (index == size - 1) {
+            T oldValue = tail.value;
+            Node<T> insertedElement = new Node<>(value);
+            insertedElement.prev = tail.prev;
+            tail.prev.next = insertedElement;
+            tail = insertedElement;
+            return oldValue;
+        } else {
             Node<T> oldElement = head;
             for (int i = 0; i < index; i++) {
                 oldElement = oldElement.next;
@@ -69,7 +92,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             oldElement.next.prev = insertedElement;
             return oldElement.value;
         }
-        return null;
     }
 
     @Override
