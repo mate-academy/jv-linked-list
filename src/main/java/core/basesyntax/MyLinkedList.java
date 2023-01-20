@@ -63,36 +63,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        if (index == 0) {
-            Node<T> insertedElement = new Node<>(value);
-            insertedElement.next = head.next;
-
-            T oldValue = head.value;
-
-            head.next.prev = insertedElement;
-            head = insertedElement;
-            return oldValue;
-        } else if (index == size - 1) {
-            Node<T> insertedElement = new Node<>(value);
-            insertedElement.prev = tail.prev;
-
-            T oldValue = tail.value;
-
-            tail.prev.next = insertedElement;
-            tail = insertedElement;
-            return oldValue;
-        } else {
-            Node<T> oldElement = head;
-            for (int i = 0; i < index; i++) {
-                oldElement = oldElement.next;
-            }
-            Node<T> insertedElement = new Node<>(value);
-            insertedElement.prev = oldElement.prev;
-            insertedElement.next = oldElement.next;
-            oldElement.prev.next = insertedElement;
-            oldElement.next.prev = insertedElement;
-            return oldElement.value;
-        }
+        Node<T> element = find(index);
+        T oldValue = element.value;
+        element.value = value;
+        return oldValue;
     }
 
     @Override
