@@ -70,15 +70,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == 0) {
             Node<T> insertedElement = new Node<>(value);
             insertedElement.next = head.next;
-            head.next.prev = insertedElement;
+
             T oldValue = head.value;
+
+            head.next.prev = insertedElement;
             head = insertedElement;
             return oldValue;
         } else if (index == size - 1) {
             Node<T> insertedElement = new Node<>(value);
             insertedElement.prev = tail.prev;
-            tail.prev.next = insertedElement;
+
             T oldValue = tail.value;
+
+            tail.prev.next = insertedElement;
             tail = insertedElement;
             return oldValue;
         } else {
