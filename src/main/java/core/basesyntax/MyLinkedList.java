@@ -68,17 +68,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (isEmpty() || index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("incorrect index: " + index);
         } else if (index == 0) {
-            T oldValue = head.value;
             Node<T> insertedElement = new Node<>(value);
             insertedElement.next = head.next;
             head.next.prev = insertedElement;
+            T oldValue = head.value;
             head = insertedElement;
             return oldValue;
         } else if (index == size - 1) {
-            T oldValue = tail.value;
             Node<T> insertedElement = new Node<>(value);
             insertedElement.prev = tail.prev;
             tail.prev.next = insertedElement;
+            T oldValue = tail.value;
             tail = insertedElement;
             return oldValue;
         } else {
@@ -135,7 +135,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void verifyInBoundOrEmpty(int index) {
-        if (isEmpty() ||  index < 0 || index >= size) {
+        if (isEmpty() || index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("incorrect index: " + index);
         }
     }
@@ -157,10 +157,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node node) {
-        if (node.prev != null) node.prev.next = node.next;
-        if (node.next != null)node.next.prev = node.prev;
-        if (node == head) head = head.next;
-        if (node == tail) tail = tail.prev;
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        }
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        }
+        if (node == head) {
+            head = head.next;
+        }
+        if (node == tail) {
+            tail = tail.prev;
+        }
     }
 
     private class Node<T> {
