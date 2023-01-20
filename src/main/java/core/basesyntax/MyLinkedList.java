@@ -24,7 +24,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        verifyInBound(index);
+        checkIndexForAdd(index);
         if (index == size) {
             add(value);
             return;
@@ -56,18 +56,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (isEmpty() || index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("incorrect index: " + index);
-        } else {
-            return (T) find(index).value;
-        }
+        checkIndex(index);
+        return (T) find(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        if (isEmpty() || index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("incorrect index: " + index);
-        } else if (index == 0) {
+        checkIndex(index);
+        if (index == 0) {
             Node<T> insertedElement = new Node<>(value);
             insertedElement.next = head.next;
 
@@ -101,7 +97,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        verifyInBoundOrEmpty(index);
+        checkIndex(index);
         Node oldNode = find(index);
         unlink(oldNode);
         size--;
@@ -132,13 +128,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void verifyInBound(int index) {
+    private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("incorrect index: " + index);
         }
     }
 
-    private void verifyInBoundOrEmpty(int index) {
+    private void checkIndex(int index) {
         if (isEmpty() || index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("incorrect index: " + index);
         }
@@ -182,43 +178,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         public Node(T value) {
             this.value = value;
-        }
-
-        public Node(T value, Node<T> prev) {
-            this.value = value;
-            this.prev = prev;
-        }
-
-        public Node(T value, Node<T> prev, Node<T> next) {
-            this.value = value;
-            this.prev = prev;
-            this.next = next;
-            prev.next = this;
-            next.prev = this;
-        }
-
-        public T getValue() {
-            return value;
-        }
-
-        public void setValue(T value) {
-            this.value = value;
-        }
-
-        public Node<T> getPrev() {
-            return prev;
-        }
-
-        public void setPrev(Node<T> prev) {
-            this.prev = prev;
-        }
-
-        public Node<T> getNext() {
-            return next;
-        }
-
-        public void setNext(Node<T> next) {
-            this.next = next;
         }
     }
 }
