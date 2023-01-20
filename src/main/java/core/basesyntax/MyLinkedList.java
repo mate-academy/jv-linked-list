@@ -113,6 +113,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private void unlink(Node node) {
+        node.prev.next = null;
+        node.next.prev = null;
+    }
+
     private class Node<T> {
         private T value;
         private Node<T> prev;
