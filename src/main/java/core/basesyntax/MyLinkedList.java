@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
@@ -26,6 +25,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         verifyInBound(index);
+        if (index == size) {
+            add(value);
+            return;
+        } else if (index == 0) {
+            Node<T> insertedElement = new Node<>(value);
+            insertedElement.next = head;
+            head.prev = insertedElement;
+            head = insertedElement;
+            size++;
+            return;
+        }
+
+        Node<T> insertedBeforeNode = find(index);
+        Node<T> insertedElement = new Node<>(value);
+
+        insertedBeforeNode.prev.next = insertedElement;
+        insertedElement.prev = insertedBeforeNode.prev;
+        insertedElement.next = insertedBeforeNode;
+        insertedBeforeNode.prev = insertedElement;
+        size++;
     }
 
     @Override
