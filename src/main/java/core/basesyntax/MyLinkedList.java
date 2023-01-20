@@ -39,19 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (isEmpty() || index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("incorrect index: " + index);
         } else {
-            if (index > size / 2) {
-                Node<T> element = tail;
-                for (int i = size - 1; i > index; i--) {
-                    element = element.prev;
-                }
-                return element.value;
-            } else {
-                Node<T> element = head;
-                for (int i = 0; i < index; i++) {
-                    element = element.next;
-                }
-                return element.value;
-            }
+            return (T) find(index).value;
         }
     }
 
@@ -89,7 +77,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        return null;
+        verifyInBoundOrEmpty(index);
+        Node oldNode = find(index);
+        unlink(oldNode);
+        size--;
+        return (T) oldNode.value;
     }
 
     @Override
@@ -113,9 +105,33 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private void verifyInBoundOrEmpty(int index) {
+        if (isEmpty() ||  index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("incorrect index: " + index);
+        }
+    }
+
+    private Node find(int index) {
+        Node element;
+        if (index < size / 2) {
+            element = head;
+            for (int i = 0; i < index; i++) {
+                element = element.next;
+            }
+        } else {
+            element = tail;
+            for (int i = size - 1; i > index; i--) {
+                element = element.prev;
+            }
+        }
+        return element;
+    }
+
     private void unlink(Node node) {
-        node.prev.next = null;
-        node.next.prev = null;
+        if (node.prev != null) node.prev.next = node.next;
+        if (node.next != null)node.next.prev = node.prev;
+        if (node == head) head = head.next;
+        if (node == tail) tail = tail.prev;
     }
 
     private class Node<T> {
