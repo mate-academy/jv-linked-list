@@ -4,7 +4,7 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
-    private Node<T> last = null;
+    private Node<T> last;
     private Node<T> first;
 
     @Override
@@ -52,19 +52,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> node = first; node != null; node = node.next) {
-                if (node.item == null) {
-                    unlinkItem(node);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> node = first; node != null; node = node.next) {
-                if (object.equals(node.item)) {
-                    unlinkItem(node);
-                    return true;
-                }
+        for (Node<T> node = first; node != null; node = node.next) {
+            if (node.item == object || (object != null && object.equals(node.item))) {
+                unlinkItem(node);
+                return true;
             }
         }
         return false;
