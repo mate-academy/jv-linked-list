@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -24,7 +25,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            checkIndex(index);
             Node<T> target = getNodeByIndex(index);
             linkBefore(value,target);
             size++;
@@ -38,13 +38,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         T removedValue = getNodeByIndex(index).value;
         getNodeByIndex(index).value = value;
         return removedValue;
@@ -52,20 +50,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> removedNode = getNodeByIndex(index);
-        T removedElement = removedNode.value;
         unlink(removedNode);
-        return removedElement;
+        return removedNode.value;
     }
 
     @Override
     public boolean remove(T object) {
-        for (int i = 0; i < size; i++) {
-            if (object == getNodeByIndex(i).value
-                    || object != null && object.equals(getNodeByIndex(i).value)) {
-                unlink(getNodeByIndex(i));
+        Node<T> node = head;
+        while (node != null) {
+            if (Objects.equals(object, node.value)) {
+                unlink(node);
                 return true;
+            } else {
+                node = node.next;
             }
         }
         return false;
@@ -82,6 +80,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
+        checkIndex(index);
         Node<T> current = head;
         for (int i = 0; i < index; i++) {
             current = current.next;
