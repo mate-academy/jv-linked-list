@@ -6,13 +6,10 @@ import java.util.Objects;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
-    private int size = 0;
+    private int size;
 
     @Override
     public void add(T value) {
-        if (size == 0) {
-            tail = null;
-        }
         Node<T> oldTail = tail;
         tail = new Node<>(oldTail, value, null);
         if (oldTail == null) {
@@ -30,23 +27,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             Node<T> target = getNode(index);
             linkBefore(value, target);
-            size++;
         }
     }
 
     private void linkBefore(T value, Node<T> target) {
-        Node<T> newNode = new Node<>(null, value, null);
+        Node<T> newNode = new Node<>(null, value, target);
         if (target == head) {
-            newNode.next = target;
-            target.prev = newNode;
             head = newNode;
+            size++;
             return;
         }
         Node<T> previousNode = target.prev;
-        newNode.next = target;
         target.prev = newNode;
         previousNode.next = newNode;
         newNode.prev = previousNode;
+        size++;
     }
 
     @Override
@@ -58,7 +53,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         Node<T> currentNode = getNode(index);
         return currentNode.value;
     }
@@ -94,13 +88,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void unlink(Node<T> node) {
         if (size == 1) {
-            head = new Node<>(null, null, null);
+            head = null;
+            tail = null;
             size--;
             return;
         }
         if (node == head) {
             head = head.next;
-            node.next.prev = null;
+            head.prev = null;
             size--;
             return;
         }

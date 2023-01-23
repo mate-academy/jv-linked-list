@@ -39,6 +39,7 @@ public class Cat {
         return Objects.equals(name, cat.name)
                 && Objects.equals(color, cat.color);
     }
+
     @Override
     public int hashCode() {
         return Objects.hash(name, color);
