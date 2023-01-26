@@ -3,65 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node tail;
-    private Node head;
+    private Node<T> tail;
+    private Node<T> head;
     private int size;
-
-    public Node getHead() {
-        return head;
-    }
-
-    public Node getTail() {
-        return tail;
-    }
-
-    public void setHead(Node head) {
-        this.head = head;
-    }
-
-    public void setTail(Node tail) {
-        this.tail = tail;
-    }
-
-    private class Node<T> {
-        private Node left;
-        private Node right;
-        private T value;
-
-        public Node(Node left, Node right, T value) {
-            this.left = left;
-            this.right = right;
-            this.value = value;
-        }
-
-        public Node getLeft() {
-            return left;
-        }
-
-        public Node getRight() {
-            return right;
-        }
-
-        public T getValue() {
-            return value;
-        }
-
-        public void setLeft(Node left) {
-            this.left = left;
-        }
-
-        public void setRight(Node right) {
-            this.right = right;
-        }
-
-        public void setValue(T value) {
-            this.value = value;
-        }
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
 
     public MyLinkedList() {
         head = null;
@@ -69,28 +13,48 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size = 0;
     }
 
-    private void unlink(Node node) {
-        // 1 - node - 3
-        if (node.left == null) {
-            head = node.right;
-        } else {
-            node.left.right = node.right;
+    private static class Node<T> {
+        private Node<T> prev;
+        private Node<T> next;
+        private T value;
+
+        public Node(Node<T> prev, Node<T> next, T value) {
+            this.prev = prev;
+            this.next = next;
+            this.value = value;
         }
-        if (node.right == null) {
-            tail = node.left;
-        } else {
-            node.right.left = node.left;
+
+        public T getValue() {
+            return value;
+        }
+
+        public void setValue(T value) {
+            this.value = value;
         }
     }
 
-    private Node getNode(int index) {
+    private void unlink(Node<T> node) {
+        // 1 - node - 3
+        if (node.prev == null) {
+            head = node.next;
+        } else {
+            node.prev.next = node.next;
+        }
+        if (node.next == null) {
+            tail = node.prev;
+        } else {
+            node.next.prev = node.prev;
+        }
+    }
+
+    private Node<T> getNode(int index) {
         int count = 0;
-        Node pointer = head;
+        Node<T> pointer = head;
         while (pointer != null) {
             if (count == index) {
                 return pointer;
             }
-            pointer = pointer.right;
+            pointer = pointer.next;
             count++;
         }
         return null;
@@ -98,19 +62,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void testIndex(int index) {
         if (index >= size() || index < 0) {
-            //  if(index >= size || index < 0) {
-            throw new java.lang.IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("index outside size: "+ index);
         }
     }
 
     @Override
     public void add(T value) {
-        Node newNoge = new Node(tail, null, value);
+        Node<T> newNoge = new Node<>(tail, null, value);
         if (head == null) {
             head = newNoge;
         }
         if (tail != null) {
-            tail.right = newNoge;
+            tail.next = newNoge;
         }
         tail = newNoge;
         size++;
@@ -123,19 +86,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         testIndex(index);
-        // int count = 0;
-        Node pointer = getNode(index); // 1 - newNode - pointer
-        Node leftNode = null;
-        if (pointer != null) {
-            leftNode = pointer.left;
+        if (index == 0) {
+            Node<T> newNode = new Node<>(null, head, value);
+            head.prev = newNode;
+            head = newNode;
+        } else {
+            Node<T> currentNode = getNode(index);
+            Node<T> newNode = new Node<>(currentNode.prev, currentNode, value);
+            currentNode.prev.next = newNode;
+            currentNode.prev = newNode;
         }
-        Node newNode = new Node(leftNode, pointer, value);
-        if (leftNode != null) {
-            leftNode.right = newNode;
-        }
-        if (pointer != null) {
-            pointer.left = newNode;
-        }
+        size++;
     }
 
     @Override
@@ -148,11 +109,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         testIndex(index);
-        Node pointer = getNode(index);
+        Node<T> pointer = getNode(index);
         if (pointer == null) {
             return null;
         } else {
-            return (T) pointer.getValue();
+            return  pointer.getValue();
         }
     }
 
@@ -168,7 +129,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 pointer.setValue(value);
                 break;
             } else {
-                pointer = pointer.right;
+                pointer = pointer.next;
                 count++;
             }
         }
@@ -193,25 +154,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> pointer = head;
         while (pointer != null) {
-            if (pointer.getValue() == object) {
+            if (pointer.getValue() == object || pointer.getValue() != null
+                    && (pointer.getValue().equals(object))) {
                 unlink(pointer);
                 size--;
                 return true;
             }
-            pointer = pointer.right;
+            pointer = pointer.next;
         }
         return false;
     }
 
     @Override
     public int size() {
-    /*    int count = 0;
-        Node pointer = head;
-        while (pointer != null) {
-            pointer = pointer.right;
-            count++;
-        }
-      */
         return size;
     }
 
