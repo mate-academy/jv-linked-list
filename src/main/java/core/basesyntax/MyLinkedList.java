@@ -9,7 +9,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
 
     public MyLinkedList() {
-        this.size = 0;
     }
 
     @Override
@@ -73,7 +72,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> currentNode = head;
         for (int i = 0; i < size; i++) {
-            if (currentNode.value == object || Objects.equals(currentNode.value, object)) {
+            if (Objects.equals(currentNode.value, object)) {
                 remove(i);
                 return true;
             }
@@ -107,7 +106,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             currentIndex++;
         }
 
-        return null;
+        return head;
     }
 
     private void unlink(Node<T> currentNode) {
