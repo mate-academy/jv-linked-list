@@ -62,7 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void testIndex(int index) {
         if (index >= size() || index < 0) {
-            throw new IndexOutOfBoundsException("index outside size: "+ index);
+            throw new IndexOutOfBoundsException("index outside size: " + index);
         }
     }
 
@@ -113,7 +113,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (pointer == null) {
             return null;
         } else {
-            return  pointer.getValue();
+            return pointer.getValue();
         }
     }
 
