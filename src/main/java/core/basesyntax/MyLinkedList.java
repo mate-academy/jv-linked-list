@@ -31,7 +31,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        testIndex(index);
+        checkIndex(index);
         if (index == 0) {
             Node<T> newNode = new Node<>(null, head, value);
             head.prev = newNode;
@@ -54,41 +54,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        testIndex(index);
+        checkIndex(index);
         Node<T> pointer = getNode(index);
         if (pointer == null) {
             return null;
         } else {
-            return pointer.getValue();
+            return pointer.value;
         }
     }
 
     @Override
     public T set(T value, int index) {
-        testIndex(index);
-        int count = 0;
-        Node<T> pointer = head;
+        checkIndex(index);
+        Node<T> pointer = getNode(index);
         T oldValue = null;
-        while (pointer != null) {
-            if (index == count) {
-                oldValue = pointer.getValue();
-                pointer.setValue(value);
-                break;
-            } else {
-                pointer = pointer.next;
-                count++;
-            }
+        if (pointer != null) {
+            oldValue = pointer.value;
+            pointer.value = value;
         }
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        testIndex(index);
+        checkIndex(index);
         //   T toReturn = null;
         Node<T> pointer = getNode(index);
         if (pointer != null) {
-            T result = pointer.getValue();
+            T result = pointer.value;
             unlink(pointer);
             return result;
         }
@@ -99,8 +92,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> pointer = head;
         while (pointer != null) {
-            if (pointer.getValue() == object || pointer.getValue() != null
-                    && (pointer.getValue().equals(object))) {
+            if (pointer.value == object || pointer.value != null
+                    && (pointer.value.equals(object))) {
                 unlink(pointer);
                 return true;
             }
@@ -146,7 +139,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
-    private void testIndex(int index) {
+    private void checkIndex(int index) {
         if (index >= size() || index < 0) {
             throw new IndexOutOfBoundsException("index: " + index + " outside size: " + size);
         }
@@ -160,14 +153,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         public Node(Node<T> prev, Node<T> next, T value) {
             this.prev = prev;
             this.next = next;
-            this.value = value;
-        }
-
-        public T getValue() {
-            return value;
-        }
-
-        public void setValue(T value) {
             this.value = value;
         }
     }
