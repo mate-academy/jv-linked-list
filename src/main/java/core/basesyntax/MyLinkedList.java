@@ -7,11 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private int size;
 
-    public MyLinkedList() {
-        head = null;
-        tail = null;
-    }
-
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(tail, null, value);
@@ -54,7 +49,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         Node<T> pointer = getNode(index);
         if (pointer == null) {
             return null;
@@ -65,7 +59,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> pointer = getNode(index);
         T oldValue = null;
         if (pointer != null) {
@@ -77,8 +70,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        //   T toReturn = null;
         Node<T> pointer = getNode(index);
         if (pointer != null) {
             T result = pointer.value;
@@ -127,16 +118,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
+        checkIndex(index);
         int count = 0;
-        Node<T> pointer = head;
-        while (pointer != null) {
-            if (count == index) {
-                return pointer;
+        if (index < size / 2) {
+            Node<T> pointer = head;
+            for (int i = 0; i < index; i++) {
+                pointer = pointer.next;
             }
-            pointer = pointer.next;
-            count++;
+            return pointer;
+        } else {
+            Node<T> pointer = tail;
+            for (int i = index + 1; i < size; i++) {
+                pointer = pointer.prev;
+            }
+            return pointer;
         }
-        return null;
     }
 
     private void checkIndex(int index) {
