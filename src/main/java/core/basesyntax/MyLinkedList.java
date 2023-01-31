@@ -49,12 +49,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Node<T> pointer = getNode(index);
-        if (pointer == null) {
-            return null;
-        } else {
-            return pointer.value;
-        }
+        return getNode(index).value;
     }
 
     @Override
