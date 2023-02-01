@@ -50,7 +50,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void addAll(int index, Collection<? extends T> collection) {
         checkAddingIndex(index);
-        T[] objects =(T[]) collection.toArray();
+        T[] objects = (T[]) collection.toArray();
 
         if (index == size) {
             for (T element : objects) {
@@ -136,20 +136,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private T unlink(Node<T> removeNode) {
         final T removedElement = removeNode.item;
-        final Node<T> previous = removeNode.prev;
+        final Node<T> prev = removeNode.prev;
         final Node<T> next = removeNode.next;
 
-        if (previous == null) {
+        if (prev == null) {
             head = next;
         } else {
-            previous.next = next;
+            prev.next = next;
             removeNode.prev = null;
         }
 
         if (next == null) {
-            tail = previous;
+            tail = prev;
         } else {
-            next.prev = previous;
+            next.prev = prev;
             removeNode.next = null;
         }
 
