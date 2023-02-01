@@ -25,13 +25,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> node = new Node<>(value);
+        Node<T> node;
         if (isEmpty()) {
+            node = new Node<>(null, value, null);
             setHead(node);
             setTail(node);
         } else {
+            node = new Node<>(tail, value, null);
             tail.setNext(node);
-            node.setPrev(tail);
+            setTail(node);
         }
         setTail(node);
         size++;
@@ -43,20 +45,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index " + index
                     + " out of range " + size());
         }
-        Node<T> insert = new Node<>(value);
+        Node<T> insert;
         if (index == 0 && getHead() != null) {
+            insert = new Node<>(null, value, getHead());
             getHead().setPrev(insert);
-            insert.setNext(head);
             setHead(insert);
             size++;
         } else if (getHead() == null || index == size()) {
             add(value);
         } else {
-            Node<T> temp = getNode(index);
-            temp.getPrev().setNext(insert);
-            insert.setPrev(temp.getPrev());
-            insert.setNext(temp);
-            temp.setPrev(insert);
+            Node<T> old = getNode(index);
+            insert = new Node<>(old.getPrev(), value, old);
+            old.getPrev().setNext(insert);
+            old.setPrev(insert);
             size++;
         }
     }
@@ -172,10 +173,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        public Node(T element) {
+        public Node(Node<T> prev, T element, Node<T> next) {
             this.item = element;
-            this.prev = null;
-            this.next = null;
+            this.prev = prev;
+            this.next = next;
         }
 
         public T getItem() {
