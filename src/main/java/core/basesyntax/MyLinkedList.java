@@ -4,10 +4,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node<T> head;
-    private Node<T> tail;
-    private int size;
-
     private static class Node<T> {
         private T item;
         private Node<T> prev;
@@ -20,24 +16,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private Node<T> head;
+    private Node<T> tail;
+    private int size;
+
     @Override
     public void add(T value) {
-        final Node<T> l = tail;
-        final Node<T> newNode = new Node<>(l, value, null);
+        final Node<T> currentLastNode = tail;
+        final Node<T> newNode = new Node<>(currentLastNode, value, null);
         tail = newNode;
 
-        if (l == null) {
+        if (currentLastNode == null) {
             head = newNode;
         } else {
-            l.next = newNode;
+            currentLastNode.next = newNode;
         }
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkAddingIndex(index);
-
         if (index == size) {
             add(value);
         } else {
@@ -52,7 +50,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void addAll(int index, Collection<? extends T> collection) {
         checkAddingIndex(index);
-        T[] objects = (T[]) collection.toArray();
+        T[] objects =(T[]) collection.toArray();
 
         if (index == size) {
             for (T elem : objects) {
@@ -68,13 +66,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkElementIndex(index);
         return getNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkElementIndex(index);
         Node<T> setNode = getNode(index);
         final T oldValue = setNode.item;
         setNode.item = value;
@@ -83,7 +79,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkElementIndex(index);
         return unlink(getNode(index));
     }
 
@@ -109,19 +104,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void linkBefore(T value, Node<T> current) {
-        if (current == null) {
-            throw new IndexOutOfBoundsException("Can't link element "
-                    + value + " before null Node " + current);
-        }
-
-        final Node<T> precedent = current.prev;
-        final Node<T> newNode = new Node<>(precedent, value, current);
+        final Node<T> prev = current.prev;
+        final Node<T> newNode = new Node<>(prev, value, current);
         current.prev = newNode;
 
-        if (precedent == null) {
+        if (prev == null) {
             head = newNode;
         } else {
-            precedent.next = newNode;
+            prev.next = newNode;
         }
         size++;
     }
@@ -145,10 +135,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T unlink(Node<T> removeNode) {
-        if (removeNode == null) {
-            throw new NullPointerException("Can't remove the non-exist element " + removeNode);
-        }
-
         final T removedElement = removeNode.item;
         final Node<T> previous = removeNode.prev;
         final Node<T> next = removeNode.next;
