@@ -53,8 +53,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         T[] objects =(T[]) collection.toArray();
 
         if (index == size) {
-            for (T elem : objects) {
-                add(elem);
+            for (T element : objects) {
+                add(element);
             }
         } else {
             for (T element : objects) {
