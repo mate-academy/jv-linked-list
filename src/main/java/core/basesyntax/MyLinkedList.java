@@ -155,15 +155,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean isEquals(T firstObject, T secondObject) {
-        return firstObject == secondObject || (firstObject != null && firstObject.equals(secondObject));
+        return firstObject == secondObject
+                || (firstObject != null && firstObject.equals(secondObject));
     }
 
     private class Node<T> {
-        Node<T> prev;
-        T main;
-        Node<T> next;
+       private Node<T> prev;
+        private T main;
+       private Node<T> next;
 
-        public Node(Node<T> prev, T main, Node<T> next) {
+        private Node(Node<T> prev, T main, Node<T> next) {
             this.prev = prev;
             this.main = main;
             this.next = next;
