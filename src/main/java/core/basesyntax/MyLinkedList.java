@@ -36,22 +36,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void addBeforeIndex(T value, int index) {
-        Node<T> node = getNode(index);
-        Node<T> nodeValue = new Node<>(null, value, null);
-        assert node != null;
-        if (node.equals(head)) {
-            nodeValue.next = node;
-            node.prev = nodeValue;
-            head = nodeValue;
-            return;
-        }
-        nodeValue.next = node;
-        nodeValue.prev = node.prev;
-        node.prev.next = nodeValue;
-        node.prev = nodeValue;
-    }
-
     @Override
     public void addAll(List<T> list) {
         for (T value : list) {
@@ -132,6 +116,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             currentIndex++;
         }
         return null;
+    }
+
+    private void addBeforeIndex(T value, int index) {
+        Node<T> node = getNode(index);
+        Node<T> nodeValue = new Node<>(null, value, null);
+        assert node != null;
+        if (node.equals(head)) {
+            nodeValue.next = node;
+            node.prev = nodeValue;
+            head = nodeValue;
+            return;
+        }
+        nodeValue.next = node;
+        nodeValue.prev = node.prev;
+        node.prev.next = nodeValue;
+        node.prev = nodeValue;
     }
 
     private void unlink(Node<T> node) {
