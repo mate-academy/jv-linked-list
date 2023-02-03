@@ -21,23 +21,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index == size) {
+            add(value);
+            return;
+        }
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index " + index
                     + " out of range " + size);
-        } else if (index == 0 && head != null) {
-            Node<T> newNode = new Node<>(null, value, head);
-            head.prev = newNode;
-            head = newNode;
-            size++;
-        } else if (index == size) {
-            add(value);
-        } else {
-            Node<T> oldNode = getNode(index);
-            Node<T> newNode = new Node<>(oldNode.prev, value, oldNode);
-            oldNode.prev.next = newNode;
-            oldNode.prev = newNode;
-            size++;
         }
+        Node<T> nextNode = getNode(index);
+        Node<T> prevNode = nextNode.prev;
+        Node<T> newNode = new Node<>(prevNode, value, nextNode);
+        if (prevNode == null) {
+            head = newNode;
+        } else {
+            prevNode.next = newNode;
+        }
+        nextNode.prev = newNode;
+        size++;
     }
 
     @Override
@@ -70,13 +71,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> test = head;
-        while (test != null) {
-            if (isEquals(object, test.item)) {
-                unlink(test);
+        Node<T> temp = head;
+        while (temp != null) {
+            if (isEquals(object, temp.item)) {
+                unlink(temp);
                 return true;
             }
-            test = test.next;
+            temp = temp.next;
         }
         return false;
     }
