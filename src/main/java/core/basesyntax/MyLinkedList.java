@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class MyLinkedList<M> implements MyLinkedListInterface<M> {
     private Node<M> top;
@@ -24,17 +25,17 @@ public class MyLinkedList<M> implements MyLinkedListInterface<M> {
         } else if (index == size) {
             linkBottom(value);
         } else {
-            Node<M> a = node(index);
-            Node<M> newNode = new Node<>(a.prev, value, a);
-            a.prev.next = newNode;
-            a.prev = newNode;
+            Node<M> k = node(index);
+            Node<M> newNode = new Node<>(k.prev, value, k);
+            k.prev.next = newNode;
+            k.prev = newNode;
             size++;
         }
     }
 
     @Override
     public void addAll(List<M> list) {
-        if (!(list == null)) {
+        if (list != null) {
             for (M item : list) {
                 add(item);
             }
@@ -50,53 +51,26 @@ public class MyLinkedList<M> implements MyLinkedListInterface<M> {
     @Override
     public M set(M value, int index) {
         checkItemIndex(index);
-        Node<M> a;
-        if (index == 0) {
-            a = top;
-            unLinkTop(a);
-            linkTop(value);
-        } else {
-            a = node(index);
-            unLink(a);
-            add(value, index);
-        }
-        return a.item;
+        Node<M> k = node(index);
+        M updatedValue = k.item;
+        k.item = value;
+        return updatedValue;
     }
 
     @Override
     public M remove(int index) {
         checkItemIndex(index);
-        if (index == 0) {
-            Node<M> b = top;
-            unLinkTop(b);
-            return b.item;
-        } else if (index == size - 1) {
-            Node<M> c = bottom;
-            unLinkBottom(c);
-            return c.item;
-        } else {
-            Node<M> a = node(index);
-            unLink(a);
-            return a.item;
-        }
+        return unLink(node(index));
     }
 
     @Override
     public boolean remove(M object) {
-        Node<M> b = top;
-        while (b != null) {
-            if (object == null && b.item == null) {
-                unLink(b);
-                return true;
-            } else if (object != null && object.equals(b.item)) {
-                if (size == 1 || object.equals(top.item)) {
-                    unLinkTop(b);
-                } else {
-                    unLink(b);
-                }
+        for (Node<M> k = top; k != null; k = k.next) {
+            if ((object == null && k.item == null)
+                    || (object != null && object.equals(k.item))) {
+                unLink(k);
                 return true;
             }
-            b = b.next;
         }
         return false;
     }
@@ -112,7 +86,7 @@ public class MyLinkedList<M> implements MyLinkedListInterface<M> {
     }
 
     private static class Node<M> {
-        private final M item;
+        private M item;
         private Node<M> next;
         private Node<M> prev;
 
@@ -123,28 +97,12 @@ public class MyLinkedList<M> implements MyLinkedListInterface<M> {
         }
     }
 
-    private Node<M> node(int index) {
-        Node<M> a;
-        if (index < (size / 2)) {
-            a = top;
-            for (int i = 0; i < index; i++) {
-                a = a.next;
-            }
-        } else {
-            a = bottom;
-            for (int i = size - 1; i > index; i--) {
-                a = a.prev;
-            }
-        }
-        return a;
-    }
-
     private void linkTop(M value) {
-        Node<M> b = top;
-        Node<M> newNode = new Node<>(null, value, b);
+        Node<M> l = top;
+        Node<M> newNode = new Node<>(null, value, l);
         top = newNode;
-        if (b != null) {
-            b.prev = newNode;
+        if (l != null) {
+            l.prev = newNode;
         } else {
             bottom = newNode;
         }
@@ -152,43 +110,31 @@ public class MyLinkedList<M> implements MyLinkedListInterface<M> {
     }
 
     private void linkBottom(M value) {
-        Node<M> c = bottom;
-        Node<M> newNode = new Node<>(c, value, null);
+        Node<M> p = bottom;
+        Node<M> newNode = new Node<>(p, value, null);
         bottom = newNode;
-        if (c != null) {
-            c.next = newNode;
+        if (p != null) {
+            p.next = newNode;
         } else {
             top = newNode;
         }
         size++;
     }
 
-    private void unLink(Node<M> node) {
-        if (!(node == null)) {
-            node.prev.next = node.next;
-            node.next.prev = node.prev;
-            size--;
-        }
-    }
-
-    private void unLinkTop(Node<M> node) {
-        if (!(node == null)) {
+    private M unLink(@NotNull Node<M> node) {
+        final M removeItem = node.item;
+        if (node.prev == null) {
             top = node.next;
-            if (node.next == null) {
-                bottom = null;
-            } else {
-                node.next.prev = null;
-            }
-            size--;
+        } else {
+            node.prev.next = node.next;
         }
-    }
-
-    private void unLinkBottom(Node<M> node) {
-        if (!(node == null)) {
+        if (node.next == null) {
             bottom = node.prev;
-            node.prev.next = null;
-            size--;
+        } else {
+            node.next.prev = node.prev;
         }
+        size--;
+        return removeItem;
     }
 
     private void checkItemIndex(int index) {
@@ -201,5 +147,21 @@ public class MyLinkedList<M> implements MyLinkedListInterface<M> {
         if (!(index >= 0 && index <= size)) {
             throw new IndexOutOfBoundsException("Index " + index + " doesn't exist");
         }
+    }
+
+    private Node<M> node(int index) {
+        Node<M> k;
+        if (index < (size / 2)) {
+            k = top;
+            for (int i = 0; i < index; i++) {
+                k = k.next;
+            }
+        } else {
+            k = bottom;
+            for (int i = size - 1; i > index; i--) {
+                k = k.prev;
+            }
+        }
+        return k;
     }
 }
