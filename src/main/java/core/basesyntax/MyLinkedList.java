@@ -47,21 +47,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T get(int index) {
         checkIndexInBounds(index);
         Node<T> node = getNode(index);
-        if (node != null) {
-            return node.main;
-        }
-        return null;
+        return node.value;
     }
 
     @Override
     public T set(T value, int index) {
-        if (!isEmpty() || index < 0) {
-            checkIndexInBounds(index);
-        }
+        checkIndexInBounds(index);
         Node<T> node = getNode(index);
         if (node != null) {
-            T result = node.main;
-            node.main = value;
+            T result = node.value;
+            node.value = value;
             return result;
         }
         return value;
@@ -69,28 +64,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (!isEmpty() || index < 0) {
-            checkIndexInBounds(index);
-        }
+        checkIndexInBounds(index);
         Node<T> result = getNode(index);
-        assert result != null;
         unlink(result);
         size--;
-        return result.main;
+        return result.value;
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> node = head;
-        int curentIndex = 0;
         while (node != null) {
-            if (isEquals(object, node.main)) {
+            if (isEquals(object, node.value)) {
                 unlink(node);
                 size--;
                 return true;
             }
             node = node.next;
-            curentIndex++;
         }
         return false;
     }
@@ -106,22 +96,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
+        checkIndexInBounds(index);
         int currentIndex = 0;
-        Node<T> current = head;
-        while (current != null) {
+        Node<T> getNode = head;
+        while (getNode != null) {
             if (index == currentIndex) {
-                return current;
+                return getNode;
             }
-            current = current.next;
+            getNode = getNode.next;
             currentIndex++;
         }
         return null;
     }
 
     private void addBeforeIndex(T value, int index) {
+        checkIndexInBounds(index);
         Node<T> node = getNode(index);
         Node<T> nodeValue = new Node<>(null, value, null);
-        assert node != null;
         if (node.equals(head)) {
             nodeValue.next = node;
             node.prev = nodeValue;
@@ -161,12 +152,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private class Node<T> {
         private Node<T> prev;
-        private T main;
+        private T value;
         private Node<T> next;
 
-        private Node(Node<T> prev, T main, Node<T> next) {
+        private Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
-            this.main = main;
+            this.value = value;
             this.next = next;
         }
     }
