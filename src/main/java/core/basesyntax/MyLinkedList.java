@@ -110,14 +110,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(T object) {
-        if (!isEmpty()) {
-            Node<T> current = first;
-            for (int i = 0; i < size; i++) {
-                if (object == current.value || object != null && object.equals(current.value)) {
-                    return current;
-                }
-                current = current.next;
+        Node<T> current = first;
+        for (int i = 0; i < size; i++) {
+            if (object == current.value || object != null && object.equals(current.value)) {
+                return current;
             }
+            current = current.next;
         }
         return null;
     }
@@ -138,34 +136,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is out of Bounds");
+            throw new IndexOutOfBoundsException("Index " + index
+                    + " is outside the bounds of an array of size " + size);
         }
     }
 
     private boolean unlink(Node<T> target) {
         if (size == 1) {
             first = last = null;
-            size--;
-            return true;
         } else if (target == first) {
             Node<T> rightNode = target.next;
             rightNode.prev = null;
             first = rightNode;
-            size--;
-            return true;
         } else if (target == last) {
             Node<T> leftNode = target.prev;
             leftNode.next = null;
             last = leftNode;
-            size--;
-            return true;
         } else {
             Node<T> leftNode = target.prev;
             Node<T> rightNode = target.next;
             leftNode.next = rightNode;
             rightNode.prev = leftNode;
-            size--;
-            return true;
         }
+        size--;
+        return true;
     }
 }
