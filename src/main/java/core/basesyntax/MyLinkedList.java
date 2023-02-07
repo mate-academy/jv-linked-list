@@ -67,7 +67,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return elementByIndex.value;
     }
 
-
     @Override
     public boolean remove(T object) {
         Node<T> node = first;
