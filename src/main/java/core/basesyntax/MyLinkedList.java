@@ -9,13 +9,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> oldLast = last;
+        Node<T> lastNode = last;
         Node<T> newNode = new Node<>(last, value, null);
         last = newNode;
         if (first == null) {
             first = newNode;
         } else {
-            oldLast.next = newNode;
+            lastNode.next = newNode;
         }
         size++;
     }
@@ -26,6 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
+        checkIndex(index);
         if (index == 0) {
             Node<T> newNode = new Node<>(null, value, first);
             first.prev = newNode;
@@ -49,24 +50,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
+        checkIndex(index);
         return findElementByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        Node<T> element = findElementByIndex(index);
-        T oldValue = element.value;
-        element.value = value;
+        checkIndex(index);
+        T oldValue = findElementByIndex(index).value;
+        findElementByIndex(index).value = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
+        checkIndex(index);
         Node<T> elementByIndex = findElementByIndex(index);
         unlink(elementByIndex);
+        size--;
         return elementByIndex.value;
     }
-
 
     @Override
     public boolean remove(T object) {
@@ -74,6 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < size; i++) {
             if ((node.value != null && node.value.equals(object)) || node.value == object) {
                 unlink(node);
+                size--;
                 return true;
             }
             node = node.next;
@@ -95,29 +99,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 1) {
             first = null;
             last = null;
-            size--;
             return;
         }
-        if (node == first) {
+        if (node.equals(first)) {
             first = node.next;
-            size--;
             return;
         }
-        if (node == last) {
+        if (node.equals(last)) {
             last = node.prev;
-            size--;
             return;
         }
         node.prev.next = node.next;
         node.next.prev = node.prev;
-        size--;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index " + index + " " + "is not valid.");
+        }
     }
 
     private Node<T> findElementByIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " "
-                    + "is not valid for size: " + size);
-        }
         Node<T> node = null;
         if (index <= (size / 2)) {
             node = first;
