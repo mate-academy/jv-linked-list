@@ -1,12 +1,12 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private static final int DEFAULT_SIZE = 0;
     private Node<T> head;
     private Node<T> tail;
+    private int size = DEFAULT_SIZE;
 
     public MyLinkedList() {
     }
@@ -28,14 +28,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            Node<T> oldNode = findByIndex(index);
-            Node<T> newNode = new Node<>(oldNode.prev, value, oldNode);
-            if (oldNode != head) {
-                oldNode.prev.next = newNode;
+            Node<T> prevNode = findByIndex(index);
+            Node<T> newNode = new Node<>(prevNode.prev, value, prevNode);
+            if (prevNode != head) {
+                prevNode.prev.next = newNode;
             } else {
                 head = newNode;
             }
-            oldNode.prev = newNode;
+            prevNode.prev = newNode;
             size++;
         }
     }
@@ -70,13 +70,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> node = head;
-        do {
-            if (Objects.equals(node.item, object)) {
+        while (node != null) {
+            if (node.item == object || (node.item != null && node.item.equals(object))) {
                 unlink(node);
                 return true;
             }
             node = node.next;
-        } while (node != tail);
+        }
         return false;
     }
 
