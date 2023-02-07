@@ -83,22 +83,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = null;
             last = null;
             size--;
+            unlink(elementByIndex);
             return elementByIndex.value;
         }
-        if (elementByIndex.prev == null) {
+        if (index == 0) {
             first = elementByIndex.next;
             size--;
+            unlink(elementByIndex);
             return elementByIndex.value;
         }
         if (elementByIndex.next == null) {
             last = elementByIndex.prev;
             elementByIndex.prev.next = null;
             size--;
+            unlink(elementByIndex);
             return elementByIndex.value;
         }
         elementByIndex.prev.next = elementByIndex.next;
         elementByIndex.next.prev = elementByIndex.prev;
         size--;
+        unlink(elementByIndex);
         return elementByIndex.value;
     }
 
@@ -108,6 +112,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < size; i++) {
             if ((node.value != null && node.value.equals(object)) || node.value == object) {
                 remove(i);
+                unlink(node);
                 return true;
             }
             node = node.next;
@@ -124,6 +129,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean isEmpty() {
         return size == 0;
     }
+
+    private void unlink(Node<T> node) {
+        node.next = null;
+        node.prev = null;
+    }
+
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index " + index + " " + "is not valid.");
