@@ -8,9 +8,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
 
     private static class Node<E> {
-        E value;
-        Node<E> next;
-        Node<E> prev;
+        private E value;
+        private Node<E> next;
+        private Node<E> prev;
 
         Node(Node<E> prev, E element, Node<E> next) {
             this.value = element;
@@ -26,8 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         last = newNode;
         if (first == null) {
             first = newNode;
-        }
-        else {
+        } else {
             lastNode.next = newNode;
         }
         size++;
@@ -140,6 +139,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index " + index + " " + "is not valid.");
         }
     }
+
     private Node<T> findElementByIndex(int index) {
         Node<T> node = null;
         if (index <= (size / 2)) {
@@ -150,7 +150,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         if (index >= size / 2) {
             node = last;
-            for (int i = size - 1; i > index ; i--) {
+            for (int i = size - 1; i > index; i--) {
                 node = node.prev;
             }
         }
