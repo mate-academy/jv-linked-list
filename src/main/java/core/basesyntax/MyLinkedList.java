@@ -84,7 +84,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-
     private void linkTop(T value) {
         Node<T> oldTop = top;
         Node<T> newNode = new Node<>(null, value, oldTop);
