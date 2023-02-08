@@ -4,7 +4,6 @@ import java.util.List;
 import org.w3c.dom.Node;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private int size;
     private Node<T> first;
     private Node<T> last;
@@ -110,9 +109,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node findByIndex(int index) {
         checkIndex(index);
-        Node<T> currentNode = first;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
+        Node<T> currentNode;
+        if (index <= size / 2) {
+            currentNode = first;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+        } else {
+            currentNode = last;
+            for (int i = size - 1; i > index; i--) {
+                currentNode = currentNode.prev;
+            }
         }
         return currentNode;
     }
