@@ -43,13 +43,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkItemIndex(index);
         return getNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkItemIndex(index);
         Node<T> k = getNodeByIndex(index);
         T updatedValue = k.item;
         k.item = value;
@@ -58,7 +56,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkItemIndex(index);
         return unLink(getNodeByIndex(index));
     }
 
@@ -137,6 +134,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
+        checkItemIndex(index);
         Node<T> k;
         if (index < (size / 2)) {
             k = top;
