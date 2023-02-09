@@ -9,7 +9,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        final Node<T> newNode = new Node<>(value);
+        final Node<T> newNode = new Node<>(null, value, null);
 
         if (isEmpty()) {
             first = newNode;
@@ -26,7 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         checkIndexExclusive(index);
 
-        final Node<T> newNode = new Node<>(value);
+        final Node<T> newNode = new Node<>(null, value, null);
         final Node<T> nodeAtIndex = getNodeByIndex(index);
 
         if (isEmpty()) {
@@ -86,28 +86,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         final Node<T> node = getNodeByIndex(index);
         unlink(node);
-        size--;
 
         return node.value;
     }
 
     @Override
     public boolean remove(T object) {
-        boolean removed = false;
         Node<T> node = first;
 
         while (node != null) {
             if (objectsEquals(object, node.value)) {
                 unlink(node);
-                size--;
-                removed = true;
-                break;
+                return true;
             }
 
             node = node.next;
         }
 
-        return removed;
+        return false;
     }
 
     @Override
@@ -132,13 +128,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 1) {
             last = null;
             first = null;
-        } else if (first == node || first != null && first.equals(node)) {
+        } else if (objectsEquals(first, node)) {
             first.next.prev = null;
             first = first.next;
-        } else if (last == node || last != null && last.equals(node)) {
+        } else if (objectsEquals(last, node)) {
             last.prev.next = null;
             last = last.prev;
         }
+
+        size--;
     }
 
     private Node<T> getNodeByIndex(int index) {
@@ -160,7 +158,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    private boolean objectsEquals(T a, T b) {
+    private boolean objectsEquals(Object a, Object b) {
         return a == b || a != null && a.equals(b);
     }
 
@@ -183,8 +181,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        private Node(T value) {
+        private Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
             this.value = value;
+            this.next = next;
         }
     }
 }
