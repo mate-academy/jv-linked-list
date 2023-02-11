@@ -26,7 +26,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkIndexInBounds(index);
         addBeforeIndex(value, index);
         size++;
     }
@@ -41,20 +40,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndexInBounds(index);
-        Node<T> node = getNode(index);
-        return node.value;
+        return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndexInBounds(index);
         Node<T> node = getNode(index);
-        if (node != null) {
-            T result = node.value;
-            node.value = value;
-            return result;
-        }
-        return value;
+        T result = node.value;
+        node.value = value;
+        return result;
     }
 
     @Override
@@ -92,32 +86,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         checkIndexInBounds(index);
-        int currentIndex = 0;
-        Node<T> getNode = head;
-        while (getNode != null) {
-            if (index == currentIndex) {
-                return getNode;
+        Node<T> getNode;
+        if (index <= size / 2) {
+            getNode = head;
+            for (int i = 0; i < index; i++) {
+                getNode = getNode.next;
             }
-            getNode = getNode.next;
-            currentIndex++;
+        } else {
+            getNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                getNode = getNode.prev;
+            }
         }
-        return null;
+        return getNode;
     }
 
     private void addBeforeIndex(T value, int index) {
-        checkIndexInBounds(index);
-        Node<T> node = getNode(index);
-        Node<T> nodeValue = new Node<>(null, value, null);
-        if (node.equals(head)) {
-            nodeValue.next = node;
-            node.prev = nodeValue;
-            head = nodeValue;
-            return;
+        Node<T> next = getNode(index);
+        Node<T> prev = next.prev;
+        Node<T> newNode = new Node<>(prev, value, next);
+        if (prev == null) {
+            head = newNode;
+        } else {
+            prev.next = newNode;
         }
-        nodeValue.next = node;
-        nodeValue.prev = node.prev;
-        node.prev.next = nodeValue;
-        node.prev = nodeValue;
+        next.prev = newNode;
     }
 
     private void unlink(Node<T> node) {
