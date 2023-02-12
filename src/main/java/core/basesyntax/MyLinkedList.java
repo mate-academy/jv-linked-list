@@ -9,13 +9,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        final Node<T> newNode = new Node<>(null, value, null);
+        final Node<T> newNode = new Node<>(last, value, null);
 
         if (isEmpty()) {
             first = newNode;
         } else {
             last.next = newNode;
-            newNode.prev = last;
         }
 
         last = newNode;
@@ -24,10 +23,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexExclusive(index);
-
         final Node<T> newNode = new Node<>(null, value, null);
-        final Node<T> nodeAtIndex = getNodeByIndex(index);
+        final Node<T> nodeAtIndex = getNodeByIndexExclusive(index);
 
         if (isEmpty()) {
             first = newNode;
@@ -52,10 +49,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null) {
-            return;
-        }
-
         for (T object : list) {
             add(object);
         }
@@ -63,16 +56,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         final Node<T> node = getNodeByIndex(index);
-
         return node.value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
-
         final Node<T> node = getNodeByIndex(index);
         final T oldValue = node.value;
         node.value = value;
@@ -82,8 +71,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-
         final Node<T> node = getNodeByIndex(index);
         unlink(node);
 
@@ -140,6 +127,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
+        checkIndex(index);
+        return getNode(index);
+    }
+
+    private Node<T> getNodeByIndexExclusive(int index) {
+        checkIndexExclusive(index);
+        return getNode(index);
+    }
+
+    private Node<T> getNode(int index) {
         final int middle = index / 2;
         Node<T> node;
 
