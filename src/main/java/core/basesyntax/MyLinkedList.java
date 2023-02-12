@@ -56,37 +56,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index do not exist");
+        indexExistCheck(index);
+        Node<T> currentNode = head;
+        T result;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
         }
-        Node<T> result = head;
-        if (index == 0) {
-            Node<T> node = new Node<>(null, value, result.next);
-            result.next.prev = node;
-            head = node;
-            return result.value;
-        } else if (index == size - 1) {
-            result = tail;
-            Node<T> node = new Node<>(result.prev, value, null);
-            result.prev.next = node;
-            tail = node;
-            return result.value;
-        } else {
-            for (int i = 0; i < index; i++) {
-                result = result.next;
-            }
-            Node<T> node = new Node<>(result.prev, value, result.next);
-            result.next.prev = node;
-            result.prev.next = node;
-            return result.value;
-        }
+        result = currentNode.value;
+        currentNode.value = value;
+        return result;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index do not exist");
-        }
+        indexExistCheck(index);
         Node<T> result = removeNode(index);
         return result.value;
     }
@@ -103,7 +86,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             index++;
             currentNode = currentNode.next;
         }
-        if(index > size - 1){
+        if (index > size - 1) {
             return false;
         }
         removeNode(index);
@@ -118,6 +101,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void indexExistCheck(int index){
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index do not exist");
+        }
     }
 
     private Node<T> removeNode(int index) {
