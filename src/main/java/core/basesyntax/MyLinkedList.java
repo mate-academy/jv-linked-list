@@ -3,10 +3,10 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    int size;
+    private int size;
 
-    Node<T> head;
-    Node<T> tail;
+    private Node<T> head;
+    private Node<T> tail;
 
     @Override
     public void add(T value) {
@@ -98,7 +98,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node <T> findNode(int index){
+    private Node<T> findNode(int index) {
         Node<T> currentNode = head;
         for (int i = 0; i < index; i++) {
             currentNode = currentNode.next;
@@ -106,7 +106,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    private void indexExistCheck(int index){
+    private void indexExistCheck(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index do not exist");
         }
@@ -164,9 +164,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     static class Node<T> {
-        Node<T> prev;
-        T value;
-        Node<T> next;
+        private Node<T> prev;
+        private T value;
+        private Node<T> next;
 
         public Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
