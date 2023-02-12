@@ -42,9 +42,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index + 1 > size) {
-            throw new IndexOutOfBoundsException("Index do not exist");
-        }
+        indexExistCheck(index);
         Node<T> result = head;
         int counter = 0;
         while (counter != index) {
@@ -57,11 +55,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         indexExistCheck(index);
-        Node<T> currentNode = head;
+        Node<T> currentNode = findNode(index);
         T result;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
         result = currentNode.value;
         currentNode.value = value;
         return result;
@@ -103,6 +98,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private Node <T> findNode(int index){
+        Node<T> currentNode = head;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
+        }
+        return currentNode;
+    }
+
     private void indexExistCheck(int index){
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index do not exist");
@@ -122,9 +125,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail.prev.next = null;
             tail = tail.prev;
         } else {
-            for (int i = 0; i < index; i++) {
-                currentNode = currentNode.next;
-            }
+            currentNode = findNode(index);
             currentNode.prev.next = currentNode.next;
             currentNode.next.prev = currentNode.prev;
         }
@@ -147,10 +148,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addByIndex(T value, int index) {
-        Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
+        Node<T> currentNode = findNode(index);
         Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
         currentNode.prev.next = newNode;
         currentNode.prev = newNode;
