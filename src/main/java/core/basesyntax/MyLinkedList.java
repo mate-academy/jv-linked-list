@@ -88,42 +88,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index do not exist");
         }
-        Node<T> result = head;
-        if (size == 1) { // delete head if only head exist
-            Node<T> node = new Node<>(null, null, null);
-            head = node;
-            tail = node;
-            size--;
-            return result.value;
-        }
-        if (index == 0) { // delete head
-            result = head.next;
-            Node<T> node = new Node<>(null, result.value, result.next);
-            head = node;
-            result.next.prev = node;
-            size--;
-            return result.prev.value;
-        }
-        if (index == size - 1) { //delete tail
-            result = tail;
-            result.prev.next = null;
-            tail = result.prev;
-            size--;
-            return result.value;
-        } else { // delete middle
-            for (int i = 0; i < index; i++) {
-                result = result.next;
-            }
-            result.next.prev = result.prev;
-            result.prev.next = result.next;
-            size--;
-            return result.value;
-        }
+        Node<T> result = removeNode(index);
+        return result.value;
     }
 
     @Override
     public boolean remove(T object) {
-        return false;
+        int index = 0;
+        Node<T> currentNode = head;
+        for (int i = 0; i <= size - 1; i++) {
+            if (object == currentNode.value || object != null
+                    && object.equals(currentNode.value)) {
+                break;
+            }
+            index++;
+            currentNode = currentNode.next;
+        }
+        if(index > size - 1){
+            return false;
+        }
+        removeNode(index);
+        return true;
     }
 
     @Override
@@ -134,6 +119,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private Node<T> removeNode(int index) {
+        Node<T> currentNode = head;
+        if (size == 1) {
+            head = null;
+            tail = null;
+        } else if (index == 0) {
+            head.next.prev = null;
+            head = head.next;
+        } else if (index == size - 1) {
+            currentNode = tail;
+            tail.prev.next = null;
+            tail = tail.prev;
+        } else {
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+            currentNode.prev.next = currentNode.next;
+            currentNode.next.prev = currentNode.prev;
+        }
+        size--;
+        return currentNode;
     }
 
     private void addFirstHead(T value) {
