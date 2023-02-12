@@ -59,7 +59,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index do not exist");
         }
-
         Node<T> result = head;
         if (index == 0) {
             Node<T> node = new Node<>(null, value, result.next);
