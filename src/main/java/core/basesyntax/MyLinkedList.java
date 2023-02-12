@@ -90,7 +90,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         Node<T> result = head;
         if (size == 1) { // delete head if only head exist
-            removeOnlyHead();
+            Node<T> node = new Node<>(null, null, null);
+            head = node;
+            tail = node;
+            size--;
             return result.value;
         }
         if (index == 0) { // delete head
@@ -131,13 +134,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void removeOnlyHead(){
-        Node<T> node = new Node<>(null, null, null);
-        head = node;
-        tail = node;
-        size--;
     }
 
     private void addFirstHead(T value) {
