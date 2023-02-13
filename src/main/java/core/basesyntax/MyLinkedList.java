@@ -66,16 +66,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i <= size - 1; i++) {
             if (object == currentNode.value || object != null
                     && object.equals(currentNode.value)) {
-                break;
+                remove(index);
+                return true;
             }
             index++;
             currentNode = currentNode.next;
         }
-        if (index > size - 1) {
             return false;
-        }
-        removeNode(index);
-        return true;
     }
 
     @Override
