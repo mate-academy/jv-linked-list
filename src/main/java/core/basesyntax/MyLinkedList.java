@@ -26,7 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == 0) {
             addNewHead(value);
         } else {
-            addByIndex(value, index);
+            addBefore(value, findNode(index));
         }
     }
 
@@ -55,24 +55,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         indexExistCheck(index);
-        Node<T> result = removeNode(index);
+        Node<T> result = findNode(index);
+        removeNode(result);
         return result.value;
     }
 
-    @Override
     public boolean remove(T object) {
-        int index = 0;
-        Node<T> currentNode = head;
-        for (int i = 0; i <= size - 1; i++) {
-            if (object == currentNode.value || object != null
-                    && object.equals(currentNode.value)) {
-                remove(index);
+        Node<T> nodeToRemove = head;
+        while (nodeToRemove != null) {
+            if (object == nodeToRemove.value || object != null
+                    && object.equals(nodeToRemove.value)) {
+                removeNode(nodeToRemove);
                 return true;
             }
-            index++;
-            currentNode = currentNode.next;
+            nodeToRemove = nodeToRemove.next;
         }
-            return false;
+        return false;
     }
 
     @Override
@@ -107,25 +105,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> removeNode(int index) {
-        Node<T> currentNode = head;
-        if (size == 1) {
-            head = null;
-            tail = null;
-        } else if (index == 0) {
-            head.next.prev = null;
-            head = head.next;
-        } else if (index == size - 1) {
-            currentNode = tail;
-            tail.prev.next = null;
-            tail = tail.prev;
+    private void removeNode(Node<T> node) {
+        if (node == head) {
+            head = node.next;
+        } else if (node == tail) {
+            tail = node.prev;
         } else {
-            currentNode = findNode(index);
-            currentNode.prev.next = currentNode.next;
-            currentNode.next.prev = currentNode.prev;
+            node.next.prev = node.prev;
+            node.prev.next = node.next;
         }
         size--;
-        return currentNode;
     }
 
     private void addFirstHead(T value) {
@@ -142,11 +131,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void addByIndex(T value, int index) {
-        Node<T> currentNode = findNode(index);
-        Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
-        currentNode.prev.next = newNode;
-        currentNode.prev = newNode;
+    private void addBefore(T value, Node<T> node) {
+        Node<T> newNode = new Node<>(node.prev, value, node);
+        node.prev.next = newNode;
+        node.prev = newNode;
         size++;
     }
 
