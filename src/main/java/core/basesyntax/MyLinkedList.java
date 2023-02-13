@@ -3,14 +3,14 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> first;
     private Node<T> last;
 
     @Override
     public void add(T value) {
         if (size != 0) {
-            getInLast(last, value);
+            addLast(last, value);
         } else {
             Node<T> newNode = new Node<>(null, value, null);
             size++;
@@ -25,17 +25,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        if (0 <= index && index < size) {
-            Node<T> item = getNodeByIndex(index);
-            if (item == first) {
-                getInFirst(item, value);
-                return;
-            }
-            getInMiddle(item, value);
+        checkIndex(index);
+        Node<T> item = getNodeByIndex(index);
+        if (item == first) {
+            addFirst(item, value);
             return;
         }
-        throw new IndexOutOfBoundsException("You can not insert in "
-                + index + " only 0 - " + (size - 1));
+        addBefore(item, value);
+        return;
     }
 
     @Override
@@ -47,14 +44,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        isElementIndex(index);
+        checkIndex(index);
         Node<T> item = getNodeByIndex(index);
         return item.item;
     }
 
     @Override
     public T set(T value, int index) {
-        isElementIndex(index);
+        checkIndex(index);
         MyLinkedList.Node<T> item = getNodeByIndex(index);
         T oldValue = item.item;
         item.item = value;
@@ -65,7 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Node<T> nodeToDelete = getNodeByIndex(index);
         T removeItemValue = nodeToDelete.item;
-        getOutNode(nodeToDelete);
+        unlink(nodeToDelete);
         return removeItemValue;
     }
 
@@ -74,7 +71,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> item = first;
         for (int i = 0; i < size; i++) {
             if (object == item.item || item.item != null && item.item.equals(object)) {
-                getOutNode(item);
+                unlink(item);
                 return true;
             }
             item = item.next;
@@ -92,7 +89,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private boolean isElementIndex(int index) {
+    private boolean checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
@@ -100,45 +97,45 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        isElementIndex(index);
+        checkIndex(index);
         if (index < (size >> 1)) {
-            Node<T> x = first;
+            Node<T> pointer = first;
             for (int i = 0; i < index; i++) {
-                x = x.next;
+                pointer = pointer.next;
             }
-            return x;
+            return pointer;
         } else {
-            Node<T> x = last;
+            Node<T> pointer = last;
             for (int i = size - 1; i > index; i--) {
-                x = x.prev;
+                pointer = pointer.prev;
             }
-            return x;
+            return pointer;
         }
 
     }
 
-    private void getInLast(Node<T> last, T value) {
+    private void addLast(Node<T> last, T value) {
         Node<T> newNode = new Node<>(last, value, null);
         last.next = newNode;
         this.last = newNode;
         size++;
     }
 
-    private void getInMiddle(Node<T> item, T value) {
+    private void addBefore(Node<T> item, T value) {
         Node<T> newNode = new Node<>(item.prev, value, item);
         newNode.prev.next = newNode;
         item.prev = newNode;
         size++;
     }
 
-    private void getInFirst(Node<T> first, T value) {
+    private void addFirst(Node<T> first, T value) {
         Node<T> newNode = new Node<>(null, value, first);
         first.prev = newNode;
         this.first = newNode;
         size++;
     }
 
-    private void getOutNode(Node<T> nodeToDelete) {
+    private void unlink(Node<T> nodeToDelete) {
         size--;
         if (size == 0) {
             first = null;
