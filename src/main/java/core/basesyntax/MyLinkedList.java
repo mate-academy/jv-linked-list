@@ -4,7 +4,6 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
-
     private Node<T> head;
     private Node<T> tail;
 
@@ -22,12 +21,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index do not exist");
         }
-        if (index == 0 && size == 0) {
-            addFirstHead(value);
+        if (size == index) {
+            add(value);
         } else if (index == 0) {
             addNewHead(value);
-        } else if (index == size) {
-            addNewTail(value);
         } else {
             addByIndex(value, index);
         }
@@ -157,9 +154,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void addNewHead(T value) {
         Node<T> node = head;
-        Node<T> node1 = new Node<>(null, value, node);
-        node.prev = node1;
-        head = node1;
+        Node<T> newNode = new Node<>(null, value, node);
+        node.prev = newNode;
+        head = newNode;
         size++;
     }
 
