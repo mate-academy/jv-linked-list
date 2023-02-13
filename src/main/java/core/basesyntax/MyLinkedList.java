@@ -39,19 +39,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexExistCheck(index);
-        Node<T> result = head;
-        int counter = 0;
-        while (counter != index) {
-            result = result.next;
-            counter++;
-        }
+        Node<T> result = findNode(index);
         return result.value;
     }
 
     @Override
     public T set(T value, int index) {
-        indexExistCheck(index);
         Node<T> currentNode = findNode(index);
         T result;
         result = currentNode.value;
@@ -96,6 +89,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNode(int index) {
+        indexExistCheck(index);
         Node<T> currentNode = head;
         if (index <= size / 2) {
             for (int i = 0; i < index; i++) {
