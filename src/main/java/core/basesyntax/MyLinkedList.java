@@ -52,7 +52,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return oldVal;
     }
 
-
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size()) {
@@ -92,10 +91,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        T element;
-        Node<T> next;
-        Node<T> prev;
-
+       private T element;
+       private Node<T> next;
+       private Node<T> prev;
 
         public Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
