@@ -26,7 +26,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        addBeforeIndex(value, index);
+        Node<T> next = getNode(index);
+        Node<T> prev = next.prev;
+        Node<T> newNode = new Node<>(prev, value, next);
+        if (prev == null) {
+            head = newNode;
+        } else {
+            prev.next = newNode;
+        }
+        next.prev = newNode;
         size++;
     }
 
@@ -98,18 +106,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return getNode;
-    }
-
-    private void addBeforeIndex(T value, int index) {
-        Node<T> next = getNode(index);
-        Node<T> prev = next.prev;
-        Node<T> newNode = new Node<>(prev, value, next);
-        if (prev == null) {
-            head = newNode;
-        } else {
-            prev.next = newNode;
-        }
-        next.prev = newNode;
     }
 
     private void unlink(Node<T> node) {
