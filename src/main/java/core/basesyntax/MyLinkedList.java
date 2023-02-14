@@ -26,34 +26,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        int counter;
-        if (size == 0) {
+        if (size == 0) { //adding first element to empty LL
             firstNodeAdd(value);
             return;
         }
         Node<T> addNode = new Node<>(null, value, null);
         Node<T> currentNode;
+        if (index == 0) { //adding first element to LL
+            currentNode = head;
+            currentNode.prev = addNode;
+            addNode.next = currentNode;
+            size++;
+            head = addNode;
+            return;
+        }
         if (index <= size / 2) { //from head to tail
             currentNode = head;
-            if (index == 0) {
-                currentNode.prev = addNode;
-                addNode.next = currentNode;
-                size++;
-                head = addNode;
-                return;
-            } else {
-                counter = 1;
-                while (counter != index) {
-                    currentNode = currentNode.next;
-                    counter++;
-                }
+            for (int i = 1; i < index; i++) {
+                currentNode = currentNode.next;
             }
         } else { //from tail to head
             currentNode = tail;
-            counter = size;
-            while (counter != index) {
+            for (int i = size - 1; i >= index; i--) {
                 currentNode = currentNode.prev;
-                counter--;
             }
         }
         addNode.prev = currentNode;
@@ -77,37 +72,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        Node<T> currentNode;
-        if (index <= size / 2) { //from head to tail
-            currentNode = head;
-            for (int i = 1; i <= index; i++) {
-                currentNode = currentNode.next;
-            }
-        } else { // from tail to head
-            currentNode = tail;
-            for (int i = size - 2; i >= index; i--) {
-                currentNode = currentNode.prev;
-            }
-        }
-        return currentNode.value;
+        return searchingCurrentNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
         T oldValue;
-        Node<T> currentNode;
-        if (index <= size / 2) { //from head to tail
-            currentNode = head;
-            for (int i = 1; i <= index; i++) {
-                currentNode = currentNode.next;
-            }
-        } else { //from tail to head
-            currentNode = tail;
-            for (int i = size - 2; i >= index; i--) {
-                currentNode = currentNode.prev;
-            }
-        }
+        Node<T> currentNode = searchingCurrentNode(index);
         oldValue = currentNode.value;
         currentNode.value = value;
         return oldValue;
@@ -118,7 +90,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         T oldValue;
         Node<T> currentNode = head;
-        if (index == 0 && size == 1) {
+        if (index == 0 && size == 1) { //remove single element and make LL null
             oldValue = currentNode.value;
             size--;
             head = tail = null;
@@ -131,16 +103,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size--;
             return oldValue;
         }
-        if (index <= size / 2) { //from head to tail
-            for (int i = 1; i <= index; i++) {
-                currentNode = currentNode.next;
-            }
-        } else { //from tail to head
-            currentNode = tail;
-            for (int i = size - 2; i >= index; i--) {
-                currentNode = currentNode.prev;
-            }
-        }
+        currentNode = searchingCurrentNode(index);
         oldValue = currentNode.value;
         unlink(currentNode);
         size--;
@@ -213,5 +176,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             currentNode.next.prev = currentNode.prev;
         }
+    }
+
+    private Node<T> searchingCurrentNode(int index) { //only for Get, Set, Remove methods
+        Node<T> currentNode;
+        if (index <= size / 2) { //from head to tail
+            currentNode = head;
+            for (int i = 1; i <= index; i++) {
+                currentNode = currentNode.next;
+            }
+        } else { //from tail to head
+            currentNode = tail;
+            for (int i = size - 2; i >= index; i--) {
+                currentNode = currentNode.prev;
+            }
+        }
+        return currentNode;
     }
 }
