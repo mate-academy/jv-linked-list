@@ -4,6 +4,19 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
+    private class Node<T> {
+
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.value = value;
+            this.prev = prev;
+            this.next = next;
+        }
+    }
+
     private Node<T> head;
     private Node<T> tail;
     private int size;
