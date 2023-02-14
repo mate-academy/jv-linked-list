@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private Node<T> first;
     private Node<T> last;
     private int size;
@@ -17,7 +16,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException(
+                    "index is negative or index is bigger than size");
         }
         if (index == size) {
             linkLast(value);
@@ -35,17 +35,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkIndex(index);
         return node(index).element;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size()) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkIndex(index);
         Node<T> x = node(index);
         T oldVal = x.element;
         x.element = value;
@@ -54,9 +50,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkIndex(index);
         return unlink(node(index));
     }
 
@@ -108,7 +102,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void linkBefore(T e, Node<T> succ) {
         if (succ == null) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("Element is null");
         }
         final Node<T> prev = succ.prev;
         final Node<T> newNode = new Node<>(prev, e, succ);
@@ -138,7 +132,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T unlink(Node<T> x) {
-        // assert x != null;
         final T value = x.element;
         final Node<T> next = x.next;
         final Node<T> prev = x.prev;
@@ -159,5 +152,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         x.element = null;
         size--;
         return value;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(
+                    "index is negative or index is bigger than size");
+        }
     }
 }
