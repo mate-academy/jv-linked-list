@@ -60,11 +60,11 @@ public class MyLinkedListTest {
     @Test
     public void testAddManyData() {
         MyLinkedListInterface<String> linkedList = new MyLinkedList<>();
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 1001; i++) {
             linkedList.add("String" + i);
         }
-        Assert.assertEquals("Expected size is incorrect", 1000, linkedList.size());
-        for (int i = 0; i < 1000; i++) {
+        Assert.assertEquals("Expected size is incorrect", 1001, linkedList.size());
+        for (int i = 0; i < 1001; i++) {
             Assert.assertEquals("Test failed! Can't add multiple values correctly",
                     "String" + i, linkedList.get(i));
         }
