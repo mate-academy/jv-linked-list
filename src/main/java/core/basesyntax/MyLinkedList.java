@@ -29,11 +29,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         checkIndex(index);
         Node<T> node = getNodeByIndex(index);
+        Node<T> newNode = new Node<>(null, value, null);
+        size++;
         if (node == first) {
-            linkFirst(value);
+            newNode.next = first;
+            first.prev = newNode;
+            first = newNode;
             return;
         }
-        linkBefore(node, value);
+        newNode.prev = node.prev;
+        newNode.next = node;
+        newNode.prev.next = newNode;
+        node.prev = newNode;
     }
 
     @Override
@@ -111,21 +118,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return pointer;
-
-    }
-
-    private void linkBefore(Node<T> item, T value) {
-        Node<T> newNode = new Node<>(item.prev, value, item);
-        newNode.prev.next = newNode;
-        item.prev = newNode;
-        size++;
-    }
-
-    private void linkFirst(T value) {
-        Node<T> newNode = new Node<>(null, value, first);
-        first.prev = newNode;
-        this.first = newNode;
-        size++;
     }
 
     private void unlink(Node<T> nodeToDelete) {
