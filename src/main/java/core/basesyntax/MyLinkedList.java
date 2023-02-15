@@ -3,31 +3,17 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
-    private class Node<T> {
-
-        private T value;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.value = value;
-            this.prev = prev;
-            this.next = next;
-        }
-    }
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
 
-    public MyLinkedList() {
-    }
-
     @Override
     public void add(T value) {
         if (size == 0) {
-            firstNodeAdd(value);
+            Node<T> addNode = new Node<>(null, value, null);
+            head = addNode;
+            tail = addNode;
+            size++;
         } else {
             Node<T> addNode = new Node<>(tail, value, null);
             tail.next = addNode;
@@ -39,8 +25,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        if (size == 0) { //adding first element to empty LL
-            firstNodeAdd(value);
+        if (index == size) {
+            add(value);
             return;
         }
         Node<T> addNode = new Node<>(null, value, null);
@@ -85,14 +71,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return searchingCurrentNode(index).value;
+        return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
         T oldValue;
-        Node<T> currentNode = searchingCurrentNode(index);
+        Node<T> currentNode = getNode(index);
         oldValue = currentNode.value;
         currentNode.value = value;
         return oldValue;
@@ -116,10 +102,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size--;
             return oldValue;
         }
-        currentNode = searchingCurrentNode(index);
+        currentNode = getNode(index);
         oldValue = currentNode.value;
         unlink(currentNode);
-        size--;
         return oldValue;
     }
 
@@ -142,7 +127,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         unlink(currentNode);
-        size--;
         return true;
     }
 
@@ -153,29 +137,33 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        if (tail == null) {
-            return true;
+        return size == 0;
+    }
+
+    private class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.value = value;
+            this.prev = prev;
+            this.next = next;
         }
-        return false;
     }
 
     private void checkIndex(int index) { //for methods Get, Set, Remove
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Incorrect index");
+            throw new IndexOutOfBoundsException("Index is less than 0 "
+                    + "or bigger than LinkedList's size");
         }
     }
 
     private void checkIndexForAdd(int index) { //for method Add
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Incorrect index");
+            throw new IndexOutOfBoundsException("Index is less than 0 "
+                    + "or bigger than LinkedList's size");
         }
-    }
-
-    private void firstNodeAdd(T value) {
-        Node<T> addNode = new Node<>(null, value, null);
-        head = addNode;
-        tail = addNode;
-        size++;
     }
 
     private void unlink(Node<T> currentNode) {
@@ -189,9 +177,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             currentNode.next.prev = currentNode.prev;
         }
+        size--;
     }
 
-    private Node<T> searchingCurrentNode(int index) { //only for Get, Set, Remove methods
+    private Node<T> getNode(int index) { //only for Get, Set, Remove methods
         Node<T> currentNode;
         if (index <= size / 2) { //from head to tail
             currentNode = head;
