@@ -9,13 +9,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> currentNode = tail;
-        Node<T> newNode = new Node<>(currentNode, value, null);
+        Node<T> oldTail = tail;
+        Node<T> newNode = new Node<>(oldTail, value, null);
         tail = newNode;
         if (size == 0) {
             head = newNode;
         } else {
-            currentNode.next = newNode;
+            oldTail.next = newNode;
         }
         size++;
     }
@@ -60,10 +60,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndexInBounds(index);
         Node<T> result = getNode(index);
         unlink(result);
-        size--;
         return result.value;
     }
 
@@ -73,7 +71,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (node != null) {
             if (isEquals(object, node.value)) {
                 unlink(node);
-                size--;
                 return true;
             }
             node = node.next;
@@ -119,6 +116,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             tail = node.prev;
         }
+        size--;
     }
 
     private void checkIndexInBounds(int index) {
