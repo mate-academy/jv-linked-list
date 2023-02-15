@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int length;
@@ -62,8 +61,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         Node<T> elementToChange = getNode(index, false);
+        T oldItem = elementToChange.getItem();
         elementToChange.setItem(value);
-        return elementToChange.getItem();
+        return oldItem;
     }
 
     @Override
@@ -72,17 +72,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == length - 1) {
             elementToRemove.prev.next = null;
             tail = elementToRemove.prev;
-            length--;
-            return elementToRemove.getItem();
-        }
-        if (index == 0) {
+        } else if (index == 0) {
             elementToRemove.next.prev = null;
             head = elementToRemove.next;
-            length--;
-            return elementToRemove.getItem();
+        } else {
+            elementToRemove.next.prev = elementToRemove.prev;
+            elementToRemove.prev.next = elementToRemove.next;
         }
-        elementToRemove.next.prev = elementToRemove.prev;
-        elementToRemove.prev.next = elementToRemove.next;
         length--;
         return elementToRemove.getItem();
     }
@@ -138,7 +134,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-
     private boolean isInRightSide(int index) {
         return (length / 2) > index;
     }
@@ -182,16 +177,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             prev = null;
             next = null;
         }
-
-//        @Override
-//        public String toString() {
-//            return "Node{" +
-//                    "item=" + item +
-//                    ", next=" + next +
-//                    ", prev=" + prev +
-//                    '}';
-//        }
     }
-
-
 }
