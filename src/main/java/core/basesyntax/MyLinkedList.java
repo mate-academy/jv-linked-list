@@ -39,18 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = addNode;
             return;
         }
-        if (index <= size / 2) { //from head to tail
-            currentNode = head;
-            for (int i = 1; i < index; i++) {
-                currentNode = currentNode.next;
-            }
-        } else { //from tail to head
-            currentNode = tail;
-            for (int i = size - 1; i >= index; i--) {
-                currentNode = currentNode.prev;
-            }
-        }
-        addNode.prev = currentNode;
+        addNode.prev = currentNode = getNode(index - 1);
         addNode.next = currentNode.next;
         if (addNode.next == null) {
             tail = addNode;
@@ -87,23 +76,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T oldValue;
-        Node<T> currentNode = head;
-        if (index == 0 && size == 1) { //remove single element and make LL null
-            oldValue = currentNode.value;
-            size--;
-            head = tail = null;
-            return oldValue;
-        }
-        if (index == 0) {
-            currentNode.next.prev = null;
-            head = currentNode.next;
-            oldValue = currentNode.value;
-            size--;
-            return oldValue;
-        }
-        currentNode = getNode(index);
-        oldValue = currentNode.value;
+        Node<T> currentNode = getNode(index);
+        T oldValue = currentNode.value;
         unlink(currentNode);
         return oldValue;
     }
@@ -111,23 +85,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> currentNode = head;
-        if (object == null) {
-            while (object != currentNode.value) {
-                currentNode = currentNode.next;
-                if (currentNode == tail) {
-                    return false;
-                }
+        while (currentNode != null) {
+            if (currentNode.value == object || object != null && object.equals(currentNode.value)) {
+                unlink(currentNode);
+                return true;
             }
-        } else {
-            while (!object.equals(currentNode.value)) {
-                currentNode = currentNode.next;
-                if (currentNode == tail) {
-                    return false;
-                }
-            }
+            currentNode = currentNode.next;
         }
-        unlink(currentNode);
-        return true;
+        return false;
     }
 
     @Override
