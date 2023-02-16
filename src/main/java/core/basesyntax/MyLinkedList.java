@@ -31,7 +31,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         if (index == 0) {
             Node<T> newNode = new Node<T>(null, value, head);
-            head.prev = newNode;
+            head.setPrev(newNode);
             head = newNode;
         }
         Node<T> after = getNode(index, true);
@@ -70,14 +70,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Node<T> elementToRemove = getNode(index, false);
         if (index == length - 1) {
-            elementToRemove.prev.next = null;
-            tail = elementToRemove.prev;
+            elementToRemove.getPrev().setNext(null);
+            tail = elementToRemove.getPrev();
         } else if (index == 0) {
-            elementToRemove.next.prev = null;
-            head = elementToRemove.next;
+            elementToRemove.getNext().setPrev(null);
+            head = elementToRemove.getNext();
         } else {
-            elementToRemove.next.prev = elementToRemove.prev;
-            elementToRemove.prev.next = elementToRemove.next;
+            elementToRemove.getNext().setPrev(elementToRemove.getPrev());
+            elementToRemove.getPrev().setNext(elementToRemove.getNext());
         }
         length--;
         return elementToRemove.getItem();
@@ -93,7 +93,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 remove(i);
                 return true;
             }
-            current = current.next;
+            current = current.getNext();
         }
         return false;
     }
