@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
@@ -41,9 +42,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+    public void addAll(List<T> lists) {
+        for (T list : lists) {
+            add(list);
         }
     }
 
@@ -72,19 +73,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> currendNode = head; currendNode != null; currendNode = currendNode.next) {
-                if (currendNode.value == null) {
-                    removedLink(currendNode);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> currentNode = head; currentNode != null; currentNode = currentNode.next) {
-                if (object.equals(currentNode.value)) {
-                    removedLink(currentNode);
-                    return true;
-                }
+        for (Node<T> currentNode = head; currentNode != null; currentNode = currentNode.next) {
+            if (object == currentNode.value || Objects.equals(object, currentNode.value)) {
+                removedLink(currentNode);
+                return true;
             }
         }
         return false;
@@ -131,7 +123,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index!");
+            throw new IndexOutOfBoundsException("Invalid index: " + index + " !");
         }
     }
 
