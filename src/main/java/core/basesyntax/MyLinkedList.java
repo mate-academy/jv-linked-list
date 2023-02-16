@@ -58,17 +58,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        final Node<T> temp = new MyLinkedList.Node<>(null, value, null);
+        final Node<T> temp = new Node<>(null, value, null);
         if (index == 0) {
             temp.next = head;
             head.prev = temp;
             head = temp;
             size++;
         } else {
-            Node<T> current = head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
+            Node<T> current = getNode(index);
             temp.prev = current.prev;
             temp.next = current;
             current.prev.next = temp;
@@ -87,10 +84,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
+        Node<T> current = getNode(index);
         return current.item;
     }
 
@@ -98,10 +92,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         T temp;
         checkIndex(index);
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
+        Node<T> current = getNode(index);
         temp = current.item;
         current.item = value;
         return temp;
@@ -118,9 +109,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current = tail;
             removeLast();
         } else {
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
+            current = getNode(index);
             current.prev.next = current.next;
             current.next.prev = current.prev;
         }
@@ -170,4 +159,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Incorrect index" + index);
         }
     }
+
+    private Node<T> getNode(int index) {
+        Node<T> current = new Node<>(null, null, null);
+        if (index < size / 2) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size; i > (index + 1); i--) {
+                current = current.prev;
+            }
+        }
+        return current;
+    }
+
 }
