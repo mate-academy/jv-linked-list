@@ -36,12 +36,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Incorrect index " + index);
-        }
         if (index == size) {
             add(value);
             return;
+        } else {
+            checkIndex(index);
         }
         final Node<T> temp = new Node<>(null, value, null);
         if (index == 0) {
@@ -89,26 +88,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if ((object == head.item) || (object != null && object.equals(head.item))) {
-            unlink(head);
-            return true;
-        }
         Node<T> current = head;
-        while (current.next != null
-                && !((current.item == object)
-                || (current.item != null && current.item.equals(object)))) {
+        while (current != null) {
+            if ((object == current.item) || (object != null && object.equals(current.item))) {
+                unlink(current);
+                return true;
+            }
             current = current.next;
         }
-        if ((current.next == null && object != null)
-                || (object == null && current.equals(tail) && tail.item != null)) {
-            return false;
-        }
-        if (current.equals(tail)) {
-            unlink(tail);
-            return true;
-        }
-        unlink(current);
-        return true;
+        return false;
     }
 
     @Override
