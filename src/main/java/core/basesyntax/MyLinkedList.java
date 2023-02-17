@@ -96,18 +96,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return removedNode.item;
         }
         Node<T> currentNode = getNodeByIndex(index);
-        currentNode.prev.next = currentNode.next;
-        currentNode.next.prev = currentNode.prev;
+        unLink(currentNode);
         size--;
         return currentNode.item;
     }
 
     @Override
     public boolean remove(T object) {
-        if (!isValid(getIndexByValue(object))) {
+        int index = getIndexByValue(object);
+        if (!isValid(index)) {
             return false;
         }
-        remove(getIndexByValue(object));
+        remove(index);
         return true;
     }
 
@@ -119,6 +119,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void unLink(Node<T> currentNode) {
+        currentNode.prev.next = currentNode.next;
+        currentNode.next.prev = currentNode.prev;
+        currentNode = null;
     }
 
     private Node<T> getNodeByIndex(int index) {
