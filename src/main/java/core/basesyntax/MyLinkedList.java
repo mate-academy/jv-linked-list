@@ -9,6 +9,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
+        /* if we don`t have any Nodes*/
         if (size == 0) {
             head = new Node<>(null, value,null);
             tail = head;
@@ -26,10 +27,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index is not valid");
         } else {
+            /* if we add Node to the end*/
             if (index == size) {
                 add(value);
                 return;
             }
+            /* if we add Node to the beginning */
             if (index == 0) {
                 Node<T> newNode = new Node<>(null, value, head);
                 head.prev = newNode;
@@ -54,65 +57,58 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (indexIsValid(index)) {
-            return getNodeByIndex(index).item;
-        } else {
-            throw new IndexOutOfBoundsException("Index is not valid");
-        }
+        indexIsValid(index);
+        return getNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        if (indexIsValid(index)) {
-            T temp = getNodeByIndex(index).item;
-            getNodeByIndex(index).item = value;
-            return temp;
-        } else {
-            throw new IndexOutOfBoundsException("Index is not valid");
-        }
+        indexIsValid(index);
+        T temp = getNodeByIndex(index).item;
+        getNodeByIndex(index).item = value;
+        return temp;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is not valid");
-        } else {
-            if (size == 1 && index == 0) {
-                size--;
-                Node<T> removedNode = tail;
-                tail = head = null;
-                return removedNode.item;
-            }
-            if (index == size - 1) {
-                size--;
-                Node<T> removedNode = tail;
-                tail = tail.prev;
-                tail.next.prev = tail.next = null;
-                return removedNode.item;
-            }
-            if (index == 0) {
-                size--;
-                Node<T> removedNode = head;
-                head = head.next;
-                head.prev.next = head.prev = null;
-                return removedNode.item;
-            }
-            Node<T> currentNode = getNodeByIndex(index);
-            currentNode.prev.next = currentNode.next;
-            currentNode.next.prev = currentNode.prev;
+        indexIsValid(index);
+        /* if we need remove single Node */
+        if (size == 1 && index == 0) {
             size--;
-            return currentNode.item;
+            Node<T> removedNode = tail;
+            tail = head = null;
+            return removedNode.item;
         }
+        /* if we need remove Node from the end */
+        if (index == size - 1) {
+            size--;
+            Node<T> removedNode = tail;
+            tail = tail.prev;
+            tail.next.prev = tail.next = null;
+            return removedNode.item;
+        }
+        /* if we need remove Node from the beginning*/
+        if (index == 0) {
+            size--;
+            Node<T> removedNode = head;
+            head = head.next;
+            head.prev.next = head.prev = null;
+            return removedNode.item;
+        }
+        Node<T> currentNode = getNodeByIndex(index);
+        currentNode.prev.next = currentNode.next;
+        currentNode.next.prev = currentNode.prev;
+        size--;
+        return currentNode.item;
     }
 
     @Override
     public boolean remove(T object) {
-        if (getIndexByValue(object) == -1) {
+        if (!isValid(getIndexByValue(object))) {
             return false;
-        } else {
-            remove(getIndexByValue(object));
-            return true;
         }
+        remove(getIndexByValue(object));
+        return true;
     }
 
     @Override
@@ -126,9 +122,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
+        return index > size / 2 ? startWithTail(index) : startWithHead(index);
+    }
+
+    private Node<T> startWithHead(int index) {
         Node<T> currentNode = head;
         for (int i = 0; i < index; i++) {
             currentNode = currentNode.next;
+        }
+        return currentNode;
+    }
+
+    private Node<T> startWithTail(int index) {
+        Node<T> currentNode = tail;
+        for (int i = size - 1; i > index; i--) {
+            currentNode = currentNode.prev;
         }
         return currentNode;
     }
@@ -151,7 +159,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return element1 == element2 || element1 != null && element1.equals(element2);
     }
 
-    private boolean indexIsValid(int index) {
+    private void indexIsValid(int index) {
+        if (!isValid(index)) {
+            throw new IndexOutOfBoundsException("Index is not valid");
+        }
+    }
+
+    private boolean isValid(int index) {
         return index < size && index >= 0;
     }
 
