@@ -14,12 +14,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = head;
             tail.setPrev(head);
             head.setNext(head);
-        } else {
-            Node<T> newTail = new Node<T>(tail, value, null);
-            tail.setNext(newTail);
-            newTail.setPrev(tail);
-            tail = newTail;
+            length++;
+            return;
         }
+        Node<T> newTail = new Node<T>(tail, value, null);
+        tail.setNext(newTail);
+        newTail.setPrev(tail);
+        tail = newTail;
         length++;
     }
 
@@ -48,7 +49,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T element: list) {
+        for (T element : list) {
             add(element);
         }
     }
@@ -128,7 +129,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current = tail;
             for (int i = length; i > (index + 1); i--) {
                 current = current.getPrev();
-
             }
         }
         return current;
