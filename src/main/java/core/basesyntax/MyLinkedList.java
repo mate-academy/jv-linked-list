@@ -21,8 +21,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        final Node<T> l = tail;
-        final Node<T> temp = new Node<>(l, value, null);
+        final Node<T> temp = new Node<>(tail, value, null);
         if (tail == null) {
             tail = temp;
             head = temp;
