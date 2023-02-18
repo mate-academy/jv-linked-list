@@ -43,7 +43,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    Node<T> searchByIndex(int index) {
+    private Node<T> searchByIndex(int index) {
         Node<T> search;
         if (index < (size >> 1)) {
             search = head;
