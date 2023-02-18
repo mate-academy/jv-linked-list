@@ -155,4 +155,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean isEmpty() {
         return null == head ? true : false;
     }
+
+    private Node<T> isHeadOrLast(int index) {
+        return index <= (this.index / 2) ? head : last;
+    }
+
+    private Node<T> getNode(int index) {
+        currentNode = isHeadOrLast(index);
+        if (currentNode == head) {
+            for (int i = 1; i <= index; i++) {
+                currentNode = currentNode.next;
+            }
+            return currentNode;
+        }
+        for (int i = this.index; i > index; i--) {
+            currentNode = currentNode.prev;
+        }
+        return currentNode;
+    }
+
+    private boolean isValue(Node<T> node, T value) {
+        return (null == value && null == node.item) || (node.item.equals(value));
+    }
+
+    private void removeNode() {
+        nextNode = currentNode.next;
+        prevNode = currentNode.prev;
+        nextNode.prev = prevNode;
+        prevNode.next = nextNode;
+        index--;
+    }
 }
