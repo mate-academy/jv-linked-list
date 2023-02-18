@@ -14,7 +14,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (head == null) {
             tail = newNode;
             head = newNode;
-
         } else {
             tail.next = newNode;
             newNode.prev = tail;
@@ -32,7 +31,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         indexCheck(index);
         Node<T> currentNode = findByIndex(index);
-        Node<T> newNode = new Node(value, currentNode.prev, currentNode);
+        Node<T> newNode = new Node<>(value, currentNode.prev, currentNode);
         if (index == 0) {
             head = newNode;
         } else {
@@ -44,8 +43,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T node : list) {
+            add(node);
         }
     }
 
@@ -78,15 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (removeObject != null) {
             if (removeObject.value == object
                     || object != null && object.equals(removeObject.value)) {
-                if (removeObject == head) {
-                    head = removeObject.next;
-                } else if (removeObject == tail) {
-                    tail = removeObject.prev;
-                } else {
-                    removeObject.next.prev = removeObject.prev;
-                    removeObject.prev.next = removeObject.next;
-                }
-                size--;
+                unlink(removeObject);
                 return true;
             }
             removeObject = removeObject.next;
@@ -101,7 +92,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-
         return size == 0;
     }
 
