@@ -93,15 +93,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
+        T item;
         if (index == 0) {
+            item = head.item;
             head.item = value;
         } else if (index == this.index) {
+            item = last.item;
             last.item = value;
         } else {
             currentNode = getNode(index);
+            item = currentNode.item;
             currentNode.item = value;
         }
-        return value;
+        return item;
     }
 
     @Override
