@@ -49,6 +49,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         Node<T> newNode = new Node<>(value);
+        if (isEmpty() && index == 0) {
+            add(value);
+        }
         currentNode = isHeadOrLast(index);
         if (index == 0) {
             currentNode.prev = newNode;
