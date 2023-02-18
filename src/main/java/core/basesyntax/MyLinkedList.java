@@ -12,37 +12,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (isEmpty()) {
             head = new Node<T>(null, value, null);
             tail = head;
-            tail.setPrev(head);
-            head.setNext(head);
-            length++;
-            return;
+        } else {
+            tail.next = new Node<T>(tail, value, null);
+            tail = tail.next;
         }
-        Node<T> newTail = new Node<T>(tail, value, null);
-        tail.setNext(newTail);
-        newTail.setPrev(tail);
-        tail = newTail;
         length++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index == length || (isEmpty() && index > -1)) {
+        if (index < 0 || index > length) {
+            throw new IndexOutOfBoundsException("From add Index " + index + " is out of scope");
+        }
+        if (index == length) {
             add(value);
             return;
         }
-        if (index == 0) {
-            Node<T> newNode = new Node<T>(null, value, head);
-            head.setPrev(newNode);
-            head = newNode;
-        }
-        Node<T> after = getNode(index, true);
-        Node<T> before = after.getPrev();
+        Node<T> after = getNode(index);
+        Node<T> before = after.prev;
         Node<T> newNode = new Node<T>(before, value, after);
-        if (after != null) {
-            after.setPrev(newNode);
-        }
+        after.prev = newNode;
         if (before != null) {
-            before.setNext(newNode);
+            before.next = newNode;
+        } else {
+            head = newNode;
         }
         length++;
     }
@@ -56,45 +49,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return getNode(index, false).getItem();
+        return getNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        Node<T> elementToChange = getNode(index, false);
-        T oldItem = elementToChange.getItem();
-        elementToChange.setItem(value);
+        Node<T> elementToChange = getNode(index);
+        T oldItem = elementToChange.item;
+        elementToChange.item = value;
         return oldItem;
     }
 
     @Override
     public T remove(int index) {
-        Node<T> elementToRemove = getNode(index, false);
-        if (index == length - 1) {
-            elementToRemove.getPrev().setNext(null);
-            tail = elementToRemove.getPrev();
-        } else if (index == 0) {
-            elementToRemove.getNext().setPrev(null);
-            head = elementToRemove.getNext();
-        } else {
-            elementToRemove.getNext().setPrev(elementToRemove.getPrev());
-            elementToRemove.getPrev().setNext(elementToRemove.getNext());
-        }
+        Node<T> elementToRemove = getNode(index);
+        unlink(elementToRemove);
         length--;
-        return elementToRemove.getItem();
+        return elementToRemove.item;
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> current = head;
         for (int i = 0; i < length; i++) {
-            if (current.getItem() == object
-                    || current.getItem() != null
-                    && current.getItem().equals(object)) {
-                remove(i);
+            if (current.item == object
+                    || current.item != null
+                    && current.item.equals(object)) {
+                unlink(current);
+                length--;
                 return true;
             }
-            current = current.getNext();
+            current = current.next;
         }
         return false;
     }
@@ -109,33 +94,38 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return length == 0;
     }
 
-    private Node<T> getNode(int index, boolean isItAddOperation) {
-        if (isItAddOperation) {
-            if (index < 0 || index > length) {
-                throw new IndexOutOfBoundsException("From add Index " + index + " is out of scope");
-            }
-        } else {
-            if (index < 0 || index >= length) {
-                throw new IndexOutOfBoundsException("From add Index " + index + " is out of scope");
-            }
+    private Node<T> getNode(int index) {
+        if (index < 0 || index >= length) {
+            throw new IndexOutOfBoundsException("From add Index " + index + " is out of scope");
         }
         Node<T> current;
-        if (isInRightSide(index)) {
+        if ((length / 2) > index) {
             current = head;
             for (int i = 0; i < index; i++) {
-                current = current.getNext();
+                current = current.next;
             }
         } else {
             current = tail;
             for (int i = length; i > (index + 1); i--) {
-                current = current.getPrev();
+                current = current.prev;
             }
         }
         return current;
     }
 
-    private boolean isInRightSide(int index) {
-        return (length / 2) > index;
+    private void unlink(Node<T> node) {
+        if (node.next == null) {
+            if (node.prev != null) {
+                node.prev.next = null;
+            }
+            tail = node.prev;
+        } else if (node.prev == null) {
+            node.next.prev = null;
+            head = node.next;
+        } else {
+            node.next.prev = node.prev;
+            node.prev.next = node.next;
+        }
     }
 
     private static class Node<E> {
@@ -143,39 +133,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<E> next;
         private Node<E> prev;
 
-        public Node(Node<E> prev, E item, Node<E> next) {
+        private Node(Node<E> prev, E item, Node<E> next) {
             this.item = item;
             this.next = next;
             this.prev = prev;
-        }
-
-        public void setItem(E item) {
-            this.item = item;
-        }
-
-        public void setNext(Node<E> next) {
-            this.next = next;
-        }
-
-        public void setPrev(Node<E> prev) {
-            this.prev = prev;
-        }
-
-        public E getItem() {
-            return item;
-        }
-
-        public Node<E> getNext() {
-            return next;
-        }
-
-        public Node<E> getPrev() {
-            return prev;
-        }
-
-        private void unlink(Node<E> node) {
-            prev = null;
-            next = null;
         }
     }
 }
