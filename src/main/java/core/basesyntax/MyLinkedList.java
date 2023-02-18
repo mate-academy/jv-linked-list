@@ -98,14 +98,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
     
-    private void throwIndexOfBoundsException(int index) {
+    private Node<T> getNode(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index" + index + "out of bounds exception");
         }
-    }
-    
-    private Node<T> getNode(int index) {
-        throwIndexOfBoundsException(index);
         if (index < size / 2) {
             Node<T> node = head;
             for (int i = 0; i < index; i++) {
