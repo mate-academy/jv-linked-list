@@ -12,7 +12,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
         
-        private Node(T data, Node<T> prev, Node<T> next) {
+        private Node( Node<T> prev, T data, Node<T> next) {
             this.prev = prev;
             this.data = data;
             this.next = next;
@@ -21,7 +21,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value, tail, null);
+        Node<T> newNode = new Node<>( tail, value, null);
         if (tail == null) {
             head = newNode;
         } else {
@@ -37,7 +37,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
         } else {
             Node<T> node = getNode(index);
-            Node<T> newNode = new Node<>(value, node.prev, node);
+            Node<T> newNode = new Node<>(node.prev, value, node);
             if (node.prev != null) {
                 node.prev.next = newNode;
             } else {
