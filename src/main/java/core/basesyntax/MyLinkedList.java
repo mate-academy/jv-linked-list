@@ -48,6 +48,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        Node<T> newNode = new Node<>(value);
+        currentNode = isHeadOrLast(index);
+        if (index == 0) {
+            currentNode.prev = newNode;
+            newNode.next = currentNode;
+            head = newNode;
+            this.index++;
+        } else if (index == this.index + 1) {
+            add(value);
+        } else {
+            currentNode = getNode(index);
+            prevNode = currentNode.prev;
+            prevNode.next = newNode;
+            newNode.next = currentNode;
+            currentNode.prev = newNode;
+            newNode.prev = prevNode;
+            this.index++;
+        }
     }
 
     @Override
