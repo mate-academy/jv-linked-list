@@ -77,7 +77,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return null;
+        currentNode = head;
+        if (index == 0) {
+            return currentNode.item;
+        } else if (index == this.index) {
+            currentNode = last;
+            return currentNode.item;
+        }
+        currentNode = getNode(index);
+        return currentNode.item;
     }
 
     @Override
