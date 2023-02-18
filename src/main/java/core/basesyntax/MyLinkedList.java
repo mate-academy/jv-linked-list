@@ -14,6 +14,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         head = null;
         last = null;
     }
+
     private static class Node<T> {
         private T item;
         private Node<T> next;
@@ -29,15 +30,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(value);
-        Node<T> currentNode = head;
+        currentNode = head;
         if (head == null) {
+            index = 0;
             head = newNode;
+            last = newNode;
         } else {
             while (currentNode.next != null) {
                 currentNode = currentNode.next;
             }
             currentNode.next = newNode;
+            newNode.prev = currentNode;
             last = newNode;
+            index++;
         }
     }
 
