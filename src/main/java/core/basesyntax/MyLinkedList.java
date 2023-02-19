@@ -49,7 +49,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         Node<T> newNode = new Node<>(value);
-        if (isValidIndex(index)) {
+        if (index == 0 && isEmpty()) {
             add(value);
         }
         currentNode = isHeadOrLast(index);
@@ -81,7 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         currentNode = head;
-        if (index == 0) {
+        if (index == 0 && isValidIndex(index)) {
             return currentNode.item;
         } else if (index == this.index) {
             currentNode = last;
@@ -94,14 +94,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         T item;
-        if (index == 0) {
+        if (index == 0 && isValidIndex(index)) {
             item = head.item;
             head.item = value;
         } else if (index == this.index) {
             item = last.item;
             last.item = value;
         } else {
-            isValidIndex(index);
             currentNode = getNode(index);
             item = currentNode.item;
             currentNode.item = value;
@@ -111,7 +110,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index == 0) {
+        if (index == 0 && isValidIndex(index)) {
             head = head.next;
             head.prev = null;
             currentNode = head;
@@ -198,12 +197,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean isValidIndex(int index) {
-        if (isEmpty() && index == 0) {
-            return true;
-        } else if (index < 0 || index > this.index) {
+        if ((index < 0) || (isEmpty() && index > 0)
+                || index > this.index) {
             throw new IndexOutOfBoundsException("Not valid index");
         } else {
-            return false;
+            return true;
         }
     }
 }
