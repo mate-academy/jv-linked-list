@@ -49,16 +49,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         Node<T> newNode = new Node<>(value);
-        if (index == 0 && isEmpty()) {
-            add(value);
-        }
-        currentNode = isHeadOrLast(index);
-        if (isValidIndex(index) && index == 0) {
-            currentNode.prev = newNode;
-            newNode.next = currentNode;
+        if (!isEmpty() && index == 0) {
+            head.prev = newNode;
+            newNode.next = head;
             head = newNode;
             this.index++;
-        } else if (index == this.index) {
+        } else if (!isEmpty() && index == size()) {
+            add(value);
+        } else if (isEmpty() && index == 0){
             add(value);
         } else {
             currentNode = getNode(index);
