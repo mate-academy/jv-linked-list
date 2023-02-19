@@ -135,7 +135,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         if (isValue(head, object) && size() > 1) {
-            nextNode = currentNode.next;
+            nextNode = head.next;
             nextNode.prev = null;
             head = nextNode;
             index--;
