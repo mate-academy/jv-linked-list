@@ -165,7 +165,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> isHeadOrLast(int index) {
-        return index <= (this.index / 2) ? head : last;
+        return isValidIndex(index) && index <= (this.index / 2) ? head : last;
     }
 
     private Node<T> getNode(int index) {
