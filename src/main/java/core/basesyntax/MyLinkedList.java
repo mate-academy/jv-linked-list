@@ -141,7 +141,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             index--;
             return true;
         } else if (isValue(last, object) && size() > 1) {
-            prevNode = currentNode.prev;
+            prevNode = last.prev;
             prevNode.next = null;
             last = prevNode;
             index--;
