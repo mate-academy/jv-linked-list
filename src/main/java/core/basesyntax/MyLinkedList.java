@@ -10,6 +10,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static class Node<T> {
         private T value;
         private Node<T> next;
+        private Node<T> prev;
 
         public Node(T value) {
             this.value = value;
@@ -30,12 +31,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == 0) {
             newNode.next = head;
             head = newNode;
+            newNode.next.prev = newNode;
         } else if (index == size) {
             tail.next = newNode;
+            newNode.prev = tail;
             tail = newNode;
         } else {
             Node<T> current = getNode(index - 1);
             newNode.next = current.next;
+            newNode.prev = current;
+            newNode.next.prev = newNode;
             current.next = newNode;
         }
         size++;
@@ -75,10 +80,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = head.next;
             if (head == null) {
                 tail = null;
+            } else {
+                head.prev = null;
             }
         } else {
             Node<T> prev = getNode(index - 1);
-            removeValue = getNode(index).value;
+            removeValue = get(index);
             prev.next = prev.next.next;
         }
         size--;
@@ -109,9 +116,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        Node<T> current;
+        if ((size - index) < index) {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
+        } else {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
         }
         return current;
     }
