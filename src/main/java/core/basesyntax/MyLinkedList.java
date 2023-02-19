@@ -53,7 +53,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
         }
         currentNode = isHeadOrLast(index);
-        if (index == 0) {
+        if (index == 0 && isValidIndex(index)) {
             currentNode.prev = newNode;
             newNode.next = currentNode;
             head = newNode;
