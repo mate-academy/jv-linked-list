@@ -20,10 +20,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             addLastItem(value);
         } else {
             MyLinkedList.Node<T> findNodeAfterToAdd = findNodeByIndex(index).prev;
-            final MyLinkedList.Node<T> newNode = new MyLinkedList.Node<>(findNodeAfterToAdd.prev,
+            MyLinkedList.Node<T> nextNode = findNodeAfterToAdd.next;
+            MyLinkedList.Node<T> newNode = new MyLinkedList.Node<>(findNodeAfterToAdd,
                     value, findNodeAfterToAdd.next);
             findNodeAfterToAdd.next = newNode;
-            findNodeAfterToAdd.next.prev = newNode;
+            nextNode.prev = newNode;
             size++;
         }
     }
@@ -52,29 +53,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         MyLinkedList.Node<T> nodeToRemove = findNodeByIndex(index);
-        if (index == 0) {
-            return removeFirstNode();
-        } else if (index == size - 1) {
-            return removeLastNode();
-        } else {
-            final T oldItem = nodeToRemove.item;
-            nodeToRemove.next.prev = nodeToRemove.prev;
-            nodeToRemove.prev.next = nodeToRemove.next;
-            size--;
-            return oldItem;
-        }
+        return unlink(nodeToRemove, index);
     }
 
     @Override
     public boolean remove(T object) {
         MyLinkedList.Node<T> findNode = first;
         for (int i = 0; i < size; i++) {
-            if (findNode.item == null && object == null) {
-                remove(i);
-                return true;
-            }
-            if (findNode.item != null && findNode.item.equals(object)) {
-                remove(i);
+            if (findNode.item == object || findNode.item != null && findNode.item.equals(object)) {
+                unlink(findNode, i);
                 return true;
             }
             findNode = findNode.next;
@@ -148,11 +135,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
         } else {
-            MyLinkedList.Node<T> findNode = first;
-            for (int i = 0; i < index; i++) {
-                findNode = findNode.next;
+            if (index * 2 < size) {
+                MyLinkedList.Node<T> findNode = first;
+                for (int i = 0; i < index; i++) {
+                    findNode = findNode.next;
+                }
+                return findNode;
+            } else {
+                MyLinkedList.Node<T> findNode = last;
+                for (int i = size - 1; i > index; i--) {
+                    findNode = findNode.prev;
+                }
+                return findNode;
             }
-            return findNode;
         }
     }
 
@@ -161,6 +156,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         first = newNode;
         last = newNode;
         size++;
+    }
+
+    private T unlink(Node<T> nodeToUnlink, int index) {
+        if (index == 0) {
+            return removeFirstNode();
+        } else if (index == size - 1) {
+            return removeLastNode();
+        } else {
+            final T oldItem = nodeToUnlink.item;
+            nodeToUnlink.next.prev = nodeToUnlink.prev;
+            nodeToUnlink.prev.next = nodeToUnlink.next;
+            size--;
+            return oldItem;
+        }
     }
 
     private static class Node<T> {
