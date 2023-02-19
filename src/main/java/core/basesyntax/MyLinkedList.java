@@ -212,4 +212,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         last = null;
         index--;
     }
+
+    private T unlink(Node<T> node) {
+        T value = node.item;
+        Node<T> next = node.next;
+        Node<T> prev = node.prev;
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
+            node.prev = null;
+        }
+        if (next == null) {
+            last = prev;
+        } else {
+            next.prev = prev;
+            node.next = null;
+        }
+        node.item = null;
+        index--;
+        return value;
+    }
 }
