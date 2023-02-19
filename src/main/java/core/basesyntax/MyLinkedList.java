@@ -199,7 +199,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private boolean isValidIndex(int index) {
         if (isEmpty() && index == 0) {
             return true;
-        } else if (index < 0) {
+        } else if (index < 0 || index > this.index) {
             throw new IndexOutOfBoundsException("Not valid index");
         } else {
             return false;
