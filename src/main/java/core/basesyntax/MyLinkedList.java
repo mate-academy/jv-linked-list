@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node head;
@@ -27,57 +26,54 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         Node newNode = new Node(value);
         if (index == size) {
-            if (size == 0) {
-                tail = head = newNode;
-            } else {
-                tail.next = newNode;
-                newNode.prev = tail;
-                tail = newNode;
-            }
-            size++;
-            return;
+            addNodeWhenIndexEqualsSize(newNode);
+        } else {
+            Node findNode = findNode(index, "Can't add by index " + index);
+            insertNode(findNode, newNode);
         }
-        Node findNode = findNode(index);
-        if (findNode != null) {
-            newNode.next = findNode;
-            newNode.prev = findNode.prev;
-            if (findNode.prev != null) {
-                findNode.prev.next = newNode;
-            } else {
-                head = newNode;
-            }
-            findNode.prev = newNode;
-            size++;
-            return;
+    }
+
+    private void addNodeWhenIndexEqualsSize(Node newNode) {
+        if (size == 0) {
+            tail = head = newNode;
+        } else {
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
         }
-        throw new IndexOutOfBoundsException("Can't add by index " + index);
+        size++;
+    }
+
+    private void insertNode(Node findNode, Node newNode) {
+        newNode.next = findNode;
+        newNode.prev = findNode.prev;
+        if (head == findNode) {
+            head = newNode;
+        } else {
+            findNode.prev.next = newNode;
+        }
+        findNode.prev = newNode;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null) {
-            return;
-        }
-        for (T item : list) {
-            add(item);
+        if (list != null) {
+            for (T item : list) {
+                add(item);
+            }
         }
     }
 
     @Override
     public T get(int index) {
-        Node findNode = findNode(index);
-        if (findNode == null) {
-            throw new IndexOutOfBoundsException("Can't get by index " + index);
-        }
+        Node findNode = findNode(index, "Can't get by index " + index);
         return findNode.element;
     }
 
     @Override
     public T set(T value, int index) {
-        Node findNode = findNode(index);
-        if (findNode == null) {
-            throw new IndexOutOfBoundsException("Can't set by index " + index);
-        }
+        Node findNode = findNode(index, "Can't set by index " + index);
         T tmp = findNode.element;
         findNode.element = value;
         return tmp;
@@ -85,10 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node findNode = findNode(index);
-        if (findNode == null) {
-            throw new IndexOutOfBoundsException("Can't remove by index " + index);
-        }
+        Node findNode = findNode(index, "Can't remove by index " + index);
         return unlink(findNode);
     }
 
@@ -96,7 +89,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node currentNode = head;
         while (currentNode != null) {
-            if (Objects.equals(object, currentNode.element)) {
+            if (object == currentNode.element
+                    || object != null
+                    && object.equals(currentNode.element)) {
                 unlink(currentNode);
                 return true;
             }
@@ -115,9 +110,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node findNode(int index) {
+    private Node findNode(int index, String messageForException) {
         if (size == 0 || index < 0 || index >= size) {
-            return null;
+            throw new IndexOutOfBoundsException(messageForException);
         }
         return (index <= size >> 1) ? getNodeStartHead(index) : getNodeStartTail(index);
     }
