@@ -131,17 +131,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (isValue(last, object)) {
+        if (isValue(head, object) && size() > 1) {
+            nextNode = currentNode.next;
+            nextNode.prev = null;
+            head = nextNode;
+            index--;
+            return true;
+        } else if (isValue(last, object) && size() > 1) {
             prevNode = currentNode.prev;
             prevNode.next = null;
             last = prevNode;
             index--;
             return true;
-        }
-        if (isValue(head, object)) {
-            nextNode = currentNode.next;
-            nextNode.prev = null;
-            head = nextNode;
+        } else if (size() == 1) {
+            head = null;
+            last = null;
             index--;
             return true;
         }
@@ -149,6 +153,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (currentNode.next != null) {
             if (isValue(currentNode, object)) {
                 removeNode();
+                return true;
             }
             currentNode = currentNode.next;
         }
