@@ -155,6 +155,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
+        if (isEmpty()) {
+            return 0;
+        }
         return index + 1;
     }
 
