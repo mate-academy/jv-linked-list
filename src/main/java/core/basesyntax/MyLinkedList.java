@@ -109,7 +109,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         T value;
-        if (isValidIndex(index) && index == 0) {
+        if (size() == 1 && index == 0) {
+            value = head.item;
+            removeHeadAndLastNode();
+        } else if (isValidIndex(index) && index == 0) {
             value = head.item;
             head = head.next;
             head.prev = null;
@@ -144,9 +147,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             index--;
             return true;
         } else if (size() == 1) {
-            head = null;
-            last = null;
-            index--;
+            removeHeadAndLastNode();
             return true;
         }
         currentNode = head;
@@ -209,5 +210,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             return true;
         }
+    }
+
+    private void removeHeadAndLastNode() {
+        head = null;
+        last = null;
+        index--;
     }
 }
