@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -32,8 +31,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T elememt : list) {
+            add(elememt);
         }
     }
 
@@ -44,11 +43,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
-        Node<T> node = getNodeByIndex(index);
-        T x = node.value;
-        node.value = value;
-        return x;
+        Node<T> current = getNodeByIndex(index);
+        T future = current.value;
+        current.value = value;
+        return future;
     }
 
     @Override
@@ -88,13 +86,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 node = node.next;
             }
             return node;
-        } else {
-            Node<T> node = tail;
-            for (int i = size - 1; i > index; i--) {
-                node = node.prev;
-            }
-            return node;
         }
+        Node<T> node = tail;
+        for (int i = size - 1; i > index; i--) {
+            node = node.prev;
+        }
+        return node;
     }
 
     private void linkBefore(T value, Node<T> current) {
@@ -138,7 +135,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        public Node(Node<T> prev,T value, Node<T> next) {
+        public Node(Node<T> prev, T value, Node<T> next) {
             this.value = value;
             this.prev = prev;
             this.next = next;
