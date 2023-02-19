@@ -143,6 +143,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 }
                 currentNode = currentNode.next;
             }
+        } else if (size() == 1) {
+            removeHeadAndLastNode();
+            return true;
         } else {
             currentNode = head;
             while (currentNode.next != null) {
