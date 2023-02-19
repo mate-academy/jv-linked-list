@@ -192,4 +192,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         prevNode.next = nextNode;
         index--;
     }
+
+    private boolean isValidIndex(int index) {
+        if (isEmpty() && index == 0) {
+            return true;
+        } else if (index < 0) {
+            throw new IndexOutOfBoundsException("Not valid index");
+        } else {
+            return false;
+        }
+    }
 }
