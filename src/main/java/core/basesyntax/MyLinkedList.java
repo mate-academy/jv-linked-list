@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -50,8 +49,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T value : list) {
+            add(value);
         }
     }
 
@@ -76,18 +75,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             makeEmpty();
             return removedValue;
         }
-        if (index == size - 1) {
-            tail = currentNode.prev;
-            currentNode.prev.next = null;
-        } else {
-            currentNode.next.prev = currentNode.prev;
-        }
-        if (index == 0) {
-            head = currentNode.next;
-            currentNode.next.prev = null;
-        } else {
-            currentNode.prev.next = currentNode.next;
-        }
+        unlink(currentNode);
         size--;
         return removedValue;
     }
@@ -96,7 +84,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(current.value, object)) {
+            if (customEquals(current.value, object)) {
                 remove(i);
                 return true;
             }
@@ -123,20 +111,42 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         checkIndex(index);
-        if (index == 0) {
-            return head;
-        }
         Node<T> current = head;
-        for (int i = 0; i < index - 1; i++) {
-            current = current.next;
+        if ((size / 2) > index) {
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size; i > index + 1; i--) {
+                current = current.prev;
+            }
         }
-        return current.next;
+        return current;
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index >= size || isEmpty()) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(index
                     + " is invalid index for " + size);
         }
+    }
+
+    private void unlink(Node<T> currentNode) {
+        if (currentNode.next == null) {
+            tail = currentNode.prev;
+            currentNode.prev.next = null;
+        } else {
+            currentNode.next.prev = currentNode.prev;
+        }
+        if (currentNode.prev == null) {
+            head = currentNode.next;
+        } else {
+            currentNode.prev.next = currentNode.next;
+        }
+    }
+
+    private boolean customEquals(Object a, Object b) {
+        return a == null ? a == b : a.equals(b);
     }
 }
