@@ -81,7 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         currentNode = head;
-        if (index == 0 && isValidIndex(index)) {
+        if (isValidIndex(index) && index == 0) {
             return currentNode.item;
         } else if (index == this.index) {
             currentNode = last;
@@ -94,7 +94,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         T item;
-        if (index == 0 && isValidIndex(index)) {
+        if (isValidIndex(index) && index == 0) {
             item = head.item;
             head.item = value;
         } else if (index == this.index) {
