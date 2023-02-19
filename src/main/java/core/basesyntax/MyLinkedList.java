@@ -108,21 +108,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
+        T value;
         if (isValidIndex(index) && index == 0) {
+            value = head.item;
             head = head.next;
             head.prev = null;
             currentNode = head;
             this.index--;
         } else if (index == this.index) {
+            value = last.item;
             last = last.prev;
             last.next = null;
             currentNode = last;
             this.index--;
         } else {
             currentNode = getNode(index);
+            value = currentNode.item;
             removeNode();
         }
-        return currentNode.item;
+        return value;
     }
 
     @Override
