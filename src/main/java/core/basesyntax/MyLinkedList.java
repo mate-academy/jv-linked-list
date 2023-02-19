@@ -49,7 +49,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         Node<T> newNode = new Node<>(value);
-        if (isEmpty() && index == 0) {
+        if (isValidIndex(index)) {
             add(value);
         }
         currentNode = isHeadOrLast(index);
