@@ -1,24 +1,9 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node<T> head;
-    private Node<T> tail;
-    private int size;
-    
-    private static class Node<T> {
-        private T data;
-        private Node<T> next;
-        private Node<T> prev;
-        
-        private Node(Node<T> prev, T data, Node<T> next) {
-            this.prev = prev;
-            this.data = data;
-            this.next = next;
-        }
-    }
-    
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(tail, value, null);
@@ -72,16 +57,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Node<T> node = getNode(index);
         unlink(node);
-        size--;
         return node.data;
     }
     
     @Override
     public boolean remove(T object) {
         for (Node<T> node = head; node != null; node = node.next) {
-            if (object == null ? node.data == null : object.equals(node.data)) {
+            if (Objects.equals(object, node.data)) {
                 unlink(node);
-                size--;
                 return true;
             }
         }
@@ -98,9 +81,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
     
+    private Node<T> head;
+    private Node<T> tail;
+    private int size;
+    
+    private static class Node<T> {
+        private T data;
+        private Node<T> next;
+        private Node<T> prev;
+        
+        private Node(Node<T> prev, T data, Node<T> next) {
+            this.prev = prev;
+            this.data = data;
+            this.next = next;
+        }
+    }
+    
     private Node<T> getNode(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index" + index + "out of bounds exception");
+            throw new IndexOutOfBoundsException("Index: " + index + " out of bounds exception, current size: " + size);
         }
         if (index < size / 2) {
             Node<T> node = head;
@@ -129,5 +128,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             node.next.prev = node.prev;
         }
+        size--;
     }
 }
