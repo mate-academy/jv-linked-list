@@ -9,7 +9,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(tail, value,null);
+        Node<T> newNode = new Node<>(tail, value, null);
         if (head == null) {
             head = newNode;
             tail = newNode;
@@ -108,7 +108,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void indexValidation(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("");
+            throw new IndexOutOfBoundsException("Index " + index + " doesn't exist");
         }
     }
 
@@ -144,8 +144,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             node.next.prev = node.prev;
         }
-        node.prev = null;
-        node.next = null;
         size--;
     }
 }
