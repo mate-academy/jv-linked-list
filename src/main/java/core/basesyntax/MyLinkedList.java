@@ -7,7 +7,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    static class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node<T> next;
 
@@ -18,14 +18,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
-        if (head == null) {
-            head = tail = newNode;
-        } else {
-            tail.next = newNode;
-            tail = newNode;
-        }
-        size++;
+        add(value, size);
     }
 
     @Override
@@ -50,6 +43,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
+        if (list == null) {
+            return;
+        }
         for (T value : list) {
             add(value);
         }
@@ -129,4 +125,3 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 }
-
