@@ -101,6 +101,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             item = last.item;
             last.item = value;
         } else {
+            isValidIndex(index);
             currentNode = getNode(index);
             item = currentNode.item;
             currentNode.item = value;
