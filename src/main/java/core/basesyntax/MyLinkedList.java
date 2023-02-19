@@ -110,7 +110,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index == 0 && isValidIndex(index)) {
+        if (isValidIndex(index) && index == 0) {
             head = head.next;
             head.prev = null;
             currentNode = head;
