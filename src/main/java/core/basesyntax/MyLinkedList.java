@@ -56,7 +56,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.index++;
         } else if (!isEmpty() && index == size()) {
             add(value);
-        } else if (isEmpty() && index == 0){
+        } else if (isEmpty() && index == 0) {
             add(value);
         } else {
             currentNode = getNode(index);
