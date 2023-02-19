@@ -214,9 +214,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T unlink(Node<T> node) {
-        T value = node.item;
-        Node<T> next = node.next;
-        Node<T> prev = node.prev;
+        final T value = node.item;
+        final Node<T> next = node.next;
+        final Node<T> prev = node.prev;
         if (prev == null) {
             head = next;
         } else {
