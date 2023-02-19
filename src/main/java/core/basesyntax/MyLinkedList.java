@@ -3,45 +3,130 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private Node<T> head;
+    private Node<T> tail;
+    private int size;
+
+    static class Node<T> {
+        private T value;
+        private Node<T> next;
+
+        public Node(T value) {
+            this.value = value;
+        }
+    }
+
     @Override
     public void add(T value) {
+        Node<T> newNode = new Node<>(value);
+        if (head == null) {
+            head = tail = newNode;
+        } else {
+            tail.next = newNode;
+            tail = newNode;
+        }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
+        checkIndex(index, size + 1);
+        Node<T> newNode = new Node<>(value);
+        if (head == null) {
+            head = tail = newNode;
+        } else if (index == 0) {
+            newNode.next = head;
+            head = newNode;
+        } else if (index == size) {
+            tail.next = newNode;
+            tail = newNode;
+        } else {
+            Node<T> current = getNode(index - 1);
+            newNode.next = current.next;
+            current.next = newNode;
+        }
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
+        for (T value : list) {
+            add(value);
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndex(index, size);
+        return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        return null;
+        checkIndex(index, size);
+        Node<T> node = getNode(index);
+        T oldValue = node.value;
+        node.value = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIndex(index, size);
+        T removeValue;
+        if (index == 0) {
+            removeValue = head.value;
+            head = head.next;
+            if (head == null) {
+                tail = null;
+            }
+        } else {
+            Node<T> prev = getNode(index - 1);
+            removeValue = getNode(index).value;
+            prev.next = prev.next.next;
+        }
+        size--;
+        return removeValue;
     }
 
     @Override
     public boolean remove(T object) {
+        Node<T> current = head;
+        for (int i = 0; current != null; i++) {
+            if (current.value == object || current.value != null && current.value.equals(object)) {
+                remove(i);
+                return true;
+            }
+            current = current.next;
+        }
         return false;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return head == null;
+    }
+
+    private Node<T> getNode(int index) {
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        return current;
+    }
+
+    private void checkIndex(int index, int length) {
+        if (index < 0) {
+            throw new IndexOutOfBoundsException("Index can't be less than 0 " + index);
+        } else if (index > length - 1) {
+            throw new IndexOutOfBoundsException("Our storage has only "
+                    + length + " objects!");
+        }
     }
 }
+
