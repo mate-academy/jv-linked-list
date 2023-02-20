@@ -19,7 +19,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        add(value, size);
+        Node<T> newNode = new Node<>(value);
+        if (head == null) {
+            head = tail = newNode;
+        } else {
+            tail.next = newNode;
+            tail.next.prev = tail;
+            tail = newNode;
+        }
+        size++;
     }
 
     @Override
@@ -117,7 +125,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         Node<T> current;
-        if ((size - index) < index) {
+        if (size - index < index) {
             current = tail;
             for (int i = size - 1; i > index; i--) {
                 current = current.prev;
@@ -132,11 +140,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndex(int index, int length) {
-        if (index < 0) {
-            throw new IndexOutOfBoundsException("Index can't be less than 0 " + index);
-        } else if (index > length - 1) {
-            throw new IndexOutOfBoundsException("Our storage has only "
-                    + length + " objects!");
+        if (index < 0 || index > length - 1) {
+            throw new IndexOutOfBoundsException("Wrong index " + index);
         }
     }
 }
