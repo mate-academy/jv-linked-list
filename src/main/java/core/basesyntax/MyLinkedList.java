@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(MyLinkedList.Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     @Override
     public void add(T value) {
         final Node<T> temp = new Node<>(tail, value, null);
@@ -38,23 +26,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
             return;
-        } else {
-            checkIndex(index);
         }
+        checkIndex(index);
         final Node<T> temp = new Node<>(null, value, null);
         if (index == 0) {
             temp.next = head;
             head.prev = temp;
             head = temp;
             size++;
-        } else {
-            Node<T> current = getNode(index);
-            temp.prev = current.prev;
-            temp.next = current;
-            current.prev.next = temp;
-            current.prev = temp;
-            size++;
+            return;
         }
+        Node<T> current = getNode(index);
+        temp.prev = current.prev;
+        temp.next = current;
+        current.prev.next = temp;
+        current.prev = temp;
+        size++;
     }
 
     @Override
@@ -89,7 +76,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if ((object == current.item) || (object != null && object.equals(current.item))) {
+            if (object == current.item || (object != null && object.equals(current.item))) {
                 unlink(current);
                 return true;
             }
@@ -149,5 +136,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         size--;
         return removeNode.item;
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(MyLinkedList.Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
