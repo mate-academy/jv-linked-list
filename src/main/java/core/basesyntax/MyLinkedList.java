@@ -34,9 +34,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0) {
-            throw new IndexOutOfBoundsException("Can't add value by negative index");
-        } else if (index == size) {
+        checkIndex(index);
+        if (index == size) {
             add(value);
         } else if (index == 0) {
             Node<T> newNode = new Node<>(null, value, firstNode);
@@ -71,9 +70,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (index < 0) {
-            throw new IndexOutOfBoundsException("Can't change element by negative index");
-        }
+        checkIndex(index);
         T oldValue = getNode(index).item;
         getNode(index).item = value;
         return oldValue;
@@ -81,14 +78,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0) {
-            throw new IndexOutOfBoundsException("Can't remove element by negative index");
-        } else {
-            Node<T> removed = getNode(index);
-            T value = removed.item;
-            deleteNode(removed);
-            return value;
-        }
+        checkIndex(index);
+        Node<T> removed = getNode(index);
+        T value = removed.item;
+        deleteNode(removed);
+        return value;
+
     }
 
     @Override
@@ -156,5 +151,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.prev.next = node.next;
         }
         size--;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0) {
+            throw new IndexOutOfBoundsException("Can't operate negative index");
+        } else if (index > size) {
+            throw new IndexOutOfBoundsException("Index " + index + " ot of bounds of size " + size);
+        }
     }
 }
