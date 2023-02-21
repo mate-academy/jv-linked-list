@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int currentSize;
@@ -23,7 +22,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > currentSize) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Input index : " + index
+                    + " out of bonds: [" + 0 + ", " + currentSize + "]");
         } else if (currentSize == index) {
             add(value);
             return;
@@ -65,7 +65,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndexBounds(index);
         if (index == 0 && currentSize == 1) {
             T tempToReturn = head.value;
-            unlink();
+            unlinkSingleNode();
             return tempToReturn;
         }
         Node<T> currentNode = getNodeByIndex(index);
@@ -74,25 +74,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public boolean remove(T object) {
-        Node<T> currentNode = head;
-        if (equals(head.value, object) && currentSize == 1) {
-            unlink();
-            return true;
-        } else if (equals(head.value, object)) {
-            headNodeRemote();
-            return true;
+    public boolean remove(T value) {
+        if (isValuesEquals(head.value, value) && currentSize == 1) {
+            return unlinkSingleNode();
+        } else if (isValuesEquals(head.value, value)) {
+
+            return unlinkHeadNode();
         }
-        while (currentNode != null) {
-            if (equals(currentNode.value, object)) {
-                currentNode.prev.next = currentNode.next;
-                currentNode.next.prev = currentNode.prev;
-                currentSize--;
-                return true;
-            }
-            currentNode = currentNode.next;
-        }
-        return false;
+        return unlinkNodeInDifferentPosition(value);
     }
 
     @Override
@@ -107,7 +96,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndexBounds(int index) {
         if (index < 0 || index >= currentSize) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Input index : " + index
+                    + " out of bonds: [" + 0 + ", " + currentSize + "]");
         }
     }
 
@@ -125,18 +115,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         currentSize++;
     }
 
-    private void unlink() {
+    private boolean unlinkNodeInDifferentPosition(T value) {
+        Node<T> currentNode = head;
+        while (currentNode != null) {
+            if (isValuesEquals(currentNode.value, value)) {
+                currentNode.prev.next = currentNode.next;
+                currentNode.next.prev = currentNode.prev;
+                currentSize--;
+                return true;
+            }
+            currentNode = currentNode.next;
+        }
+        return false;
+    }
+
+    private boolean unlinkSingleNode() {
         tail.next = null;
         tail.prev = null;
         tail.value = null;
         head = tail;
         currentSize--;
+        return true;
     }
 
-    private void headNodeRemote() {
+    private boolean unlinkHeadNode() {
         head.next.prev = null;
         head = head.next;
         currentSize--;
+        return true;
     }
 
     private Node<T> getNodeByIndex(int index) {
@@ -153,8 +159,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    private boolean equals(T value, T object) {
-        return Objects.equals(value, object);
+    private boolean isValuesEquals(T value, T object) {
+        return (value == object) || (value != null && value.equals(object));
     }
 
     private class Node<T> {
