@@ -45,6 +45,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> searchByIndex(int index) {
         Node<T> search;
+        if (size == 0) {
+            search = null;
+        }
         if (index < (size >> 1)) {
             search = head;
             for (int i = 0; i < index; i++) {
@@ -102,7 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return oldVal;
     }
 
-    T unlink(Node<T> unlinkElement) {
+    private T unlink(Node<T> unlinkElement) {
         final T unlinkValue = unlinkElement.value;
         final Node<T> nextFromUnlink = unlinkElement.next;
         final Node<T> prevFromUnlink = unlinkElement.prev;
@@ -134,14 +137,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> x = head; x != null; x = x.next) {
-                if (x.value == null) {
-                    unlink(x);
-                    return true;
-                }
+        for (Node<T> x = head; x != null; x = x.next) {
+            if (x.value == object) {
+                unlink(x);
+                return true;
             }
-        } else {
+        }
+        if (object != null) {
             for (Node<T> x = head; x != null; x = x.next) {
                 if (object.equals(x.value)) {
                     unlink(x);
