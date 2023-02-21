@@ -81,7 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Node<T> removed = getNode(index);
         T value = removed.item;
-        deleteNode(removed);
+        unlink(removed);
         return value;
 
     }
@@ -92,7 +92,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (node == null) {
             return false;
         }
-        deleteNode(node);
+        unlink(node);
         return true;
     }
 
@@ -137,7 +137,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
-    private void deleteNode(Node<T> node) {
+    private void unlink(Node<T> node) {
         if (node.next == null) {
             if (node.prev != null) {
                 node.prev.next = null;
