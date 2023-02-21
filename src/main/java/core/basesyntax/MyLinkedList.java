@@ -56,8 +56,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Node<T> current = getNode(index);
-        return current.value;
+        return getNode(index).value;
     }
 
     @Override
@@ -84,7 +83,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         for (int i = 0; i < size; i++) {
-            if (customEquals(current.value, object)) {
+            if (isEqual(current.value, object)) {
                 remove(i);
                 return true;
             }
@@ -146,7 +145,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private boolean customEquals(Object a, Object b) {
+    private boolean isEqual(Object a, Object b) {
         return a == null ? a == b : a.equals(b);
     }
 }
