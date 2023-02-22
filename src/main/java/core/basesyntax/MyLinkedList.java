@@ -3,13 +3,13 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node<T> prev;
-    private Node<T> next;
+    private Node<T> tail;
+    private Node<T> head;
     private int size;
 
     public MyLinkedList() {
-        prev = null;
-        next = null;
+        tail = null;
+        head = null;
         size = 0;
     }
 
@@ -23,16 +23,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
-        if (prev == null) {
-            prev = next = new Node<>(null, value, null);
+        if (tail == null) {
+            tail = head = new Node<>(null, value, null);
         } else if (index == 0) {
-            prev.prev = new Node<>(null, value, prev);
-            prev = prev.prev;
+            tail.prev = new Node<>(null, value, tail);
+            tail = tail.prev;
         } else if (index == size) {
-            next.next = new Node<>(next, value, null);
-            next = next.next;
+            head.next = new Node<>(head, value, null);
+            head = head.next;
         } else {
-            Node<T> current = prev;
+            Node<T> current = tail;
             for (int i = 0; i < index; i++) {
                 current = current.next;
             }
@@ -52,7 +52,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         isIndexOutOfBoundsException(index);
-        Node<T> current = prev;
+        Node<T> current = tail;
         for (int i = 0; i < index; i++) {
             current = current.next;
         }
@@ -62,7 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         isIndexOutOfBoundsException(index);
-        Node<T> current = prev;
+        Node<T> current = tail;
         for (int i = 0; i < index; i++) {
             current = current.next;
         }
@@ -74,16 +74,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         isIndexOutOfBoundsException(index);
-        if (prev == null) {
+        if (tail == null) {
             throw new RuntimeException("List is empty");
         }
         Node<T> current;
         if (index == 0) {
-            current = prev;
+            current = tail;
         } else if (index == size - 1) {
-            current = next;
+            current = head;
         } else {
-            current = prev;
+            current = tail;
             for (int i = 0; i < index; i++) {
                 current = current.next;
             }
@@ -94,7 +94,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T node) {
-        Node<T> current = prev;
+        Node<T> current = tail;
         while (current != null) {
             if (areEqual(node, current.item)) {
                 unlink(current);
@@ -127,12 +127,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void unlink(Node<T> node) {
         if (node.prev == null) {
-            prev = node.next;
+            tail = node.next;
         } else {
             node.prev.next = node.next;
         }
         if (node.next == null) {
-            next = node.prev;
+            head = node.prev;
         } else {
             node.next.prev = node.prev;
         }
