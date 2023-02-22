@@ -71,8 +71,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (isEmpty()) {
             throw new RuntimeException("List is Empty!");
         } else if (size == 1) {
-            first = null;
-            last = null;
+            first = last = null;
         } else if (deleteNode == first) {
             first = deleteNode.next;
             first.prev = null;
@@ -92,7 +91,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = first;
         for (int i = 0; i < size; i++) {
             if (current.item == object
-                    || (current.item != null) && (current.item).equals(object)) {
+                    || current.item != null && current.item.equals(object)) {
                 remove(i);
                 return true;
             }
