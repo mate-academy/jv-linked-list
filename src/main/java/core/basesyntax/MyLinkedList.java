@@ -32,8 +32,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            this.add(list.get(i));
+        for (T item : list) {
+            this.add(item);
         }
     }
 
@@ -50,9 +50,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             setFirstValue(value);
             return value;
         }
-        T removedValue = remove(index);
-        add(value, index);
-        return removedValue;
+        Node<T> oldNode = findNodeByIndex(index);
+        T oldItem = oldNode.item;
+        oldNode.item = value;
+        return oldItem;
     }
 
     @Override
