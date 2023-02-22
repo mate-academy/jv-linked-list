@@ -99,18 +99,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private static class Node<E> {
-        private E item;
-        private Node<E> prev;
-        private Node<E> next;
-
-        public Node(Node<E> prev, E item, Node<E> next) {
-            this.prev = prev;
-            this.item = item;
-            this.next = next;
-        }
-    }
-
     private void addAtTheBeginning(T value) {
         Node<T> first = head;
         Node<T> newNode = new Node<>(null, value, first);
@@ -195,6 +183,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void checkIndexBounds(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Incorrect index " + index);
+        }
+    }
+
+    private static class Node<E> {
+        private E item;
+        private Node<E> prev;
+        private Node<E> next;
+
+        public Node(Node<E> prev, E item, Node<E> next) {
+            this.prev = prev;
+            this.item = item;
+            this.next = next;
         }
     }
 }
