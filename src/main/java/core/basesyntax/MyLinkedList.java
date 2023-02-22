@@ -43,6 +43,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
+        if (list == null) {
+            throw new RuntimeException("Could not add list, because it is null");
+        }
         for (T value : list) {
             add(value);
         }
