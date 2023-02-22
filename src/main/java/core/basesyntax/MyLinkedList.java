@@ -5,7 +5,6 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> last;
-    private Node<T> currentNode;
     private int index;
 
     public MyLinkedList() {
@@ -19,16 +18,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> prev;
 
         public Node(T item) {
-            next = null;
             this.item = item;
-            prev = null;
         }
     }
 
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(value);
-        currentNode = head;
+        Node<T> currentNode = head;
         if (head == null) {
             index = 0;
             head = newNode;
@@ -48,6 +45,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         Node<T> newNode = new Node<>(value);
         Node<T> prevNode = null;
+        Node<T> currentNode;
         if (!isEmpty() && index == 0) {
             head.prev = newNode;
             newNode.next = head;
@@ -77,7 +75,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        currentNode = head;
+        private Node<T> currentNode = head;
         if (isValidIndex(index) && index == 0) {
             return currentNode.item;
         } else if (index == this.index) {
@@ -90,6 +88,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
+        Node<T> currentNode;
         T item;
         if (isValidIndex(index) && index == 0) {
             item = head.item;
@@ -107,6 +106,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
+        Node<T> currentNode;
         T value;
         if (size() == 1 && index == 0) {
             value = head.item;
@@ -133,6 +133,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
+        Node<T> currentNode;
         if (object == null) {
             currentNode = head;
             while (currentNode.next != null) {
@@ -176,7 +177,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        currentNode = isHeadOrLast(index);
+        Node<T> currentNode = isHeadOrLast(index);
         if (currentNode == head) {
             for (int i = 1; i <= index; i++) {
                 currentNode = currentNode.next;
