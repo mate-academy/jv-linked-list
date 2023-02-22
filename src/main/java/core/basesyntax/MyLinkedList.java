@@ -178,9 +178,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node(T element, Node<T> next, Node<T> prev, int index) {
             this.element = element;
             this.next = next;
-            if (next == this) {
-                throw new RuntimeException("LOOP!");
-            }
             this.prev = prev;
             this.index = index;
         }
