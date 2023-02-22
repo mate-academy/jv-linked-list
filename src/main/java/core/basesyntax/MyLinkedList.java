@@ -21,7 +21,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        indexCheckForAdd(index);
         if (index == size) {
             add(value);
             return;
@@ -69,7 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> currentValue = head;
         for (int i = 0; i < size; i++) {
-            if (isElementsEqual(currentValue.item, object)) {
+            if (areElementsEqual(currentValue.item, object)) {
                 unlink(currentValue);
                 return true;
             }
@@ -106,7 +105,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> node) {
-        size--;
+        if (size == 1) {
+            node.next = tail;
+            tail.next = null;
+            tail.prev = null;
+            tail.item = null;
+            head = tail;
+        }
         if (node.next == null) {
             if (node.prev != null) {
                 node.prev.next = null;
@@ -119,22 +124,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.next.prev = node.prev;
             node.prev.next = node.next;
         }
-
+        size--;
     }
 
-    private boolean isElementsEqual(T element1, T element2) {
+    private boolean areElementsEqual(T element1, T element2) {
         return element1 == element2
-                || (element1 != null && element1.equals(element2));
+                || element1 != null && element1.equals(element2);
     }
 
     private void indexCheckForGet(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("This index " + index + " out of scope");
-        }
-    }
-
-    private void indexCheckForAdd(int index) {
-        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("This index " + index + " out of scope");
         }
     }
