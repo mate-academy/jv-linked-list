@@ -74,32 +74,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         isIndexOutOfBoundsException(index);
-        T value;
         if (prev == null) {
             throw new RuntimeException("List is empty");
-        } else if (index == 0) {
-            value = prev.item;
-            prev = prev.next;
-            if (prev != null) {
-                prev.prev = null;
-            } else {
-                next = null;
-            }
+        }
+        Node<T> current;
+        if (index == 0) {
+            current = prev;
         } else if (index == size - 1) {
-            value = next.item;
-            next = next.prev;
-            next.next = null;
+            current = next;
         } else {
-            Node<T> current = prev;
+            current = prev;
             for (int i = 0; i < index; i++) {
                 current = current.next;
             }
-            value = current.item;
-            current.prev.next = current.next;
-            current.next.prev = current.prev;
         }
-        size--;
-        return value;
+        unlink(current);
+        return current.item;
     }
 
     @Override
@@ -107,17 +97,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = prev;
         while (current != null) {
             if (areEqual(node, current.item)) {
-                if (current.prev == null) {
-                    prev = current.next;
-                } else {
-                    current.prev.next = current.next;
-                }
-                if (current.next == null) {
-                    next = current.prev;
-                } else {
-                    current.next.prev = current.prev;
-                }
-                size--;
+                unlink(current);
                 return true;
             }
             current = current.next;
@@ -137,13 +117,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean areEqual(T a, T b) {
-        return (a == null && b == null) || (a != null && b != null && a.hashCode() == b.hashCode());
+        return (a == null && b == null) || (a != null && a.equals(b));
     }
 
     private void isIndexOutOfBoundsException(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
+    }
+    private void unlink(Node<T> node) {
+        if (node.prev == null) {
+            prev = node.next;
+        } else {
+            node.prev.next = node.next;
+        }
+        if (node.next == null) {
+            next = node.prev;
+        } else {
+            node.next.prev = node.prev;
+        }
+        size--;
     }
 
     private static class Node<E> {
