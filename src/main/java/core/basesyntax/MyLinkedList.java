@@ -66,7 +66,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index, size);
         Node<T> deleteNode = getNodeByIndex(index);
         if (isEmpty()) {
             throw new RuntimeException("List is Empty!");
