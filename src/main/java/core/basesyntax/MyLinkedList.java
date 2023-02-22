@@ -25,7 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        indexChecker(index);
+        checkIndex(index);
         final Node<T> temporary = new Node<>(null, value, null);
         if (index == 0) {
             temporary.next = head;
@@ -93,7 +93,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public Node<T> getByIndex(int index) {
-        indexChecker(index);
+        checkIndex(index);
         Node<T> current;
         if (size / 2 > index) {
             current = head;
@@ -110,26 +110,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T removeLink(Node<T> node) {
-        if (node == head) {
-            if (size != 1) {
-                head.next.prev = null;
-                head = head.next;
-            } else {
-                head = null;
-                tail = null;
-            }
-        } else if (node == tail) {
-            tail.prev.next = null;
-            tail = tail.prev;
-        } else {
+        if (node != head) {
             node.prev.next = node.next;
+        } else {
+            head = node.next;
+        }
+        if (node != tail) {
             node.next.prev = node.prev;
+        } else {
+            tail = node.prev;
         }
         size--;
         return node.value;
     }
 
-    public void indexChecker(int index) {
+    public void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index out of bound" + index);
         }
