@@ -20,7 +20,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         if (index < 0 || index > currentSize) {
             throw new IndexOutOfBoundsException("Input index : " + index
-                    + " out of bonds: [" + 0 + ", " + currentSize + "]");
+                    + " out of bonds: [0 - " + currentSize + "]");
         } else if (currentSize == index) {
             add(value);
             return;
@@ -89,7 +89,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void checkIndexBounds(int index) {
         if (index < 0 || index >= currentSize) {
             throw new IndexOutOfBoundsException("Input index : " + index
-                    + " out of bonds: [" + 0 + ", " + currentSize + "]");
+                    + " out of bonds: [0 - " + currentSize + "]");
         }
     }
 
