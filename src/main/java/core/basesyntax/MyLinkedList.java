@@ -10,7 +10,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (head == null) {
-            head = new Node<T>(null, value, null);
+            head = new Node<>(null, value, null);
             tail = head;
         } else {
             tail.next = new Node<>(tail, value, null);
@@ -22,13 +22,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index must be less than size!");
+            throw new IndexOutOfBoundsException("Іndex " + index + " must be between 0 and size!");
         }
         if (index == size) {
             add(value);
             return;
         } else if (index == 0) {
-            head = new Node<T>(null, value, head);
+            head = new Node<>(null, value, head);
         } else {
             Node<T> next = getNode(index);
             Node<T> node = new Node<>(next.prev, value, next);
@@ -82,6 +82,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return false;
     }
 
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
     private void unlink(Node<T> node) {
         if (node.prev != null) {
             node.prev.next = node.next;
@@ -94,16 +104,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = node.prev;
         }
         size--;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
     }
 
     private Node<T> getNode(int index) {
@@ -126,7 +126,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkBounds(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index must be less than size!");
+            throw new IndexOutOfBoundsException("Іndex " + index + " must be between 0 and size!");
         }
     }
 
