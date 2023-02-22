@@ -13,10 +13,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             addFirstNode(value);
             return;
         }
-        Node<T> node = new Node<>(tail, value, null);
-        tail.next = node;
-        tail = node;
-        currentSize++;
+        addNodeToTailPosition(value);
     }
 
     @Override
@@ -28,14 +25,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         } else if (index == 0) {
-            addNodeToZeroPosition(value);
+            addNodeToHeadPosition(value);
             return;
         }
-        Node<T> currentNode = getNodeByIndex(index);
-        Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
-        currentNode.prev.next = newNode;
-        currentNode.prev = newNode;
-        currentSize++;
+        addNodeToAnyPosition(value, index);
     }
 
     @Override
@@ -78,7 +71,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (isValuesEquals(head.value, value) && currentSize == 1) {
             return unlinkSingleNode();
         } else if (isValuesEquals(head.value, value)) {
-
             return unlinkHeadNode();
         }
         return unlinkNodeInDifferentPosition(value);
@@ -108,10 +100,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         currentSize++;
     }
 
-    private void addNodeToZeroPosition(T value) {
+    private void addNodeToHeadPosition(T value) {
         Node<T> node = new Node<>(null, value, head);
         head.prev = node;
         head = node;
+        currentSize++;
+    }
+
+    private void addNodeToTailPosition(T value) {
+        Node<T> node = new Node<>(tail, value, null);
+        tail.next = node;
+        tail = node;
+        currentSize++;
+    }
+
+    private void addNodeToAnyPosition(T value, int index) {
+        Node<T> currentNode = getNodeByIndex(index);
+        Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
+        currentNode.prev.next = newNode;
+        currentNode.prev = newNode;
         currentSize++;
     }
 
@@ -163,7 +170,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return (value == object) || (value != null && value.equals(object));
     }
 
-    private class Node<T> {
+    private static class Node<T> {
         private Node<T> prev;
         private T value;
         private Node<T> next;
