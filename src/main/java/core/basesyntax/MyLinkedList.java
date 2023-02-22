@@ -50,8 +50,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        T replacedValue = getNode(index).value;
-        getNode(index).value = value;
+        Node<T> currentNode = getNode(index);
+        T replacedValue = currentNode.value;
+        currentNode.value = value;
         return replacedValue;
     }
 
@@ -129,12 +130,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (currentNode.next == null) {
             tail = currentNode.prev;
             currentNode.prev.next = null;
-        } else {
-            currentNode.next.prev = currentNode.prev;
-        }
-        if (currentNode.prev == null) {
+        } else if (currentNode.prev == null) {
             head = currentNode.next;
         } else {
+            currentNode.next.prev = currentNode.prev;
             currentNode.prev.next = currentNode.next;
         }
         size--;
