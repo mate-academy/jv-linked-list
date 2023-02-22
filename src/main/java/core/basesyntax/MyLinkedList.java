@@ -56,9 +56,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         checkIndexBounds(index);
         Node<T> node = findNodeByIndex(index);
-        T olditem = node.item;
+        T oldItem = node.item;
         node.item = value;
-        return olditem;
+        return oldItem;
     }
 
     @Override
@@ -70,9 +70,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == 0) {
             return removeFirst();
         }
-
         Node<T> nodeToRemove = findNodeByIndex(index);
-        removeSpecifiedNode(nodeToRemove);
+        unlink(nodeToRemove);
         return nodeToRemove.item;
     }
 
@@ -80,9 +79,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if (current.item == object
-                    || current.item != null && current.item.equals(object)) {
-                removeSpecifiedNode(current);
+            if (current.item == object || current.item != null
+                    && current.item.equals(object)) {
+                unlink(current);
                 return true;
             }
             current = current.next;
@@ -158,7 +157,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return element;
     }
 
-    private void removeSpecifiedNode(Node<T> nodeToRemove) {
+    private void unlink(Node<T> nodeToRemove) {
         Node<T> prevNode = nodeToRemove.prev;
         Node<T> nextNode = nodeToRemove.next;
         if (prevNode == null) {
@@ -166,7 +165,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             prevNode.next = nextNode;
         }
-
         if (nextNode == null) {
             tail = prevNode;
         } else {
@@ -176,12 +174,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
-        Node<T> currentNode = head;
-        while (index > 0) {
-            currentNode = currentNode.next;
-            index--;
+        Node<T> currentNode;
+        if (index < size / 2) {
+            currentNode = head;
+            while (index > 0) {
+                currentNode = currentNode.next;
+                index--;
+            }
+            return currentNode;
+        } else {
+            currentNode = tail;
+            while (index < size - 1) {
+                currentNode = currentNode.prev;
+                index++;
+            }
+            return currentNode;
         }
-        return currentNode;
     }
 
     private void checkIndexBounds(int index) {
