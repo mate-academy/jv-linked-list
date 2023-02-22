@@ -6,8 +6,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> last;
     private Node<T> currentNode;
-    private Node<T> nextNode = null;
-    private Node<T> prevNode = null;
     private int index;
 
     public MyLinkedList() {
@@ -49,6 +47,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         Node<T> newNode = new Node<>(value);
+        Node<T> prevNode = null;
         if (!isEmpty() && index == 0) {
             head.prev = newNode;
             newNode.next = head;
@@ -169,7 +168,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return null == head ? true : false;
+        return null == head;
     }
 
     private Node<T> isHeadOrLast(int index) {
@@ -195,6 +194,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void removeNode() {
+        Node<T> nextNode = null;
+        Node<T> prevNode = null;
         nextNode = currentNode.next;
         prevNode = currentNode.prev;
         nextNode.prev = prevNode;
