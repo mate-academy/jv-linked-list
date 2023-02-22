@@ -172,10 +172,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null == head;
     }
 
-    private Node<T> isHeadOrLast(int index) {
-        return isValidIndex(index) && index <= (size / 2) ? head : last;
-    }
-
     private Node<T> getNode(int index) {
         Node<T> currentNode = null;
         if (index <= size / 2) {
