@@ -26,30 +26,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index " + index + " is not valid");
-        } else {
-            if (index == size) {
-                add(value);
-                return;
-            }
-            if (index == 0) {
-                Node<T> newNode = new Node<>(null, value, head);
-                head.prev = newNode;
-                head = newNode;
-                size++;
-                return;
-            }
-            Node<T> currentNode = getNodeByIndex(index);
-            Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
-            currentNode.prev.next = newNode;
-            currentNode.prev = newNode;
-            size++;
         }
+        if (index == size) {
+            add(value);
+            return;
+        }
+        if (index == 0) {
+            Node<T> newNode = new Node<>(null, value, head);
+            head.prev = newNode;
+            head = newNode;
+            size++;
+            return;
+        }
+        Node<T> currentNode = getNodeByIndex(index);
+        Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
+        currentNode.prev.next = newNode;
+        currentNode.prev = newNode;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T element: list) {
+            add(element);
         }
     }
 
@@ -68,27 +67,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> currentNode = getNodeByIndex(index);
+        T value = currentNode.item;
         unLink(currentNode);
         size--;
-        return currentNode.item;
+        return value;
     }
 
     @Override
     public boolean remove(T object) {
+
         Node<T> currentNode = head;
-        int index = INDEX_BY_START_REMOVING;
-        while (!compare(currentNode.item, object)) {
-            if (index == size - 1) {
-                index = FLAG_THAT_VALUE_IS_UNREAL;
-                break;
+        for (int i = 0; currentNode != null; i++) {
+            if (compare(currentNode.item, object)) {
+                unLink(currentNode);
+                size--;
+                return true;
             }
             currentNode = currentNode.next;
-            index++;
-        }
-        if (index != FLAG_THAT_VALUE_IS_UNREAL) {
-            unLink(currentNode);
-            size--;
-            return true;
         }
         return false;
     }
@@ -109,17 +104,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         if (currentNode.next == null) {
+            currentNode.item = null;
             currentNode = currentNode.prev;
             currentNode.next.prev = currentNode.next = null;
             tail = currentNode;
             return;
         }
         if (currentNode.prev == null) {
+            currentNode.item = null;
             currentNode = currentNode.next;
             currentNode.prev.next = currentNode.prev = null;
             head = currentNode;
             return;
         }
+        currentNode.item = null;
         currentNode.prev.next = currentNode.next;
         currentNode.next.prev = currentNode.prev;
     }
@@ -145,8 +143,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    private boolean compare(T element1, T element2) {
-        return element1 == element2 || element1 != null && element1.equals(element2);
+    private boolean compare(T first, T second) {
+        return first == second || first != null && first.equals(second);
     }
 
     private void checkIndexIsValid(int index) {
@@ -159,7 +157,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return index < size && index >= 0;
     }
 
-    public class Node<T> {
+    private class Node<T> {
         private T item;
         private Node<T> next;
         private Node<T> prev;
