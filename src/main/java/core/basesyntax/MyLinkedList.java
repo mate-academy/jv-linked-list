@@ -119,6 +119,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
+        if (index == size - 1) {
+            return tail;
+        }
         Node<T> node = head;
         while (index > 0) {
             node = node.next;
