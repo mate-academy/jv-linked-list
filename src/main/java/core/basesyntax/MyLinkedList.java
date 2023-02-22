@@ -29,9 +29,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = head.prev;
             size++;
         } else {
-            Node<T> prevNode = getNodeByIndex(index).prev;
-            Node<T> nextNode = getNodeByIndex(index);
-            Node<T> current = new Node<>(prevNode, value, nextNode);
+            Node<T> node = getNodeByIndex(index);
+            Node<T> current = new Node<>(node.prev, value, node);
             current.next.prev = current;
             current.prev.next = current;
             size++;
@@ -52,8 +51,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        T element = getNodeByIndex(index).item;
-        getNodeByIndex(index).item = value;
+        Node<T> node = getNodeByIndex(index);
+        T element = node.item;
+        node.item = value;
         return element;
     }
 
@@ -92,22 +92,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void unlink(Node<T> x) {
-        if (x.next == null) {
-            tail = x.prev;
-            if (x.prev != null) {
-                x.prev.next = null;
+    private void unlink(Node<T> node) {
+        if (node.next == null) {
+            tail = node.prev;
+            if (node.prev != null) {
+                node.prev.next = null;
             }
         } else {
-            x.next.prev = x.prev;
+            node.next.prev = node.prev;
         }
-        if (x.prev == null) {
-            head = x.next;
-            if (x.next != null) {
-                x.next.prev = null;
+        if (node.prev == null) {
+            head = node.next;
+            if (node.next != null) {
+                node.next.prev = null;
             }
         } else {
-            x.prev.next = x.next;
+            node.prev.next = node.next;
         }
     }
 
