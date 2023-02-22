@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -56,19 +57,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> x = head; x != null; x = x.next) {
-                if (x.value == null) {
-                    unlink(x);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> x = head; x != null; x = x.next) {
-                if (object.equals(x.value)) {
-                    unlink(x);
-                    return true;
-                }
+        for (Node<T> x = head; x != null; x = x.next) {
+            if (Objects.equals(x.value, object)) {
+                unlink(x);
+                return true;
             }
         }
         return false;
@@ -85,26 +77,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addFirst(T value) {
-        Node<T> h = head;
-        Node<T> newNode = new Node<>(null, value, h);
-        head = newNode;
-        if (h == null) {
+        Node<T> newNode = new Node<>(null, value, head);
+        if (head == null) {
             tail = newNode;
         } else {
-            h.prev = newNode;
+            head.prev = newNode;
         }
+        head = newNode;
         size++;
     }
 
     private void addLast(T value) {
-        Node<T> t = tail;
-        Node<T> newNode = new Node<>(t, value, null);
-        tail = newNode;
-        if (t == null) {
+        Node<T> newNode = new Node<>(tail, value, null);
+        if (tail == null) {
             head = newNode;
         } else {
-            t.next = newNode;
+            tail.next = newNode;
         }
+        tail = newNode;
         size++;
     }
 
