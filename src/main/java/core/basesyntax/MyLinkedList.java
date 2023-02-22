@@ -13,12 +13,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = new Node<T>(null, value, null);
             tail = head;
         } else {
-            Node<T> node = head;
-            while (node.next != null) {
-                node = node.next;
-            }
-            node.next = new Node<T>(node, value, null);
-            tail = node;
+            tail.next = new Node<>(tail, value, null);
+            tail = tail.next;
         }
         size++;
     }
