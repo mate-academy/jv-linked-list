@@ -11,9 +11,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value) {
         if (currentSize == 0) {
             addFirstNode(value);
-            return;
+        } else {
+            addNodeToTailPosition(value);
         }
-        addNodeToTailPosition(value);
     }
 
     @Override
@@ -23,12 +23,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     + " out of bonds: [0 - " + currentSize + "]");
         } else if (currentSize == index) {
             add(value);
-            return;
         } else if (index == 0) {
             addNodeToHeadPosition(value);
-            return;
+        } else {
+            addNodeToAnyPosition(value, index);
         }
-        addNodeToAnyPosition(value, index);
     }
 
     @Override
@@ -60,10 +59,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             T tempToReturn = head.value;
             unlinkSingleNode();
             return tempToReturn;
+        } else {
+            Node<T> currentNode = getNodeByIndex(index);
+            remove(currentNode.value);
+            return currentNode.value;
         }
-        Node<T> currentNode = getNodeByIndex(index);
-        remove(currentNode.value);
-        return currentNode.value;
     }
 
     @Override
@@ -72,8 +72,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return unlinkSingleNode();
         } else if (isValuesEquals(head.value, value)) {
             return unlinkHeadNode();
+        }else{
+            return unlinkNodeInDifferentPosition(value);
         }
-        return unlinkNodeInDifferentPosition(value);
     }
 
     @Override
