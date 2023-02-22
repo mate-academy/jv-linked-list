@@ -25,9 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of bound" + index);
-        }
+        indexChecker(index);
         final Node<T> temporary = new Node<>(null, value, null);
         if (index == 0) {
             temporary.next = head;
@@ -95,9 +93,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public Node<T> getByIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of bound" + index);
-        }
+        indexChecker(index);
         Node<T> current;
         if (size / 2 > index) {
             current = head;
@@ -131,6 +127,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         size--;
         return node.value;
+    }
+
+    public void indexChecker(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of bound" + index);
+        }
     }
 
     private class Node<T> {
