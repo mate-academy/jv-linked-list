@@ -75,14 +75,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Node<T> currentNode = head;
-        if (isValidIndex(index) && index == 0) {
-            return currentNode.item;
-        } else if (index == size) {
-            currentNode = last;
-            return currentNode.item;
-        }
-        currentNode = getNode(index);
+        Node<T> currentNode = getNode(index);
         return currentNode.item;
     }
 
