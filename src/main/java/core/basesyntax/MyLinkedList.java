@@ -95,10 +95,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         checkIndex(index);
-        if (index == 0) {
-            linkBefore(value, findByIndex(index));
-            return;
-        }
         linkBefore(value, findByIndex(index));
     }
 
