@@ -66,8 +66,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index, size);
         Node<T> deleteNode = getNodeByIndex(index);
-        deleteNode.prev.next = deleteNode.next;
-        deleteNode.next.prev = deleteNode.prev;
+        if (isEmpty()) {
+            throw new RuntimeException("List is Empty!");
+        } else if (size == 1) {
+            first = null;
+            last = null;
+        } else if (deleteNode == first) {
+            first = deleteNode.next;
+            first.prev = null;
+        } else if (deleteNode == last) {
+            last = deleteNode.prev;
+            last.next = null;
+        } else {
+            deleteNode.prev.next = deleteNode.next;
+            deleteNode.next.prev = deleteNode.prev;
+        }
         size--;
         return deleteNode.item;
     }
@@ -83,7 +96,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             current = current.next;
         }
-        throw new RuntimeException("No Such Element");
+        return false;
     }
 
     @Override
@@ -113,14 +126,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndex(int index, int size) {
-        if (index < 0 || index >= size)
+        if (index < 0 || index >= size) {
             throw new LinkedListIndexOutOfBoundsException("Index Out Of Bounds");
+        }
     }
 
     private static class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> prev;
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
         public Node(Node<T> prev, T item, Node<T> next) {
             this.item = item;
