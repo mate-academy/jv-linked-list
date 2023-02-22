@@ -107,23 +107,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        if (index < 0) {
-            throw new IndexOutOfBoundsException("Can't get element by negative index");
-        } else if (index >= size) {
+        checkIndex(index);
+        if (index >= size) {
             throw new IndexOutOfBoundsException("No such element exists");
-        } else if (index < size / 2) {
-            Node<T> sought = firstNode;
+        }
+        Node<T> sought;
+        if (index < size / 2) {
+            sought = firstNode;
             for (int i = 1; i <= index; i++) {
                 sought = sought.next;
             }
-            return sought;
         } else {
-            Node<T> sought = lastNode;
+            sought = lastNode;
             for (int i = size - 2; i >= index; i--) {
                 sought = sought.prev;
             }
-            return sought;
         }
+        return sought;
     }
 
     private Node<T> getNode(T value) {
