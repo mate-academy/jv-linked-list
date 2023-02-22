@@ -3,45 +3,149 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private T element;
+    private Node<T> head;
+    private Node<T> tail;
+    private int size;
+
     @Override
     public void add(T value) {
+        Node<T> newNode;
+        if (head == null) {
+            newNode = new Node<>(null, value, null);
+            head = newNode;
+        } else {
+            newNode = new Node<>(tail, value, null);
+            tail.next = newNode;
+        }
+        tail = newNode;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
+        checkIndex(index, size + 1);
+        Node<T> newNode;
+        if (index == size()) {
+            add(value);
+        } else if (index == 0) {
+            newNode = new Node<>(null, value, head);
+            head.prev = newNode;
+            head = newNode;
+            size++;
+        } else {
+            Node<T> current = getNodeByIndex(index);
+            newNode = new Node<>(current.prev, value, current);
+            current.prev.next = newNode;
+            current.prev = newNode;
+            size++;
+        }
     }
 
     @Override
     public void addAll(List<T> list) {
+        for (T element : list) {
+            add(element);
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndex(index, size);
+        return getNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        return null;
+        checkIndex(index, size);
+        Node<T> oldValue = getNodeByIndex(index);
+        T oldItem = oldValue.item;
+        oldValue.item = value;
+        return oldItem;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIndex(index, size);
+        Node<T> removedElement = getNodeByIndex(index);
+        if (isEmpty()) {
+            throw new RuntimeException("Can't remove it");
+        }
+        if (size == 1) {
+            head = null;
+            tail = null;
+        }
+        else if (removedElement == head) {
+            head = removedElement.next;
+            head.prev = null;
+        }
+        else if (removedElement == tail) {
+            tail = removedElement.prev;
+            tail.next = null;
+        } else {
+            removedElement.prev.next = removedElement.next;
+            removedElement.next.prev = removedElement.prev;
+        }
+        size--;
+        return removedElement.item;
     }
 
     @Override
     public boolean remove(T object) {
+        Node<T> current = head;
+        for (int i = 0; i < size; i++) {
+            if (current.item == object || (current.item != null) && current.item.equals(object)) {
+                remove(i);
+                return true;
+            }
+            current = current.next;
+        }
         return false;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private void checkIndex(int index, int size) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Wrong index");
+        }
+    }
+
+    private Node<T> getNodeByIndex(int index) {
+        checkIndex(index, size);
+        Node<T> current = head;
+        if ((size / 2) > index) {
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
+        }
+        return current;
+    }
+
+    private
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        private Node(Node<T> prev, T item, Node<T> next) {
+            this.item = item;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
