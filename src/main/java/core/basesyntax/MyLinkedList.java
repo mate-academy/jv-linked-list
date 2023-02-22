@@ -105,7 +105,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return false;
     }
 
-
     @Override
     public int size() {
         return size;
@@ -125,6 +124,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
+
     private void unlink(Node<T> node) {
         if (node.prev == null) {
             prev = node.next;
