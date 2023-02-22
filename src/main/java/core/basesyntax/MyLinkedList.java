@@ -8,7 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
 
     MyLinkedList() {
-        size = 0;
     }
 
     @Override
@@ -68,23 +67,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         indexCheck(index);
-        T temp;
-        if (index == 0) {
-            temp = head.item;
-            head = head.next;
-            if (head == null) {
-                tail = null;
-            }
-        } else {
-            Node<T> prev = getNode(index - 1);
-            temp = prev.next.item;
-            prev.next = prev.next.next;
-            if (index == size - 1) {
-                tail = prev;
-            }
-        }
-        size--;
-        return temp;
+        return unlink(index);
     }
 
     @Override
@@ -92,7 +75,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> temp = head;
         for (int i = 0; i < size; i++) {
             if (object == temp.item || object != null && object.equals(temp.item)) {
-                remove(i);
+                unlink(i);
                 return true;
             }
             temp = temp.next;
@@ -123,6 +106,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Incorrect index" + index);
         }
+    }
+
+    private T unlink(int index) {
+        T temp;
+        if (index == 0) {
+            temp = head.item;
+            head = head.next;
+            if (head == null) {
+                tail = null;
+            }
+        } else {
+            Node<T> prev = getNode(index - 1);
+            temp = prev.next.item;
+            prev.next = prev.next.next;
+            if (index == size - 1) {
+                tail = prev;
+            }
+        }
+        size--;
+        return temp;
     }
 
     private static class Node<E> {
