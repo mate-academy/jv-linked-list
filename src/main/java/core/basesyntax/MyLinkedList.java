@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int currentSize;
@@ -55,26 +56,51 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndexBounds(index);
-        if (index == 0 && currentSize == 1) {
-            T tempToReturn = head.value;
-            unlinkSingleNode();
-            return tempToReturn;
-        } else {
-            Node<T> currentNode = getNodeByIndex(index);
-            remove(currentNode.value);
-            return currentNode.value;
-        }
+        Node<T> currentNode = getNodeByIndex(index);
+        T tempToReturn = currentNode.value;
+        unlink(currentNode);
+        return tempToReturn;
     }
 
     @Override
     public boolean remove(T value) {
-        if (isValuesEquals(head.value, value) && currentSize == 1) {
-            return unlinkSingleNode();
-        } else if (isValuesEquals(head.value, value)) {
-            return unlinkHeadNode();
-        }else{
-            return unlinkNodeInDifferentPosition(value);
+        boolean isRemoteSuccessful = false;
+        if (isValuesEquals(head.value, value)) {
+            isRemoteSuccessful = unlink(head);
+        } else {
+            isRemoteSuccessful = unlink(new Node<>(null, value, null));
         }
+        return isRemoteSuccessful;
+    }
+
+    private boolean unlink(Node<T> node) {
+        boolean isUnlinkSuccessful = false;
+        if (isValuesEquals(head.value, node.value) && currentSize == 1) {
+            tail.next = null;
+            tail.prev = null;
+            tail.value = null;
+            head = tail;
+            isUnlinkSuccessful = true;
+            currentSize--;
+        } else if (isValuesEquals(head.value, node.value)) {
+            head.next.prev = null;
+            head = head.next;
+            isUnlinkSuccessful = true;
+            currentSize--;
+        } else {
+            Node<T> currentNode = head;
+            while (currentNode != null) {
+                if (isValuesEquals(currentNode.value, node.value)) {
+                    currentNode.prev.next = currentNode.next;
+                    currentNode.next.prev = currentNode.prev;
+                    isUnlinkSuccessful = true;
+                    currentSize--;
+                    break;
+                }
+                currentNode = currentNode.next;
+            }
+        }
+        return isUnlinkSuccessful;
     }
 
     @Override
@@ -168,7 +194,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean isValuesEquals(T value, T object) {
-        return (value == object) || (value != null && value.equals(object));
+        return Objects.equals(value, object);
     }
 
     private static class Node<T> {
