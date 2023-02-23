@@ -64,9 +64,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (isEmpty()) {
-            throw new IndexOutOfBoundsException("List is Empty!");
-        }
         Node<T> deleteNode = getNodeByIndex(index);
         unlink(deleteNode);
         return deleteNode.item;
@@ -74,7 +71,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-
         Node<T> current = first;
         for (int i = 0; i < size; i++) {
             if (isEqual(current.item, object)) {
