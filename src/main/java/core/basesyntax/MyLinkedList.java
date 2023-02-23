@@ -26,7 +26,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkAddIndex(index);
         Node<T> node = findNode(index);
         Node<T> prevNode = node.prev;
         Node<T> newNode = new Node<>(prevNode, value, node);
@@ -108,13 +107,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void checkAddIndex(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index of bound. Input index is wrong! " + index);
-        }
-    }
-
     private Node<T> findNode(int index) {
+        checkIndex(index);
         Node<T> node;
         if (index > size) {
             node = tail;
