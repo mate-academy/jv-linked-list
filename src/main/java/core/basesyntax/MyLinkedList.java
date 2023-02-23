@@ -31,6 +31,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         if (index == 0) {
             Node<T> newNode = new Node<>(head.prev, value, head);
+            head.prev = newNode;
             head = newNode;
             size++;
             return;
@@ -38,6 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode = getCurrentNode(index);
         Node<T> anotherNode = new Node<>(currentNode.prev, value, currentNode);
         currentNode.prev.next = anotherNode;
+        currentNode.prev = anotherNode;
         size++;
     }
 
@@ -71,25 +73,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> currentNode = getCurrentNode(index);
-        T oldValue = currentNode.value;
-        if (index == 0) {
-            head = currentNode.next;
-            size--;
-            return oldValue;
-        }
-        if (currentNode.next != null) {
-            currentNode.next.prev = currentNode.prev;
-        }
-        if (currentNode.prev != null) {
-            currentNode.prev.next = currentNode.next;
-        }
-        size--;
-        return oldValue;
+        return unlink(currentNode);
     }
 
     @Override
     public boolean remove(T object) {
-        int index = 0;
         if (size == 1) {
             remove(size - 1);
             return true;
@@ -98,10 +86,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (currentNode.next != null) {
             if (currentNode.value == object || currentNode.value != null
                     && currentNode.value.equals(object)) {
-                remove(index);
+                unlink(currentNode);
                 return true;
             }
-            index++;
             currentNode = currentNode.next;
         }
         return false;
@@ -117,10 +104,35 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private T unlink(Node<T> node) {
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        }
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        }
+        if (node == head) {
+            head = node.next;
+        }
+        if (node == tail) {
+            tail = node.prev;
+        }
+        size--;
+        return node.value;
+    }
+
     private Node<T> getCurrentNode(int index) {
-        Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
+        Node<T> currentNode;
+        if (index <= size >> 1) {
+            currentNode = head;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+        } else {
+            currentNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                currentNode = currentNode.prev;
+            }
         }
         return currentNode;
     }
