@@ -9,13 +9,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
+        if (isEmpty()) {
+            setFirstValue(value);
+            return;
+        }
         linkLast(value);
     }
 
     @Override
     public void add(T value, int index) {
         checkAddIndex(index);
-        if (size == index || size == 0) {
+        if (isEmpty()) {
+            setFirstValue(value);
+            return;
+        }
+        if (index == size) {
             linkLast(value);
             return;
         }
@@ -36,11 +44,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (isEmpty()) {
-            checkIndex(index);
-            linkLast(value);
-            return value;
-        }
         Node<T> oldNode = findNodeByIndex(index);
         T oldItem = oldNode.item;
         oldNode.item = value;
@@ -130,16 +133,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
+    private void setFirstValue(T value) {
+        Node<T> newNode = new Node<>(null, value, null);
+        first = newNode;
+        last = newNode;
+        size++;
+    }
+
     private void linkLast(T element) {
-        if (isEmpty()) {
-            Node<T> newNode = new Node<>(null, element, null);
-            first = newNode;
-            last = newNode;
-        } else {
-            Node<T> newNode = new Node<>(last, element, null);
-            last.next = newNode;
-            last = newNode;
-        }
+        Node<T> newNode = new Node<>(last, element, null);
+        last.next = newNode;
+        last = newNode;
         size++;
     }
 
