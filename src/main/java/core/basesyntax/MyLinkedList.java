@@ -88,7 +88,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexOnRangeEqualsSize(index);
         Node<T> currentNode = getNodeByIndex(index);
         if (currentNode != null) {
             return currentNode.value;
@@ -98,7 +97,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        indexOnRangeEqualsSize(index);
         Node<T> currentNode = getNodeByIndex(index);
         T oldValue = currentNode.value;
         currentNode.value = value;
@@ -167,12 +165,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void indexOnRange(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
-        }
     }
 
     private void indexOnRangeEqualsSize(int index) {
