@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    public Node<T> head = null;
-    public Node<T> tail = null;
+    private Node<T> head = null;
+    private Node<T> tail = null;
     private int size;
 
     @Override
