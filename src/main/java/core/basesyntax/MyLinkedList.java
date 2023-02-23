@@ -84,14 +84,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index >= size) {
             throw new IndexOutOfBoundsException();
         }
-        Node<T> node = head;
-        int indexCount = 0;
-        while (node != null) {
-            if (indexCount == index) {
-                return node;
+        if (index < size - 1) {
+            Node<T> node = head;
+            int indexCount = 0;
+            while (node != null) {
+                if (indexCount == index) {
+                    return node;
+                }
+                indexCount++;
+                node = node.next;
             }
-            indexCount++;
-            node = node.next;
+        } else {
+            Node<T> node = tail;
+            int indexCount = size - 1;
+            while (node != null) {
+                if (indexCount == index) {
+                    return node;
+                }
+                indexCount--;
+                node = node.prev;
+            }
         }
         throw new NoSuchElementException();
     }
