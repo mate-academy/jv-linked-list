@@ -109,7 +109,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> deleteNode) {
-        if (size == 1) {
+        size--;
+        if (isEmpty()) {
             first = last = null;
         } else if (deleteNode == first) {
             first = deleteNode.next;
@@ -121,7 +122,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             deleteNode.prev.next = deleteNode.next;
             deleteNode.next.prev = deleteNode.prev;
         }
-        size--;
     }
 
     private void checkIndex(int index, int size) {
