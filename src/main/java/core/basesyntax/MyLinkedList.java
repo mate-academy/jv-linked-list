@@ -33,17 +33,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         setHeadNTail(newNode);
         size++;
-        setIndexes();
-    }
-
-    private void setIndexes() {
-        Node<T> node = head;
-        int index = 0;
-        while (node != null) {
-            node.index = index;
-            index++;
-            node = node.next;
-        }
     }
 
     @Override
@@ -104,10 +93,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException();
         }
         Node<T> node = head;
+        int indexCount = 0;
         while (node != null) {
-            if (node.index == index) {
+            if (indexCount == index) {
                 return node;
             }
+            indexCount++;
             node = node.next;
         }
         throw new NoSuchElementException();
@@ -116,11 +107,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void unlink(Node<T> node) {
         Node<T> prev = null;
         Node<T> next = null;
-        if (node.index > 0) {
+        if (node.prev != null) {
             prev = node.prev;
             prev.next = null;
         }
-        if (node.index < size - 1) {
+        if (node.next != null) {
             next = node.next;
             next.prev = null;
         }
@@ -133,7 +124,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             setHeadNTail(next);
         }
         size--;
-        setIndexes();
     }
 
     private void checkForValidIndex(int index) {
@@ -170,7 +160,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     static class Node<T> {
-        private int index;
         private Node<T> next;
         private Node<T> prev;
         private T element;
@@ -179,7 +168,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.element = element;
             this.next = next;
             this.prev = prev;
-            this.index = index;
         }
     }
 }
