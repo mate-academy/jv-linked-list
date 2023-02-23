@@ -76,10 +76,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        Node<T> node = getNode(index);
-        T item = node.item;
-        node.item = value;
-        return item;
+        if (isValidIndex(index)) {
+            Node<T> node = getNode(index);
+            T item = node.item;
+            node.item = value;
+            return item;
+        }
+        return null;
     }
 
     @Override
@@ -166,7 +169,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean isValidIndex(int index) {
-        if (index < 0 || index >= size) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Not valid index");
         } else {
             return true;
