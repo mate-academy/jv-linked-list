@@ -7,9 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    MyLinkedList() {
-    }
-
     @Override
     public void add(T value) {
         if (size == 0) {
@@ -33,12 +30,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (head == null) {
             head = tail = newNode;
         } else if (index == 0) {
-            newNode.next = head;
+            head.prev = newNode;
             head = newNode;
         } else {
-            Node<T> prev = getNode(index - 1);
-            newNode.next = prev.next;
-            prev.next = newNode;
+            Node<T> current = getNode(index);
+            newNode.prev = current.prev;
+            current.prev.next = newNode;
+            current.prev = newNode;
+            newNode.next = current;
         }
         size++;
     }
@@ -57,7 +56,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        indexCheck(index);
         Node<T> current = getNode(index);
         T temp = current.item;
         current.item = value;
@@ -95,16 +93,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         indexCheck(index);
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        Node<T> current;
+        if (index > size / 2) {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
+        } else {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
         }
         return current;
     }
 
     private void indexCheck(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Incorrect index" + index);
+            throw new IndexOutOfBoundsException("Incorrect index " + index
+                    + " Please only positive numbers no larger than the size of the array");
         }
     }
 
