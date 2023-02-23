@@ -21,11 +21,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        checkIndex(index);
         if (index == size) {
             add(value);
             return;
         }
-        checkIndex(index);
         Node<T> after = getNode(index);
         Node<T> before = after.prev;
         Node<T> newNode = new Node<>(before, value, after);
@@ -136,7 +136,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndex(int index) {
-        if (index > size || index < 0) {
+        if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Index must be between 0 and " + size);
         }
     }
