@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -19,10 +18,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkPositionIndex(index);
         if (index == size) {
             addLast(value);
         } else {
+            checkElementIndex(index);
             addBefore(value, findNode(index));
         }
     }
@@ -36,13 +35,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkElementIndex(index);
         return findNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkElementIndex(index);
         Node<T> foundNode = findNode(index);
         T prevVal = foundNode.value;
         foundNode.value = value;
@@ -51,14 +48,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkElementIndex(index);
         return unlink(findNode(index));
     }
 
     @Override
     public boolean remove(T object) {
         for (Node<T> x = head; x != null; x = x.next) {
-            if (Objects.equals(x.value, object)) {
+            if (equals(x.value, object)) {
                 unlink(x);
                 return true;
             }
@@ -111,6 +107,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNode(int index) {
+        checkElementIndex(index);
         Node<T> search;
         if (index < (size / 2)) {
             search = head;
@@ -150,16 +147,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return unlinkValue;
     }
 
-    private void checkPositionIndex(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Non-existent position");
+    private void checkElementIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index " + index + " out of bounds");
         }
     }
 
-    private void checkElementIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("index out of bounds");
-        }
+    public boolean equals(Object a, Object b) {
+        return (a == b) || (a != null && a.equals(b));
     }
 
     private static class Node<T> {
