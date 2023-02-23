@@ -23,7 +23,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        indexValidationForAdding(index);
+        if (index != size) {
+            indexValidation(index);
+        }
         if (index == size) {
             add(value);
             return;
@@ -44,13 +46,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list != null) {
-            for (T listElement : list) {
-                add(listElement);
-            }
-        } else {
-            throw new RuntimeException("Can`t add this list, because list is null."
-                    + " Try to use correct list");
+        for (T listElement : list) {
+            add(listElement);
         }
     }
 
@@ -104,19 +101,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void indexValidationForAdding(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Wrong index value."
-                    + " No such index or index is less than 0");
-        }
-    }
-
     private Node<T> getNodeByIndex(int index) {
         indexValidation(index);
-        if (index >= size / 2) {
-            return countFromTail(index);
-        }
-        return countFromHead(index);
+        return (index >= size / 2) ? countFromTail(index) : countFromHead(index);
     }
 
     private Node<T> countFromHead(int index) {
@@ -162,7 +149,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> prev;
         private Node<T> next;
 
-        Node(Node<T> prev,T value, Node<T> next) {
+        private Node(Node<T> prev,T value, Node<T> next) {
             this.prev = prev;
             this.value = value;
             this.next = next;
