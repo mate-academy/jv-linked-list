@@ -104,7 +104,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("This index is incorrect");
+            throw new IndexOutOfBoundsException("This index: " + index + " is incorrect");
         }
     }
 
@@ -137,4 +137,3 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current.element;
     }
 }
-
