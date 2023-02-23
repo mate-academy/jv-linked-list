@@ -22,6 +22,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index > size || index < 0) {
+            throw new IndexOutOfBoundsException("Index " + index + " don't exist!");
+        }
         if (index == size) {
             add(value);
         } else if (index == 0) {
@@ -70,7 +73,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
         for (int i = 0; i < size; i++) {
             if (current.item == object || current.item != null && current.item.equals(object)) {
-                remove(i);
+                unlink(current);
                 return true;
             }
             current = current.next;
