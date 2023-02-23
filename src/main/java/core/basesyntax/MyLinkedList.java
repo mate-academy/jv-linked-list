@@ -35,8 +35,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNodeByIndex(int index) {
         indexCheck(index);
-        int part = size % 2 == 0 ? size / 2 : size / 2 + 1;
-        if (index < part) {
+        if ((size / 2) > index) {
             Node<T> node = head;
             for (int i = 0; i < index; i++) {
                 node = node.next;
@@ -64,8 +63,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void setFirstValue(T value) {
         Node<T> newNode = new Node<>(null, value, null);
-        head = newNode;
-        tail = newNode;
+        head = tail = newNode;
         size++;
     }
 
