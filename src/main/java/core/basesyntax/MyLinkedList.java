@@ -22,9 +22,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(value);
         Node<T> currentNode = head;
         if (head == null) {
-            size = 0;
             head = newNode;
             last = newNode;
+            size++;
         } else {
             while (currentNode.next != null) {
                 currentNode = currentNode.next;
