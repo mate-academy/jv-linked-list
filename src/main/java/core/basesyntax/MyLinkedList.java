@@ -18,9 +18,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Element doesn't exist at " + index);
-        }
+        checkingCapacity(index);
         if (index == size) {
             linkLast(value);
         } else {
@@ -65,7 +63,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -156,6 +153,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkPositionIndex(int index) {
         if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Element doesn't exist at " + index);
+        }
+    }
+
+    private void checkingCapacity(int index) {
+        if (index > size || index < 0) {
             throw new IndexOutOfBoundsException("Element doesn't exist at " + index);
         }
     }
