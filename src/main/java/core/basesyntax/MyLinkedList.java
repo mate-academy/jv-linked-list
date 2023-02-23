@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size;
 
-    private static class Node<E> {
-        private E item;
-        private Node<E> next;
-        private Node<E> prev;
-
-        private Node(Node<E> prev, E item, Node<E> next) {
-            this.item = item;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     @Override
     public void add(T value) {
         if (isEmpty()) {
@@ -33,9 +21,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index out of bounds");
-        }
+        checkIndex(index);
         if (index == size) {
             add(value);
             return;
@@ -102,6 +88,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index: " + index + " out of bounds");
+        }
+    }
+
+    private static class Node<E> {
+        private E item;
+        private Node<E> next;
+        private Node<E> prev;
+
+        private Node(Node<E> prev, E item, Node<E> next) {
+            this.item = item;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 
     private Node<T> getNode(int index) {
