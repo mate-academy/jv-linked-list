@@ -23,7 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("");
+            throw new IndexOutOfBoundsException("Element doesn't exist at " + index);
         }
         if (index == size) {
             linkLast(value);
@@ -90,25 +90,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void linkFirst(T value) {
-        Node<T> h = head;
-        Node<T> newNode = new Node<>(null, value, h);
-        head = newNode;
-        if (h == null) {
+        Node<T> head = this.head;
+        Node<T> newNode = new Node<>(null, value, head);
+        this.head = newNode;
+        if (head == null) {
             tail = newNode;
         } else {
-            h.prev = newNode;
+            head.prev = newNode;
         }
         size++;
     }
 
     private void linkLast(T value) {
-        final Node<T> last = tail;
-        final Node<T> newNode = new Node<>(last, value, null);
-        tail = newNode;
-        if (last == null) {
+        Node<T> tail = this.tail;
+        Node<T> newNode = new Node<>(tail, value, null);
+        this.tail = newNode;
+        if (tail == null) {
             head = newNode;
         } else {
-            last.next = newNode;
+            tail.next = newNode;
         }
         size++;
     }
@@ -126,23 +126,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        Node<T> x;
+        Node<T> node;
         int i;
         if (size == 0) {
-            x = null;
+            node = null;
         }
         if (index < (size >> 1)) {
-            x = head;
+            node = head;
             for (i = 0;i < index; i++) {
-                x = x.next;
+                node = node.next;
             }
         } else {
-            x = tail;
+            node = tail;
             for (i = size - 1; i > index; i--) {
-                x = x.prev;
+                node = node.prev;
             }
         }
-        return x;
+        return node;
     }
 
     private T unlink(Node<T> unlinkElement) {
@@ -168,7 +168,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkPositionIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Element doesn't exist");
+            throw new IndexOutOfBoundsException("Element doesn't exist at " + index);
         }
     }
 
