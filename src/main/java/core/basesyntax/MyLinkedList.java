@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -40,8 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index " + index + " must be between 0 and size "
-                    + size + " inclusively");
+            throw new IndexOutOfBoundsException("Invalid index " + index + " for size " + size);
         }
         Node<T> next = getNode(index);
         Node<T> newNode = new Node<>(value);
@@ -95,7 +93,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> node = head;
         int index = 0;
         while (node != null) {
-            if (Objects.equals(node.item, object)) {
+            if (node.item == object || node.item != null && node.item.equals(object)) {
                 unlink(getNode(index));
                 return true;
             }
@@ -117,7 +115,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void validateIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(index + " index too big for the size " + size);
+            throw new IndexOutOfBoundsException("Invalid index " + index + " for size " + size);
         }
     }
 
