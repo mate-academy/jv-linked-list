@@ -26,10 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Index - " + index
-                    + " out of bounds for length: " + size);
-        }
+        checkIndex(index, size + 1);
         if (index == 0) {
             node.prev = null;
             node.next = head;
@@ -54,13 +51,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         return getNode(index).currentValue;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> node = getNode(index);
         T newValue = node.currentValue;
         node.currentValue = value;
@@ -69,7 +64,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> node = getNode(index);
         T oldValue = node.currentValue;
         unlink(node);
@@ -100,7 +94,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        checkIndex(index);
+        checkIndex(index, size);
         Node<T> node = head;
         if (index < size / 2) {
             for (int i = 0; i < index; i++) {
@@ -115,34 +109,32 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    private void checkIndex(int index) {
-        if (index >= size || index < 0) {
+    private void checkIndex(int index, int bound) {
+        if (index >= bound || index < 0) {
             throw new IndexOutOfBoundsException("Index - " + index
                     + " out of bounds for length: " + size);
         }
     }
 
     private void unlink(Node<T> node) {
+        size--;
         if (node == head) {
-            if (size != 1) {
+            if (!isEmpty()) {
                 head.next.prev = null;
                 head = head.next;
             } else {
                 head = null;
                 tail = null;
             }
-            size--;
             return;
         }
         if (node == tail) {
             tail.prev.next = null;
             tail = tail.prev;
-            size--;
             return;
         }
         node.next.prev = node.prev;
         node.prev.next = node.next;
-        size--;
     }
 
     private static class Node<T> {
