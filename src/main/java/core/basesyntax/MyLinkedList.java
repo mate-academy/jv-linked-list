@@ -9,7 +9,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        addAtLastPosition(value);
+        Node<T> lastElement = tail;
+        Node<T> newNode = new Node<>(lastElement, value, null);
+        tail = newNode;
+        if (lastElement == null) {
+            head = newNode;
+        } else {
+            lastElement.next = newNode;
+        }
+        size++;
     }
 
     @Override
@@ -127,18 +135,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = newNode;
         } else {
             firstElement.previous = newNode;
-        }
-        size++;
-    }
-
-    private void addAtLastPosition(T value) {
-        Node<T> lastElement = tail;
-        Node<T> newNode = new Node<>(lastElement, value, null);
-        tail = newNode;
-        if (lastElement == null) {
-            head = newNode;
-        } else {
-            lastElement.next = newNode;
         }
         size++;
     }
