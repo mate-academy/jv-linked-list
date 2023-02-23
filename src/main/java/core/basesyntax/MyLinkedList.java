@@ -21,11 +21,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
         if (index == size) {
             add(value);
             return;
         }
+        checkIndex(index);
         Node<T> after = getNode(index);
         Node<T> before = after.prev;
         Node<T> newNode = new Node<>(before, value, after);
