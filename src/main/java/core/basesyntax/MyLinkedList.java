@@ -7,12 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public MyLinkedList() {
-        head = null;
-        tail = null;
-        size = 0;
-    }
-
     @Override
     public void add(T value) {
         Node<T> newNode = cratedNode(value);
@@ -150,5 +144,4 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
         }
     }
-
 }
