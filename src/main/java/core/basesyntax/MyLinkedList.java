@@ -20,13 +20,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(value);
-        Node<T> currentNode = head;
         if (head == null) {
             head = newNode;
             last = newNode;
             size++;
         } else {
-            currentNode =last;
+            Node<T> currentNode =last;
             currentNode.next = newNode;
             newNode.prev = currentNode;
             last = newNode;
