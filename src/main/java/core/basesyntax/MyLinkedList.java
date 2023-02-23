@@ -96,13 +96,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (!(index >= 0 && index < size)) {
-            throw new IndexOutOfBoundsException("Index of bound. Input index is wrong!");
+            throw new IndexOutOfBoundsException("Index of bound. Input index is wrong! " + index);
         }
     }
 
     private void checkAddIndex(int index) {
         if (!(index >= 0 && index <= size)) {
-            throw new IndexOutOfBoundsException("Index of bound. Input index is wrong!");
+            throw new IndexOutOfBoundsException("Index of bound. Input index is wrong! " + index);
         }
     }
 
