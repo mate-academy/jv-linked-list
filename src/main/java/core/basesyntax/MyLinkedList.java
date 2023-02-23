@@ -14,11 +14,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(
-                    String.format("Index %d out of bounds. List size: %d", index, size)
-            );
-        }
         if (index == size) {
             add(value);
             return;
@@ -26,6 +21,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == 0) {
             addAtFirstPosition(value);
             return;
+        }
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException(
+                    String.format("Index %d out of bounds. List size: %d", index, size)
+            );
         }
         addBefore(value, index);
     }
@@ -119,18 +119,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private static class Node<T> {
-        private T value;
-        private Node<T> next;
-        private Node<T> previous;
-
-        public Node(Node<T> previous, T value, Node<T> next) {
-            this.previous = previous;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
     private void addAtFirstPosition(T value) {
         Node<T> firstElement = head;
         Node<T> newNode = new Node<>(null, value, firstElement);
@@ -166,5 +154,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = newNode;
         }
         size++;
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> previous;
+
+        public Node(Node<T> previous, T value, Node<T> next) {
+            this.previous = previous;
+            this.value = value;
+            this.next = next;
+        }
     }
 }
