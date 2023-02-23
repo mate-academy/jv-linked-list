@@ -89,7 +89,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-
     private Node<T> getNodeByIndex(int index) {
         checkIndexBounds(index);
         Node<T> current = tail;
