@@ -121,33 +121,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    private boolean isValue(Node<T> node, T value) {
-        return (null == value && null == node.item) || (node.item.equals(value));
-    }
-
-    private void removeNode() {
-        Node<T> nextNode = null;
-        Node<T> prevNode = null;
-        Node<T> currentNode = null;
-        nextNode = currentNode.next;
-        prevNode = currentNode.prev;
-        nextNode.prev = prevNode;
-        prevNode.next = nextNode;
-        size--;
-    }
-
     private boolean isValidIndex(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Not valid index");
         } else {
             return true;
         }
-    }
-
-    private void removeHeadAndLastNode() {
-        head = null;
-        last = null;
-        size--;
     }
 
     private T unlink(Node<T> node) {
