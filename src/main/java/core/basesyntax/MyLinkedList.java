@@ -3,8 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final int INDEX_BY_START_REMOVING = 0;
-    private static final int FLAG_THAT_VALUE_IS_UNREAL = -1;
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -24,9 +22,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index " + index + " is not valid");
-        }
         if (index == size) {
             add(value);
             return;
@@ -69,7 +64,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode = getNodeByIndex(index);
         T value = currentNode.item;
         unLink(currentNode);
-        size--;
         return value;
     }
 
@@ -80,7 +74,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; currentNode != null; i++) {
             if (compare(currentNode.item, object)) {
                 unLink(currentNode);
-                size--;
                 return true;
             }
             currentNode = currentNode.next;
@@ -101,25 +94,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void unLink(Node<T> currentNode) {
         if (currentNode.prev == null && currentNode.next == null) {
             tail = head = null;
-            return;
-        }
-        if (currentNode.next == null) {
+        } else if (currentNode.next == null) {
             currentNode.item = null;
             currentNode = currentNode.prev;
             currentNode.next.prev = currentNode.next = null;
             tail = currentNode;
-            return;
-        }
-        if (currentNode.prev == null) {
+        } else if (currentNode.prev == null) {
             currentNode.item = null;
             currentNode = currentNode.next;
             currentNode.prev.next = currentNode.prev = null;
             head = currentNode;
-            return;
+        } else {
+            currentNode.item = null;
+            currentNode.prev.next = currentNode.next;
+            currentNode.next.prev = currentNode.prev;
         }
-        currentNode.item = null;
-        currentNode.prev.next = currentNode.next;
-        currentNode.next.prev = currentNode.prev;
+        size--;
     }
 
     private Node<T> getNodeByIndex(int index) {
