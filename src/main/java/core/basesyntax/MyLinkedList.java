@@ -35,21 +35,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Node<T> newNode = new Node<>(value);
-        Node<T> prevNode = null;
-        Node<T> currentNode;
-        if (!isEmpty() && index == 0) {
-            head.prev = newNode;
-            newNode.next = head;
-            head = newNode;
-            size++;
-        } else if (!isEmpty() && index == size()) {
+        if (index == size) {
             add(value);
-        } else if (isEmpty() && index == 0) {
-            add(value);
-        } else {
-            currentNode = getNode(index);
-            prevNode = currentNode.prev;
+        } else if (isValidIndex(index)) {
+            Node<T> newNode = new Node<>(value);
+            Node<T> currentNode = getNode(index);
+            Node<T> prevNode = currentNode.prev;
             prevNode.next = newNode;
             newNode.next = currentNode;
             currentNode.prev = newNode;
