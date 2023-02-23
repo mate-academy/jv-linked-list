@@ -66,31 +66,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node<T> deleteNode = getNodeByIndex(index);
         if (isEmpty()) {
-            throw new RuntimeException("List is Empty!");
-        } else if (size == 1) {
-            first = last = null;
-        } else if (deleteNode == first) {
-            first = deleteNode.next;
-            first.prev = null;
-        } else if (deleteNode == last) {
-            last = deleteNode.prev;
-            last.next = null;
-        } else {
-            deleteNode.prev.next = deleteNode.next;
-            deleteNode.next.prev = deleteNode.prev;
+            throw new IndexOutOfBoundsException("List is Empty!");
         }
-        size--;
+        Node<T> deleteNode = getNodeByIndex(index);
+        unlink(deleteNode);
         return deleteNode.item;
     }
 
     @Override
     public boolean remove(T object) {
+
         Node<T> current = first;
         for (int i = 0; i < size; i++) {
             if (isEqual(current.item, object)) {
-                remove(i);
+                unlink(current);
                 return true;
             }
             current = current.next;
@@ -122,6 +112,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return result;
+    }
+
+    private void unlink(Node<T> deleteNode) {
+        if (size == 1) {
+            first = last = null;
+        } else if (deleteNode == first) {
+            first = deleteNode.next;
+            first.prev = null;
+        } else if (deleteNode == last) {
+            last = deleteNode.prev;
+            last.next = null;
+        } else {
+            deleteNode.prev.next = deleteNode.next;
+            deleteNode.next.prev = deleteNode.prev;
+        }
+        size--;
     }
 
     private void checkIndex(int index, int size) {
