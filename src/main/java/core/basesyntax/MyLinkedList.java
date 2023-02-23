@@ -7,38 +7,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private T element;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.element = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     @Override
     public void add(T value) {
-        add(value, size);
+        Node<T> prevNode = tail;
+        Node<T> newNode = new Node<>(tail, value, null);
+        tail = newNode;
+        if (prevNode == null) {
+            head = newNode;
+        } else {
+            prevNode.next = newNode;
+        }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkAddIndex(index);
         if (index == size) {
-            link(value);
+            add(value);
+            return;
+        }
+        checkAddIndex(index);
+        Node<T> node = findNode(index);
+        Node<T> prevNode = node.prev;
+        Node<T> newNode = new Node<>(prevNode, value, node);
+        node.prev = newNode;
+        if (prevNode == null) {
+            head = newNode;
         } else {
-            Node<T> node = findNode(index);
-            Node<T> prevNode = node.prev;
-            Node<T> newNode = new Node<>(prevNode, value, node);
-            node.prev = newNode;
-            if (prevNode == null) {
-                head = newNode;
-            } else {
-                prevNode.next = newNode;
-            }
+            prevNode.next = newNode;
         }
         size++;
     }
@@ -94,26 +90,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size() == 0;
     }
 
+    private static class Node<T> {
+        private T element;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.element = element;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+
     private void checkIndex(int index) {
-        if (!(index >= 0 && index < size)) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index of bound. Input index is wrong! " + index);
         }
     }
 
     private void checkAddIndex(int index) {
-        if (!(index >= 0 && index <= size)) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index of bound. Input index is wrong! " + index);
-        }
-    }
-
-    private void link(T value) {
-        Node<T> prevNode = tail;
-        Node<T> newNode = new Node<>(tail, value, null);
-        tail = newNode;
-        if (prevNode == null) {
-            head = newNode;
-        } else {
-            prevNode.next = newNode;
         }
     }
 
@@ -134,27 +131,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean compareEquality(T element1, T element2) {
-        return ((element2 == element1) || (element1 != null && element1.equals(element2)));
+        return (element2 == element1) || (element1 != null && element1.equals(element2));
     }
 
     private T unLink(Node<T> findNode) {
-        T element = findNode.element;
-        Node<T> next = findNode.next;
-        Node<T> prev = findNode.prev;
-        if (next == null) {
-            tail = prev;
-        } else {
-            next.prev = prev;
-            findNode.next = null;
+        if (findNode.prev != null) {
+            findNode.prev.next = findNode.next;
         }
-        if (prev == null) {
-            head = next;
-        } else {
-            prev.next = next;
-            findNode.prev = null;
+        if (findNode.next != null) {
+            findNode.next.prev = findNode.prev;
         }
-        findNode.element = null;
+        if (findNode == head) {
+            head = findNode.next;
+        }
+        if (findNode == tail) {
+            tail = findNode.prev;
+        }
         size--;
-        return element;
+        return findNode.element;
     }
 }
