@@ -26,9 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             last = newNode;
             size++;
         } else {
-            while (currentNode.next != null) {
-                currentNode = currentNode.next;
-            }
+            currentNode =last;
             currentNode.next = newNode;
             newNode.prev = currentNode;
             last = newNode;
