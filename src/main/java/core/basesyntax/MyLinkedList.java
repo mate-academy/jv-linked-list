@@ -130,6 +130,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
+        if (list == null) {
+            throw new IndexOutOfBoundsException("List is null");
+        }
         for (T item : list) {
             this.add(item);
         }
