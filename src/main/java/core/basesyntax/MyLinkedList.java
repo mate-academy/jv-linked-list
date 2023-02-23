@@ -71,7 +71,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public T set(T value, int index) { // нащо повертаємо???
+    public T set(T value, int index) {
         checkIndex(index);
         Node<T> node = getNode(index);
         T newValue = node.currentValue;
