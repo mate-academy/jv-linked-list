@@ -38,16 +38,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T data, int index) {
         checkIndex(index, size);
         Node<T> newNode;
-        if (head == null) {
-            newNode = new Node<>(null, data, null);
-            head = tail = newNode;
+        if (head == null || index == size) {
+            add(data);
+            return;
         } else if (index == 0) {
             newNode = new Node<>(null, data, head);
             head = newNode;
             newNode.next.prev = newNode;
-        } else if (index == size) {
-            add(data);
-            return;
         } else {
             Node<T> current = getNode(index - 1, size);
             newNode = new Node<>(current.prev, data, current.next);
