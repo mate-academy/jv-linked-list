@@ -18,17 +18,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
         if (tail == null) {
-            tail = head = new Node<>(null, value, null);
+            addFirst(value);
         } else if (index == 0) {
             tail.prev = new Node<>(null, value, tail);
             tail = tail.prev;
         } else if (index == size) {
-            head.next = new Node<>(head, value, null);
-            head = head.next;
+            addLast(value);
         } else {
-            Node<T> current = getNodeByIndex(index);
-            current.prev.next = new Node<>(current.prev, value, current);
-            current.prev = current.prev.next;
+            addMiddle(value, index);
         }
         size++;
     }
@@ -55,22 +52,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node<T> current = getNodeByIndex(index);
-        unlink(current);
-        return current.item;
+        return unlink(getNodeByIndex(index));
     }
 
     @Override
-    public boolean remove(T node) {
-        Node<T> current = tail;
-        while (current != null) {
-            if (areEqual(node, current.item)) {
-                unlink(current);
-                return true;
-            }
-            current = current.next;
+    public boolean remove(T object) {
+        Node<T> removedNode = getNodeByItem(object);
+        if (removedNode == null) {
+            return false;
         }
-        return false;
+        unlink(removedNode);
+        return true;
     }
 
     @Override
@@ -102,19 +94,48 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private void unlink(Node<T> node) {
-        if (node.prev == null) {
-            tail = node.next;
+    private T unlink(Node<T> node) {
+        T item = node.item;
+        Node<T> next = node.next;
+        Node<T> prev = node.prev;
+        if (prev == null) {
+            tail = next;
         } else {
-            node.prev.next = node.next;
+            prev.next = next;
         }
-        if (node.next == null) {
-            head = node.prev;
-            tail = head;
+        if (next == null) {
+            head = prev;
         } else {
-            node.next.prev = node.prev;
+            next.prev = prev;
         }
         size--;
+        return item;
+    }
+
+    private Node<T> getNodeByItem(T item) {
+        Node<T> node = tail;
+        while (node != null) {
+            if (areEqual(node.item, item)) {
+                return node;
+            }
+            node = node.next;
+        }
+        return null;
+    }
+
+    private void addFirst(T value) {
+        tail = head = new Node<>(null, value, null);
+    }
+
+    private void addLast(T value) {
+        head.next = new Node<>(head, value, null);
+        head = head.next;
+    }
+
+    private void addMiddle(T value, int index) {
+        Node<T> current = getNodeByIndex(index);
+        current.prev.next = new Node<>(current.prev, value, current);
+        current.prev = current.prev.next;
     }
 
     private static class Node<E> {
