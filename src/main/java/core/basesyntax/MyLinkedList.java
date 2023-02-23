@@ -53,41 +53,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         Node<T> tempPoint = getByIndex(index);
-        return tempPoint != null ? tempPoint.data : null;
+        return tempPoint.data;
     }
 
     @Override
     public T set(T value, int index) {
-        T result = null;
         Node<T> tempPoint = getByIndex(index);
-        if (tempPoint != null) {
-            result = tempPoint.data;
-            tempPoint.data = value;
-        }
+        T result = tempPoint.data;
+        tempPoint.data = value;
         return result;
     }
 
     @Override
     public T remove(int index) {
-        T result = null;
         Node<T> tempPoint = getByIndex(index);
-        if (tempPoint != null) {
-            result = tempPoint.data;
-            if (tempPoint.next != null) {
-                tempPoint.next.prev = tempPoint.prev;
-            }
-            if (tempPoint.prev != null) {
-                tempPoint.prev.next = tempPoint.next;
-            }
-            if (tempPoint.prev == null) {
-                first = tempPoint.next;
-            }
-            if (tempPoint.next == null) {
-                last = tempPoint.prev;
-            }
-            size--;
+        if (tempPoint.next != null) {
+            tempPoint.next.prev = tempPoint.prev;
         }
-        return result;
+        if (tempPoint.prev != null) {
+            tempPoint.prev.next = tempPoint.next;
+        }
+        if (tempPoint.prev == null) {
+            first = tempPoint.next;
+        }
+        if (tempPoint.next == null) {
+            last = tempPoint.prev;
+        }
+        size--;
+        return tempPoint.data;
     }
 
     @Override
@@ -117,14 +110,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getByIndex(int index) {
-        if (index < 0 || index > size - 1) {
+        Node<T> tempPoint = first;
+        if (index < 0 || index > size - 1 || tempPoint == null) {
             throw new IndexOutOfBoundsException("Invalid index : " + index + " Out bounds of List");
         }
-        Node<T> tempPoint = first;
-        if (tempPoint != null) {
-            for (int i = 0; i < index; i++) {
-                tempPoint = tempPoint.next;
-            }
+        for (int i = 0; i < index; i++) {
+            tempPoint = tempPoint.next;
         }
         return tempPoint;
     }
