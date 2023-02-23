@@ -62,8 +62,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (list == null) {
             throw new RuntimeException("This list is null!");
         }
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T value : list) {
+            add(value);
         }
     }
 
@@ -83,7 +83,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> node = getNode(index, size - 1);
-        removeLink(node);
+        unlink(node);
         return node.value;
     }
 
@@ -92,7 +92,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> node = head;
         while (node != null) {
             if (node.value == object || node.value != null && node.value.equals(object)) {
-                removeLink(node);
+                unlink(node);
                 return true;
             }
             node = node.next;
@@ -126,7 +126,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return temp;
     }
 
-    private void removeLink(Node<T> node) {
+    private void unlink(Node<T> node) {
         if (node.prev == null) {
             head = head.next;
         } else if (node.next == null) {
