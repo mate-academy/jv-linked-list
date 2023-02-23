@@ -115,11 +115,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Inserted index is not valid: "
                     + index + " Please try again.");
         }
-        if (index <= size >> 1) {
-            return getNodeFromStart(index);
-        } else {
-            return getNodeFromEnd(index);
-        }
+        return (index <= size >> 1) ? getNodeFromStart(index) : getNodeFromEnd(index);
     }
 
     private Node<T> getNodeFromStart(int index) {
