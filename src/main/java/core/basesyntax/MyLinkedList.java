@@ -14,18 +14,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        negativeIndex(index);
         if (tail == null) {
-            addFirst(value);
+            tail = head = new Node<>(null, value, null);
         } else if (index == 0) {
-            tail.prev = new Node<>(null, value, tail);
-            tail = tail.prev;
+            addFirst(value);
         } else if (index == size) {
             addLast(value);
         } else {
-            addMiddle(value, index);
+            addTop(value, index);
         }
         size++;
     }
@@ -80,10 +77,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndexBounds(int index) {
-        if (index < 0 || index >= size) {
+        negativeIndex(index);
+        if (index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
+
+    private void negativeIndex(int index) {
+        if (index < 0) {
+            throw new IndexOutOfBoundsException("Index " + index + " is negative");
+        }
+    }
+
 
     private Node<T> getNodeByIndex(int index) {
         checkIndexBounds(index);
@@ -94,9 +99,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private T unlink(Node<T> node) {
-        Node<T> next = node.next;
-        Node<T> prev = node.prev;
+    private T unlink(Node<T> removedNode) {
+        Node<T> next = removedNode.next;
+        Node<T> prev = removedNode.prev;
         if (prev == null) {
             tail = next;
         } else {
@@ -108,7 +113,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             next.prev = prev;
         }
         size--;
-        return node.item;
+        return removedNode.item;
     }
 
     private Node<T> getNodeByItem(T item) {
@@ -122,19 +127,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
+    private void addTop(T value, int index) {
+        Node<T> current = getNodeByIndex(index);
+        current.prev.next = new Node<>(current.prev, value, current);
+        current.prev = current.prev.next;
+    }
+
     private void addFirst(T value) {
-        tail = head = new Node<>(null, value, null);
+        tail.prev = new Node<>(null, value, tail);
+        tail = tail.prev;
     }
 
     private void addLast(T value) {
         head.next = new Node<>(head, value, null);
         head = head.next;
-    }
-
-    private void addMiddle(T value, int index) {
-        Node<T> current = getNodeByIndex(index);
-        current.prev.next = new Node<>(current.prev, value, current);
-        current.prev = current.prev.next;
     }
 
     private static class Node<E> {
