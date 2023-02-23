@@ -4,17 +4,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node<T> head = null;
-    private Node<T> tail = null;
+    public Node<T> head = null;
+    public Node<T> tail = null;
     private int size;
-
-    public Node<T> getHead() {
-        return head;
-    }
-
-    public Node<T> getTail() {
-        return tail;
-    }
 
     @Override
     public void add(T value) {
@@ -24,14 +16,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkForValidIndex(index);
-        Node<T> newNode = new Node<>(value,null, null, size);
+        Node<T> newNode = new Node<>(value,null, null);
         if (index < size) {
             connectToNext(newNode, getNodeByIndex(index));
         }
         if (index > 0) {
             connectToPrev(newNode, getNodeByIndex(index - 1));
         }
-        setHeadNTail(newNode);
+        setHeadAndTail(newNode);
         size++;
     }
 
@@ -117,17 +109,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         if (prev != null) {
             connectToNext(prev, next);
-            setHeadNTail(prev);
+            setHeadAndTail(prev);
         }
         if (next != null) {
             connectToPrev(next, prev);
-            setHeadNTail(next);
+            setHeadAndTail(next);
         }
         size--;
     }
 
     private void checkForValidIndex(int index) {
-        if (index < 0) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException();
         }
     }
@@ -150,7 +142,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         next.prev = current;
     }
 
-    private void setHeadNTail(Node<T> current) {
+    private void setHeadAndTail(Node<T> current) {
         if (current.prev == null) {
             head = current;
         }
@@ -159,12 +151,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    static class Node<T> {
+    private static class Node<T> {
         private Node<T> next;
         private Node<T> prev;
         private T element;
 
-        Node(T element, Node<T> next, Node<T> prev, int index) {
+        Node(T element, Node<T> next, Node<T> prev) {
             this.element = element;
             this.next = next;
             this.prev = prev;
