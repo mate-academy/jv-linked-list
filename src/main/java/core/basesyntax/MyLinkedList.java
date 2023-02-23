@@ -60,15 +60,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 unlink(x);
                 return true;
             }
-        }
-        if (object != null) {
-            for (Node<T> x = head; x != null; x = x.next) {
-                if (object.equals(x.element)) {
-                    unlink(x);
-                    return true;
-                }
+            if (object != null && object.equals(x.element)) {
+                unlink(x);
+                return true;
             }
         }
+
         return false;
     }
 
