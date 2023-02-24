@@ -11,34 +11,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value) {
         Node<T> newValue = new Node<>(last, value, null);
         if (isEmpty()) {
-            last = newValue;
             first = newValue;
         } else {
             last.next = newValue;
             newValue.prev = last;
-            last = newValue;
         }
+        last = newValue;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Index " + index + " out of bounds");
-        }
-        if (isEmpty() || size == index) {
+        if (size == index) {
             add(value);
             return;
         }
         Node<T> newValue = new Node<>(null, value, null);
         if (index == 0) {
             newValue.next = first;
+            first.prev = newValue;
             first = newValue;
         } else {
-            Node<T> current = first;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
+            checkIndex(index);
+            Node<T> current = findNodeByIndex(index);
             newValue.prev = current.prev;
             current.prev.next = newValue;
             newValue.next = current;
@@ -56,14 +51,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         Node<T> current = findNodeByIndex(index);
         return current.nodeValue;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> current = findNodeByIndex(index);
         T removedValue = current.nodeValue;
         current.nodeValue = value;
@@ -72,7 +65,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> current = findNodeByIndex(index);
         unlink(current);
         return current.nodeValue;
