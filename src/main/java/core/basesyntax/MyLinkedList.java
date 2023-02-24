@@ -30,11 +30,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             addAtFirstPosition(value);
             return;
         }
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(
-                    String.format("Index %d out of bounds. List size: %d", index, size)
-            );
-        }
+        checkIndex(index);
         addBefore(value, index);
     }
 
@@ -91,11 +87,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findByIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(
-                    String.format("Index %d out of bounds. List size: %d", index, size)
-            );
-        }
+        checkIndex(index);
         Node<T> currentNode;
         if (index < (size >> 1)) {
             currentNode = head;
@@ -104,7 +96,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         } else {
             currentNode = tail;
-            for (int i = size; i > (index + 1); i--) {
+            for (int i = size + 1; i > index; i--) {
                 currentNode = currentNode.previous;
             }
         }
@@ -150,6 +142,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = newNode;
         }
         size++;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(
+                    String.format("Index %d out of bounds. List size: %d", index, size)
+            );
+        }
     }
 
     private static class Node<T> {
