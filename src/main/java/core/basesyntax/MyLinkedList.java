@@ -117,7 +117,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return currentNode;
         }
         currentNode = last;
-        for (int i = size; i > index; i--) {
+        for (int i = size - 1; i > index; i--) {
             currentNode = currentNode.prev;
         }
         return currentNode;
