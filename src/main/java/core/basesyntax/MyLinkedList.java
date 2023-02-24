@@ -93,14 +93,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Invalid index: " + index + " Size: " + size);
         }
         Node<T> currentNode;
-        if ((size * 2) > index) {
+        if ((size / 2) > index) {
             currentNode = head;
             for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
             }
         } else {
             currentNode = tail;
-            for (int i = 0; i > (index + 1); i--) {
+            for (int i = size; i > (index + 1); i--) {
                 currentNode = currentNode.prev;
             }
         }
