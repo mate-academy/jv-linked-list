@@ -3,16 +3,15 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> head;
     private Node<T> tail;
 
     @Override
     public void add(T value) {
         if (size == 0) {
-            head = new Node<T>(null, value, null);
+            head = new Node<>(null, value, null);
             tail = head;
-
         } else {
             tail.next = new Node<>(tail, value, null);
             tail = tail.next;
@@ -31,22 +30,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             nodeToInsert.next = head;
             head.prev = nodeToInsert;
             head = nodeToInsert;
-            size++;
-            return;
+        } else {
+            Node<T> current = getNodeByIndex(index);
+            nodeToInsert.prev = current.prev;
+            nodeToInsert.next = current;
+            current.prev.next = nodeToInsert;
+            current.prev = nodeToInsert;
         }
-        Node<T> current = getNodeByIndex(index);
-        nodeToInsert.prev = current.prev;
-        nodeToInsert.next = current;
-        current.prev.next = nodeToInsert;
-        current.prev = nodeToInsert;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null) {
-            return;
-        }
         for (T element : list) {
             add(element);
         }
@@ -54,7 +49,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         Node<T> nodeByIndex = getNodeByIndex(index);
         return nodeByIndex.element;
     }
@@ -114,9 +108,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeByIndex(int index) {
         checkIndex(index);
-        Node<T> current = head;
-        for (int i = 0; i < index; ++i) {
-            current = current.next;
+        Node<T> current;
+        if ((float)(index / size) < 0.5) {
+            current = head;
+            for (int i = 0; i < index; ++i) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size; i > index; --i) {
+                current = current.prev;
+            }
         }
         return current;
     }
