@@ -121,11 +121,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    private boolean isValidIndex(int index) {
+    private void isValidIndex(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Not valid index");
-        } else {
-            return true;
         }
     }
 
