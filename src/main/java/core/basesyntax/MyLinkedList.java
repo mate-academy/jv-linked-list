@@ -3,17 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
 
     private int size;
     private Node<T> tail;
@@ -21,17 +10,35 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        linkLast(value);
+        if (isEmpty()) {
+            head = new Node<T>(null, value, null);
+            tail = head;
+        } else {
+            tail.next = new Node<T>(tail, value, null);
+            tail = tail.next;
+        }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("From add Index " + index + " is out of scope");
+        }
         if (index == size) {
             add(value);
             return;
         }
-        checkIndex(index);
-        linkBefore(value, findByIndex(index));
+        Node<T> after = findByIndex(index);
+        Node<T> before = after.prev;
+        Node<T> newNode = new Node<T>(before, value, after);
+        after.prev = newNode;
+        if (before != null) {
+            before.next = newNode;
+        } else {
+            head = newNode;
+        }
+        size++;
     }
 
     @Override
@@ -86,43 +93,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findByIndex(int index) {
+        Node<T> node;
         if (index < (size >> 1)) {
-            Node<T> node = head;
+            node = head;
             for (int i = 0; i < index; i++) {
                 node = node.next;
             }
-            return node;
         } else {
-            Node<T> node = tail;
+            node = tail;
             for (int i = size - 1; i > index; i--) {
                 node = node.prev;
             }
-            return node;
         }
-    }
-
-    private void linkLast(T element) {
-        Node<T> last = tail;
-        Node<T> newNode = new Node<>(last, element, null);
-        tail = newNode;
-        if (last == null) {
-            head = newNode;
-        } else {
-            last.next = newNode;
-        }
-        size++;
-    }
-
-    private void linkBefore(T element, Node<T> checked) {
-        Node<T> prev = checked.prev;
-        Node<T> newNode = new Node<>(prev, element, checked);
-        checked.prev = newNode;
-        if (prev == null) {
-            head = newNode;
-        } else {
-            prev.next = newNode;
-        }
-        size++;
+        return node;
     }
 
     private T unlink(Node<T> node) {
@@ -152,6 +135,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index out of bounds " + index);
+        }
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
         }
     }
 }
