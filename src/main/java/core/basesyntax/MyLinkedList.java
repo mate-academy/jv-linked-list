@@ -8,19 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-
-        private T value;
-        private Node<T> prev;
-        private Node<T> next;
-
-        private Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         if (isEmpty()) {
@@ -33,7 +20,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIfMayAddToIndex(index);
         if (index == size) {
             add(value);
             return;
@@ -81,7 +67,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         for (int i = 0; i < size; i++) {
-            if (areValuesEqual(current.value, object)) {
+            if (compare(current.value, object)) {
                 unLink((current));
                 return true;
             }
@@ -100,24 +86,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkIfMayAddToIndex(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Requested index" + index + " is out of range");
-        }
-    }
-
-    private void checkIfMayGetFromIndex(int index) {
+    private void checkElementIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Requested index" + index + " is out of range");
         }
     }
 
-    private boolean areValuesEqual(T a, T b) {
+    private boolean compare(T a, T b) {
         return a == b || a != null && a.equals(b);
     }
 
     private Node<T> getNode(int index) {
-        checkIfMayGetFromIndex(index);
+        checkElementIndex(index);
         Node<T> current;
         if ((size >> 1) > index) {
             current = head;
@@ -146,6 +126,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             node.next.prev = node.prev;
             node.prev.next = node.next;
+        }
+    }
+
+    private static class Node<T> {
+
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        private Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
         }
     }
 }
