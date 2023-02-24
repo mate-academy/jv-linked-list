@@ -9,7 +9,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = cratedNode(value);
+        Node<T> newNode = new Node<>(null, value, null);
         if (isEmpty()) {
             head = newNode;
         } else {
@@ -23,7 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndex(index, size);
-        Node<T> newNode = cratedNode(value);
+        Node<T> newNode = new Node<>(null, value, null);
         if (head == null) {
             head = tail = newNode;
         } else if (index == 0) {
@@ -51,12 +51,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return getNode(index, size - 1).value;
+        return getNode(index, size).value;
     }
 
     @Override
     public T set(T value, int index) {
-        Node<T> current = getNode(index, size - 1);
+        Node<T> current = getNode(index, size);
         T oldValue = current.value;
         current.value = value;
         return oldValue;
@@ -64,7 +64,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node<T> current = getNode(index, size - 1);
+        Node<T> current = getNode(index, size);
         unlink(current);
         return current.value;
     }
@@ -93,11 +93,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node<T> cratedNode(T value) {
-        return new Node<>(null, value, null);
-    }
-
     private Node<T> getNode(int index, int length) {
+        length--;
         checkIndex(index, length);
         Node<T> current;
         if (index > size / 2) {
