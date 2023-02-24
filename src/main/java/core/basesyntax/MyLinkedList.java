@@ -90,7 +90,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < size; i++) {
             if (tempPoint != null && (tempPoint.data == object || (tempPoint.data != null
                     && tempPoint.data.equals(object)))) {
-                remove(i);
+                exclude(tempPoint);
                 result = true;
                 break;
             }
@@ -109,13 +109,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private void exclude(Node<T> node) {
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        } else {
+            first = node.next;
+        }
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        } else {
+            last = node.prev;
+        }
+        size--;
+    }
+
     private Node<T> getByIndex(int index) {
-        Node<T> tempPoint = first;
-        if (index < 0 || index > size - 1 || tempPoint == null) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Invalid index : " + index + " Out bounds of List");
         }
-        for (int i = 0; i < index; i++) {
-            tempPoint = tempPoint.next;
+        Node<T> tempPoint = index < (size >> 1) ? first : last;
+        boolean direct = tempPoint == first;
+        for (int i = direct ? 0 : size - 1; direct ? i < index : i > index;
+                i = direct ? i + 1 : i - 1) {
+            tempPoint = direct ? tempPoint.next : tempPoint.prev;
         }
         return tempPoint;
     }
@@ -130,5 +146,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
             this.data = data;
         }
+    }
+
+    public static void main(String[] args) {
+        MyLinkedListInterface<String> myLinkedList = new MyLinkedList<>();
+        myLinkedList.add("FIRST_ITEM");
+        System.out.println(myLinkedList.size());
+        boolean firstRemove = myLinkedList.remove("FIRST_ITEM");
+        System.out.println(myLinkedList.size());
+        myLinkedList.add("SECOND_ITEM");
+        System.out.println(myLinkedList.size());
+        boolean secondRemove = myLinkedList.remove("FIRST_ITEM");
+        System.out.println(myLinkedList.size());
     }
 }
