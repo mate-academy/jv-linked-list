@@ -37,7 +37,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         if (index == size) {
             add(value);
-        } else if (isValidIndex(index)) {
+        } else {
+            isValidIndex(index);
             Node<T> newNode = new Node<>(value);
             Node<T> currentNode = getNode(index);
             Node<T> prevNode = currentNode.prev;
