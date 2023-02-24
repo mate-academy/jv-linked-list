@@ -39,8 +39,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T value: list) {
+            add(value);
         }
     }
 
@@ -67,10 +67,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> currentNode = head;
-        for (int i = 0; i < size; i++) {
+        while (currentNode != null) {
             if (currentNode.value == object || currentNode.value != null
                     && currentNode.value.equals(object)) {
-                remove(i);
+                unlink(currentNode);
                 return true;
             }
             currentNode = currentNode.next;
