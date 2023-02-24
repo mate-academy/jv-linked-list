@@ -54,17 +54,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        final Node<T> found = getAt(index);
-        final T oldValue = found.value;
-        found.value = value;
+        final Node<T> foundNode = getAt(index);
+        final T oldValue = foundNode.value;
+        foundNode.value = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        Node<T> found = getAt(index);
-        unlinc(found);
-        return found.value;
+        Node<T> foundNode = getAt(index);
+        unlinc(foundNode);
+        return foundNode.value;
     }
 
     @Override
@@ -82,19 +82,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return false;
     }
 
-    private void unlinc(Node<T> found) {
+    private void unlinc(Node<T> foundNode) {
         if (size == 1) {
             head = null;
             tail = null;
-        } else if (found.previous == null) {
-            head = found.next;
+        } else if (foundNode.previous == null) {
+            head = foundNode.next;
             head.previous = null;
-        } else if (found.next == null) {
-            tail = found.previous;
+        } else if (foundNode.next == null) {
+            tail = foundNode.previous;
             tail.next = null;
         } else {
-            found.previous.next = found.next;
-            found.next.previous = found.previous;
+            foundNode.previous.next = foundNode.next;
+            foundNode.next.previous = foundNode.previous;
         }
         size--;
     }
