@@ -24,7 +24,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == size) {
             addLast(value);
         } else {
-            addTop(value, index);
+            addMiddle(value, index);
         }
         size++;
     }
@@ -121,7 +121,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
-    private void addTop(T value, int index) {
+    private void addMiddle(T value, int index) {
         Node<T> current = getNodeByIndex(index);
         current.prev.next = new Node<>(current.prev, value, current);
         current.prev = current.prev.next;
