@@ -5,7 +5,7 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
-    private int length;
+    private int size;
 
     @Override
     public void add(T value) {
@@ -14,13 +14,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             tail = tail.next = new Node<>(tail, value, null);
         }
-        length++;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        isIndexValidForAdd(index);
-        if (index == length) {
+        if (index == size) {
             add(value);
             return;
         }
@@ -33,7 +32,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             head = newNode;
         }
-        length++;
+        size++;
     }
 
     @Override
@@ -66,7 +65,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> currentNode = head;
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < size; i++) {
             if (currentNode.item == object
                     || currentNode.item != null && currentNode.item.equals(object)) {
                 unlink(currentNode);
@@ -79,37 +78,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        return length;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return length == 0;
+        return size == 0;
     }
 
-    private void isIndexValidForGet(int index) {
-        if (index < 0 || index >= length) {
-            throw new IndexOutOfBoundsException("Index: " + index + " is out of scope");
-        }
-    }
-
-    private void isIndexValidForAdd(int index) {
-        if (index < 0 || index > length) {
+    private void isIndexValid(int index) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + " is out of scope");
         }
     }
 
     private Node<T> getNode(int index) {
-        isIndexValidForGet(index);
+        isIndexValid(index);
         Node<T> current;
-        if ((length / 2) > index) {
+        if ((size / 2) > index) {
             current = head;
             for (int i = 0; i < index; i++) {
                 current = current.next;
             }
         } else {
             current = tail;
-            for (int i = length; i > (index + 1); i--) {
+            for (int i = size; i > (index + 1); i--) {
                 current = current.prev;
             }
         }
@@ -117,7 +110,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> node) {
-        length--;
+        size--;
         if (node.next == null) {
             if (node.prev != null) {
                 node.prev.next = null;
