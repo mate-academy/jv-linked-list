@@ -14,7 +14,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        negativeIndex(index);
+        if (index < 0) {
+            throw new IndexOutOfBoundsException("Index " + index + " is negative");
+        }
         if (tail == null) {
             tail = head = new Node<>(null, value, null);
         } else if (index == 0) {
@@ -77,15 +79,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndexBounds(int index) {
-        negativeIndex(index);
-        if (index >= size) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-    }
-
-    private void negativeIndex(int index) {
-        if (index < 0) {
-            throw new IndexOutOfBoundsException("Index " + index + " is negative");
         }
     }
 
