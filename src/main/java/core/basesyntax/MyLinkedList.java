@@ -12,7 +12,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value) {
         final Node<T> newNode = new Node<>(value, tail, null);
         if (tail != null) {
-            tail.setNext(newNode);
+            tail.next = newNode;
         }
         checkHeadTail(newNode);
         size++;
@@ -27,22 +27,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             replacedNode = getAt(index);
             if (replacedNode != null) {
-                newNode = new Node<>(value, replacedNode.getPrevious(), replacedNode);
-                replacedNode.setPrevious(newNode);
+                newNode = new Node<>(value, replacedNode.previous, replacedNode);
+                replacedNode.previous = newNode;
             } else {
                 newNode = new Node<>(value, null, null);
             }
         }
-        if (newNode.getPrevious() != null) {
-            newNode.getPrevious().setNext(newNode);
+        if (newNode.previous != null) {
+            newNode.previous.next = newNode;
         }
         checkHeadTail(newNode);
         size++;
     }
 
     @Override
-    public void addAll(List<T> list) {
-        for (T toAdd : list) {
+    public void addAll(List<T> values) {
+        for (T toAdd : values) {
             add(toAdd);
         }
     }
@@ -55,8 +55,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         final Node<T> found = getAt(index);
-        final T oldValue = found.getValue();
-        found.setValue(value);
+        final T oldValue = found.value;
+        found.value = value;
         return oldValue;
     }
 
@@ -64,37 +64,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Node<T> found = getAt(index);
         unlinc(found);
-        return found.getValue();
+        return found.value;
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> current = head;
         for (int i = 0; i < size; i++) {
-            T value = current.getValue();
+            T value = current.value;
             if (value == null && object == null
                     || value != null && value.equals(object)) {
                 unlinc(current);
                 return true;
             }
-            current = current.getNext();
+            current = current.next;
         }
         return false;
     }
 
     private void unlinc(Node<T> found) {
-        if (found.getNext() == null && found.getPrevious() == null) {
-            setHead(null);
-            setTail(null);
-        } else if (found.getPrevious() == null) {
-            head = found.getNext();
-            head.setPrevious(null);
-        } else if (found.getNext() == null) {
-            tail = found.getPrevious();
-            tail.setNext(null);
+        if (size == 1) {
+            head = null;
+            tail = null;
+        } else if (found.previous == null) {
+            head = found.next;
+            head.previous = null;
+        } else if (found.next == null) {
+            tail = found.previous;
+            tail.next = null;
         } else {
-            found.getPrevious().setNext(found.getNext());
-            found.getNext().setPrevious(found.getPrevious());
+            found.previous.next = found.next;
+            found.next.previous = found.previous;
         }
         size--;
     }
@@ -112,16 +112,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getAt(int index) {
         checkBounds(index);
         Node<T> result;
-        int middle = (size - 1) / 2;
-        if (index < middle) {
+        if (index < (size - 1) / 2) {
             result = head;
             for (int i = 0; i < index; i++) {
-                result = result.getNext();
+                result = result.next;
             }
         } else {
             result = tail;
             for (int i = 0; i < size - (index + 1); i++) {
-                result = result.getPrevious();
+                result = result.previous;
             }
         }
         return result;
@@ -136,23 +135,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkHeadTail(Node<T> node) {
-        if (node.getNext() == null) {
-            setTail(node);
+        if (node.next == null) {
+            tail = node;
         }
-        if (node.getPrevious() == null) {
-            setHead(node);
+        if (node.previous == null) {
+            head = node;
         }
     }
 
-    public void setHead(Node<T> head) {
-        this.head = head;
-    }
-
-    public void setTail(Node<T> tail) {
-        this.tail = tail;
-    }
-
-    private class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node<T> previous;
         private Node<T> next;
@@ -160,30 +151,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         public Node(T value, Node<T> previous, Node<T> next) {
             this.value = value;
             this.previous = previous;
-            this.next = next;
-        }
-
-        public T getValue() {
-            return value;
-        }
-
-        public void setValue(T value) {
-            this.value = value;
-        }
-
-        public Node<T> getPrevious() {
-            return previous;
-        }
-
-        public void setPrevious(Node<T> previous) {
-            this.previous = previous;
-        }
-
-        public Node<T> getNext() {
-            return next;
-        }
-
-        public void setNext(Node<T> next) {
             this.next = next;
         }
     }
