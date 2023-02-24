@@ -65,13 +65,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (isValidIndex(index)) {
-            Node<T> node = getNode(index);
-            T item = node.item;
-            node.item = value;
-            return item;
-        }
-        return null;
+        isValidIndex(index);
+        Node<T> node = getNode(index);
+        T item = node.item;
+        node.item = value;
+        return item;
     }
 
     @Override
