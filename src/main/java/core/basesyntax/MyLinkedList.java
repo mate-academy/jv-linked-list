@@ -22,7 +22,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index out of bound");
+            throw new IndexOutOfBoundsException("Input index: " + index + " out of bound: " + size);
         } else if (size == index) {
             add(value);
         } else if (index == 0) {
@@ -54,7 +54,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> currentNode = getNodeByIndex(index);
         T temp = currentNode.value;
         currentNode.value = value;
@@ -64,26 +63,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        if (index == 0 && size == 1) {
-            T tempToReturn = head.value;
-            unlinkOneNode();
-            return tempToReturn;
-        } else {
-            Node<T> currentNode = getNodeByIndex(index);
-            remove(currentNode.value);
-            return currentNode.value;
-        }
+        Node<T> currentNode = getNodeByIndex(index);
+        T tempToReturn = currentNode.value;
+        unlink(currentNode);
+        return tempToReturn;
     }
 
     @Override
-    public boolean remove(T value) {
-        if (isEquals(head.value, value) && size == 1) {
-            return unlinkOneNode();
-        } else if (isEquals(head.value, value)) {
-            return unlinkHeadNode();
-        } else {
-            return unlinkNode(value);
+    public boolean remove(T object) {
+        Node<T> currentNode = head;
+        for (int i = 0; i < size; i++) {
+            if (isEquals(currentNode.value, object)) {
+                remove(i);
+                return true;
+            }
+            currentNode = currentNode.next;
         }
+        return false;
     }
 
     @Override
@@ -98,28 +94,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of bound");
+            throw new IndexOutOfBoundsException("Input index: " + index + " out of bound: " + size);
         }
     }
 
-    private boolean unlinkNode(T value) {
-        Node<T> currentNode = head;
-        while (currentNode != null) {
-            if (isEquals(currentNode.value, value)) {
-                currentNode.prev.next = currentNode.next;
-                currentNode.next.prev = currentNode.prev;
-                size--;
-                return true;
+    private void unlink(Node<T> node) {
+        size--;
+        if (node.next == null) {
+            if (node.prev != null) {
+                node.prev.next = null;
             }
-            currentNode = currentNode.next;
+            tail = node.prev;
+        } else if (node.prev == null) {
+            node.next.prev = null;
+            head = node.next;
+        } else {
+            node.next.prev = node.prev;
+            node.prev.next = node.next;
         }
-        return false;
     }
 
     private Node<T> getNodeByIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of bound");
-        }
+        checkIndex(index);
         Node<T> currentNode = size / 2 < index ? head : tail;
         if (currentNode == head) {
             for (int i = 0; i < index; i++) {
@@ -131,22 +127,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return currentNode;
-    }
-
-    private boolean unlinkOneNode() {
-        tail.next = null;
-        tail.prev = null;
-        tail.value = null;
-        head = tail;
-        size--;
-        return true;
-    }
-
-    private boolean unlinkHeadNode() {
-        head.next.prev = null;
-        head = head.next;
-        size--;
-        return true;
     }
 
     private boolean isEquals(T value, T object) {
