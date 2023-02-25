@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import org.w3c.dom.Node;
+
 import java.util.List;
 
 public interface MyLinkedListInterface<T> {
@@ -20,4 +22,5 @@ public interface MyLinkedListInterface<T> {
     int size();
 
     boolean isEmpty();
+
 }
