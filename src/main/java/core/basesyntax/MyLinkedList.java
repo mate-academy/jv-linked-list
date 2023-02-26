@@ -7,6 +7,76 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
+    @Override
+    public void add(T value) {
+        if (isEmpty()) {
+            setFirstValue(value);
+            return;
+        }
+        linkLast(value);
+    }
+
+    @Override
+    public void add(T value, int index) {
+        addCheck(index);
+        if (index == size) {
+            add(value);
+            return;
+        }
+        linkBefore(value, findNodeByIndex(index));
+    }
+
+    @Override
+    public void addAll(List<T> list) {
+        if (list == null) {
+            return;
+        }
+        for (T item : list) {
+            this.add(item);
+        }
+    }
+
+    @Override
+    public T get(int index) {
+        return findNodeByIndex(index).item;
+    }
+
+    @Override
+    public T set(T value, int index) {
+        Node<T> oldNode = findNodeByIndex(index);
+        T oldItem = oldNode.item;
+        oldNode.item = value;
+        return oldItem;
+    }
+
+    @Override
+    public T remove(int index) {
+        Node<T> node = findNodeByIndex(index);
+        T value = node.item;
+        unlink(node);
+        return value;
+    }
+
+    @Override
+    public boolean remove(T object) {
+        Node<T> node = getNode(object);
+        if (node == null) {
+            return false;
+        }
+        unlink(node);
+        return true;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
     private void addCheck(int index) {
         if (index > size || index < 0) {
             throw new IndexOutOfBoundsException("Your index was " + index
@@ -21,16 +91,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> findNodeByValue(T value) {
+    private Node<T> getNode(T value) {
         Node<T> node = head;
         for (int i = 0; i < size; i++) {
-            if (value == node.item || value != null
-                    && value.equals(node.item)) {
+            if ((node.item == value) || (node.item != null && node.item.equals(value))) {
                 return node;
             }
             node = node.next;
         }
-        throw new RuntimeException("Element " + value + " didn't find");
+        return null;
     }
 
     private Node<T> findNodeByIndex(int index) {
@@ -103,79 +172,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
             this.prev = prev;
         }
-    }
-
-    @Override
-    public void add(T value) {
-        if (isEmpty()) {
-            setFirstValue(value);
-            return;
-        }
-        linkLast(value);
-    }
-
-    @Override
-    public void add(T value, int index) {
-        addCheck(index);
-        if (isEmpty()) {
-            setFirstValue(value);
-            return;
-        }
-        if (index == size) {
-            linkLast(value);
-            return;
-        }
-        linkBefore(value, findNodeByIndex(index));
-    }
-
-    @Override
-    public void addAll(List<T> list) {
-        if (list == null) {
-            throw new IndexOutOfBoundsException("List is null");
-        }
-        for (T item : list) {
-            this.add(item);
-        }
-    }
-
-    @Override
-    public T get(int index) {
-        return findNodeByIndex(index).item;
-    }
-
-    @Override
-    public T set(T value, int index) {
-        Node<T> oldNode = findNodeByIndex(index);
-        T oldItem = oldNode.item;
-        oldNode.item = value;
-        return oldItem;
-    }
-
-    @Override
-    public T remove(int index) {
-        Node<T> node = findNodeByIndex(index);
-        T value = node.item;
-        unlink(node);
-        return value;
-    }
-
-    @Override
-    public boolean remove(T object) {
-        try {
-            unlink(findNodeByValue(object));
-        } catch (RuntimeException e) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
     }
 }
