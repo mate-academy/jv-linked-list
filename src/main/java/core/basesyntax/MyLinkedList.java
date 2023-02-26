@@ -112,9 +112,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.next.prev = node.prev;
         }
         if (node == head) {
+            head.prev = null;
             head = node.next;
         }
         if (node == tail) {
+            tail.next = null;
             tail = node.prev;
         }
         size--;
