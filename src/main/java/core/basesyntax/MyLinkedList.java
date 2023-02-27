@@ -59,7 +59,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return oldValue;
     }
 
-
     @Override
     public int size() {
         return size;
