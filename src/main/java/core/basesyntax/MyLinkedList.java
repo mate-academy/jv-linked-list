@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -60,10 +59,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return oldValue;
     }
 
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
     @Override
     public T remove(int index) {
         Node<T> foundNode = getAt(index);
-        unlinc(foundNode);
+        unlink(foundNode);
         return foundNode.value;
     }
 
@@ -74,7 +84,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             T value = current.value;
             if (value == null && object == null
                     || value != null && value.equals(object)) {
-                unlinc(current);
+                unlink(current);
                 return true;
             }
             current = current.next;
@@ -82,7 +92,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return false;
     }
 
-    private void unlinc(Node<T> foundNode) {
+    private void unlink(Node<T> foundNode) {
         if (size == 1) {
             head = null;
             tail = null;
@@ -97,16 +107,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             foundNode.next.previous = foundNode.previous;
         }
         size--;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
     }
 
     private Node<T> getAt(int index) {
