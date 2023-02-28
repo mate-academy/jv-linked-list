@@ -21,32 +21,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index " + index + " is out of bound for length "
-                    + size);
-        }
         if (index == size) {
             add(value);
             return;
         }
-        if (index == 0) {
-            Node<T> newNode = new Node<>(head.prev, value, head);
-            head.prev = newNode;
-            head = newNode;
-            size++;
-            return;
-        }
+        checkIndex(index);
         Node<T> currentNode = getCurrentNode(index);
-        Node<T> anotherNode = new Node<>(currentNode.prev, value, currentNode);
-        currentNode.prev.next = anotherNode;
-        currentNode.prev = anotherNode;
+        Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
+        if (currentNode.prev == null) {
+            head = newNode;
+        } else {
+            currentNode.prev.next = newNode;
+        }
+        currentNode.prev = newNode;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         if (list == null) {
-            throw new RuntimeException("Current list is null!");
+            throw new RuntimeException("Can't add elements, cause current list is null!");
         }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
@@ -78,7 +72,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (size == 1) {
+        if (size == 1 && head.value.equals(object)) {
             remove(size - 1);
             return true;
         }
