@@ -62,19 +62,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> x = first; x != null; x = x.next) {
-                if (x.item == null) {
-                    unlink(x);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> x = first; x != null; x = x.next) {
-                if (object.equals(x.item)) {
-                    unlink(x);
-                    return true;
-                }
+        for (Node<T> x = first; x != null; x = x.next) {
+            if (object == x.item || object != null && object.equals(x.item)) {
+                unlink(x);
+                return true;
             }
         }
         return false;
@@ -129,7 +120,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    void linkLast(T value) {
+    private void linkLast(T value) {
         Node<T> newNode = new Node<>(last, value, null);
         if (last == null) {
             first = newNode;
@@ -140,7 +131,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    void linkBefore(T value, MyLinkedList.Node<T> successorNode) {
+    private void linkBefore(T value, MyLinkedList.Node<T> successorNode) {
         final Node<T> predecessorNode = successorNode.prev;
         final Node<T> newNode = new Node<>(predecessorNode, value, successorNode);
         successorNode.prev = newNode;
@@ -152,23 +143,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    T unlink(Node<T> x) {
-        final T element = x.item;
-        final Node<T> next = x.next;
-        final Node<T> prev = x.prev;
+    private T unlink(Node<T> node) {
+        final T element = node.item;
+        final Node<T> next = node.next;
+        final Node<T> prev = node.prev;
         if (prev == null) {
             first = next;
         } else {
             prev.next = next;
-            x.prev = null;
+            node.prev = null;
         }
         if (next == null) {
             last = prev;
         } else {
             next.prev = prev;
-            x.next = null;
+            node.next = null;
         }
-        x.item = null;
+        node.item = null;
         size--;
         return element;
     }
