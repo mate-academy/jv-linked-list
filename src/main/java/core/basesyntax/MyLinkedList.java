@@ -33,7 +33,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Objects.requireNonNull(list);
         if (list != null) {
             for (T elements : list) {
                 add(elements);
@@ -52,7 +51,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         T element = current.element;
         current.element = value;
         return element;
-
     }
 
     @Override
