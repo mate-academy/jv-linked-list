@@ -5,41 +5,43 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
-    private Node<T> currentNode;
     private int size;
 
     @Override
     public void add(T value) {
+        Node<T> newNode;
         if (size == 0) {
-            head = new Node<>(null, value, null);
-            tail = head;
+            newNode = new Node<>(null, value, null);
+            head = newNode;
         } else {
-            currentNode = new Node<>(tail, value, null);
-            tail.next = currentNode;
-            tail = currentNode;
+            newNode = new Node<>(tail, value, null);
+            tail.next = newNode;
+            //tail = newNode;
         }
+        tail = newNode;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
+        Node<T> newNode;
         if (index == size) {
             add(value);
             return;
         } else {
             if (index == 0) {
-                currentNode = new Node<>(null, value, head);
-                head.prev = currentNode;
-                head = currentNode;
+                newNode = new Node<>(null, value, head);
+                head.prev = newNode;
+                head = newNode;
             } else {
                 checkForValidIndex(index);
                 Node<T> next = getNodeByIndex(index - 1);
                 Node<T> prev = next.prev;
-                currentNode = new Node<>(prev, value, next);
-                currentNode.next = next.next;
-                next.next = currentNode;
-                currentNode.prev = next;
-                currentNode.next.prev = currentNode;
+                newNode = new Node<>(prev, value, next);
+                newNode.next = next.next;
+                next.next = newNode;
+                newNode.prev = next;
+                newNode.next.prev = newNode;
             }
         }
         size++;
@@ -55,36 +57,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkForValidIndex(index);
-        Node<T> currentNode = head;
+        Node<T> newNode = head;
         int countIndex = 0;
-        while (currentNode != null) {
+        while (newNode != null) {
             if (countIndex == index) {
-                return (T) currentNode.value;
+                return (T) newNode.value;
             }
             countIndex++;
-            currentNode = currentNode.next;
+            newNode = newNode.next;
         }
         return null;
     }
 
     @Override
     public T set(T value, int index) {
+        Node<T> newNode;
         checkForValidIndex(index);
-        currentNode = getNodeByIndex(index);
-        T previousValue = (T) currentNode.value;
-        currentNode.value = value;
+        newNode = getNodeByIndex(index);
+        T previousValue = (T) newNode.value;
+        newNode.value = value;
         return previousValue;
     }
 
     @Override
     public T remove(int index) {
-        Node currentNode = head;
+        Node<T> newNode = head;
         if (index == 0) {
             head = head.next;
         } else {
             checkForValidIndex(index);
             Node<T> node = getNodeByIndex(index - 1);
-            currentNode = node.next;
+            newNode = node.next;
             if (index == size - 1) {
                 node.next = null;
             } else {
@@ -93,7 +96,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         size--;
-        return (T) currentNode.value;
+        return (T) newNode.value;
     }
 
     @Override
