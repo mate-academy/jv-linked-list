@@ -16,7 +16,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             newNode = new Node<>(tail, value, null);
             tail.next = newNode;
-            //tail = newNode;
         }
         tail = newNode;
         size++;
@@ -154,7 +153,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return nodeLink;
     }
 
-    class Node<T> {
+    public static class Node<T> {
         private T value;
         private Node<T> prev;
         private Node<T> next;
