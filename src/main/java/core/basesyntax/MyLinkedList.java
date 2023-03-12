@@ -14,8 +14,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexInBounds(index);
-
         if (size == index) {
             linkLast(value);
         } else {
@@ -42,15 +40,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndexInBounds(index);
-        checkIndexAtSizeRange(index);
         return getNodeIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndexInBounds(index);
-        checkIndexAtSizeRange(index);
         Node<T> nodeAtIndex = getNodeIndex(index);
         T changedNode = nodeAtIndex.value;
         nodeAtIndex.value = value;
@@ -59,8 +53,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndexInBounds(index);
-        checkIndexAtSizeRange(index);
         return unlink(getNodeIndex(index));
     }
 
@@ -85,19 +77,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkIndexInBounds(int index) {
-        if (index < 0) {
+    private Node<T> getNodeIndex(int index) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
-        if (index > size) {
-            throw new IndexOutOfBoundsException();
-        }
-    }
+        Node<T> nodeAtIndex;
 
-    private void checkIndexAtSizeRange(int index) {
-        if (index == size) {
-            throw new IndexOutOfBoundsException();
+        if (index < size) {
+            nodeAtIndex = head;
+            for (int i = 0; i < index; i++) {
+                nodeAtIndex = nodeAtIndex.next;
+            }
+            return nodeAtIndex;
+        } else {
+            nodeAtIndex = tail;
+            for (int i = size - 1; i > index; i--) {
+                nodeAtIndex = nodeAtIndex.prev;
+            }
         }
+        return nodeAtIndex;
     }
 
     private void linkLast(T value) {
@@ -134,24 +132,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         nodeAtIndex.value = null;
         size--;
         return value;
-    }
-
-    private Node<T> getNodeIndex(int index) {
-        Node<T> nodeAtIndex;
-
-        if (index < size) {
-            nodeAtIndex = head;
-            for (int i = 0; i < index; i++) {
-                nodeAtIndex = nodeAtIndex.next;
-            }
-            return nodeAtIndex;
-        } else {
-            nodeAtIndex = tail;
-            for (int i = size - 1; i > index; i--) {
-                nodeAtIndex = nodeAtIndex.prev;
-            }
-        }
-        return nodeAtIndex;
     }
 
     private class Node<T> {
