@@ -3,15 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node<T> head;
-    private Node<T> tail;
-    private int size;
-
-    public MyLinkedList() {
-        this.size = 0;
-        this.head = null;
-        this.tail = null;
-    }
+    private Node<T> head = null;
+    private Node<T> tail = null;
+    private int size = 0;
 
     @Override
     public void add(T value) {
@@ -20,16 +14,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        int linkedListSize = size;
         checkOnIndexOutOfBoundsException(index, false);
 
-        if (linkedListSize == 0) {
+        if (size == 0) {
             addHead(value);
-        } else if (linkedListSize == index) {
+        } else if (size == index) {
             addTail(value);
         } else {
             Node<T> findedNode = findNode(index);
-            addBetween(value, findedNode);
+            addBefore(value, findedNode);
         }
     }
 
@@ -42,24 +35,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkOnIndexOutOfBoundsException(index, true);
-        Node<T> needNode = findNode(index);
-        return needNode.value;
+        return findNodeAndCheckIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkOnIndexOutOfBoundsException(index, true);
-        Node<T> needNode = findNode(index);
-        T oldValue = needNode.value;
-        needNode.value = value;
+        Node<T> node = findNodeAndCheckIndex(index);
+        T oldValue = node.value;
+        node.value = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        checkOnIndexOutOfBoundsException(index, true);
-        Node<T> node = findNode(index);
+        Node<T> node = findNodeAndCheckIndex(index);
         T removeValue = node.value;
         removeNode(node);
         return removeValue;
@@ -115,12 +104,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void addBetween(T value, Node<T> findNode) {
+    private void addBefore(T value, Node<T> findNode) {
         Node<T> prev = findNode.prev;
         Node<T> newNode = new Node<>(prev, value, findNode);
         findNode.prev = newNode;
         checkOnNull(prev, newNode);
         size++;
+    }
+
+    private Node<T> findNodeAndCheckIndex(int index) {
+        checkOnIndexOutOfBoundsException(index, true);
+        return findNode(index);
     }
 
     private void checkOnNull(Node<T> checkNode, Node<T> useNode) {
@@ -132,28 +126,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNode(int index) {
-        int sizeLinkedList = size;
-        if (sizeLinkedList == 0) {
+        int counter = size;
+        if (counter == 0) {
             return head;
         }
-        if (index == sizeLinkedList) {
+        if (index == counter) {
             return tail;
         }
 
         Node<T> needNode;
-        int middle = sizeLinkedList / 2;
+        int middle = counter / 2;
         if (index > middle) {
             needNode = tail;
-            while (sizeLinkedList - 1 != index) {
+            while (counter - 1 != index) {
                 needNode = needNode.prev;
-                sizeLinkedList--;
+                counter--;
             }
         } else {
-            int checkIndex = 0;
+            counter = 0;
             needNode = head;
-            while (checkIndex != index) {
+            while (counter != index) {
                 needNode = needNode.next;
-                checkIndex++;
+                counter++;
             }
         }
         return needNode;
