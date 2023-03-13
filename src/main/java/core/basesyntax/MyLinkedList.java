@@ -7,12 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size;
 
-    public MyLinkedList() {
-        this.first = null;
-        this.last = null;
-        this.size = 0;
-    }
-
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(null, value, null);
@@ -51,8 +45,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            Node<T> newNode = new Node<>(null,list.get(i), null);
-            add(newNode.item);
+            add(list.get(i));
         }
     }
 
@@ -75,7 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        return getRemovedItem(index);
+        return unlink(index);
     }
 
     @Override
@@ -86,7 +79,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             temp++;
             if (removedNode.item == i.item || removedNode.item != null && removedNode.item
                     .equals(i.item)) {
-                getRemovedItem(temp - 1);
+                unlink(temp - 1);
                 return true;
             }
         }
@@ -103,7 +96,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private T getRemovedItem(int index) {
+    private T unlink(int index) {
         T removedItem;
         if (index == 0) {
             removedItem = first.item;
