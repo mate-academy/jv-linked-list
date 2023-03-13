@@ -27,21 +27,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
             return;
+        }
+        if (index == 0) {
+            newNode = new Node<>(null, value, head);
+            head.prev = newNode;
+            head = newNode;
         } else {
-            if (index == 0) {
-                newNode = new Node<>(null, value, head);
-                head.prev = newNode;
-                head = newNode;
-            } else {
-                checkForValidIndex(index);
-                Node<T> next = getNodeByIndex(index - 1);
-                Node<T> prev = next.prev;
-                newNode = new Node<>(prev, value, next);
-                newNode.next = next.next;
-                next.next = newNode;
-                newNode.prev = next;
-                newNode.next.prev = newNode;
-            }
+            Node<T> next = getNodeByIndex(index - 1);
+            Node<T> prev = next.prev;
+            newNode = new Node<>(prev, value, next);
+            newNode.next = next.next;
+            next.next = newNode;
+            newNode.prev = next;
+            newNode.next.prev = newNode;
         }
         size++;
     }
@@ -55,24 +53,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkForValidIndex(index);
-        Node<T> newNode = head;
-        int countIndex = 0;
-        while (newNode != null) {
-            if (countIndex == index) {
-                return (T) newNode.value;
-            }
-            countIndex++;
-            newNode = newNode.next;
-        }
-        return null;
+        return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        Node<T> newNode;
-        checkForValidIndex(index);
-        newNode = getNodeByIndex(index);
+        Node<T> newNode = getNodeByIndex(index);
         T previousValue = (T) newNode.value;
         newNode.value = value;
         return previousValue;
@@ -80,43 +66,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node<T> newNode = head;
-        if (index == 0) {
-            head = head.next;
-        } else {
-            checkForValidIndex(index);
-            Node<T> node = getNodeByIndex(index - 1);
-            newNode = node.next;
-            if (index == size - 1) {
-                node.next = null;
-            } else {
-                node.next.next.prev = node;
-                node.next = node.next.next;
-            }
-        }
-        size--;
-        return (T) newNode.value;
+        return unlink(index);
     }
 
     @Override
     public boolean remove(T object) {
         int currentIndex = 0;
-        if (object == null) {
-            for (Node<T> node = head; node != null; node = node.next) {
-                if (node.value == null) {
-                    remove(currentIndex);
-                    return true;
-                }
-                currentIndex++;
+        for (Node<T> node = head; node != null; node = node.next) {
+            if ((object == null && node.value == null)
+                    || (object != null && object.equals(node.value))) {
+                unlink(currentIndex);
+                return true;
             }
-        } else {
-            for (Node<T> node = head; node != null; node = node.next) {
-                if (object.equals(node.value)) {
-                    remove(currentIndex);
-                    return true;
-                }
-                currentIndex++;
-            }
+            currentIndex++;
         }
         return false;
     }
@@ -139,18 +101,38 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Node<T> nodeLink = head;
+        checkForValidIndex(index);
+        Node<T> newNode = head;
         if (index <= size / 2) {
             for (int i = 0; i < index; i++) {
-                nodeLink = nodeLink.next;
+                newNode = newNode.next;
             }
         } else {
-            nodeLink = tail;
-            for (int i = size; i > index; i--) {
-                nodeLink = nodeLink.prev;
+            newNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                newNode = newNode.prev;
             }
         }
-        return nodeLink;
+        return newNode;
+    }
+
+    private T unlink(int index) {
+        Node<T> newNode = head;
+        if (index == 0) {
+            head = head.next;
+        } else {
+            checkForValidIndex(index);
+            Node<T> node = getNodeByIndex(index - 1);
+            newNode = node.next;
+            if (index == size - 1) {
+                node.next = null;
+            } else {
+                node.next.next.prev = node;
+                node.next = node.next.next;
+            }
+        }
+        size--;
+        return (T) newNode.value;
     }
 
     public static class Node<T> {
