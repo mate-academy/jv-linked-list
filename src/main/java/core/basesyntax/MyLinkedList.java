@@ -36,11 +36,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 head.prev = newNode;
                 head = newNode;
             } else {
-                checkIndex(index);
-                Node<T> prevNode = getNode(index - 1);
                 Node<T> nextNode = getNode(index);
-                newNode = new Node<T>(prevNode, value, nextNode);
-                prevNode.next = newNode;
+                newNode = new Node<T>(nextNode.prev, value, nextNode);
+                nextNode.prev.next = newNode;
                 nextNode.prev = newNode;
             }
             size++;
@@ -128,6 +126,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Non-existent list index");
         }
+    }
+
+    private void unlink(Node<T> node) {
+
     }
 
     private static class Node<T> {
