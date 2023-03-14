@@ -10,15 +10,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode;
+        Node<T> newNode = new Node<>(null, value, null);
         if (size == 0) {
-            newNode = new Node<>(null, value, null);
             head = newNode;
-        } else if (size == 1) {
-            newNode = new Node<>(head, value, null);
-            head.next = newNode;
         } else {
-            newNode = new Node<>(tail, value, null);
+            newNode.prev = tail;
             tail.next = newNode;
         }
         tail = newNode;
