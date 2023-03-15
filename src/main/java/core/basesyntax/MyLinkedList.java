@@ -128,7 +128,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    public void unlink(Node<T> needToRemoveNode) {
+    private void unlink(Node<T> needToRemoveNode) {
         if (needToRemoveNode == head) {
             head = needToRemoveNode.next;
             needToRemoveNode.prev = null;
