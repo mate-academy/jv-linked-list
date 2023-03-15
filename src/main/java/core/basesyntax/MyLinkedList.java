@@ -5,9 +5,7 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private int size;
-
     private Node<T> head;
-
     private Node<T> tail;
 
     public static class Node<T> {
@@ -89,10 +87,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             if (target.value == object || object != null && object.equals(target.value)) {
                 unlink(target);
-
                 return true;
             }
-
             target = target.next;
         }
         return false;
