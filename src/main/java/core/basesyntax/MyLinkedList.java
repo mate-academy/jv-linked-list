@@ -110,7 +110,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public Node<T> getNode(int index) {
+    private Node<T> getNode(int index) {
         checkIndex(index);
         Node<T> currentNode;
 
