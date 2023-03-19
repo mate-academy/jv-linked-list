@@ -4,18 +4,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static class Node<T> {
-        private T item;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T item, Node<T> next) {
-            this.prev = prev;
-            this.item = item;
-            this.next = next;
-        }
-    }
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -50,7 +38,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     public void addAll(int index, Collection<? extends T> collection) {
         for (T element : collection) {
-            checkAddingIndex(index);
             add(element, index++);
         }
     }
@@ -160,6 +147,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index " + index
                     + " out of bounce of size " + size);
+        }
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T item, Node<T> next) {
+            this.prev = prev;
+            this.item = item;
+            this.next = next;
         }
     }
 }
