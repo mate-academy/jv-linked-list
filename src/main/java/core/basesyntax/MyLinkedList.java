@@ -49,29 +49,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public void addAll(int index, Collection<? extends T> collection) {
-       /* checkAddingIndex(index);
-        T[] objects = (T[]) collection.toArray();
-    private void addAll(int index, Collection<? extends T> collection) {
-        checkAddingIndex(index);
-        T[] objects = (T[]) collection.toArray();
-
-        if (index == size) {
-            for (T element : objects) {
-                add(element);
-            }
-        } else {
-            for (T element : objects) {
-                linkBefore(element, getNode(index));
-                index++;
-            }
+        for (T element : collection) {
+            checkAddingIndex(index);
+            add(element, index++);
         }
-        */
-        T[] objects = (T[]) collection.toArray();
-
-        for (T element : objects) {
-
-        }
-
     }
 
     @Override
@@ -175,7 +156,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void checkElementIndex(int index) throws IndexOutOfBoundsException {
+    private void checkElementIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index " + index
                     + " out of bounce of size " + size);
