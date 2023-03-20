@@ -24,7 +24,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        if ((index >= 0) && (index == size)) {
+        if (index == size) {
             add(value);
             return;
         }
@@ -97,7 +97,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         if ((object != null)) {
-            for (Node<T> node = firstNode; node != null; node = node.next) {
+            for (Node<T> node = firstNode; node.next != null; node = node.next) {
                 if (object.equals(node.item)) {
                     unlink(node);
                     return true;
