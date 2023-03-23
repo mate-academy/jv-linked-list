@@ -26,7 +26,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         } else {
-            indexExist(index);
             Node<T> current = nodeGetByIndex(index);
             Node<T> newNode = new Node<T>(current.prev, value, current);
             if (current == head) {
@@ -61,7 +60,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        indexExist(index);
         Node<T> currentNode = nodeGetByIndex(index);
         T old = currentNode.value;
         currentNode.value = value;
@@ -70,7 +68,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexExist(index);
         Node<T> currentNode = nodeGetByIndex(index);
         unlink(currentNode);
         return currentNode.value;
@@ -100,13 +97,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void indexExist(int index) throws IndexOutOfBoundsException {
+    private void indexExist(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("This index " + index + " is not exist!");
         }
     }
 
     private Node<T> nodeGetByIndex(int index) {
+        indexExist(index);
         Node<T> currentNode = head;
         for (int i = 0; i < size; i++) {
             if (i == index) {
