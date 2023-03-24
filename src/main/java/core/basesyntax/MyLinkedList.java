@@ -160,13 +160,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         } else {
             Node<T> tempNode = tail;
-            for(int i = size - 1; i > 0; i--) {
+            for (int i = size - 1; i > 0; i--) {
                 if (i == index) {
                     correctNode = tempNode;
                 }
                 tempNode = tempNode.prev;
             }
-            }
+        }
         return correctNode;
     }
 
