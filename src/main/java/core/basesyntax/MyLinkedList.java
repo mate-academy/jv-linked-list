@@ -34,28 +34,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size++;
             return;
         }
-        if (index < (size - 1) / 2) {
-            int indexCounter = 0;
-            Node<T> tempNode = head.next;
-            while (indexCounter != index) {
-                indexCounter++;
-                if (indexCounter == index) {
-                    linkNewNode(tempNode, value);
-                }
-                tempNode = tempNode.next;
-
-            }
-        } else {
-            int indexCounter = size;
-            Node<T> tempNode = tail;
-            while (indexCounter != index) {
-                indexCounter--;
-                if (indexCounter == index) {
-                    linkNewNode(tempNode, value);
-                }
-                tempNode = tempNode.prev;
-            }
-        }
+        linkNewNode(getNode(index), value);
     }
 
     @Override
@@ -152,20 +131,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> correctNode = null;
         if (index <= firstHalf) {
             Node<T> tempNode = head;
-            for (int i = 0; i < size; i++) {
-                if (i == index) {
-                    correctNode = tempNode;
-                }
+            for (int i = 0; i < index; i++) {
                 tempNode = tempNode.next;
             }
+            correctNode = tempNode;
         } else {
             Node<T> tempNode = tail;
-            for (int i = size - 1; i > 0; i--) {
-                if (i == index) {
-                    correctNode = tempNode;
-                }
+            for (int i = size - 1; i > index; i--) {
                 tempNode = tempNode.prev;
             }
+            correctNode = tempNode;
         }
         return correctNode;
     }
