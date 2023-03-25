@@ -10,14 +10,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        final Node<T> newTail = tail;
         Node<T> newNode = new Node<>(tail, value, null);
-        tail = newNode;
-        if (newTail == null) {
+        if (tail == null) {
             head = newNode;
         } else {
-            newTail.next = tail;
+            tail.next = newNode;
         }
+        tail = newNode;
         size++;
     }
 
@@ -44,14 +43,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] listArray = list.toArray();
-        final int numNew = listArray.length;
-        Node<T> pred;
-        Node<T> succ;
-        succ = null;
-        pred = tail;
-        for (Object object : listArray) {
-            T element = (T) object;
+        for (T element : list) {
             add(element);
         }
     }
@@ -71,7 +63,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return finalValue;
     }
 
-    public Node<T> getNodeByIndex(int index) {
+    private Node<T> getNodeByIndex(int index) {
         if (index < (size >> 1)) {
             Node<T> x = head;
             for (int i = 0; i < index; i++) {
@@ -180,7 +172,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Expected index is incorrect.");
         }
     }
 }
