@@ -53,15 +53,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndexForBound(index);
-        T previousBody = getNode(index).body;
-        getNode(index).body = value;
+        Node<T> node = getNode(index);
+        T previousBody = node.body;
+        node.body = value;
         return previousBody;
     }
 
     @Override
     public T remove(int index) {
         Node<T> toRemoveNode = getNode(index);
-
         unlinkNode(toRemoveNode);
         size--;
         return toRemoveNode.body;
@@ -110,18 +110,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlinkNode(Node<T> node) {
-        Node<T> nextNode = node.next;
-        Node<T> previousNode = node.prev;
         if (node == head) {
-            head = nextNode;
+            head = node.next;;
         } else if (node == tail) {
-            tail = previousNode;
+            tail = node.prev;
         }
-        if (previousNode != null) {
-            previousNode.next = nextNode;
+        if (node.prev != null) {
+            node.prev.next = node.next;
         }
-        if (nextNode != null) {
-            nextNode.prev = previousNode;
+        if (node.next != null) {
+            node.next.prev = node.prev;
         }
     }
 
