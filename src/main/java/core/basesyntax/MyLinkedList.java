@@ -10,10 +10,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> node = new Node<>(value);
-        size++;
 
         if (first == null) {
             first = node;
+            size++;
+
             return;
         }
 
@@ -21,12 +22,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             last = node;
             last.prev = first;
             first.next = last;
+            size++;
+
             return;
         }
 
         last.next = node;
         node.prev = last;
         last = node;
+        size++;
     }
 
     @Override
