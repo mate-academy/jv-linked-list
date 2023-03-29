@@ -26,7 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkIndex(index);
+        checkIndex(index, size);
         if (index == 0) {
             Node<T> newNode = new Node<>(null, value, head);
             head.prev = newNode;
@@ -49,13 +49,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        checkIndex(index, size);
         return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
+        checkIndex(index, size);
         Node<T> node = getNodeByIndex(index);
         T setValue = node.value;
         node.value = value;
@@ -64,7 +64,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
+        checkIndex(index, size);
         Node<T> currentNode = getNodeByIndex(index);
         unlink(currentNode);
         return currentNode.value;
@@ -110,7 +110,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    Node<T> getNodeByIndex(int index) {
+    private Node<T> getNodeByIndex(int index) {
+        checkIndex(index, size);
         Node<T> currentNode;
         if (index < (size >> 1)) {
             currentNode = head;
@@ -126,7 +127,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    private void checkIndex(int index) {
+    private void checkIndex(int index, int size) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("This index is incorrect: " + index);
         }
