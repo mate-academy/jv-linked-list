@@ -3,17 +3,34 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private class Node<T> {
+        private Node<T> prev;
+        private T value;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
+
+        public Node(Node<T> prev, T value) {
+            this.prev = prev;
+            this.value = value;
+        }
+    }
+
     private Node<T> head;
     private Node<T> tail;
     private int size;
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(tail, value, null);
+        Node<T> newNode = new Node<>(tail, value);
         if (isEmpty()) {
             head = newNode;
         } else {
-            tail.setNext(newNode);
+            tail.next = newNode;
         }
         tail = newNode;
         size++;
@@ -28,14 +45,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
         } else {
             Node<T> indexNode = getNodeAtIndex(index);
-            Node<T> prevToIndexNode = indexNode.getPrev();
+            Node<T> prevToIndexNode = indexNode.prev;
             Node<T> newNode = new Node<>(prevToIndexNode, value, indexNode);
             if (index == 0) {
                 head = newNode;
             } else {
-                prevToIndexNode.setNext(newNode);
+                prevToIndexNode.next = newNode;
             }
-            indexNode.setPrev(newNode);
+            indexNode.prev = newNode;
             size++;
         }
     }
@@ -50,15 +67,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         indexRangeCheck(index);
-        return getNodeAtIndex(index).getValue();
+        return getNodeAtIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         indexRangeCheck(index);
         Node<T> indexNode = getNodeAtIndex(index);
-        T oldValue = indexNode.getValue();
-        indexNode.setValue(value);
+        T oldValue = indexNode.value;
+        indexNode.value = value;
         return oldValue;
     }
 
@@ -66,18 +83,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         indexRangeCheck(index);
         Node<T> removedNode = getNodeAtIndex(index);
-        if (index == 0) {
-            head = removedNode.getNext();
-        } else {
-            removedNode.getPrev().setNext(removedNode.getNext());
-        }
-        if (index == size - 1) {
-            tail = removedNode.getPrev();
-        } else {
-            removedNode.getNext().setPrev(removedNode.getPrev());
-        }
+        unlink(removedNode);
         size--;
-        return removedNode.getValue();
+        return removedNode.value;
     }
 
     @Override
@@ -85,12 +93,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> temp = head;
         int index = 0;
         while (temp != null) {
-            if (object == temp.getValue()
-                    || temp.getValue() != null && temp.getValue().equals(object)) {
+            if (object == temp.value
+                    || temp.value != null && temp.value.equals(object)) {
                 remove(index);
                 return true;
             }
-            temp = temp.getNext();
+            temp = temp.next;
             index++;
         }
         return false;
@@ -118,14 +126,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < size / 2) {
             indexNode = head;
             for (int i = 0; i < index; i++) {
-                indexNode = indexNode.getNext();
+                indexNode = indexNode.next;
             }
         } else {
             indexNode = tail;
             for (int i = size - 1; i > index; i--) {
-                indexNode = indexNode.getPrev();
+                indexNode = indexNode.prev;
             }
         }
         return indexNode;
+    }
+
+    private void unlink(Node<T> node) {
+        if (node.prev == null) {
+            head = node.next;
+        } else {
+            node.prev.next = node.next;
+        }
+        if (node.next == null) {
+            tail = node.prev;
+        } else {
+            node.next.prev = node.prev;
+        }
     }
 }
