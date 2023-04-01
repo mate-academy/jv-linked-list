@@ -85,7 +85,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> temp = head;
         int index = 0;
         while (temp != null) {
-            if (object == temp.getValue() || temp.getValue() != null && temp.getValue().equals(object)) {
+            if (object == temp.getValue()
+                    || temp.getValue() != null && temp.getValue().equals(object)) {
                 remove(index);
                 return true;
             }
