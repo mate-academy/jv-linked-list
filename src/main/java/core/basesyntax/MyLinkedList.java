@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    private static class Node<T> {
-        private T item;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T item, Node<T> next) {
-            this.prev = prev;
-            this.item = item;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         if (!isEmpty()) {
@@ -155,6 +143,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             removedNode.prev.next = removedNode.next;
             removedNode.next.prev = removedNode.prev;
+        }
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T item, Node<T> next) {
+            this.prev = prev;
+            this.item = item;
+            this.next = next;
         }
     }
 }
