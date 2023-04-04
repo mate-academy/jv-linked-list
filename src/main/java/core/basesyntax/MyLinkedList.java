@@ -30,7 +30,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         checkIndex(index);
-        if (index >= 1 && index < size ) {
+        if (index >= 1 && index < size) {
             Node<T> currentBefore = getNodeByIndex(index - 1);
             Node<T> newNode = new Node<T>(currentBefore, value, currentBefore.next);
             currentBefore.next.prev = newNode;
@@ -158,9 +158,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private class Node<T> {
-        T value;
-        Node<T> prev;
-        Node<T> next;
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
 
         public Node(Node<T> prev, T value, Node<T> next) {
             this.next = next;
