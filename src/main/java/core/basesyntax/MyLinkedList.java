@@ -3,6 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final String INDEX_OUT_OF_BOUNDS = "Index - %d is out of bounds";
     private int size;
     private Node<T> first;
     private Node<T> last;
@@ -97,7 +98,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkElementIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException(String.format(INDEX_OUT_OF_BOUNDS, index));
         }
     }
 
