@@ -7,10 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    public MyLinkedList() {
-
-    }
-
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(value);
@@ -28,7 +24,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index out of LinkedList!!!");
+            throw new IndexOutOfBoundsException("Index " + index
+                    + " is out of acceptable range 0 - " + size);
         }
         Node<T> newNode = new Node<>(value);
         if (index == 0) {
@@ -49,8 +46,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             newNode.next = currentNode.next;
             newNode.prev = currentNode;
             currentNode.next = newNode;
-            currentNode = newNode.next;
-            currentNode.prev = newNode;
+            newNode.next.prev = newNode;
         }
         size++;
     }
@@ -137,7 +133,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of LinkedList!!!");
+            throw new IndexOutOfBoundsException("Index " + index
+                    + " is out of acceptable range 0 - " + size);
         }
     }
 
