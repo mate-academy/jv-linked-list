@@ -5,7 +5,7 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
-    private int size = 0;
+    private int size;
 
     @Override
     public void add(T value) {
@@ -62,7 +62,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode = getNodeByIndex(index);
         Node<T> currentAfter = getNodeByIndex(index + 1);
         if (index == 0) {
-            //Node<T> newNode = new Node<T>(null, T value, null);
             Node<T> newNode = new Node<T>(null, value, null);
             head = newNode;
             if (size == 1) {
