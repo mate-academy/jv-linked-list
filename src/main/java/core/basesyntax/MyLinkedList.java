@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private MyNode<T> first;
@@ -15,10 +14,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = newNode;
             last = newNode;
         } else {
-            MyNode<T> l = last;
-            MyNode<T> newNode = new MyNode<>(l, value, null);
+            MyNode<T> prevNode = last;
+            MyNode<T> newNode = new MyNode<>(prevNode, value, null);
             last = newNode;
-            l.next = newNode;
+            prevNode.next = newNode;
         }
         size++;
     }
@@ -31,15 +30,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         MyNode<T> oldNode = findNodeByIndex(index);
         if (oldNode == first) {
-            MyNode<T> f = first;
-            MyNode<T> newNode = new MyNode<>(null, value, f);
+            MyNode<T> nextNode = first;
+            MyNode<T> newNode = new MyNode<>(null, value, nextNode);
             first = newNode;
-            f.prev = newNode;
+            nextNode.prev = newNode;
         } else {
-            MyNode<T> l = oldNode.prev;
-            MyNode<T> newNode = new MyNode<>(l, value, oldNode);
+            MyNode<T> prevNode = oldNode.prev;
+            MyNode<T> newNode = new MyNode<>(prevNode, value, oldNode);
             oldNode.prev = newNode;
-            l.next = newNode;
+            prevNode.next = newNode;
         }
         size++;
     }
@@ -59,9 +58,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        MyNode<T> current = findNodeByIndex(index);
-        T result = current.item;
-        current.item = value;
+        MyNode<T> currentNode = findNodeByIndex(index);
+        T result = currentNode.item;
+        currentNode.item = value;
         return result;
     }
 
@@ -74,13 +73,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        MyNode<T> f = first;
-        while (f != null) {
-            if (Objects.equals(f.item, object)) {
-                unlinkNode(f);
+        MyNode<T> currentNode = first;
+        while (currentNode != null) {
+            if ((currentNode.item == object)
+                    || (currentNode.item != null && currentNode.item.equals(object))) {
+                unlinkNode(currentNode);
                 return true;
             }
-            f = f.next;
+            currentNode = currentNode.next;
         }
         return false;
     }
@@ -118,11 +118,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private MyNode<T> findNodeByIndex(int index) {
         checkIndex(index);
-        MyNode<T> current = first;
+        MyNode<T> currentNode = first;
         for (int i = 0; i < index; i++) {
-            current = current.next;
+            currentNode = currentNode.next;
         }
-        return current;
+        return currentNode;
     }
 
     private static class MyNode<T> {
