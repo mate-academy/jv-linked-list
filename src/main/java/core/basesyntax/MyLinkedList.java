@@ -31,13 +31,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             addByIndexDefault(index, value);
         }
 
-
     }
 
     @Override
     public void addAll(List<T> list) {
         for (T element : list) {
-          add(element);
+           add(element);
         }
     }
 
@@ -115,11 +114,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addByIndexDefault(int index, T value) {
-       Node<T> node = findByIndex(index);
-       Node<T> newNode = new Node<>(node.prev, value, node);
-       node.prev.next = newNode;
-       node.prev = newNode;
-       size++;
+        Node<T> node = findByIndex(index);
+        Node<T> newNode = new Node<>(node.prev, value, node);
+        node.prev.next = newNode;
+        node.prev = newNode;
+        size++;
     }
 
     private Node<T> findByIndex(int index) {
@@ -129,7 +128,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode;
         if (index <= size / 2) {
             currentNode = head;
-            for(int i = 0; i < index; i++) {
+            for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
             }
         } else {
