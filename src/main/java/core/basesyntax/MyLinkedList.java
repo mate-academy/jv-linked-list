@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
 
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        public Node(Node<T> prev, T item, Node<T> next) {
-            this.prev = prev;
-            this.item = item;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         if (first == null) {
@@ -33,12 +21,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        //add first
         if (index == 0) {
             addFirst(value);
-        } else if (index == size) { //add last
+        } else if (index == size) {
             addLast(value);
-        } else { //add middle
+        } else {
             checkAddIndex(index);
             Node<T> oldNode = getNodeByIndex(index);
             Node<T> oldNodePrev = oldNode.prev;
@@ -52,8 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         Object[] arrayList = list.toArray();
-        int length = arrayList.length;
-        if (length == 0) {
+        if (arrayList.length == 0) {
             throw new IllegalArgumentException("Can't add an empty array.");
         }
         for (Object o : arrayList) {
@@ -168,7 +154,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    //if there is only one object
     private T removeOnlyOne(Node<T> removedNode) {
         final T removedItem = removedNode.item;
         first = null;
@@ -178,9 +163,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return removedItem;
     }
 
-    // this method defines which way to find out the value(index) will be preferred
     private Node<T> getNodeByIndex(int index) {
-        if (index < (size >> 1)) { //the same is "index < size/2"
+        if (index < (size >> 1)) {
             Node<T> x = first;
             for (int i = 0; i < index; i++) {
                 x = x.next;
@@ -192,6 +176,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 x = x.prev;
             }
             return x;
+        }
+    }
+
+    private class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(Node<T> prev, T item, Node<T> next) {
+            this.prev = prev;
+            this.item = item;
+            this.next = next;
         }
     }
 }
