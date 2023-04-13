@@ -26,7 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == size) {
             addLast(value);
         } else {
-            checkAddIndex(index);
+            checkIndexIsValid(index);
             Node<T> oldNode = getNodeByIndex(index);
             Node<T> oldNodePrev = oldNode.prev;
             Node<T> newNode = new Node<>(oldNodePrev, value, oldNode);
@@ -125,12 +125,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void checkIndexIsValid(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Can't add element on position " + index);
-        }
-    }
-
-    private void checkAddIndex(int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Can't set element on position " + index);
         }
     }
 
