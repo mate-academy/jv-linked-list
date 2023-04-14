@@ -45,13 +45,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkElementIndex(index);
-        return node(index).value;
+        return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkElementIndex(index);
-        Node<T> currentNode = node(index);
+        Node<T> currentNode = getNode(index);
         T oldValue = currentNode.value;
         currentNode.value = value;
         return oldValue;
@@ -60,24 +60,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkElementIndex(index);
-        return unlink(node(index));
+        return unlink(getNode(index));
     }
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> currentNode = head; currentNode != null; currentNode = currentNode.next) {
-                if (currentNode.value == null) {
-                    unlink(currentNode);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> currentNode = head; currentNode != null; currentNode = currentNode.next) {
-                if (currentNode.value != null && currentNode.value.equals(object)) {
-                    unlink(currentNode);
-                    return true;
-                }
+        for (Node<T> currentNode = head; currentNode != null; currentNode = currentNode.next) {
+            if (currentNode.value == object
+                    || (currentNode.value != null
+                    && currentNode.value.equals(object))) {
+                unlink(currentNode);
+                return true;
             }
         }
         return false;
@@ -91,17 +84,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder a = new StringBuilder();
-        Node<T> currentNode = head;
-        while (currentNode != null) {
-            a.append(currentNode.value).append(", ");
-            currentNode = currentNode.next;
-        }
-        return a.substring(0, a.length() - 2);
     }
 
     private T unlink(Node<T> node) {
@@ -157,10 +139,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         checkIndexPosition(index);
-        return node(index);
-    }
-
-    private Node<T> node(int index) {
         if (index < (size / 2)) {
             Node<T> node = head;
             for (int i = 0; i < index; i++) {
