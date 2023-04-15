@@ -6,16 +6,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String INDEX_OUT_OF_BOUNDS = "Index is out of bounds of list";
     private ListNode<T> head;
     private ListNode<T> tail;
-    private int size = 0;
+    private int size;
 
-    public MyLinkedList() {
+    private class ListNode<T> {
+        private T value;
+        private ListNode prev;
+        private ListNode next;
 
-    }
-
-    public MyLinkedList(T value) {
-        head = new ListNode<>(value);
-        tail = head;
-        size = 1;
+        ListNode(T value) {
+            this.value = value;
+        }
     }
 
     @Override
@@ -25,9 +25,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = head;
             size = 1;
         } else {
-            tail.setNext(new ListNode<>(value));
-            tail.getNext().setPrev(tail);
-            tail = tail.getNext();
+            tail.next = new ListNode<>(value);
+            tail.next.prev = tail;
+            tail = tail.next;
             size++;
         }
     }
@@ -37,7 +37,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         ListNode<T> node = getListNode(index);
         ListNode<T> newNode = new ListNode<>(value);
         boolean isAfterTailInsert = false;
-        if (node == null) {
+        if (checkIndexOutOfBorder(index)) {
             if (isEmpty()) {
                 head = newNode;
                 tail = newNode;
@@ -48,16 +48,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             isAfterTailInsert = true;
         }
         if (isAfterTailInsert) {
-            newNode.setPrev(node);
-            node.setNext(newNode);
+            newNode.prev = node;
+            node.next = newNode;
             tail = newNode;
         } else {
-            newNode.setNext(node);
-            newNode.setPrev(node.getPrev());
-            if (newNode.getPrev() != null) {
-                newNode.getPrev().setNext(newNode);
+            newNode.next = node;
+            newNode.prev = node.prev;
+            if (newNode.prev != null) {
+                newNode.prev.next = newNode;
             }
-            node.setPrev(newNode);
+            node.prev = newNode;
             if (index == 0) {
                 head = newNode;
             }
@@ -72,79 +72,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private ListNode<T> getListNode(int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS);
-        }
-
-        if (size == 0 || index == size) {
-            return null;
-        }
-
-        if (index == 0) {
-            return head;
-        }
-
-        if (index == size - 1) {
-            return tail;
-        }
-
-        ListNode<T> nextNode = head;
-        for (int i = 1; i <= index; i++) {
-            nextNode = nextNode.getNext();
-        }
-        return nextNode;
-    }
-
     @Override
     public T get(int index) {
+        checkIndexOutOfBorderThrowException(index);
         ListNode<T> node = getListNode(index);
-        if (node == null) {
-            throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS);
-        }
-        return node.getValue();
+        return node.value;
     }
 
     @Override
     public T set(T value, int index) {
+        checkIndexOutOfBorderThrowException(index);
         ListNode<T> node = getListNode(index);
-        if (node == null) {
-            throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS);
-        }
-        T oldValue = node.getValue();
-        node.setValue(value);
+        T oldValue = node.value;
+        node.value = value;
         return oldValue;
-    }
-
-    private void removeNode(ListNode<T> node) {
-        ListNode<T> nextNode = node.getNext();
-        ListNode<T> prevNode = node.getPrev();
-
-        if (nextNode != null) {
-            nextNode.setPrev(prevNode);
-        } else {
-            tail = size == 1 ? head : prevNode;
-        }
-        if (prevNode != null) {
-            prevNode.setNext(nextNode);
-        } else {
-            head = nextNode;
-        }
-        size--;
-        if (isEmpty()) {
-            head = null;
-            tail = null;
-        }
     }
 
     @Override
     public T remove(int index) {
+        checkIndexOutOfBorderThrowException(index);
         ListNode<T> node = getListNode(index);
-        if (node == null) {
-            throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS);
-        }
-        removeNode(node);
-        return node.getValue();
+        unlink(node);
+        return node.value;
     }
 
     @Override
@@ -155,9 +104,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return false;
         }
 
-        while (!(nextNode.getValue() == object
-                || nextNode.getValue() != null && nextNode.getValue().equals(object))) {
-            nextNode = nextNode.getNext();
+        while (!(nextNode.value == object
+                || nextNode.value != null && nextNode.value.equals(object))) {
+            nextNode = nextNode.next;
             if (nextNode == null) {
                 break;
             }
@@ -165,7 +114,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (nextNode == null) {
             return false;
         }
-        removeNode(nextNode);
+        unlink(nextNode);
         return true;
     }
 
@@ -177,5 +126,67 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkIndex(int index) {
+        if (index > size || index < 0) {
+            throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS);
+        }
+    }
+
+    private boolean checkIndexOutOfBorder(int index) {
+        return size == 0 || index == size;
+    }
+
+    private void checkIndexOutOfBorderThrowException(int index) {
+        if (size == 0 || index == size) {
+            throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS);
+        }
+    }
+
+    private void unlink(ListNode<T> node) {
+        ListNode<T> nextNode = node.next;
+        ListNode<T> prevNode = node.prev;
+
+        if (nextNode != null) {
+            nextNode.prev = prevNode;
+        } else {
+            tail = size == 1 ? head : prevNode;
+        }
+        if (prevNode != null) {
+            prevNode.next = nextNode;
+        } else {
+            head = nextNode;
+        }
+        size--;
+        if (isEmpty()) {
+            head = null;
+            tail = null;
+        }
+    }
+
+    private ListNode<T> getListNode(int index) {
+        checkIndex(index);
+
+        if (index == 0) {
+            return head;
+        }
+
+        if (index == size - 1) {
+            return tail;
+        }
+        int middleOfList = size / 2;
+        ListNode<T> nextNode = head;
+        if (index < middleOfList) {
+            for (int i = 1; i <= index; i++) {
+                nextNode = nextNode.next;
+            }
+        } else {
+            nextNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                nextNode = nextNode.prev;
+            }
+        }
+        return nextNode;
     }
 }
