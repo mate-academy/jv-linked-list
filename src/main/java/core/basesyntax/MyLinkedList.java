@@ -26,7 +26,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         Node<T> node = getNode(index);
         Node<T> newNode = new Node<>(value);
-        boolean isAfterTailInsert = false;
         if (checkIndexOutOfBorder(index)) {
             if (isEmpty()) {
                 head = newNode;
@@ -35,9 +34,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 return;
             }
             node = tail;
-            isAfterTailInsert = true;
         }
-        if (isAfterTailInsert) {
+        if (index == size) {
             newNode.prev = node;
             node.next = newNode;
             tail = newNode;
