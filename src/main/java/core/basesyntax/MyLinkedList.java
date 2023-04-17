@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
@@ -24,7 +23,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Objects.checkIndex(index, size + 1);
+        if (index == size) {
+            add(value);
+            return;
+        }
+        checkIndex(index);
         Node<T> newNode = new Node<>(null, value, null);
         if (first == null) {
             first = newNode;
@@ -57,14 +60,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Objects.checkIndex(index, size);
+        checkIndex(index);
         Node<T> gettedNode = getNodeByIndex(index);
         return gettedNode.value;
     }
 
     @Override
     public T set(T value, int index) {
-        Objects.checkIndex(index, size);
+        checkIndex(index);
         Node<T> settedNode = getNodeByIndex(index);
         T oldValue = settedNode.value;
         settedNode.value = value;
@@ -73,7 +76,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Objects.checkIndex(index, size);
+        checkIndex(index);
         Node<T> removedNode = getNodeByIndex(index);
         return unlink(removedNode);
     }
@@ -101,8 +104,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Index is incorrect " + index);
+        }
+    }
+
     private Node<T> getNodeByIndex(int index) {
-        Objects.checkIndex(index, size);
+        checkIndex(index);
         Node<T> currentNode = first;
         for (int i = 0; i < index; i++) {
             currentNode = currentNode.next;
