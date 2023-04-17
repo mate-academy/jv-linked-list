@@ -92,19 +92,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNode(int index) {
         checkElementIndex(index);
 
+        Node<T> result;
         if ((index < (size / 2)) && (index != 0)) {
-            Node<T> result = head;
+            result = head;
             for (int i = 0; i < index; i++) {
                 result = result.next;
             }
-            return result;
         } else {
-            Node<T> result = tail;
+            result = tail;
             for (int i = size - 1; i > index; i--) {
                 result = result.prev;
             }
-            return result;
         }
+        return result;
     }
 
     private T unlink(Node<T> removeNode) {
