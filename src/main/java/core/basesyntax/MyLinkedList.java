@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Collection;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -33,14 +32,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        addAll(size, list);
-    }
-
-    public void addAll(int index, Collection<? extends T> collection) {
-        for (T element : collection) {
-            add(element, index++);
+        for (T element : list) {
+            add(element);
         }
     }
+
 
     @Override
     public T get(int index) {
@@ -97,7 +93,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNode(int index) {
         checkElementIndex(index);
 
-        if (index < (size / 2)) {
+        if ((index < (size / 2)) && (index != 0)) {
             Node<T> result = head;
             for (int i = 0; i < index; i++) {
                 result = result.next;
