@@ -9,13 +9,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(null, value, null);
+        Node<T> newNode = new Node<>(last, value, null);
         if (first == null) {
             first = newNode;
             last = newNode;
         } else {
             last.next = newNode;
-            newNode.prev = last;
             last = newNode;
         }
         size++;
@@ -29,19 +28,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         checkIndex(index);
         Node<T> newNode = new Node<>(null, value, null);
-        if (first == null) {
-            first = newNode;
-            last = newNode;
-        } else if (index == 0) {
+        if (index == 0) {
             first.prev = newNode;
             newNode.prev = null;
             newNode.next = first;
             first = newNode;
-        } else if (index == size) {
-            last.next = newNode;
-            newNode.next = null;
-            newNode.prev = last;
-            last = newNode;
         } else {
             Node<T> currentNode = getNodeByIndex(index - 1);
             newNode.next = currentNode.next;
@@ -67,7 +58,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> settedNode = getNodeByIndex(index);
         T oldValue = settedNode.value;
         settedNode.value = value;
@@ -76,7 +66,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> removedNode = getNodeByIndex(index);
         return unlink(removedNode);
     }
