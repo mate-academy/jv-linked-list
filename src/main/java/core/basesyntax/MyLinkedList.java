@@ -3,21 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node<T> head;
-    private Node<T> tail;
-    private int size;
-
-    private static class Node<T> {
-        private T data;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(T data, Node<T> prev, Node<T> next) {
-            this.data = data;
-            this.prev = prev;
-            this.next = next;
-        }
-    }
+    private Node<T> head = null;
+    private Node<T> tail = null;
+    private int size = 0;
 
     public MyLinkedList() {
         head = null;
@@ -27,7 +15,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value, tail, null);
+        Node<T> newNode = new Node<>(tail, value, null);
         if (head == null) {
             head = newNode;
         } else {
@@ -43,19 +31,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Illegal index: " + index);
         }
         if (index == 0) {
-            Node<T> newNode = new Node<>(value, null, head);
+            Node<T> newNode = new Node<>(null,value, head);
             head = newNode;
             if (tail == null) {
                 tail = newNode;
             }
         } else if (index == size) {
-            Node<T> newNode = new Node<>(value, tail, null);
+            Node<T> newNode = new Node<>(tail, value, null);
             tail.next = newNode;
             tail = newNode;
         } else {
             Node<T> currentNode = getNode(index);
             Node<T> prevNode = currentNode.prev;
-            Node<T> newNode = new Node<>(value, prevNode, currentNode);
+            Node<T> newNode = new Node<>(prevNode, value, currentNode);
             prevNode.next = newNode;
             currentNode.prev = newNode;
         }
@@ -85,42 +73,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndexExist(index);
-        Node<T> current = getNode(index);
-        if (current == head) {
-            head = current.next;
-        } else {
-            current.prev.next = current.next;
-        }
-        if (current == tail) {
-            tail = current.prev;
-        } else {
-            current.next.prev = current.prev;
-        }
-        size--;
-        return current.data;
+        Node<T> currentNode = getNode(index);
+        unLinkNode(currentNode);
+        return currentNode.data;
     }
 
     @Override
     public boolean remove(T object) {
-        if (head == null) {
-            return false;
-        }
         Node<T> currentNode = head;
         while (currentNode != null) {
             if (object == null && currentNode.data == null || object != null
                     && object.equals(currentNode.data)) {
-                if (currentNode == head) {
-                    head = currentNode.next;
-                } else {
-                    currentNode.prev.next = currentNode.next;
-                }
-                if (currentNode == tail) {
-                    tail = currentNode.prev;
-                } else {
-                    currentNode.next.prev = currentNode.prev;
-                }
-                size--;
+                unLinkNode(currentNode);
                 return true;
             }
             currentNode = currentNode.next;
@@ -138,8 +102,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private static class Node<T> {
+        private T data;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T data, Node<T> next) {
+            this.data = data;
+            this.prev = prev;
+            this.next = next;
+        }
+    }
+
     private Node<T> getNode(int index) {
-        checkIndexExist(index);
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Illegal index: " + index);
+        }
         Node<T> currentNode;
         if (index < size / 2) {
             currentNode = head;
@@ -155,9 +133,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    private void checkIndexExist(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Illegal index: " + index);
+    private void unLinkNode(Node<T> node) {
+        if (node == null) {
+            return;
         }
+        if (node == head) {
+            head = head.next;
+        } else {
+            node.prev.next = node.next;
+        }
+        if (node == tail) {
+            tail = node.prev;
+        } else {
+            node.next.prev = node.prev;
+        }
+        size--;
     }
 }
