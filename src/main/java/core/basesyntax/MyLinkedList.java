@@ -7,12 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail = null;
     private int size = 0;
 
-    public MyLinkedList() {
-        head = null;
-        tail = null;
-        size = 0;
-    }
-
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(tail, value, null);
@@ -27,9 +21,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Illegal index: " + index);
-        }
         if (index == 0) {
             Node<T> newNode = new Node<>(null,value, head);
             head = newNode;
@@ -82,8 +73,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> currentNode = head;
         while (currentNode != null) {
-            if (object == null && currentNode.data == null || object != null
-                    && object.equals(currentNode.data)) {
+            if (object == currentNode.data || object != null && object.equals(currentNode.data)) {
                 unLinkNode(currentNode);
                 return true;
             }
@@ -134,9 +124,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unLinkNode(Node<T> node) {
-        if (node == null) {
-            return;
-        }
         if (node == head) {
             head = head.next;
         } else {
