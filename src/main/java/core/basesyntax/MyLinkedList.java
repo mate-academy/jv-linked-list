@@ -7,27 +7,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size;
 
-    private static class Node<T> {
-        private T value;
-        private Node<T> prev;
-        private Node<T> next;
-
-        Node(Node<T> prev, T value, Node<T> next) {
-            this.value = value;
-            this.prev = prev;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
-        Node<T> node = last;
-        Node<T> newNode = new Node<>(node, value, null);
+        Node<T> oldLast = last;
+        Node<T> newNode = new Node<>(oldLast, value, null);
         last = newNode;
-        if (node == null) {
+        if (oldLast == null) {
             first = newNode;
         } else {
-            node.next = newNode;
+            oldLast.next = newNode;
         }
         size++;
     }
@@ -77,17 +65,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Node<T> node = getNode(index);
         unlink(node);
-        size--;
         return node.value;
     }
 
     @Override
     public boolean remove(T object) {
         for (Node<T> node = first; node != null; node = node.next) {
-            if (node.value == null && object == null
-                    || node.value != null && node.value.equals(object)) {
+            if (node.value == object || object != null && object.equals(node.value)) {
                 unlink(node);
-                size--;
                 return true;
             }
         }
@@ -105,6 +90,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
+        checkIndex(index);
         if (index < (size / 2)) {
             Node<T> node = first;
             for (int i = 0; i < index; i++) {
@@ -121,21 +107,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> node) {
-        if (node.prev != null) {
-            node.prev.next = node.next;
-        } else {
+        if (node == first) {
             first = node.next;
-        }
-        if (node.next != null) {
-            node.next.prev = node.prev;
         } else {
-            last = node.prev;
+            node.prev.next = node.next;
         }
+        if (node == last) {
+            last = node.prev;
+        } else {
+            node.next.prev = node.prev;
+        }
+        size--;
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Invalid index: " + index);
+        }
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        Node(Node<T> prev, T value, Node<T> next) {
+            this.value = value;
+            this.prev = prev;
+            this.next = next;
         }
     }
 }
