@@ -26,7 +26,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkIndex(index);
         Node<T> node = getNode(index);
         Node<T> newNode = new Node<>(node.prev, value, node);
         if (node.prev != null) {
