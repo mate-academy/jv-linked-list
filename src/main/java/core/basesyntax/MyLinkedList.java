@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -25,7 +26,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        isValidIndex(index);
         if (index == 0) {
             Node<T> newNode = new Node<>(null, value, head);
             newNode.next = head;
@@ -49,32 +49,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        isValidIndex(index);
         return getNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        isValidIndex(index);
-        Node<T> setNote = getNodeByIndex(index);
-        T item = setNote.item;
-        setNote.item = value;
+        Node<T> oldNote = getNodeByIndex(index);
+        T item = oldNote.item;
+        oldNote.item = value;
         return item;
     }
 
     @Override
     public T remove(int index) {
-        isValidIndex(index);
-        Node<T> removeNote = getNodeByIndex(index);
-        unlink(removeNote);
-        return removeNote.item;
+        Node<T> nodeToRemove = getNodeByIndex(index);
+        unlink(nodeToRemove);
+        return nodeToRemove.item;
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> node = head;
         while (node != null) {
-            if (object == node.item || object != null && object.equals(node.item)) {
+            if (isEquals(object, node)) {
                 unlink(node);
                 return true;
             }
@@ -117,6 +114,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
+        isValidIndex(index);
         Node<T> nodeByIndex;
         if (index < size / 2) {
             nodeByIndex = head;
@@ -142,5 +140,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
             this.prev = prev;
         }
+    }
+
+    private boolean isEquals(T object, Node<T> node) {
+        return Objects.equals(object, node.item);
     }
 }
