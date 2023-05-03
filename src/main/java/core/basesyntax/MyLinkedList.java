@@ -20,9 +20,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkIndex(index);
         if (index == size) {
             addLast(value);
         } else if (index == 0) {
@@ -45,17 +43,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkIndexOutOfBoundsInclusiveSize(index);
         return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkIndexOutOfBoundsInclusiveSize(index);
         Node<T> current = getNode(index);
         T oldValue = current.value;
         current.value = value;
@@ -64,9 +58,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkIndexOutOfBoundsInclusiveSize(index);
         Node<T> current = getNode(index);
         unlink(current);
         return current.value;
@@ -156,6 +148,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.next = null;
         }
         size--;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index > size) {
+            throwIndexOutOfBoundsEx(index);
+        }
+    }
+
+    private void checkIndexOutOfBoundsInclusiveSize(int index) {
+        if (index < 0 || index >= size) {
+            throwIndexOutOfBoundsEx(index);
+        }
+    }
+
+    private void throwIndexOutOfBoundsEx(int index) {
+        throw new IndexOutOfBoundsException(
+                "Index is out of bounds, index: [" + index
+                        + "] when size: ["
+                        + size + "]");
     }
 
     private static class Node<T> {
