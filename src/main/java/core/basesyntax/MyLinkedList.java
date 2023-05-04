@@ -79,40 +79,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0) {
             throw new RuntimeException("Cannot remove from an empty list.");
         }
-        Node<T> result = getNodebyIndex(index);
-        if (result == firstNode) {
-            firstNode = result.next;
-        } else if (result == lastNode) {
-            lastNode = result.prev;
-        } else {
-            result.prev.next = result.next;
-            result.next.prev = result.prev;
-        }
-        size--;
-        return (T) result.value;
+        return unlink(index).value;
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> node = firstNode;
-        while (node != null) {
-            if (node.value == object
-                    || (node.value != null
-                    && node.value.equals(object))) {
-                if (node == firstNode) {
-                    firstNode = node.next;
-                } else {
-                    node.prev.next = node.next;
-                }
-                if (node == lastNode) {
-                    lastNode = node.prev;
-                } else {
-                    node.next.prev = node.prev;
-                }
-                size--;
+        int i = 0;
+        for (Node<T> x = firstNode; x != null; x = x.next) {
+            if ((x.value == object || (x.value != null && x.value.equals(object))
+                    || (object == null && x.value == null))) {
+                unlink(i);
                 return true;
             }
-            node = node.next;
+            i++;
         }
         return false;
     }
@@ -146,6 +125,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node = node.next;
         }
         return node;
+    }
+
+    private Node<T> unlink(int index) {
+        Node<T> result = getNodebyIndex(index);
+        if (result == firstNode) {
+            firstNode = result.next;
+        } else if (result == lastNode) {
+            lastNode = result.prev;
+        } else {
+            result.prev.next = result.next;
+            result.next.prev = result.prev;
+        }
+        size--;
+        return result;
     }
 
     private void checkIndex(int index) {
