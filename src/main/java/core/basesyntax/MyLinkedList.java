@@ -9,7 +9,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> node = new Node<>(value, tail, null);
+        Node<T> node = new Node<>(tail, value, null);
         if (head == null) {
             head = node;
             tail = head;
@@ -91,21 +91,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void insert(T value, Node<T> previous) {
-        Node<T> newNode = new Node(value, previous.prev, previous);
+        Node<T> newNode = new Node(previous.prev, value, previous);
         previous.prev.next = newNode;
         previous.prev = newNode;
         size++;
     }
 
     private void addToHead(T value) {
-        Node<T> newNode = new Node<>(value, null, head);
+        Node<T> newNode = new Node<>(null, value, head);
         head.prev = newNode;
         head = newNode;
         size++;
     }
 
     private void addToTail(T value) {
-        Node<T> newNode = new Node<>(value, tail, null);
+        Node<T> newNode = new Node<>(tail, value,null);
         tail.next = newNode;
         tail = newNode;
         size++;
@@ -166,13 +166,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> findNodeByElement(T element) {
         Node<T> curNode = head;
         while (curNode != null) {
-            if ((curNode.value != null && curNode.value.equals(element))
-                    || curNode.value == element) {
+            if (areEqual(curNode.value, element)) {
                 return curNode;
             }
             curNode = curNode.next;
         }
         return null;
+    }
+
+    private boolean areEqual(T a, T b) {
+        return a == b || (a != null && a.equals(b));
     }
 
     private boolean unlink(Node<T> node) {
@@ -195,7 +198,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        private Node(T value, Node<T> prev, Node<T> next) {
+        private Node(Node<T> prev, T value, Node<T> next) {
             this.value = value;
             this.prev = prev;
             this.next = next;
