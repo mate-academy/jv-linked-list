@@ -20,7 +20,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Node<T> newNode = new Node<>(null, value, null);
+        Node<T> newNode;
         if (index == size) {
             add(value);
             return;
