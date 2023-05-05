@@ -28,9 +28,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || size < index) {
-            throw new IndexOutOfBoundsException("Index out of range: " + index);
-        }
         if (index == size) {
             add(value);
         } else if (index == 0) {
@@ -40,13 +37,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             firstNode = newNode;
             size++;
         } else {
-            Node<T> oldNode = getNodebyIndex(index);
-            Node<T> newNode = new Node<>(null, value, null);
-            newNode.prev = oldNode.prev;
-            newNode.next = oldNode;
-            oldNode.prev.next = newNode;
-            oldNode.prev = newNode;
-            size++;
+            addNodeInside(value, index);
         }
     }
 
@@ -59,14 +50,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         Node<T> result = getNodebyIndex(index);
         return result.value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> result = getNodebyIndex(index);
         T oldVal = result.value;
         result.value = value;
@@ -110,7 +99,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> prev;
         private Node<T> next;
 
-        public Node(Node<T> prev, T value, Node<T> next) {
+        private Node(Node<T> prev, T value, Node<T> next) {
             this.value = value;
             this.prev = prev;
             this.next = next;
@@ -138,6 +127,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         size--;
         return result;
+    }
+
+    private void addNodeInside(T value, int index) {
+        Node<T> oldNode = getNodebyIndex(index);
+        Node<T> newNode = new Node<>(null, value, null);
+        newNode.prev = oldNode.prev;
+        newNode.next = oldNode;
+        oldNode.prev.next = newNode;
+        oldNode.prev = newNode;
+        size++;
     }
 
     private void checkIndex(int index) {
