@@ -31,8 +31,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else if (index == 0) {
-            Node<T> newNode = new Node<>(null, value, null);
-            newNode.next = firstNode;
+            Node<T> newNode = new Node<>(null, value, firstNode);
             firstNode.prev = newNode;
             firstNode = newNode;
             size++;
@@ -57,9 +56,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         Node<T> result = getNodebyIndex(index);
-        T oldVal = result.value;
+        T oldValue = result.value;
         result.value = value;
-        return oldVal;
+        return oldValue;
     }
 
     @Override
@@ -68,18 +67,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0) {
             throw new RuntimeException("Cannot remove from an empty list.");
         }
-        return unlink(index).value;
+        return unlink(getNodebyIndex(index));
     }
 
     @Override
     public boolean remove(T object) {
-        int i = 0;
         for (Node<T> x = firstNode; x != null; x = x.next) {
             if ((x.value == object || (x.value != null && x.value.equals(object)))) {
-                unlink(i);
+                unlink(x);
                 return true;
             }
-            i++;
         }
         return false;
     }
@@ -108,9 +105,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodebyIndex(int index) {
         checkIndex(index);
-        Node<T> node;
+        Node<T> node = firstNode;
         if (index < size / 2) {
-            node = firstNode;
             for (int i = 0; i < index; i++) {
                 node = node.next;
             }
@@ -123,25 +119,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    private Node<T> unlink(int index) {
-        Node<T> result = getNodebyIndex(index);
-        if (result == firstNode) {
-            firstNode = result.next;
-        } else if (result == lastNode) {
-            lastNode = result.prev;
+    private T unlink(Node<T> node) {
+        if (node == firstNode) {
+            firstNode = node.next;
+        } else if (node == lastNode) {
+            lastNode = node.prev;
         } else {
-            result.prev.next = result.next;
-            result.next.prev = result.prev;
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
         }
         size--;
-        return result;
+        return (T) node.value;
     }
 
     private void addNodeInside(T value, int index) {
         Node<T> oldNode = getNodebyIndex(index);
-        Node<T> newNode = new Node<>(null, value, null);
-        newNode.prev = oldNode.prev;
-        newNode.next = oldNode;
+        Node<T> newNode = new Node<>(oldNode.prev, value, oldNode);
         oldNode.prev.next = newNode;
         oldNode.prev = newNode;
         size++;
