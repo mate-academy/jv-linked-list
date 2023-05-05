@@ -97,7 +97,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int findIndex(T object) {
         Node<T> node = first;
         for (int i = 0; i < size; i++) {
-            if (node.item == object || node.item != null && node.item.equals(object)) {
+            T currentObject = node.item;
+            if (areItemsEqual(currentObject, object)) {
                 return i;
             } else {
                 node = node.next;
@@ -196,5 +197,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         indexNode.prev.next = newNode;
         indexNode.prev = newNode;
         size++;
+    }
+
+    private boolean areItemsEqual(T currentObject, T object) {
+        return (currentObject == object || currentObject != null && currentObject.equals(object));
     }
 }
