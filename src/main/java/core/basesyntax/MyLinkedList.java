@@ -10,7 +10,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(null, value, null);
-        if (addFirst(newNode)) {
+        if (size == 0) {
+            addFirst(newNode);
+        } else {
             addTail(newNode);
         }
         size++;
@@ -19,10 +21,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         Node<T> newNode = new Node<>(null, value, null);
+        if (index == size) {
+            add(value);
+            return;
+        }
         if (index == 0) {
-            addFirstElement(value, newNode);
-        } else if (index == size) {
-            addTail(newNode);
+            Node<T> newHead = new Node<>(head, value, null);
+            head.previous = newHead;
+            head = newHead;
         } else {
             Node<T> nodeByIndex = searchNode(index);
             Node<T> previousNode = nodeByIndex.previous;
@@ -31,14 +37,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             previousNode.next = newNode;
         }
         size++;
-    }
-
-    private void addFirstElement(T value, Node<T> newNode) {
-        if (addFirst(newNode)) {
-            Node<T> newHead = new Node<>(head, value, null);
-            head.previous = newHead;
-            head = newHead;
-        }
     }
 
     @Override
@@ -115,13 +113,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         tail = newNode;
     }
 
-    private boolean addFirst(Node<T> newNode) {
-        if (size == 0) {
-            head = newNode;
-            tail = newNode;
-            return false;
-        }
-        return true;
+    private void addFirst(Node<T> newNode) {
+        head = newNode;
+        tail = newNode;
     }
 
     private void unlink(Node<T> node) {
