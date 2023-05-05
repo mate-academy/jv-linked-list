@@ -15,16 +15,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        addLast(value);
+        add(value, size);
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
         if (index == size) {
-            addLast(value);
+            Node<T> newNode = new Node<>(tail, value, null);
+            if (tail != null) {
+                tail.next = newNode;
+            }
+            tail = newNode;
+            if (head == null) {
+                head = tail;
+            }
+            size++;
         } else if (index == 0) {
-            addFirst(value);
+            Node<T> newNode = new Node<>(null, value, head);
+            if (head != null) {
+                head.prev = newNode;
+            }
+            head = newNode;
+            if (tail == null) {
+                tail = head;
+            }
+            size++;
         } else {
             Node<T> current = getNode(index);
             Node<T> newNode = new Node<>(current.prev, value, current);
@@ -43,13 +58,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndexOutOfBoundsInclusiveSize(index);
         return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndexOutOfBoundsInclusiveSize(index);
         Node<T> current = getNode(index);
         T oldValue = current.value;
         current.value = value;
@@ -58,7 +71,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndexOutOfBoundsInclusiveSize(index);
         Node<T> current = getNode(index);
         unlink(current);
         return current.value;
@@ -68,9 +80,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if (current.value == object
-                    || (current.value != null
-                    && current.value.equals(object))) {
+            if (isEquals(current, object)) {
                 unlink(current);
                 return true;
             }
@@ -89,31 +99,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void addFirst(T value) {
-        Node<T> newNode = new Node<>(null, value, head);
-        if (head != null) {
-            head.prev = newNode;
-        }
-        head = newNode;
-        if (tail == null) {
-            tail = head;
-        }
-        size++;
-    }
-
-    private void addLast(T value) {
-        Node<T> newNode = new Node<>(tail, value, null);
-        if (tail != null) {
-            tail.next = newNode;
-        }
-        tail = newNode;
-        if (head == null) {
-            head = tail;
-        }
-        size++;
+    private boolean isEquals(Node<T> current, T object) {
+        return current.value == object
+                || (current.value != null
+                && current.value.equals(object));
     }
 
     private Node<T> getNode(int index) {
+        checkIndexOutOfBoundsInclusiveSize(index);
         Node<T> current;
         if (index < size / 2) {
             current = head;
@@ -150,23 +143,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private void checkIndex(int index) {
-        if (index < 0 || index > size) {
-            throwIndexOutOfBoundsEx(index);
-        }
-    }
-
     private void checkIndexOutOfBoundsInclusiveSize(int index) {
         if (index < 0 || index >= size) {
-            throwIndexOutOfBoundsEx(index);
+            throw new IndexOutOfBoundsException(
+                    "Index is out of bounds, index: [" + index
+                            + "] when size: ["
+                            + size + "]");
         }
-    }
-
-    private void throwIndexOutOfBoundsEx(int index) {
-        throw new IndexOutOfBoundsException(
-                "Index is out of bounds, index: [" + index
-                        + "] when size: ["
-                        + size + "]");
     }
 
     private static class Node<T> {
