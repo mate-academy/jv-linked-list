@@ -108,9 +108,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodebyIndex(int index) {
         checkIndex(index);
-        Node<T> node = firstNode;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
+        Node<T> node;
+        if (index < size / 2) {
+            node = firstNode;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+        } else {
+            node = lastNode;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
         }
         return node;
     }
