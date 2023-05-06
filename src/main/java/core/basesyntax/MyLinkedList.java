@@ -94,17 +94,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> currentNode = first;
         int index = 0;
-        while (currentNode.element != object) {
-            currentNode = currentNode.next;
-            index++;
-            if (index == size) {
-                return false;
+        for (Node<T> currentNode = first; currentNode != null; currentNode = currentNode.next) {
+            if (equalsElemets(currentNode.element, object)) {
+                remove(index);
+                return true;
             }
+            index++;
         }
-        remove(index);
-        return true;
+        return false;
     }
 
     @Override
@@ -136,5 +134,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             currentNode = currentNode.next;
         }
         return currentNode;
+    }
+
+    private boolean equalsElemets(T a, T b) {
+        return a == b || a != null && a.equals(b);
     }
 }
