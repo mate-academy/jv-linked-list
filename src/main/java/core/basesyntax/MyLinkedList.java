@@ -72,7 +72,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         T value = getNodeByIndex(index).value;
-        getNodeByIndexToDelete(index);
+        getNodeValueByIndexToDelete(index);
         return value;
     }
 
@@ -81,7 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         int index = 0;
         for (Node<T> removedNade = head; removedNade != null; removedNade = removedNade.next) {
             if (object == null ? removedNade.value == null : object.equals(removedNade.value)) {
-                getNodeByIndexToDelete(index);
+                getNodeValueByIndexToDelete(index);
                 return true;
             }
             index++;
@@ -136,7 +136,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    private T getNodeByIndexToDelete(int index) {
+    private T getNodeValueByIndexToDelete(int index) {
         checkIndex(index);
         Node<T> node = getNodeByIndex(index);
         final T value = node.value;
