@@ -41,14 +41,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkRange(index);
         Node<T> currentNode = getNode(index);
         return currentNode.value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkRange(index);
         Node<T> node = getNode(index);
         T oldValue = node.value;
         node.value = value;
@@ -57,7 +55,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkRange(index);
         return unlink(getNode(index));
     }
 
@@ -134,6 +131,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
+        checkRange(index);
         return (index <= (size >> 1)) ? searchFromHead(index) : searchFromTail(index);
     }
 
