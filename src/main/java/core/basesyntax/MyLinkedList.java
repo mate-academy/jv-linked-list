@@ -61,7 +61,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> node = getNodeByIndex(index);
         T oldValue = node.value;
         node.value = value;
@@ -70,21 +69,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        T value = getNodeByIndex(index).value;
-        getNodeValueByIndexToDelete(index);
+        Node<T> node = getNodeByIndex(index);
+        T value = node.value;
+        getNodeValueByIndexToDelete(node);
         return value;
     }
 
     @Override
     public boolean remove(T object) {
-        int index = 0;
-        for (Node<T> removedNade = head; removedNade != null; removedNade = removedNade.next) {
-            if (object == null ? removedNade.value == null : object.equals(removedNade.value)) {
-                getNodeValueByIndexToDelete(index);
+        for (Node<T> removedNode = head; removedNode != null; removedNode = removedNode.next) {
+            if (areEqualsValues(removedNode.value, object)) {
+                getNodeValueByIndexToDelete(removedNode);
                 return true;
             }
-            index++;
         }
         return false;
     }
@@ -111,34 +108,45 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> addHead(T value) {
+    private boolean areEqualsValues(T first, T second) {
+        return first == second || first != null && first.equals(second);
+    }
+
+    private void addHead(T value) {
         Node<T> newNode = new Node<>(null, value, null);
         head = newNode;
         tail = newNode;
-        return newNode;
     }
 
-    private Node<T> addTail(T value) {
+    private void addTail(T value) {
         Node<T> newNode = new Node<>(tail, value, null);
         tail.next = newNode;
         tail = newNode;
-        return newNode;
     }
 
     private Node<T> getNodeByIndex(int index) {
         checkIndex(index);
-        Node<T> node = head;
-        int counter = 0;
-        while (counter < index) {
-            node = node.next;
-            counter++;
+        Node<T> node;
+        int pointerIndex;
+        if (index < size / 2) {
+            node = head;
+            pointerIndex = 0;
+            while (pointerIndex < index) {
+                node = node.next;
+                pointerIndex++;
+            }
+        } else {
+            node = tail;
+            pointerIndex = size - 1;
+            while (pointerIndex > index) {
+                node = node.prev;
+                pointerIndex--;
+            }
         }
         return node;
     }
 
-    private T getNodeValueByIndexToDelete(int index) {
-        checkIndex(index);
-        Node<T> node = getNodeByIndex(index);
+    private T getNodeValueByIndexToDelete(Node<T> node) {
         final T value = node.value;
         Node<T> next = node.next;
         Node<T> prev = node.prev;
