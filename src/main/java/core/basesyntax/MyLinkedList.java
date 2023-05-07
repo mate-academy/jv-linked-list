@@ -10,10 +10,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(tail, value, null);
         if (head == null) {
             head = tail = new Node<>(null, value, null);
         } else {
+            Node<T> newNode = new Node<>(tail, value, null);
             tail.next = newNode;
             tail = newNode;
         }
@@ -125,7 +125,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         } else {
             node = tail;
-            for (int i = size - 1; i > index; i--) {
+            for (int i = size - ADD_ONE; i > index; i--) {
                 node = node.prev;
             }
         }
@@ -137,7 +137,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private T value;
         private Node<T> next;
 
-        public Node(Node<T> prev, T value, Node<T> next) {
+        private Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
             this.value = value;
             this.next = next;
