@@ -70,9 +70,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> node = getNodeByIndex(index);
-        T value = node.value;
-        getNodeValueByIndexToDelete(node);
-        return value;
+        return getNodeValueByIndexToDelete(node);
     }
 
     @Override
