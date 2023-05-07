@@ -31,7 +31,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == size) {
             addAfter(value);
         } else {
-            link(node(index), value);
+            link(nodeOf(index), value);
         }
         size++;
     }
@@ -45,13 +45,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return node(index).item;
+        return nodeOf(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         verifyIndexIsInRange(index);
-        Node<T> element = node(index);
+        Node<T> element = nodeOf(index);
         T oldValue = element.item;
         element.item = value;
         return oldValue;
@@ -60,23 +60,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         verifyIndexIsInRange(index);
-        Node<T> element = node(index);
-        if (index == 0) {
-            element.next.prev = null;
-            head = element.next;
-        } else if (index == size - 1) {
-            element.prev.next = null;
-            tail = element.prev;
-        } else {
-            element.prev.next = element.next;
-            element.next.prev = element.prev;
-        }
-        size--;
-        return element.item;
+        Node<T> element = nodeOf(index);
+        T oldValue = element.item;
+        unlink(element, index);
+        return oldValue;
     }
 
     @Override
     public boolean remove(T object) {
+        if (isEmpty()) {
+            return false;
+        }
+        Node<T> element = head;
+        int index = 0;
+        do {
+            if (object == element.item || object != null && object.equals(element.item)) {
+                unlink(element, index);
+                return true;
+            }
+            element = element.next;
+            index++;
+        } while (element.next != null);
         return false;
     }
 
@@ -90,7 +94,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node<T> node(int index) {
+    private void verifyIndexIsInRange(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index is out of bounds");
+        }
+    }
+
+    private Node<T> nodeOf(int index) {
         verifyIndexIsInRange(index);
         Node<T> node;
         if (index < size >> 1) {
@@ -105,7 +115,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return node;
-
     }
 
     private void addFirst(T value) {
@@ -122,26 +131,47 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         tail = tail.next;
     }
 
-    private void link(Node<T> node, T value) {
-        node.prev.next = new Node<>(node.prev, value, node);
-        node.prev = node.prev.next;
+    private void link(Node<T> nodeAtIndex, T value) {
+        nodeAtIndex.prev.next = new Node<>(nodeAtIndex.prev, value, nodeAtIndex);
+        nodeAtIndex.prev = nodeAtIndex.prev.next;
     }
 
-    private void unlink(Node<T> node) {
-
+    private void unlink(Node<T> element, int index) {
+        if (index == 0) {
+            unlinkFirst(element);
+        } else if (index == size - 1) {
+            unlinkLast(element);
+        } else {
+            unlinkMiddle(element);
+        }
+        size--;
     }
 
-
-    private void verifyIndexIsInRange(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is out of bounds");
+    private void unlinkFirst(Node<T> firstElement) {
+        firstElement.item = null;
+        if (firstElement.next != null) {
+            head = firstElement.next;
+            firstElement.next.prev = null;
         }
     }
 
+    private void unlinkLast(Node<T> lastElement) {
+        lastElement.item = null;
+        if (lastElement.prev != null) {
+            tail = lastElement.prev;
+            lastElement.prev.next = null;
+        }
+    }
+
+    private void unlinkMiddle(Node<T> element) {
+        element.prev.next = element.next;
+        element.next.prev = element.prev;
+    }
+
     private static class Node<T> {
-        Node<T> prev;
-        T item;
-        Node<T> next;
+        private Node<T> prev;
+        private T item;
+        private Node<T> next;
 
         public Node(Node<T> prev, T item, Node<T> next) {
             this.prev = prev;
