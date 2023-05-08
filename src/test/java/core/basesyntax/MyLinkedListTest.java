@@ -161,7 +161,7 @@ public class MyLinkedListTest {
     }
 
     @Test
-public void testGetByIndex() {
+    public void testGetByIndex() {
         myLinkedList.add(FIRST_ITEM);
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);

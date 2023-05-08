@@ -7,11 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public MyLinkedList() {
-        head = new Node<>(null, null, null);
-        tail = head;
-    }
-
     @Override
     public void add(T value) {
         if (isEmpty()) {
@@ -74,7 +69,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> element = head;
         int index = 0;
         do {
-            if (object == element.item || object != null && object.equals(element.item)) {
+            if (objectsAreEqual(object, element.item)) {
                 unlink(element, index);
                 return true;
             }
@@ -118,7 +113,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addFirst(T value) {
-        head.item = value;
+        head = new Node<>(null, value, null);
+        tail = head;
     }
 
     private void addBefore(T value) {
@@ -168,12 +164,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         element.next.prev = element.prev;
     }
 
+    private boolean objectsAreEqual(T a, T b) {
+        return a == b || a != null && a.equals(b);
+    }
+
     private static class Node<T> {
         private Node<T> prev;
         private T item;
         private Node<T> next;
 
-        public Node(Node<T> prev, T item, Node<T> next) {
+        private Node(Node<T> prev, T item, Node<T> next) {
             this.prev = prev;
             this.item = item;
             this.next = next;
