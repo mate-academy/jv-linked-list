@@ -1,26 +1,9 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static class Node<T> {
-        private T value;
-        private Node<T> next;
-        private Node<T> prev;
 
-        private Node(T value) {
-            this.value = value;
-        }
-
-        private Node(T value, Node<T> next, Node<T> prev) {
-            this.value = value;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
-    private static final int ONE_ELEMENT = 1;
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -39,21 +22,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Invalid index " + index);
-        }
+        isValidIndexForAdd(index);
         Node<T> newNode = new Node<>(value);
-        if (isEmpty()) {
+        if (index == size) {
             add(value);
             return;
         } else if (index == 0) {
             newNode.next = head;
             head.prev = newNode;
             head = newNode;
-        } else if (index == size) {
-            newNode.prev = tail;
-            tail.next = newNode;
-            tail = newNode;
         } else {
             Node<T> prevNode = findNodeByIndex(index);
             if (prevNode == null) {
@@ -77,13 +54,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Objects.checkIndex(index, size);
+        checkIndex(index);
         return findNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        Objects.checkIndex(index, size);
+        checkIndex(index);
         Node<T> current = findNodeByIndex(index);
         T prev = current.value;
         current.value = value;
@@ -93,22 +70,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> deletedElement = findNodeByIndex(index);
-        if (deletedElement == null) {
-            throw new IndexOutOfBoundsException("wrong index: " + index + ", for empty list");
-        }
         unlink(deletedElement);
-        size--;
         return deletedElement.value;
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> deletedElement = findNodeByElement(object);
-        boolean isDeleted = unlink(deletedElement);
-        if (isDeleted) {
-            size--;
+        if (deletedElement == null) {
+            return false;
         }
-        return isDeleted;
+        unlink(deletedElement);
+        return true;
+
     }
 
     @Override
@@ -133,19 +107,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
-    private boolean unlink(Node<T> node) {
+    private void unlink(Node<T> node) {
+        if (node == null) {
+            return;
+        }
         if (node == head) {
             head = head.next;
-            return true;
         } else if (node == tail) {
             tail = tail.prev;
-            return true;
-        } else if (node != null) {
+        } else {
             node.prev.next = node.next;
             node.next.prev = node.prev;
-            return true;
         }
-        return false;
+        size--;
     }
 
     private void insert(T value, Node<T> previous) {
@@ -155,8 +129,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Invalid index: " + index);
+        }
+    }
+
     private Node<T> findNodeByIndex(int index) {
-        Objects.checkIndex(index, size);
+        checkIndex(index);
         Node<T> current;
         if (index < size / 2) {
             current = head;
@@ -170,6 +150,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return current;
+    }
+
+    private void isValidIndexForAdd(int index) {
+        if (index > size || index < 0) {
+            throw new IndexOutOfBoundsException("invalid index: " + index);
+        }
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        private Node(T value) {
+            this.value = value;
+        }
+
+        private Node(T value, Node<T> next, Node<T> prev) {
+            this.value = value;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 
 }
