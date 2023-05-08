@@ -63,7 +63,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Objects.checkIndex(index, size);
         Node<T> nodeToRemove = getNodeIndex(index);
         unlink(nodeToRemove);
         return nodeToRemove.item;
@@ -90,11 +89,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        if (first == null) {
-            return true;
-        } else {
-            return false;
-        }
+        return (first == null);
     }
 
     private boolean isEquals(T object, Node<T> node) {
