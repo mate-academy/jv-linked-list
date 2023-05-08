@@ -10,7 +10,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(null, value, null);
-        if (size == 0) {
+        if (isEmpty()) {
             first = newNode;
         } else {
             newNode.prev = last;
@@ -84,8 +84,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private T delNode(Node<T> node) {
         if (node == first) {
             first = node.next;
+            node.next.prev = null;
         } else if (node == last) {
             last = node.prev;
+            node.prev.next = null;
         } else {
             node.prev.next = node.next;
             node.next.prev = node.prev;
