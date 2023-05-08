@@ -12,11 +12,93 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> prev;
         private Node<T> next;
 
-        Node(Node<T> prev, T value, Node<T> next) {
+        private Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
             this.value = value;
             this.next = next;
         }
+    }
+
+    @Override
+    public void add(T value) {
+        addBottom(value);
+    }
+
+    @Override
+    public void add(T value, int index) {
+        checkRangeAdd(index);
+        if (index == 0) {
+            addTop(value);
+        } else if (index == size) {
+            addBottom(value);
+        } else {
+            addMiddle(value, index);
+        }
+    }
+
+    @Override
+    public void addAll(List<T> list) {
+        for (T value : list) {
+            addBottom(value);
+        }
+    }
+
+    @Override
+    public T get(int index) {
+        checkRange(index);
+        return getNode(index).value;
+    }
+
+    @Override
+    public T set(T value, int index) {
+        checkRange(index);
+        Node<T> nodeAtIndex = getNode(index);
+        T oldValue = nodeAtIndex.value;
+        nodeAtIndex.value = value;
+        return oldValue;
+    }
+
+    @Override
+    public T remove(int index) {
+        checkRange(index);
+        Node<T> toRemove = getNode(index);
+        Node<T> nodeBefore = toRemove.prev;
+        Node<T> nodeAfter = toRemove.next;
+        if (nodeBefore == null) {
+            first = nodeAfter;
+        }
+        if (nodeAfter == null) {
+            last = nodeBefore;
+        } else {
+            nodeAfter.prev = nodeBefore;
+        }
+        size--;
+        return toRemove.value;
+    }
+
+    @Override
+    public boolean remove(T object) {
+        Node<T> currentNode = first;
+        while (currentNode != null) {
+            if (currentNode.value == null) {
+                if (object == null) {
+                    return removeNode(currentNode);
+                }
+            } else if (currentNode.value.equals(object)) {
+                return removeNode(currentNode);
+            }
+            currentNode = currentNode.next;
+        }
+        return false;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override public boolean isEmpty() {
+        return size == 0;
     }
 
     private void checkRange(int index) {
@@ -93,89 +175,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         size--;
         return true;
-    }
-
-    @Override
-    public void add(T value) {
-        addBottom(value);
-    }
-
-    @Override
-    public void add(T value, int index) {
-        checkRangeAdd(index);
-
-        if (index == 0) {
-            addTop(value);
-        } else if (index == size) {
-            addBottom(value);
-        } else {
-            addMiddle(value, index);
-        }
-        ;
-    }
-
-    @Override
-    public void addAll(List<T> list) {
-        for (T value : list) {
-            addBottom(value);
-        }
-    }
-
-    @Override
-    public T get(int index) {
-        checkRange(index);
-        return getNode(index).value;
-    }
-
-    @Override
-    public T set(T value, int index) {
-        checkRange(index);
-        Node<T> nodeAtIndex = getNode(index);
-        T oldValue = nodeAtIndex.value;
-        nodeAtIndex.value = value;
-        return oldValue;
-    }
-
-    @Override
-    public T remove(int index) {
-        checkRange(index);
-        Node<T> toRemove = getNode(index);
-        Node<T> nodeBefore = toRemove.prev;
-        Node<T> nodeAfter = toRemove.next;
-        if (nodeBefore == null) {
-            first = nodeAfter;
-        }
-        if (nodeAfter == null) {
-            last = nodeBefore;
-        } else {
-            nodeAfter.prev = nodeBefore;
-        }
-        size--;
-        return toRemove.value;
-    }
-
-    @Override
-    public boolean remove(T object) {
-        Node<T> currentNode = first;
-        while (currentNode != null) {
-            if (currentNode.value == null) {
-                if (object == null) {
-                    return removeNode(currentNode);
-                }
-            } else if (currentNode.value.equals(object)) {
-                return removeNode(currentNode);
-            }
-            currentNode = currentNode.next;
-        }
-        return false;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override public boolean isEmpty() {
-        return size == 0;
     }
 }
