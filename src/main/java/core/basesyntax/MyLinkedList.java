@@ -7,11 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> firstNode;
     private Node<T> lastNode;
 
-    public MyLinkedList() {
-        firstNode = null;
-        lastNode = null;
-    }
-
     class Node<T> {
         private T value;
         private Node<T> prev;
@@ -41,7 +36,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            checkRangeForAdd(index);
+            checkRange(index);
             Node<T> currentNode = getNode(index);
             Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
             Node<T> prev = currentNode.prev;
@@ -66,13 +61,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkRangeForAdd(index);
+        checkRange(index);
         return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkRangeForAdd(index);
+        checkRange(index);
         Node<T> currentNode = getNode(index);
         T oldValue = currentNode.value;
         currentNode.value = value;
@@ -81,7 +76,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkRangeForAdd(index);
+        checkRange(index);
         Node<T> currentNode = getNode(index);
         if (currentNode.prev == null) {
             firstNode = currentNode.next;
@@ -130,7 +125,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkRangeForAdd(int index) {
+    private void checkRange(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("No such index: "
                     + index + " for size: " + size);
