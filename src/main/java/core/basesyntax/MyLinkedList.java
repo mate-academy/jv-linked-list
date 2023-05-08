@@ -50,8 +50,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int index = 0; index < list.size(); index++) {
-            add(list.get(index));
+        for (T item : list) {
+            add(item);
         }
     }
 
