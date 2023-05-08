@@ -132,10 +132,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         if (node.prev == null) {
             first = node.next;
-            first.prev = null;
         } else if (node.next == null) {
             last = node.prev;
-            last.next = null;
         } else {
             node.prev.next = node.next;
             node.next.prev = node.prev;
