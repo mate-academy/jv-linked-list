@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private Node<T> first;
     private Node<T> last;
     private int size;
@@ -84,10 +83,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     }
 
-    private boolean isEquals(T object, Node<T> node) {
-        return object == node.item || object != null && object.equals(node.item);
-    }
-
     @Override
     public int size() {
         return size;
@@ -100,6 +95,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             return false;
         }
+    }
+
+    private boolean isEquals(T object, Node<T> node) {
+        return object == node.item || object != null && object.equals(node.item);
     }
 
     private Node<T> getNodeIndex(int index) {
@@ -145,5 +144,4 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Invalid index " + index);
         }
     }
-
 }
