@@ -14,21 +14,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             addAfter(value);
         }
-        size++;
+//        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (isEmpty() && index == 0) {
-            addFirst(value);
+        if (index == size) {
+            add(value);
         } else if (index == 0) {
             addBefore(value);
-        } else if (index == size) {
-            addAfter(value);
         } else {
             link(nodeOf(index), value);
         }
-        size++;
+//        size++;
     }
 
     @Override
@@ -45,7 +43,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        verifyIndexIsInRange(index);
         Node<T> element = nodeOf(index);
         T oldValue = element.item;
         element.item = value;
@@ -54,7 +51,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        verifyIndexIsInRange(index);
         Node<T> element = nodeOf(index);
         T oldValue = element.item;
         unlink(element, index);
@@ -115,21 +111,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void addFirst(T value) {
         head = new Node<>(null, value, null);
         tail = head;
+        size++;
     }
 
     private void addBefore(T value) {
         head.prev = new Node<>(null, value, head);
         head = head.prev;
+        size++;
     }
 
     private void addAfter(T value) {
         tail.next = new Node<>(tail, value, null);
         tail = tail.next;
+        size++;
     }
 
     private void link(Node<T> nodeAtIndex, T value) {
         nodeAtIndex.prev.next = new Node<>(nodeAtIndex.prev, value, nodeAtIndex);
         nodeAtIndex.prev = nodeAtIndex.prev.next;
+        size++;
     }
 
     private void unlink(Node<T> element, int index) {
