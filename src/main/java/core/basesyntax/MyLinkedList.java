@@ -22,7 +22,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkAddRange(index);
         if (index == 0 && !isEmpty()) {
             addFirst(value);
         } else if (index == size) {
@@ -60,9 +59,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        for (int i = 0; i < size; i++) {
-            if (areEqualsValues(get(i), object)) {
-                unlink(getNode(i));
+        for (Node<T> removedNode = head; removedNode != null; removedNode = removedNode.next) {
+            if (areValuesEqual(removedNode.value, object)) {
+                unlink(removedNode);
                 return true;
             }
         }
@@ -98,7 +97,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         final T element = removedNode.value;
         final Node<T> next = removedNode.next;
         final Node<T> prev = removedNode.prev;
-
         if (prev == null) {
             head = next;
         } else {
@@ -116,12 +114,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         removedNode.value = null;
         size--;
         return element;
-    }
-
-    private void checkAddRange(int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Illegal index: " + index);
-        }
     }
 
     private void checkRange(int index) {
@@ -151,7 +143,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    private boolean areEqualsValues(T first, T second) {
+    private boolean areValuesEqual(T first, T second) {
         return first == second || first != null && first.equals(second);
     }
 
