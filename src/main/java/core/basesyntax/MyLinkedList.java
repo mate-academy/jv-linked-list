@@ -82,7 +82,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T delNode(Node<T> node) {
-        if (node == first) {
+        T oldValue = node.value;
+        if (node.prev == null && node.next == null) {
+            first = null;
+        } else if (node == first) {
             first = node.next;
             node.next.prev = null;
         } else if (node == last) {
@@ -93,7 +96,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.next.prev = node.prev;
         }
         size--;
-        return (T) node.value;
+        return oldValue;
     }
 
     private Node<T> getNodeByIndex(int index) {
