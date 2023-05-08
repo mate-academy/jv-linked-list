@@ -3,24 +3,10 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    public static final int FALSE_INDEX = -1;
     private int size;
     private Node<T> first;
     private Node<T> last;
-
-    public MyLinkedList() {
-    }
-
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(MyLinkedList.Node<T> prev, T element, MyLinkedList.Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
 
     @Override
     public void add(T value) {
@@ -42,13 +28,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        areIndexInRange(index);
         return node(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        areIndexInRange(index);
         final T removedItem = node(index).item;
         node(index).item = value;
         return removedItem;
@@ -56,7 +40,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        areIndexInRange(index);
         final T removedItem = node(index).item;
         linkReassignmentForRemove(index);
         return removedItem;
@@ -65,7 +48,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         int index = findIndex(object);
-        if (index == -1) {
+        if (index == FALSE_INDEX) {
             return false;
         }
         linkReassignmentForRemove(index);
@@ -104,10 +87,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 node = node.next;
             }
         }
-        return -1;
+        return FALSE_INDEX;
     }
 
     Node<T> node(int index) {
+        areIndexInRange(index);
         Node<T> wantedNode;
         if (index < (size >> 1)) {
             wantedNode = first;
@@ -201,5 +185,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private boolean areItemsEqual(T currentObject, T object) {
         return (currentObject == object || currentObject != null && currentObject.equals(object));
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        private Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
