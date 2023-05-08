@@ -14,7 +14,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             addAfter(value);
         }
-//        size++;
     }
 
     @Override
@@ -26,7 +25,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             link(nodeOf(index), value);
         }
-//        size++;
     }
 
     @Override
@@ -53,7 +51,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Node<T> element = nodeOf(index);
         T oldValue = element.item;
-        unlink(element, index);
+        unlink(element);
         return oldValue;
     }
 
@@ -63,15 +61,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return false;
         }
         Node<T> element = head;
-        int index = 0;
-        do {
+        while (element != null) {
             if (objectsAreEqual(object, element.item)) {
-                unlink(element, index);
+                unlink(element);
                 return true;
             }
             element = element.next;
-            index++;
-        } while (element.next != null);
+        }
         return false;
     }
 
@@ -132,10 +128,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void unlink(Node<T> element, int index) {
-        if (index == 0) {
+    private void unlink(Node<T> element) {
+        if (element == head) {
             unlinkFirst(element);
-        } else if (index == size - 1) {
+        } else if (element == tail) {
             unlinkLast(element);
         } else {
             unlinkMiddle(element);
