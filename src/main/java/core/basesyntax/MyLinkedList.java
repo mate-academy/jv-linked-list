@@ -47,9 +47,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndexException(index);
-        Node<T> x = node(index);
-        T oldVal = x.item;
-        x.item = value;
+        Node<T> current = node(index);
+        T oldVal = current.item;
+        current.item = value;
         return oldVal;
     }
 
@@ -143,23 +143,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return x;
     }
 
-    T unlink(Node<T> x) {
-        final T element = x.item;
-        Node<T> next = x.next;
-        Node<T> prev = x.prev;
+    T unlink(Node<T> node) {
+        final T element = node.item;
+        Node<T> next = node.next;
+        Node<T> prev = node.prev;
         if (prev == null) {
             first = next;
         } else {
             prev.next = next;
-            x.prev = null;
+            node.prev = null;
         }
         if (next == null) {
             last = prev;
         } else {
             next.prev = prev;
-            x.next = null;
+            node.next = null;
         }
-        x.item = null;
+        node.item = null;
         size--;
         return element;
     }
@@ -192,6 +192,3 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 }
-
-
-
