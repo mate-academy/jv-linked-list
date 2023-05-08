@@ -10,7 +10,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(last,value,null);
         if (first == null) {
             first = last = newNode;
         } else {
@@ -25,18 +25,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         Objects.checkIndex(index,size + 1);
-        Node<T> newNode = new Node<>(value);
         if (first == null) {
+            Node<T> newNode = new Node<>(first,value,last);
             first = last = newNode;
         } else if (index == 0) {
+            Node<T> newNode = new Node<>(null,value,first);
             newNode.next = first;
             first = newNode;
         } else if (index == size) {
+            Node<T> newNode = new Node<>(last,value,null);
             newNode.prev = last;
             last.next = newNode;
             last = newNode;
         } else {
             Node<T> nodeAtIndex = getNodeByIndex(index);
+            Node<T> newNode = new Node<>(nodeAtIndex.prev,value,nodeAtIndex);
             newNode.next = nodeAtIndex;
             newNode.prev = nodeAtIndex.prev;
             if (newNode.prev != null) {
@@ -130,8 +133,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        public Node(T element) {
+        public Node(Node<T> prev,T element,Node<T> next) {
+            this.prev = prev;
             this.element = element;
+            this.next = next;
         }
     }
 }
