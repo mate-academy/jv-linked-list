@@ -9,14 +9,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        linkLast(value);
+        Node<T> oldLast = last;
+        Node<T> newNode = new Node<>(oldLast, value);
+        last = newNode;
+        if (oldLast == null) {
+            first = newNode;
+        } else {
+            oldLast.next = newNode;
+        }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
         checkPositionIndex(index);
         if (index == size) {
-            linkLast(value);
+            add(value);
         } else {
             linkBefore(value, getNode(index));
         }
@@ -25,7 +33,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         for (T element : list) {
-            linkLast(element);
+            add(element);
         }
     }
 
@@ -49,19 +57,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> current = first; current != null; current = current.next) {
-                if (current.item == null) {
-                    unlink(current);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> current = first; current != null; current = current.next) {
-                if (object.equals(current.item)) {
-                    unlink(current);
-                    return true;
-                }
+        for (Node<T> current = first; current != null; current = current.next) {
+            if (areEqual(object, current.item)) {
+                unlink(current);
+                return true;
             }
         }
         return false;
@@ -75,18 +74,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void linkLast(T value) {
-        Node<T> oldLast = last;
-        Node<T> newNode = new Node<>(oldLast, value);
-        last = newNode;
-        if (oldLast == null) {
-            first = newNode;
-        } else {
-            oldLast.next = newNode;
-        }
-        size++;
     }
 
     private void linkBefore(T value, Node<T> successor) {
@@ -137,6 +124,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return node;
+    }
+
+    private boolean areEqual(T a, T b) {
+        return a == b || (a != null && a.equals(b));
     }
 
     private void checkPositionIndex(int index) {
