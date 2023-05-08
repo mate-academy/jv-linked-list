@@ -18,7 +18,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             linkLast(value);
         } else {
-            linkBefore(value, node(index));
+            linkBefore(value, getNode(index));
         }
     }
 
@@ -31,14 +31,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkElementIndex(index);
-        return node(index).item;
+        return getNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkElementIndex(index);
-        Node<T> node = node(index);
+        Node<T> node = getNode(index);
         T oldValue = node.item;
         node.item = value;
         return oldValue;
@@ -46,8 +44,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkElementIndex(index);
-        return unlink(node(index));
+        return unlink(getNode(index));
     }
 
     @Override
@@ -82,7 +79,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void linkLast(T value) {
         Node<T> oldLast = last;
-        Node<T> newNode = new Node<>(oldLast, value, null);
+        Node<T> newNode = new Node<>(oldLast, value);
         last = newNode;
         if (oldLast == null) {
             first = newNode;
@@ -125,7 +122,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return element;
     }
 
-    private Node<T> node(int index) {
+    private Node<T> getNode(int index) {
+        checkElementIndex(index);
         Node<T> node;
         if (index < (size >> 1)) {
             node = first;
@@ -162,6 +160,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.prev = prev;
             this.item = item;
             this.next = next;
+        }
+
+        Node(Node<T> prev, T item) {
+            this.prev = prev;
+            this.item = item;
+            this.next = null;
         }
     }
 }
