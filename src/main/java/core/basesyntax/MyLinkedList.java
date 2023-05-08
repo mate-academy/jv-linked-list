@@ -12,12 +12,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(value, null, null);
         if (size == 0) {
             first = newNode;
-            last = newNode;
         } else {
             newNode.prev = last;
             last.next = newNode;
-            last = newNode;
         }
+        last = newNode;
         size++;
     }
 
@@ -73,8 +72,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> currentNode = first;
         while (currentNode != null) {
-            if (currentNode.value == object || (currentNode.value != null
-                    && currentNode.value.equals(object))) {
+            if (elementsAreEqual(currentNode.value, object)) {
                 removeLink(currentNode);
                 return true;
             }
@@ -95,7 +93,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Invalid index " + index);
+            throw new IndexOutOfBoundsException("Invalid index " + index + "for size " + size);
         }
     }
 
@@ -120,6 +118,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.next.prev = node.prev;
         }
         size--;
+    }
+
+    private boolean elementsAreEqual(T first, T last) {
+        if (first == last || (first != null) && first.equals(last)) {
+            return true;
+        }
+        return false;
     }
 
     private static class Node<T> {
