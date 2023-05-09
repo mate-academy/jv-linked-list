@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
 
-    private static class Node<T> {
-        private T value;
-        private Node<T> prev;
-        private Node<T> next;
-
-        private Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         addBottom(value);
@@ -45,7 +33,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkRange(index);
         return getNode(index).value;
     }
 
@@ -62,17 +49,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkRange(index);
         Node<T> toRemove = getNode(index);
-        Node<T> nodeBefore = toRemove.prev;
-        Node<T> nodeAfter = toRemove.next;
-        if (nodeBefore == null) {
-            first = nodeAfter;
-        }
-        if (nodeAfter == null) {
-            last = nodeBefore;
-        } else {
-            nodeAfter.prev = nodeBefore;
-        }
-        size--;
+        unlink(toRemove);
         return toRemove.value;
     }
 
@@ -82,10 +59,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (currentNode != null) {
             if (currentNode.value == null) {
                 if (object == null) {
-                    return removeNode(currentNode);
+                    unlink(currentNode);
+                    return true;
                 }
             } else if (currentNode.value.equals(object)) {
-                return removeNode(currentNode);
+                unlink(currentNode);
+                return true;
             }
             currentNode = currentNode.next;
         }
@@ -162,18 +141,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private boolean removeNode(Node<T> node) {
-        if (node.prev != null) {
-            node.prev.next = node.next;
+    private void unlink(Node<T> toRemove) {
+        Node<T> nodeBefore = toRemove.prev;
+        Node<T> nodeAfter = toRemove.next;
+        if (nodeBefore == null) {
+            first = nodeAfter;
         } else {
-            first = node.next;
+            nodeBefore.next = nodeAfter;
         }
-        if (node.next != null) {
-            node.next.prev = node.prev;
+        if (nodeAfter == null) {
+            last = nodeBefore;
         } else {
-            last = node.prev;
+            nodeAfter.prev = nodeBefore;
         }
         size--;
-        return true;
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        private Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
     }
 }
