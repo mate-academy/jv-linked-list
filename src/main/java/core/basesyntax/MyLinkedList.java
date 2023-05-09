@@ -79,7 +79,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node = node.next;
         }
         return false;
-
     }
 
     @Override
@@ -98,11 +97,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeIndex(int index) {
         isValidIndex(index);
-        Node<T> current = first;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        Node<T> node;
+        int pointerIndex;
+        if (index < size / 2) {
+            node = first;
+            pointerIndex = 0;
+            while (pointerIndex < index) {
+                node = node.next;
+                pointerIndex++;
+            }
+        } else {
+            node = last;
+            pointerIndex = size - 1;
+            while (pointerIndex > index) {
+                node = node.prev;
+                pointerIndex--;
+            }
         }
-        return current;
+        return node;
     }
 
     private void unlink(Node<T> node) {
@@ -122,6 +134,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
+    private void isValidIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Invalid index " + index);
+        }
+    }
+
     private static class Node<E> {
         private E item;
         private Node<E> next;
@@ -131,12 +149,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.item = element;
             this.next = next;
             this.prev = prev;
-        }
-    }
-
-    private void isValidIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Invalid index " + index);
         }
     }
 }
