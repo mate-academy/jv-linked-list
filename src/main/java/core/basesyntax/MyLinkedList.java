@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
@@ -24,34 +23,35 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkAddIndex(index);
-        Node<T> newNode = new Node<>(null, value, null);
-        if (size == 0) {
+        Node<T> newNode;
+        if (tail == null) {
+            newNode = new Node<>(null, value, null);
             head = tail = newNode;
         } else if (index == 0) {
-            newNode.next = head;
+            newNode = new Node<>(null, value, head);
             head.prev = newNode;
             head = newNode;
         } else if (index == size) {
+            newNode = new Node<>(tail, value, null);
             tail.next = newNode;
-            newNode.prev = tail;
             tail = newNode;
         } else {
-            Node<T> current = head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
-            newNode.next = current;
-            newNode.prev = current.prev;
+            Node<T> current = findNode(index);
+            newNode = new Node<>(current.prev, value, current);
             current.prev.next = newNode;
             current.prev = newNode;
+
         }
         size++;
+        if (tail == newNode) {
+            head.prev = newNode;
+        }
     }
 
     @Override
     public void addAll(List<T> list) {
         if (list == null) {
-            throw new NullPointerException("The list parameter cannot be null.");
+            throw new IllegalArgumentException("The list parameter cannot be null.");
         }
         for (T value : list) {
             add(value);
@@ -123,7 +123,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean isEqual(T value, T obj) {
-        return Objects.equals(obj, value);
+        if (value == obj) {
+            return true;
+        }
+        if (value == null || obj == null) {
+            return false;
+        }
+        return value.equals(obj);
     }
 
     private Node<T> findNode(int index) {
