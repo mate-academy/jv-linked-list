@@ -122,7 +122,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (removedElement == head) {
             head = head.next;
             head.prev = null;
-        } else if(removedElement == tail) {
+        } else if (removedElement == tail) {
             tail = tail.prev;
             tail.next = null;
         } else {
