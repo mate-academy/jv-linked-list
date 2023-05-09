@@ -22,19 +22,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        size++;
-        checkIndex(index);
-        size--;
         Node<T> nodeForeAdd = new Node<>(value);
-        if (head == null) {
-            head = tail = nodeForeAdd;
+        if (size == index) {
+            add(value);
+            return;
         } else if (index == 0) {
             nodeForeAdd.next = head;
             head = nodeForeAdd;
-        } else if (index == size) {
-            nodeForeAdd.prev = tail;
-            tail.next = nodeForeAdd;
-            tail = nodeForeAdd;
         } else {
             insert(value,index);
         }
@@ -57,21 +51,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value,int index) {
         Node<T> current = getByIndex(index);
-        Node<T> oldNode = new Node<>(current.prev, current.value, current.next);
+        T oldValue = current.value;
         current.value = value;
-        return oldNode.value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
         Node<T> node = getByIndex(index);
-        unlink(node.value);
+        unlink(node);
         return node.value;
     }
 
     @Override
     public boolean remove(T object) {
-        return unlink(object);
+        int indexNodeForRemove = getIndexByValue(object);
+        if (indexNodeForRemove != -1) {
+            return unlink(getByIndex(indexNodeForRemove));
+        }
+        return false;
     }
 
     @Override
@@ -113,24 +111,33 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private boolean unlink(T nodeValue) {
+    private int getIndexByValue(T value) {
         Node<T> current = head;
         for (int i = 0; i < size; i++) {
             if (current.value != null
-                    && current.value.equals(nodeValue)
-                    || current.value == nodeValue) {
-                if (i == 0) {
-                    head = head.next;
-                } else if (i == size - 1) {
-                    tail = tail.prev;
-                } else {
-                    current.next.prev = current.prev;
-                    current.prev.next = current.next;
-                }
-                size--;
-                return true;
+                    && current.value.equals(value)
+                    || current.value == value) {
+                return i;
             }
             current = current.next;
+        }
+        return -1;
+    }
+
+    private boolean unlink(Node<T> node) {
+        if (node == head) {
+            head = head.next;
+            size--;
+            return true;
+        } else if (node == tail) {
+            tail = tail.prev;
+            size--;
+            return true;
+        } else if (node != null) {
+            node.next.prev = node.prev;
+            node.prev.next = node.next;
+            size--;
+            return true;
         }
         return false;
     }
