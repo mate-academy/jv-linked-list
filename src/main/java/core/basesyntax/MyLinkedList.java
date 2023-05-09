@@ -67,7 +67,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         for (Node<T> currentNode = first; currentNode != null; currentNode = currentNode.next) {
-            if (equalsElemets(currentNode.element, object)) {
+            if (elementsAreEqual(currentNode.element, object)) {
                 unlink(currentNode);
                 return true;
             }
@@ -86,18 +86,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Node<T> currentNode = first;
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Input index " + index
                     + " for size " + size);
         }
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
+        Node<T> currentNode;
+        if (size / 2 > index) {
+            currentNode = first;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+        } else {
+            currentNode = last;
+            for (int i = size - 1; i > index; i--) {
+                currentNode = currentNode.prev;
+            }
         }
         return currentNode;
     }
 
-    private boolean equalsElemets(T a, T b) {
+    private boolean elementsAreEqual(T a, T b) {
         return a == b || a != null && a.equals(b);
     }
 
