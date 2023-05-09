@@ -9,16 +9,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        linkedLast(value);
+        linkLast(value);
     }
 
     @Override
     public void add(T value, int index) {
         if (index == size) {
-            linkedLast(value);
+            linkLast(value);
             return;
         }
-        linkedBefore(value, getNode(index));
+        linkBefore(value, getNode(index));
     }
 
     @Override
@@ -69,26 +69,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void linkedBefore(T value, Node<T> node) {
-        final Node<T> prev = node.prev;
-        final Node<T> newNode = new Node<>(prev, value, node);
+    private void linkBefore(T value, Node<T> node) {
+        final Node<T> prevNode = node.prev;
+        final Node<T> newNode = new Node<>(prevNode, value, node);
         node.prev = newNode;
-        if (prev == null) {
+        if (prevNode == null) {
             first = newNode;
         } else {
-            prev.next = newNode;
+            prevNode.next = newNode;
         }
         size++;
     }
 
-    private void linkedLast(T value) {
-        final Node<T> l = last;
-        final Node<T> newNode = new Node<>(l, value, null);
+    private void linkLast(T value) {
+        final Node<T> lastNode = last;
+        final Node<T> newNode = new Node<>(lastNode, value, null);
         last = newNode;
-        if (l == null) {
+        if (lastNode == null) {
             first = newNode;
         } else {
-            l.next = newNode;
+            lastNode.next = newNode;
         }
         size++;
     }
@@ -99,20 +99,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    Node<T> getNode(int index) {
+    private Node<T> getNode(int index) {
         checkIndex(index);
         if (index < (size / 2)) {
-            Node<T> x = first;
+            Node<T> firstNode = first;
             for (int i = 0; i < index; i++) {
-                x = x.next;
+                firstNode = firstNode.next;
             }
-            return x;
+            return firstNode;
         } else {
-            Node<T> x = last;
+            Node<T> lastNode = last;
             for (int i = size - 1; i > index; i--) {
-                x = x.prev;
+                lastNode = lastNode.prev;
             }
-            return x;
+            return lastNode;
         }
     }
 
