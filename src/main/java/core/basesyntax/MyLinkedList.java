@@ -166,8 +166,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private boolean areItemsEqual(T currentObject, T object) {
-        return currentObject == object || currentObject != null && currentObject.equals(object);
+    private boolean areItemsEqual(T existingItem, T searchingItem) {
+        return existingItem == searchingItem || existingItem != null && existingItem.equals(searchingItem);
     }
 
     private static class Node<T> {
