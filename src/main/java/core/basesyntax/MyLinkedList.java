@@ -26,7 +26,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = newNode;
         } else {
             tail.next = newNode;
-            newNode.prev = tail;
         }
         tail = newNode;
         size++;
@@ -34,7 +33,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        exceptionCheckForAdd(index);
         if (index == size) {
             add(value);
             return;
@@ -54,20 +52,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T item : list) {
+            add(item);
         }
     }
 
     @Override
     public T get(int index) {
-        exceptionCheck(index);
         return getIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        exceptionCheck(index);
         T returnValue = getIndex(index).value;
         getIndex(index).value = value;
         return returnValue;
@@ -75,7 +71,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        exceptionCheck(index);
         T returnValue = getIndex(index).value;
         unlink(getIndex(index));
         return returnValue;
@@ -105,6 +100,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getIndex(int index) {
+        exceptionCheck(index);
         Node<T> current;
         if (index < size / 2) {
             current = head;
@@ -142,12 +138,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void exceptionCheck(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " is invalid");
-        }
-    }
-
-    private void exceptionCheckForAdd(int index) {
-        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index " + index + " is invalid");
         }
     }
