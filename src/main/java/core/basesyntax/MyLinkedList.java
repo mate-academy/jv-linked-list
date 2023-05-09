@@ -63,10 +63,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Node<T> deletedElement = findNodeByIndex(index);
         if (deletedElement == null) {
-            throw new IndexOutOfBoundsException("wrond index: " + index + ", for empty list");
+            throw new IndexOutOfBoundsException("wrong index: " + index + ", for empty list");
         }
         unlink(deletedElement);
-        size--;
         return deletedElement.value;
     }
 
@@ -74,9 +73,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> deletedElement = findNodeByElement(object);
         boolean isDeleted = unlink(deletedElement);
-        if (isDeleted) {
-            size--;
-        }
         return isDeleted;
     }
 
@@ -131,13 +127,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return tail;
         }
         if (index < size / 2) {
-            return startFromHead(index);
+            return getNodeFromHead(index);
         } else {
-            return startFromTail(index);
+            return getNodeFromTail(index);
         }
     }
 
-    private Node<T> startFromHead(int index) {
+    private Node<T> getNodeFromHead(int index) {
         Node<T> curNode = head;
         int counter = 0;
         while (curNode.next != null) {
@@ -150,7 +146,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
-    private Node<T> startFromTail(int index) {
+    private Node<T> getNodeFromTail(int index) {
         Node<T> curNode = tail;
         int counter = size - 1;
         while (curNode.prev != null) {
@@ -181,13 +177,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private boolean unlink(Node<T> node) {
         if (node == head) {
             head = head.next;
+            size--;
             return true;
         } else if (node == tail) {
             tail = tail.prev;
+            size--;
             return true;
         } else if (node != null) {
             node.prev.next = node.next;
             node.next.prev = node.prev;
+            size--;
             return true;
         }
         return false;
