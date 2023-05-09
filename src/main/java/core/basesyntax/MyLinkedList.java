@@ -23,7 +23,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexForAdd(index);
         Node<T> newNode = new Node<>(value);
         if (index == size) {
             add(value);
@@ -54,13 +53,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndexForGet(index);
         return findByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndexForGet(index);
         Node<T> current = findByIndex(index);
         T old = current.value;
         current.value = value;
@@ -108,9 +105,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             for (int i = size - 1; i > index; i--) {
                 current = current.prev;
             }
-        }
-        if (current == null) {
-            throw new IndexOutOfBoundsException("invalid index");
         }
         return current;
     }
