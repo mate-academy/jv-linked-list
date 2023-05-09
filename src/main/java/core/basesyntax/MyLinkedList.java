@@ -15,8 +15,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         public Node(T value) {
             this.value = value;
-            this.prev = null;
-            this.next = null;
         }
     }
 
@@ -26,7 +24,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(value);
-        if (head == null && tail == null) {
+        if (head == null) {
             head = newNode;
             tail = newNode;
         } else {
@@ -41,22 +39,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         if (index == size) {
             add(value);
-        } else {
-            checkIndex(index);
-            Node<T> newNode = new Node<>(value);
-            Node<T> currentNode = getNodeByIndex(index);
-            if (isBetween(currentNode) || isTail(currentNode)) {
-                currentNode.prev.next = newNode;
-                newNode.next = currentNode;
-                newNode.prev = currentNode.prev;
-                currentNode.prev = newNode;
-            } else if (isHead(currentNode)) {
-                head = newNode;
-                head.next = currentNode;
-                currentNode.prev = head;
-            }
-            size++;
+            return;
         }
+        checkIndex(index);
+        Node<T> newNode = new Node<>(value);
+        Node<T> currentNode = getNodeByIndex(index);
+        if (currentNode == head) {
+            head = newNode;
+            head.next = currentNode;
+            currentNode.prev = head;
+        } else {
+            currentNode.prev.next = newNode;
+            newNode.next = currentNode;
+            newNode.prev = currentNode.prev;
+            currentNode.prev = newNode;
+        }
+        size++;
     }
 
     @Override
@@ -113,36 +111,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index > (size - 1)) {
-            throw new IndexOutOfBoundsException("Index must be between 0 and " + (size));
+            throw new IndexOutOfBoundsException("Index must be between 0 and " + (size - 1));
         }
-    }
-
-    private boolean isHead(Node<T> node) {
-        return node.prev == null && node.next != null;
-    }
-
-    private boolean isTail(Node<T> node) {
-        return node.prev != null && node.next == null;
-    }
-
-    private boolean isBetween(Node<T> node) {
-        return node.prev != null && node.next != null;
     }
 
     private void removeNode(Node<T> removedElement) {
-        if (isBetween(removedElement)) {
-            removedElement.next.prev = removedElement.prev;
-            removedElement.prev.next = removedElement.next;
-        } else if (isHead(removedElement)) {
-            head = head.next;
-        } else if (isTail(removedElement)) {
-            tail = tail.prev;
-        } else if (size == 1) {
+        if (size == 1) {
             head = null;
             tail = null;
+        } else if (removedElement == head) {
+            head = head.next;
+            head.prev = null;
+        } else if(removedElement == tail) {
+            tail = tail.prev;
+            tail.next = null;
+        } else {
+            removedElement.next.prev = removedElement.prev;
+            removedElement.prev.next = removedElement.next;
         }
-        removedElement.next = null;
-        removedElement.prev = null;
         size--;
     }
 
