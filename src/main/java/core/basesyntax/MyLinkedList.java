@@ -61,7 +61,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> removedNode = findIndex(object);
+        Node<T> removedNode = findByIndex(object);
         if (removedNode != null) {
             unlink(removedNode);
             return true;
@@ -79,17 +79,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void areIndexInRange(int index) {
+    private void validateIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + " doesn't exist");
         }
     }
 
-    private Node<T> findIndex(T object) {
+    private Node<T> findByIndex(T searchingItem) {
         Node<T> node = first;
-        for (int i = 0; i < size; i++) {
-            T currentObject = node.item;
-            if (areItemsEqual(currentObject, object)) {
+        while (node != null) {
+            T existingItem = node.item;
+            if (areItemsEqual(existingItem, searchingItem)) {
                 return node;
             } else {
                 node = node.next;
@@ -99,7 +99,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getByIndex(int index) {
-        areIndexInRange(index);
+        validateIndex(index);
         Node<T> wantedNode;
         if (index < (size >> 1)) {
             wantedNode = first;
@@ -167,7 +167,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean areItemsEqual(T currentObject, T object) {
-        return (currentObject == object || currentObject != null && currentObject.equals(object));
+        return currentObject == object || currentObject != null && currentObject.equals(object);
     }
 
     private static class Node<T> {
