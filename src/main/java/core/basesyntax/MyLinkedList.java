@@ -9,12 +9,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> node = new Node<>(null, value, null);
+        Node<T> node = new Node<>(last, value, null);
         if (isEmpty()) {
             first = node;
         } else {
             last.next = node;
-            node.prev = last;
         }
         last = node;
         size++;
@@ -22,24 +21,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        Node<T> node;
         if (index == size) {
             add(value);
             return;
-        }
-        verifyIndexIsValid(index);
-        Node<T> node = new Node<>(null, value, null);
-        if (index == 0) {
-            node.next = first;
+        } else if (index == 0) {
+            node = new Node<>(null, value, first);
             first.prev = node;
             first = node;
-            size++;
-            return;
+        } else {
+            Node<T> nextNode = getNode(index);
+            node = new Node<>(nextNode.prev, value, nextNode);
+            nextNode.prev.next = node;
+            nextNode.prev = node;
         }
-        Node<T> nextNode = getNode(index);
-        nextNode.prev.next = node;
-        node.prev = nextNode.prev;
-        nextNode.prev = node;
-        node.next = nextNode;
         size++;
     }
 
@@ -52,13 +47,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        verifyIndexIsValid(index);
         return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        verifyIndexIsValid(index);
         Node<T> node = getNode(index);
         T oldValue = node.value;
         node.value = value;
@@ -67,7 +60,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        verifyIndexIsValid(index);
         Node<T> nodeToRemove = getNode(index);
         unlink(nodeToRemove);
         size--;
@@ -149,7 +141,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean elementsAreEqual(T first, T last) {
-        return (first == last) || ((first != null) && (first.equals(last)));
+        return first == last || first != null && first.equals(last);
     }
 
     private static class Node<T> {
