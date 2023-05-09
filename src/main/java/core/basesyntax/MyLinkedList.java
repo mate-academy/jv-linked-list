@@ -11,7 +11,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node node = new Node<>(null, value, null);
-        if (size == 0) {
+        if (isEmpty()) {
             head = tail = node;
         } else {
             node.prev = tail;
@@ -44,8 +44,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T listElement : list) {
+            add(listElement);
         }
     }
 
@@ -109,24 +109,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByObject(T object) {
-        Node<T> currentNode = head;
-        int index = 0;
-        while (index != size) {
+        for (Node<T> currentNode = head; currentNode != null; currentNode = currentNode.next) {
             if ((currentNode.item == object)
                     || (currentNode.item != null && currentNode.item.equals(object))) {
                 return currentNode;
             }
-            currentNode = currentNode.next;
-            index++;
         }
         return null;
     }
 
     private void remover(Node<T> current) {
-        if (current.equals(head)) {
+        if (current.prev == null && current.next == null) {
+            head = null;
+        } else if (current.equals(head)) {
             head = current.next;
+            head.prev = null;
         } else if (current.equals(tail)) {
             tail = current.prev;
+            tail.next = null;
         } else {
             current.prev.next = current.next;
             current.next.prev = current.prev;
