@@ -42,9 +42,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeByIndex(int index) {
         checkIndex(index);
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        Node<T> current;
+        if (index < size / 2) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
         return current;
     }
@@ -71,32 +79,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        T removedValue;
-        if (index == 0) {
-            removedValue = head.value;
-            head = head.next;
-            if (head == null) {
-                tail = null;
-            }
-        } else {
-            Node<T> prev = getNodeByIndex(index - 1);
-            removedValue = prev.next.value;
-            prev.next = prev.next.next;
-            if (index == size - 1) {
-                tail = prev;
-            }
-        }
-        size--;
-        return removedValue;
+        Node<T> current = getNodeByIndex(index);
+        T returnValue = current.value;
+        unlink(current);
+        return returnValue;
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> current = head;
         for (int i = 0; i < size; i++) {
-            if (object == current.value || object != null
-                    && object.equals(current.value)) {
+            if (areEqual(current.value, object)) {
                 unlink(current);
                 return true;
             }
@@ -133,6 +126,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index " + index + " is not valid");
         }
+    }
+
+    private boolean areEqual(T first, T second) {
+        return first == second || second != null && second.equals(first);
     }
 
     private class Node<T> {
