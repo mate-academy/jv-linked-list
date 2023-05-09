@@ -3,9 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
     private Node<T> firstNode;
     private Node<T> lastNode;
+    private int size;
 
     @Override
     public void add(T value) {
@@ -26,14 +26,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             Node<T> currentNode = getNode(index);
             Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
-            Node<T> prev = currentNode.prev;
-            newNode.prev = prev;
-            newNode.next = currentNode;
             currentNode.prev = newNode;
-            if (prev == null) {
+            if (newNode.prev == null) {
                 firstNode = newNode;
             } else {
-                prev.next = newNode;
+                newNode.prev.next = newNode;
             }
             size++;
         }
@@ -89,18 +86,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private static class Node<T> {
-        private T value;
-        private Node<T> prev;
-        private Node<T> next;
-
-        private Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
     private Node<T> getNode(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("No such index: "
@@ -138,5 +123,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.next.prev = node.prev;
         }
         size--;
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        private Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
     }
 }
