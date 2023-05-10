@@ -8,16 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private T value;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(T value) {
-            this.value = value;
-        }
-    }
-
     public MyLinkedList() {
     }
 
@@ -139,5 +129,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             currentNode = currentNode.next;
         }
         return currentNode;
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(T value) {
+            this.value = value;
+        }
     }
 }
