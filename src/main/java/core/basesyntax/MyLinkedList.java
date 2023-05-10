@@ -14,7 +14,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkRangeAdd(index);
         if (index == 0) {
             addTop(value);
         } else if (index == size) {
@@ -38,7 +37,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        checkRange(index);
         Node<T> nodeAtIndex = getNode(index);
         T oldValue = nodeAtIndex.value;
         nodeAtIndex.value = value;
@@ -47,7 +45,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkRange(index);
         Node<T> toRemove = getNode(index);
         unlink(toRemove);
         return toRemove.value;
@@ -71,7 +68,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size;
     }
 
-    @Override public boolean isEmpty() {
+    @Override
+    public boolean isEmpty() {
         return size == 0;
     }
 
@@ -82,15 +80,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void checkRangeAdd(int index) {
-        if (index < 0 || index > size + 1) {
-            throw new IndexOutOfBoundsException("Index of elements: " + index
-                    + " Size of the list: " + size);
-        }
-    }
-
     private boolean areEqual(T a, T b) {
-        return (a == null && b == null) || (a != null && a.equals(b));
+        return a == b || a != null && a.equals(b);
     }
 
     private Node<T> getNode(int index) {
