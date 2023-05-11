@@ -34,7 +34,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == size) {
             newNode.prev = lastNode;
             lastNode.next = newNode;
-            newNode = lastNode;
+            lastNode = newNode;
         } else {
             Node<T> current = firstNode;
             for (int i = 0; i < index; i++) {
@@ -73,7 +73,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException();
         }
         Node<T> current = firstNode;
-        for (int i = 0; i < index; i++) {
+        for (int i = 0; i <= index; i++) {
             current = current.next;
         }
         T oldValue = current.item;
