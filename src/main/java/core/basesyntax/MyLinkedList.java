@@ -35,22 +35,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if ((index > size) || index < 0) {
-            throw new IndexOutOfBoundsException("Index out of bounds");
-        }
         if (index == size) {
             add(value);
-        } else {
-            Node<T> nodeAtIndex = checkNodeByIndex(index);
-            Node<T> newNode = new Node<>(nodeAtIndex.prev, value, nodeAtIndex);
-            if (nodeAtIndex.prev != null) {
-                nodeAtIndex.prev.next = newNode;
-            } else {
-                head = newNode;
-            }
-            nodeAtIndex.prev = newNode;
-            size++;
+            return;
         }
+        checkIndexOutOfBounds(index);
+        Node<T> nodeAtIndex = getNodeByIndex(index);
+        Node<T> newNode = new Node<>(nodeAtIndex.prev, value, nodeAtIndex);
+        if (nodeAtIndex.prev != null) {
+            nodeAtIndex.prev.next = newNode;
+        } else {
+            head = newNode;
+        }
+        nodeAtIndex.prev = newNode;
+        size++;
     }
 
     @Override
@@ -62,14 +60,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexOutOfBounds(index);
-        return checkNodeByIndex(index).value;
+        checkIndexOutOfBounds(index);
+        return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        indexOutOfBounds(index);
-        Node<T> nodeToSet = checkNodeByIndex(index);
+        checkIndexOutOfBounds(index);
+        Node<T> nodeToSet = getNodeByIndex(index);
         T oldValue = nodeToSet.value;
         nodeToSet.value = value;
         return oldValue;
@@ -77,8 +75,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexOutOfBounds(index);
-        Node<T> nodeToRemove = checkNodeByIndex(index);
+        checkIndexOutOfBounds(index);
+        Node<T> nodeToRemove = getNodeByIndex(index);
         unlinkNode(nodeToRemove);
         return nodeToRemove.value;
     }
@@ -106,7 +104,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void indexOutOfBounds(int index) {
+    private void checkIndexOutOfBounds(int index) {
         if ((index >= size) || index < 0) {
             throw new IndexOutOfBoundsException("Index out of bounds");
         }
@@ -130,10 +128,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private Node<T> checkNodeByIndex(int index) {
-        if ((index > size) || index < 0) {
-            return null;
-        }
+    private Node<T> getNodeByIndex(int index) {
         Node<T> current;
         if (index < size / 2) {
             current = head;
