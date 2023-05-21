@@ -23,20 +23,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-//        if (!validBound(index)) {
-//            throw new IndexOutOfBoundsException("Index out of bound");
-//        } else {
-//            if (index == size) {
-//                add(value);
-//            } else {
-//                Node<T> currentNode = getCurrentNode(index);
-//                Node<T> node = new Node<>(value, currentNode, currentNode.prev);
-//                currentNode.prev.next = node;
-//                currentNode.prev = node;
-//                size++;
-//            }
-//        }
-
         if (index == 0) {
             Node<T> node = new Node<>(value, head, null);
             head = node;
@@ -150,9 +136,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> prev;
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
         Node(T item, Node<T> next, Node<T> prev) {
             this.item = item;
