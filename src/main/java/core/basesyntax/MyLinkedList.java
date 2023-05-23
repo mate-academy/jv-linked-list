@@ -25,16 +25,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
             return;
+        }
+        checkIndex(index);
+        Node<T> current = getNodeByIndex(index);
+        Node<T> newNode = new Node<>(current.prev, value, current);
+        if (current == head) {
+            head = newNode;
         } else {
-            checkIndex(index);
-            Node<T> current = getNodeByIndex(index);
-            Node<T> newNode = new Node<>(current.prev, value, current);
-            if (current == head) {
-                head = newNode;
-            } else {
-                current.prev.next = newNode;
-                current.prev = newNode;
-            }
+            current.prev.next = newNode;
+            current.prev = newNode;
         }
         size++;
     }
