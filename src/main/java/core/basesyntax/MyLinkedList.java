@@ -3,23 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private Node head;
     private Node tail;
     private int size;
-
-    public class Node<T> {
-        private T value;
-        private Node<T> next;
-        private Node<T> prev;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.next = next;
-            this.value = value;
-            this.prev = prev;
-        }
-
-    }
 
     @Override
     public void add(T value) {
@@ -68,6 +54,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
+        checkIndex(index);
         if (index < (size >> 1)) {
             Node<T> node = head;
             for (int i = 0; i < index; i++) {
@@ -85,7 +72,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> current = getNodeByIndex(index);
         T finalValue = current.value;
         current.value = value;
@@ -94,7 +80,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> nodeToRemove = getNodeByIndex(index);
         T result = nodeToRemove.value;
         unlink(nodeToRemove);
@@ -152,4 +137,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
+    private class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.next = next;
+            this.value = value;
+            this.prev = prev;
+        }
+
+    }
 }
