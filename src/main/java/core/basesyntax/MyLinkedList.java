@@ -68,23 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedElement;
-        if (index == 0) {
-            removedElement = head.value;
-            head = head.next;
-            if (head == null) {
-                tail = null;
-            }
-        } else {
-            Node<T> current = getNodeByIndex(index - 1);
-            removedElement = current.next.value;
-            current.next = current.next.next;
-            if (index == size - 1) {
-                tail = current;
-            }
-        }
-        size--;
-        return removedElement;
+        return unlink(getNodeByIndex(index));
     }
 
     @Override
@@ -133,7 +117,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private void unlink(Node<T> currentNode) {
+    private T unlink(Node<T> currentNode) {
         if (currentNode.prev == null) {
             head = currentNode.next;
         } else {
@@ -145,5 +129,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             currentNode.next.prev = currentNode.prev;
         }
         size--;
+        return currentNode.value;
     }
 }
