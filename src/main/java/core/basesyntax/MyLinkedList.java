@@ -1,33 +1,30 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private T value;
-    private int index;
     private int size;
     private Node<T> head;
     private Node<T> tail;
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
+        Node<T> current = new Node<>(value);
         if (head == null) {
-            head = newNode;
-            newNode.prev = tail;
+            head = current;
+            current.prev = tail;
         } else {
-            newNode.prev = tail;
-            tail.next = newNode;
+            current.prev = tail;
+            tail.next = current;
         }
-        tail = newNode;
+        tail = current;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
         Node<T> newNode = new Node<>(value);
-        Objects.checkIndex(index, size + 1);
+        checkPositionIndex(index);
         if (head == null) {
             head = newNode;
             tail = newNode;
@@ -70,16 +67,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        return unlink(getNodeByIndex(index));
+        return unlinkNode(getNodeByIndex(index));
     }
 
     @Override
     public boolean remove(T object) {
-        for (Node<T> node = head; node != null; node = node.next) {
-            if (Objects.equals(object, node.value)) {
-                unlink(node);
+        Node<T> currentNode = head;
+        for (int i = 0; i < size; i++) {
+            if (currentNode.value == object
+                    || currentNode.value != null && currentNode.value.equals(object)) {
+                unlinkNode(currentNode);
                 return true;
             }
+            currentNode = currentNode.next;
         }
         return false;
     }
@@ -119,18 +119,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private T unlink(Node<T> currentNode) {
-        if (currentNode.prev == null) {
+    private void checkPositionIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException();
+        }
+    }
+
+    private T unlinkNode(Node<T> currentNode) {
+        T element = currentNode.value;
+        if (head == currentNode) {
             head = currentNode.next;
+            currentNode.prev = null;
         } else {
             currentNode.prev.next = currentNode.next;
-        }
-        if (currentNode.next == null) {
-            tail = currentNode.prev;
-        } else {
-            currentNode.next.prev = currentNode.prev;
+            if (currentNode.next != null) {
+                currentNode.next.prev = currentNode.prev;
+            }
         }
         size--;
-        return currentNode.value;
+        return element;
     }
 }
