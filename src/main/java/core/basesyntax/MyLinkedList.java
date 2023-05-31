@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size;
 
-    private static class Node<T> {
-        private Node<T> prev;
-        private T value;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         linkLast(value);
@@ -26,30 +14,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
         if (index == size) {
             linkLast(value);
         } else {
+            checkIndex(index);
             linkBefore(value, getNodeByIndex(index));
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (T element: list) {
+        for (T element : list) {
             linkLast(element);
         }
     }
 
     @Override
     public T get(int index) {
-        checkPosition(index);
+        checkIndex(index);
         return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkPosition(index);
+        checkIndex(index);
         Node<T> node = getNodeByIndex(index);
         T oldValue = node.value;
         node.value = value;
@@ -58,7 +46,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkPosition(index);
+        checkIndex(index);
         return unlink(getNodeByIndex(index));
     }
 
@@ -93,14 +81,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndex(int index) {
-        if (!(index >= 0 && index <= size)) {
-            throw new IndexOutOfBoundsException("Incorrect index");
-        }
-    }
-
-    private void checkPosition(int index) {
-        if (!(index >= 0 && index < size)) {
-            throw new IndexOutOfBoundsException("Incorrect index");
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Incorrect index! List`s size: "
+                    + size + ". You input: " + index);
         }
     }
 
@@ -166,5 +149,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         node.value = null;
         size--;
         return element;
+    }
+
+    private static class Node<T> {
+        private Node<T> prev;
+        private T value;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
     }
 }
