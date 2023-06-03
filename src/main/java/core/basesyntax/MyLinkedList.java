@@ -7,12 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public MyLinkedList() {
-        head = null;
-        tail = null;
-        size = 0;
-    }
-
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(value);
@@ -73,18 +67,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> node = getNode(index);
-
-        if (node.prev != null) {
-            node.prev.next = node.next;
-        }
-        if (node.next != null) {
-            node.next.prev = node.prev;
-        }
-
-        head = (node == head) ? node.next : head;
-        tail = (node == tail) ? node.prev : tail;
-
-        size--;
+        unlink(node);
         return node.item;
     }
 
@@ -94,17 +77,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (current != null) {
             if ((value == null && current.item == null)
                     || (current.item != null && current.item.equals(value))) {
-                if (current.prev == null) {
-                    head = current.next;
-                } else {
-                    current.prev.next = current.next;
-                }
-                if (current.next == null) {
-                    tail = current.prev;
-                } else {
-                    current.next.prev = current.prev;
-                }
-                size--;
+
+                unlink(current);
                 return true;
             }
             current = current.next;
@@ -148,6 +122,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return current;
+    }
+
+    private void unlink(Node<T> node) {
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        }
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        }
+        head = (node == head) ? node.next : head;
+        tail = (node == tail) ? node.prev : tail;
+        size--;
     }
 
     private static class Node<T> {
