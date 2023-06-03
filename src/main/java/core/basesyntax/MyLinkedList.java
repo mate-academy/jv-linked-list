@@ -14,9 +14,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public static class Node<T> {
-        T value;
-        Node<T> prev;
-        Node<T> next;
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
 
         public Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
@@ -42,7 +42,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkEqualsSizeIndex(index);
-        if(index == 0) {
+        if (index == 0) {
             if (isEmpty()) {
                 add(value);
             } else {
@@ -60,7 +60,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 add(value);
             } else {
                 Node<T> followingNode = variousNode.next;
-                Node<T> newNode = new Node<> (variousNode, value, followingNode);
+                Node<T> newNode = new Node(variousNode, value, followingNode);
                 variousNode.next = newNode;
                 followingNode.prev = newNode;
                 size++;
@@ -149,8 +149,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> variableNode = head;
         int oldSize = size;
         for (int a = 0; a < oldSize; a++) {
-            if ((variableNode.value == null && object == null) ||
-                    (variableNode.value != null && variableNode.value.equals(object))) {
+            if ((variableNode.value == null && object == null)
+                    || (variableNode.value != null && variableNode.value.equals(object))) {
                 remove(a);
                 break;
             } else {
