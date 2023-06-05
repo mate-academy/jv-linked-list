@@ -26,9 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIndexForAdd(index);
         if (index == size) {
             append(value);
         } else {
@@ -47,18 +45,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index: " + index);
-        }
-        Node<T> node = getNode(index);
-        return node.data;
+        checkIndex(index);
+        return getNode(index).data;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIndex(index);
         Node<T> node = getNode(index);
         T oldValue = node.data;
         node.data = value;
@@ -67,9 +60,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIndex(index);
         Node<T> nodeToRemove = getNode(index);
         unlink(nodeToRemove);
         size--;
@@ -81,7 +72,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = first;
         while (current != null) {
             if ((current.data != null && current.data.equals(object))
-                    || (current.data == null && object == null)) {
+                    || (current.data == object)) {
                 unlink(current);
                 size--;
                 return true;
@@ -148,5 +139,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.prev.next = newNode;
         }
         node.prev = newNode;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Invalid index: " + index);
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Invalid index: " + index);
+        }
     }
 }
