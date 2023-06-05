@@ -21,34 +21,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value, last, null);
-        if (isEmpty()) {
-            first = newNode;
-        } else {
-            last.next = newNode;
-        }
-        last = newNode;
-        size++;
+        add(value, size);
     }
 
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Invalid index" + index);
+            throw new IndexOutOfBoundsException("Invalid index: " + index);
         }
         if (index == size) {
-            add(value);
+            append(value);
         } else {
             Node<T> nodeAtIndex = getNode(index);
-            Node<T> newNode = new Node<>(value, nodeAtIndex.prev, nodeAtIndex);
-            if (index == 0) {
-                first = newNode;
-            } else {
-                nodeAtIndex.prev.next = newNode;
-            }
-            nodeAtIndex.prev = newNode;
-            size++;
+            insertBefore(value, nodeAtIndex);
         }
+        size++;
     }
 
     @Override
@@ -141,5 +128,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             node.next.prev = node.prev;
         }
+    }
+
+    private void append(T value) {
+        Node<T> newNode = new Node<>(value, last, null);
+        if (isEmpty()) {
+            first = newNode;
+        } else {
+            last.next = newNode;
+        }
+        last = newNode;
+    }
+
+    private void insertBefore(T value, Node<T> node) {
+        Node<T> newNode = new Node<>(value, node.prev, node);
+        if (node.prev == null) {
+            first = newNode;
+        } else {
+            node.prev.next = newNode;
+        }
+        node.prev = newNode;
     }
 }
