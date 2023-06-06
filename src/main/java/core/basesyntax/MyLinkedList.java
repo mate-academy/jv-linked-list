@@ -7,12 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public MyLinkedList() {
-        size = 0;
-        head = null;
-        tail = null;
-    }
-
     public static class Node<T> {
         private T value;
         private Node<T> prev;
@@ -27,9 +21,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(null, value, null);
-        size++;
+        Node<T> newNode;
         if (isEmpty()) {
+            newNode = new Node<>(null, value, null);
             head = newNode;
             tail = newNode;
         } else {
@@ -37,62 +31,40 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail.next = newNode;
             tail = newNode;
         }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
         checkEqualsSizeIndex(index);
-        if (index == 0) {
-            if (isEmpty()) {
-                add(value);
-            } else {
-                Node<T> newNode = new Node<>(null, value, head);
-                head.prev = newNode;
-                head = newNode;
-                size++;
-            }
+        if (isEmpty() || index == size) {
+            add(value);
+        } else if (index == 0 && !isEmpty()) {
+            Node<T> newNode = new Node<>(null, value, head);
+            head.prev = newNode;
+            head = newNode;
+            size++;
         } else {
-            Node<T> variousNode = head;
-            for (int a = 1; a < index; a++) {
-                variousNode = variousNode.next;
-            }
-            if (variousNode == tail) {
-                add(value);
-            } else {
-                Node<T> followingNode = variousNode.next;
-                Node<T> newNode = new Node(variousNode, value, followingNode);
-                variousNode.next = newNode;
-                followingNode.prev = newNode;
-                size++;
-            }
+            Node<T> followingNode = nodeInIndex(index);
+            Node<T> previousNode = followingNode.prev;
+            Node<T> newNode = new Node<>(previousNode, value, followingNode);
+            previousNode.next = newNode;
+            followingNode.prev = newNode;
+            size++;
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        Node<T> previousNode = tail;
-        if (list.size() > 0) {
-            Node<T> firstListNode = new Node(previousNode, list.get(0), null);
-            previousNode.next = firstListNode;
-            Node<T> variableNode = firstListNode;
-            Node<T> newNode;
-            for (int a = 1; a < list.size(); a++) {
-                newNode = new Node(variableNode, list.get(a), null);
-                variableNode.next = newNode;
-                variableNode = newNode;
-            }
-            tail = variableNode;
-            size += list.size();
+        for (int a = 0; a < list.size(); a++) {
+            add(list.get(a));
         }
     }
 
     @Override
     public T get(int index) {
         checkIndex(index);
-        Node<T> variableNode = head;
-        for (int a = 1; a <= index; a++) {
-            variableNode = variableNode.next;
-        }
+        Node<T> variableNode = nodeInIndex(index);
         return variableNode.value;
     }
 
@@ -100,10 +72,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         checkIndex(index);
         T deletedValue;
-        Node<T> variableNode = head;
-        for (int a = 1; a <= index; a++) {
-            variableNode = variableNode.next;
-        }
+        Node<T> variableNode = nodeInIndex(index);
         deletedValue = variableNode.value;
         variableNode.value = value;
         return deletedValue;
@@ -124,16 +93,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         if (index == size - 1 && index > 0) {
             deletedValue = tail.value;
-            Node<T> lastNode = tail;
-            lastNode = lastNode.prev;
-            tail = lastNode;
-            lastNode.next = null;
+            tail = tail.prev;
+            tail.next = null;
         }
         if (size - 1 > index && size > 1 && index != 0) {
-            Node<T> deletedNode = head;
-            for (int a = 1; a <= index; a++) {
-                deletedNode = deletedNode.next;
-            }
+            Node<T> deletedNode = nodeInIndex(index);
             deletedValue = deletedNode.value;
             Node<T> previousNode = deletedNode.prev;
             Node<T> followingNode = deletedNode.next;
@@ -147,17 +111,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> variableNode = head;
-        int oldSize = size;
-        for (int a = 0; a < oldSize; a++) {
+        for (int a = 0; a < size; a++) {
             if ((variableNode.value == null && object == null)
                     || (variableNode.value != null && variableNode.value.equals(object))) {
                 remove(a);
-                break;
-            } else {
-                variableNode = variableNode.next;
+                return true;
             }
+            variableNode = variableNode.next;
         }
-        return size != oldSize;
+        return false;
     }
 
     @Override
@@ -170,15 +132,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return head == null;
     }
 
+    private Node<T> nodeInIndex(int index) {
+        Node<T> variableNode = head;
+        for (int a = 1; a <= index; a++) {
+            variableNode = variableNode.next;
+        }
+        return variableNode;
+    }
+
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("this index is not correction");
+            throw new IndexOutOfBoundsException("index " + index
+                    + " is not correction. size = " + size);
         }
     }
 
     private void checkEqualsSizeIndex(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("this index is not correction");
+            throw new IndexOutOfBoundsException("index " + index
+                    + " is not correction. size = " + size);
         }
     }
 }
