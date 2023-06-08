@@ -64,12 +64,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> removedNode = findByElement(object);
-        if (removedNode == null) {
-            return false;
+        if (findByElement(object) !=null) {
+            unlink(findByElement(object));
+            return true;
         }
-        unlink(removedNode);
-        return true;
+        return false;
     }
 
     @Override
@@ -145,7 +144,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> prev;
         private Node<T> next;
 
-        public Node(Node<T> prev, T value, Node<T> next) {
+        private Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
             this.value = value;
             this.next = next;
