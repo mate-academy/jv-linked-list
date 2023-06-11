@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -86,7 +85,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         int index = -1;
         for (int i = 0; i < size; i++) {
-            if ((object != null && get(i) != null && get(i).equals(object)) || (object == null && get(i) == null)) {
+            if ((object != null && get(i) != null && get(i).equals(object))
+                    || (object == null && get(i) == null)) {
                 index = i;
                 break;
             }
