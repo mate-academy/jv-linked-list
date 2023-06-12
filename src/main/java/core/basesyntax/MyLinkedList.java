@@ -70,15 +70,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedElement = removeFirstElementInLinkedList(index);
-        if (removedElement == null) {
-            removedElement = removeMiddleElementInLinkedList(index);
-        }
-        if (removedElement == null) {
-            removedElement = removeLastElementInLinkedList(index);
-        }
+        Node<T> removedElement = getNodeByIndex(index);
+        unLink(removedElement);
         size--;
-        return removedElement;
+        return (T) removedElement;
     }
 
     @Override
@@ -92,7 +87,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         if (index != -1) {
-            remove(index);
+            Node<T> removedNode = getNodeByIndex(index);
+            unLink(removedNode);
             return true;
         }
         return false;
@@ -152,42 +148,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         current.prev = newNode;
     }
 
-    private T removeFirstElementInLinkedList(int index) {
-        if (index == 0) {
-            T removedElement = first.element;
+    public void unLink(Node<T> node) {
+        if (first == null || node == null) {
+            return;
+        }
+        if (node == first) {
             first = first.next;
-            if (first == null) {
-                last = null;
-            } else {
-                first.prev = null;
-            }
-            return removedElement;
+            return;
         }
-        return null;
-    }
-
-    private T removeMiddleElementInLinkedList(int index) {
-        Node<T> current = getNodeByIndex(index);
-        Node<T> prev = current.prev;
-        Node<T> next = current.next;
-        prev.next = next;
-        if (next != null) {
-            next.prev = prev;
+        Node<T> prevNode = first;
+        while (prevNode != null && prevNode.next != node) {
+            prevNode = prevNode.next;
         }
-        return current.element;
-    }
-
-    private T removeLastElementInLinkedList(int index) {
-        if (index == size) {
-            T removedElement = last.element;
-            last = last.prev;
-            if (last == null) {
-                first = null;
-            } else {
-                last.next = null;
-            }
-            return removedElement;
+        if (prevNode != null) {
+            prevNode.next = node.next;
         }
-        return null;
     }
 }
