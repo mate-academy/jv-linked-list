@@ -29,7 +29,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             addFirstNode(value);
             return;
         }
-        checkIndex(index);
         // add value in the middle
         Node currentNode = getNode(index);
         Node newNode = new Node<>(currentNode.prevNode, value, currentNode);
@@ -47,13 +46,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         return (T) getNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node currentNode = getNode(index);
         T resultItem = (T) currentNode.item;
         currentNode.item = value;
@@ -62,7 +59,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node currentNode = getNode(index);
         unlink(currentNode);
         return (T) currentNode.item;
