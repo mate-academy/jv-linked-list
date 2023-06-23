@@ -9,122 +9,36 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value, null, null);
-        if (size == 0) {
+        Node<T> newNode = new Node<>(value, tail, null);
+        if (isEmpty()) {
             head = tail = newNode;
         } else {
-            linkToTheEnd(newNode);
+            tail.next = newNode;
+            tail = newNode;
         }
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndexForAdd(index);
-        Node<T> newNode = new Node<>(value, null, null);
-        if (index == 0) {
-            if (size == 0) {
-                head = tail = newNode;
-            } else {
-                head.prev = newNode;
-                newNode.next = head;
+        if (index == size) {
+            add(value);
+        } else {
+            Node<T> target = getNodeByIndex(index);
+            Node<T> prev = target.prev;
+            Node<T> newNode = new Node<>(value, prev, target);
+            target.prev = newNode;
+            if (prev == null) {
                 head = newNode;
+            } else {
+                prev.next = newNode;
             }
-        } else if (index == size) {
-            linkToTheEnd(newNode);
-        } else {
-            Node<T> prev = getNodeByIndex(index - 1);
-            Node<T> next = prev.next;
-            prev.next = newNode;
-            newNode.prev = prev;
-            newNode.next = next;
-            next.prev = newNode;
+            size++;
         }
-        size++;
-    }
-
-    @Override
-    public void addAll(List<T> list) {
-        for (T element : list) {
-            add(element);
-        }
-    }
-
-    @Override
-    public T get(int index) {
-        checkIndex(index);
-        return getNodeByIndex(index).value;
-    }
-
-    @Override
-    public T set(T value, int index) {
-        checkIndex(index);
-        Node<T> node = getNodeByIndex(index);
-        T oldValue = node.value;
-        node.value = value;
-        return oldValue;
-    }
-
-    @Override
-    public T remove(int index) {
-        checkIndex(index);
-        T valueToReturn;
-        if (index == 0) {
-            valueToReturn = head.value;
-            head = head.next;
-        } else if (index == size - 1) {
-            valueToReturn = tail.value;
-            tail = tail.prev;
-        } else {
-            Node<T> prev = getNodeByIndex(index - 1);
-            valueToReturn = prev.next.value;
-            Node<T> next = prev.next.next;
-            prev.next = next;
-            next.prev = prev;
-        }
-        size--;
-        return valueToReturn;
-    }
-
-    @Override
-    public boolean remove(T object) {
-        int index = getNodeIndexByValue(object);
-        if (index == -1) {
-            return false;
-        }
-        remove(index);
-        return true;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    private void linkToTheEnd(Node<T> newNode) {
-        newNode.prev = tail;
-        tail.next = newNode;
-        tail = newNode;
-    }
-
-    private void checkIndexForAdd(int index) {
-        if (index > size || index < 0) {
-            indexOutOfBounds(index);
-        }
-    }
-
-    private void indexOutOfBounds(int index) {
-        throw new IndexOutOfBoundsException(
-                String.format("Index '%d' out of bounds for size '%d'", index, size)
-        );
     }
 
     private Node<T> getNodeByIndex(int index) {
+        checkIndex(index);
         Node<T> current;
         if (index < size / 2) {
             current = head;
@@ -142,19 +56,87 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            indexOutOfBounds(index);
+            throw new IndexOutOfBoundsException(
+                    String.format("Index '%d' out of bounds for size '%d'", index, size)
+            );
         }
     }
 
-    private int getNodeIndexByValue(T value) {
+    @Override
+    public void addAll(List<T> list) {
+        for (T element : list) {
+            add(element);
+        }
+    }
+
+    @Override
+    public T get(int index) {
+        return getNodeByIndex(index).value;
+    }
+
+    @Override
+    public T set(T value, int index) {
+        Node<T> target = getNodeByIndex(index);
+        T oldValue = target.value;
+        target.value = value;
+        return oldValue;
+    }
+
+    @Override
+    public T remove(int index) {
+        Node<T> target = getNodeByIndex(index);
+        unlink(target);
+        return target.value;
+    }
+
+    @Override
+    public boolean remove(T object) {
+        Node<T> target = getNodeByValue(object);
+        if (target == null) {
+            return false;
+        }
+        unlink(target);
+        return true;
+    }
+
+    private void unlink(Node<T> target) {
+        Node<T> prev = target.prev;
+        Node<T> next = target.next;
+
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
+        }
+
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.prev = prev;
+        }
+
+        size--;
+    }
+
+    private Node<T> getNodeByValue(T value) {
         Node<T> current = head;
-        for (int i = 0; i < size; i++) {
+        while (current != null) {
             if (value == current.value || value != null && value.equals(current.value)) {
-                return i;
+                return current;
             }
             current = current.next;
         }
-        return -1;
+        return null;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
     }
 
     private static class Node<T> {
