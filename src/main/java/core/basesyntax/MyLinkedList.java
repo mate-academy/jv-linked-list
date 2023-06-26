@@ -59,7 +59,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> current = getNodeByIndex(index);
-        cutNode(current);
+        unlink(current);
         return current.value;
     }
 
@@ -67,7 +67,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         for (Node<T> node = head; node != null; node = node.next) {
             if (Objects.equals(node.value, object)) {
-                cutNode(node);
+                unlink(node);
                 return true;
             }
         }
@@ -104,14 +104,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Incorrect index: " + index);
         }
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        Node<T> current;
+        if (index < size / 2) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
         return current;
     }
 
-    private void cutNode(Node<T> node) {
+    private void unlink(Node<T> node) {
         if (node.prev == null) {
             head = node.next;
         } else {
