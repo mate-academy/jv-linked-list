@@ -10,12 +10,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(tail, value, null);
         if (head == null) {
             head = newNode;
         } else {
             tail.next = newNode;
-            newNode.prev = tail;
         }
         tail = newNode;
         size++;
@@ -27,7 +26,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkIndexRange(index);
         Node<T> current = getNodeByIndex(index);
         Node<T> newNode = new Node<>(current.prev, value, current);
         if (current == head) {
@@ -48,13 +46,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndexRange(index);
         return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndexRange(index);
         T oldValue = getNodeByIndex(index).value;
         getNodeByIndex(index).value = value;
         return oldValue;
@@ -104,14 +100,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void checkIndexRange(int index) {
+    private Node<T> getNodeByIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Incorrect index: " + index);
         }
-    }
-
-    private Node<T> getNodeByIndex(int index) {
-        checkIndexRange(index);
         Node<T> current = head;
         for (int i = 0; i < index; i++) {
             current = current.next;
