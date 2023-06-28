@@ -51,8 +51,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        T oldValue = getNodeByIndex(index).value;
-        getNodeByIndex(index).value = value;
+        Node<T> target = getNodeByIndex(index);
+        T oldValue = target.value;
+        target.value = value;
         return oldValue;
     }
 
@@ -100,10 +101,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> getNodeByIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Incorrect index: " + index);
         }
+    }
+
+    private Node<T> getNodeByIndex(int index) {
+        checkIndex(index);
         Node<T> current;
         if (index < size / 2) {
             current = head;
