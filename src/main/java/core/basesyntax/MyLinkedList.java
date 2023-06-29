@@ -88,6 +88,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
         return nodeToRemove.value;
     }
+
     @Override
     public boolean remove(T object) {
         Node<T> current = head;
