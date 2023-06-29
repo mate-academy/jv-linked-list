@@ -7,11 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    public MyLinkedList() {
-        head = null;
-        tail = null;
-    }
-
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(value);
@@ -74,33 +69,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> nodeToRemove = getNode(index);
-        if (nodeToRemove.prev != null) {
-            nodeToRemove.prev.next = nodeToRemove.next;
-        } else {
-            head = nodeToRemove.next;
-        }
-        if (nodeToRemove.next != null) {
-            nodeToRemove.next.prev = nodeToRemove.prev;
-        } else {
-            tail = nodeToRemove.prev;
-        }
-        size--;
-        return nodeToRemove.value;
+        Node<T> currentNode = getNode(index);
+        unlinkNode(currentNode);
+        return currentNode.value;
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> current = head;
-        while (current != null) {
-            if (current.value == null && object == null) {
-                removeNode(current);
-                return true;
-            } else if (current.value != null && current.value.equals(object)) {
-                removeNode(current);
+        Node<T> currentNode = head;
+        while (currentNode != null) {
+            if (currentNode.value == object || object != null && object.equals(currentNode.value)) {
+                unlinkNode(currentNode);
                 return true;
             }
-            current = current.next;
+            currentNode = currentNode.next;
         }
         return false;
     }
@@ -136,7 +118,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    private void removeNode(Node<T> node) {
+    private void unlinkNode(Node<T> node) {
         Node<T> prevNode = node.prev;
         Node<T> nextNode = node.next;
 
