@@ -31,10 +31,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null) {
-            return;
-        }
-
+        checkListValidity(list);
         for (T item : list) {
             add(item);
         }
@@ -100,6 +97,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException(
                     "Index " + index + " out of bounds for range 0.." + size
             );
+        }
+    }
+
+    private void checkListValidity(List<T> list) {
+        if (list == null) {
+            throw new NullPointerException("List must not be a null");
         }
     }
 
