@@ -89,13 +89,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndexWithin(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("LOL, YOU DUMB? XDXDXDXDXDX");
+            throw new IndexOutOfBoundsException(
+                    "Index " + index + " out of bounds for length " + size
+            );
         }
     }
 
     private void checkIndexBetween(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Well, shit happens!");
+            throw new IndexOutOfBoundsException(
+                    "Index " + index + " out of bounds for range 0.." + size
+            );
         }
     }
 
