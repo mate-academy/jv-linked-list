@@ -26,7 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         Node<T> successorNode = getNodeByIndex(index);
-        linkBefore(value,successorNode);
+        linkBefore(value, successorNode);
     }
 
     @Override
@@ -56,11 +56,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        int index = indexOf(object);
-        if (index == -1) {
+        Node<T> objectNode = getNodeByValue(object);
+        if (objectNode == null) {
             return false;
         }
-        unLink(getNodeByIndex(index));
+        unLink(objectNode);
         return true;
     }
 
@@ -178,24 +178,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return tempNode;
     }
 
-    private int indexOf(T value) {
-        int index = 0;
-        if (value == null) {
-            for (Node<T> node = head; node != null; node = node.next) {
-                if (node.value == null) {
-                    return index;
-                }
-                index++;
-            }
-        } else {
-            for (Node<T> node = head; node != null; node = node.next) {
-                if (value.equals(node.value)) {
-                    return index;
-                }
-                index++;
+    private Node<T> getNodeByValue(T value) {
+        for (Node<T> node = head; node != null; node = node.next) {
+            if (value != null && value.equals(node.value) || node.value == null && value == null) {
+                return node;
             }
         }
-        return -1;
+        return null;
     }
 
     private static class Node<T> {
