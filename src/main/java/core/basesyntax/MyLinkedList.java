@@ -5,15 +5,13 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size = 0;
-    private int modCount;
     private Node<T> first;
     private Node<T> last;
 
-
     private static class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> prev;
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
         Node(Node<T> prev, T element, Node<T> next) {
             this.item = element;
@@ -25,9 +23,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public MyLinkedList() {
     }
 
-    public MyLinkedList(Collection<? extends T> c) {
+    public MyLinkedList(Collection<? extends T> list) {
         this();
-        addAll((List<T>) c);
+        addAll((List<T>) list);
     }
 
     @Override
@@ -35,21 +33,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         final Node<T> l = last;
         final Node<T> newNode = new Node<>(l, value, null);
         last = newNode;
-        if (l == null)
+        if (l == null) {
             first = newNode;
-        else
+        } else {
             l.next = newNode;
+        }
         size++;
-        modCount++;
     }
     /////////////////////////////////////////////////////////////////////////////////////////////
+
     @Override
     public void add(T value, int index) {
         checkPositionIndex(index);
-        if (index == size)
+        if (index == size) {
             linkLast(value);
-        else
+        } else {
             linkBefore(value, node(index));
+        }
     }
 
     void linkLast(T value) {
@@ -62,7 +62,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             l.next = newNode;
         }
         size++;
-        modCount++;
     }
 
     void linkBefore(T value, Node<T> successor) {
@@ -74,9 +73,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             predecessor.next = newNode;
         }
-
         size++;
-        modCount++;
     }
 
     Node<T> node(int index) {
@@ -105,45 +102,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return index >= 0 && index <= size;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
     @Override
     public void addAll(List<T> list) {
-        addAll(size, list);
-    }
-
-    public void addAll(int index, Collection<? extends T> c) {
-        checkPositionIndex(index);
-        Object[] a = c.toArray();
-        int numNew = a.length;
+        checkPositionIndex(size);
+        Object[] arrayOfList = list.toArray();
+        int numNew = arrayOfList.length;
         if (numNew != 0) {
-            Node<T> predecessor, successor;
-            if (index == size) {
-                successor = null;
-                predecessor = last;
-            } else {
-                successor = node(index);
-                predecessor = successor.prev;
-            }
-            for (Object o : a) {
-                T e = (T) o;
-                Node<T> newNode = new Node<>(predecessor, e, null);
-                if (predecessor == null)
-                    first = newNode;
-                else
-                    predecessor.next = newNode;
+            Node<T> predecessor = last;
+            for (Object object : arrayOfList) {
+                Node<T> newNode = new Node<>(predecessor, (T) object, null);
+                predecessor.next = newNode;
                 predecessor = newNode;
             }
-            if (successor == null) {
-                last = predecessor;
-            } else {
-                predecessor.next = successor;
-                successor.prev = predecessor;
-            }
+            last = predecessor;
             size += numNew;
-            modCount++;
         }
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////
+
     @Override
     public T get(int index) {
         checkElementIndex(index);
@@ -169,7 +146,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return index >= 0 && index < size;
     }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////
     @Override
     public T remove(int index) {
         checkElementIndex(index);
@@ -214,11 +191,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         x.item = null;
         size--;
-        modCount++;
         return element;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////
     @Override
     public int size() {
         return size;
