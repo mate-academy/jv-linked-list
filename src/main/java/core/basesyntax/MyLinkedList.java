@@ -53,13 +53,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     void linkLast(T value) {
-        final Node<T> l = last;
-        final Node<T> newNode = new Node<>(l, value, null);
+        final Node<T> oldLast = last;
+        final Node<T> newNode = new Node<>(oldLast, value, null);
         last = newNode;
-        if (l == null) {
+        if (oldLast == null) {
             first = newNode;
         } else {
-            l.next = newNode;
+            oldLast.next = newNode;
         }
         size++;
     }
@@ -78,17 +78,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     Node<T> node(int index) {
         if (index < (size >> 1)) {
-            Node<T> x = first;
+            Node<T> nodeToFind = first;
             for (int i = 0; i < index; i++) {
-                x = x.next;
+                nodeToFind = nodeToFind.next;
             }
-            return x;
+            return nodeToFind;
         } else {
-            Node<T> x = last;
+            Node<T> nodeToFind = last;
             for (int i = size - 1; i > index; i--) {
-                x = x.prev;
+                nodeToFind = nodeToFind.prev;
             }
-            return x;
+            return nodeToFind;
         }
     }
 
