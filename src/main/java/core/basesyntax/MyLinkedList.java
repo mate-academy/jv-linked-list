@@ -6,12 +6,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> first;
     private Node<T> last;
-    private int size = 0;
-
-    public MyLinkedList() {
-        first = null;
-        last = null;
-    }
+    private int size;
 
     @Override
     public void add(T value) {
@@ -28,9 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index is out of bound");
-        }
+        checkIndexForAdding(index);
         if (index == size) {
             add(value);
         } else if (index == 0) {
@@ -78,7 +71,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Node<T> node = findNodeByIndex(index);
         unlinkNode(node);
-        size--;
         return node.value;
     }
 
@@ -93,7 +85,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return false;
         }
         unlinkNode(node);
-        size--;
         return true;
     }
 
@@ -109,6 +100,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index is out of bound");
+        }
+    }
+
+    private void checkIndexForAdding(int index) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index is out of bound");
         }
     }
@@ -135,23 +132,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlinkNode(Node<T> node) {
-        if (node == first) {
-            if (first == last) {
-                first = null;
-                last = null;
-            } else {
-                first = node.next;
-                node.next.prev = null;
-            }
-        } else if (node == last) {
-            last = node.prev;
-            node.prev.next = null;
+        if (first == node) {
+            first = node.next;
         } else {
             node.prev.next = node.next;
-            node.next.prev = node.prev;
+            if (node.next != null) {
+                node.next.prev = node.prev;
+            } else {
+                last = node.prev;
+            }
         }
         node.prev = null;
         node.next = null;
+        size--;
     }
 
     private static class Node<T> {
@@ -161,8 +154,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         public Node(T value) {
             this.value = value;
-            next = null;
-            prev = null;
         }
 
     }
