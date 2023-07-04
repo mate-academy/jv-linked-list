@@ -1,17 +1,13 @@
 package core.basesyntax;
 
+import core.basesyntax.util.ObjectUtil;
+
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
     private int size;
-
-    public MyLinkedList() {
-        head = null;
-        tail = null;
-        size = 0;
-    }
 
     private static class Node<T> {
         private Node<T> prev;
@@ -40,26 +36,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Can't add node with invalid index");
-        }
+        canAdd(index);
         if (index == size) {
             add(value);
-        } else {
-            Node<T> newNode = new Node<>(null, value, null);
-            if (index == 0) {
-                newNode.next = head;
-                head.prev = newNode;
-                head = newNode;
-            } else {
-                Node<T> current = getNodeAtIndex(index);
-                newNode.next = current;
-                newNode.prev = current.prev;
-                current.prev.next = newNode;
-                current.prev = newNode;
-            }
-            size++;
+            return;
         }
+        Node<T> newNode = new Node<>(null, value, null);
+        if (index == 0) {
+            newNode.next = head;
+            head.prev = newNode;
+            head = newNode;
+        } else {
+            Node<T> current = getNodeAtIndex(index);
+            newNode.next = current;
+            newNode.prev = current.prev;
+            current.prev.next = newNode;
+            current.prev = newNode;
+        }
+        size++;
     }
 
     @Override
@@ -74,31 +68,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index");
-        }
-        if (index == 0) {
-            return head.item;
-        }
-        int count = 0;
+        indexValidator(index);
         Node<T> node = head;
-        while (count != index) {
+        for (int i = 0; i < index; i++) {
             node = node.next;
-            count++;
         }
         return node.item;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Can't set value with invalid index");
-        }
-        int count = 0;
+        indexValidator(index);
         Node<T> node = head;
-        while (count != index) {
+        for (int i = 0; i < index; i++) {
             node = node.next;
-            count++;
         }
         T oldItem = node.item;
         node.item = value;
@@ -107,9 +90,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Can't remove node with invalid index");
-        }
+        indexValidator(index);
         if (index == 0) {
             final T item = head.item;
             head.prev = null;
@@ -140,13 +121,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return true;
         }
         Node<T> current = head;
-        boolean notNullEquals = false;
-        while (!notNullEquals) {
+        while (!ObjectUtil.equals(current.item, object)) {
             if (current.next == null) {
                 return false;
             }
             current = current.next;
-            notNullEquals = current.item == null ? object == null : current.item.equals(object);
         }
         unlink(current);
         return true;
@@ -178,5 +157,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current = current.next;
         }
         return current;
+    }
+
+    private void canAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Can't add element with invalid index");
+        }
+    }
+
+    private void indexValidator(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Invalid index value: " + index);
+        }
     }
 }
