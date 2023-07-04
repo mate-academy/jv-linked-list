@@ -3,45 +3,165 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private Node<T> first;
+    private Node<T> last;
+    private int size;
+
+    public MyLinkedList() {
+        this.size = 0;
+    }
+
     @Override
     public void add(T value) {
+        addLast(value);
     }
 
     @Override
     public void add(T value, int index) {
+        validateIndexToAdd(index);
+        if (index == size) {
+            addLast(value);
+        } else {
+            addBefore(value, getNodeByIndex(index));
+        }
     }
 
     @Override
     public void addAll(List<T> list) {
+        for (T value : list) {
+            addLast(value);
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        return null;
+        Node<T> oldNode = getNodeByIndex(index);
+        T oldNodeValue = oldNode.value;
+        oldNode.value = value;
+        return oldNodeValue;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        Node<T> nodeToRemove = getNodeByIndex(index);
+        unLinc(nodeToRemove);
+        return nodeToRemove.value;
     }
 
     @Override
     public boolean remove(T object) {
-        return false;
+        Node<T> nodeToRemove = getNodeByValue(object);
+        if (nodeToRemove == null) {
+            return false;
+        } else {
+            unLinc(nodeToRemove);
+        }
+        return true;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private void validateIndexToAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException();
+        }
+    }
+
+    private void validateIndexToGet(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+    }
+
+    private void addLast(T value) {
+        Node<T> tempLast = last;
+        Node<T> newNode = new Node<>(tempLast, value, null);
+        last = newNode;
+        if (tempLast == null) {
+            first = newNode;
+        } else {
+            tempLast.next = last;
+        }
+        size++;
+    }
+
+    private void addBefore(T value, Node<T> node) {
+        Node<T> nodeBefore = node.prev;
+        Node<T> newNode = new Node<>(nodeBefore, value, node);
+        if (nodeBefore == null) {
+            first = newNode;
+        } else {
+            nodeBefore.next = newNode;
+            node.prev = newNode;
+        }
+        size++;
+    }
+
+    private Node<T> getNodeByIndex(int index) {
+        validateIndexToGet(index);
+        Node<T> temp;
+        if (index < size / 2) {
+            temp = first;
+            for (int i = 0; i < index; i++) {
+                temp = temp.next;
+            }
+        } else {
+            temp = last;
+            for (int i = size - 1; i > index; i--) {
+                temp = temp.prev;
+            }
+        }
+        return temp;
+    }
+
+    private Node<T> getNodeByValue(T value) {
+        Node<T> temp = first;
+        for (int i = 0; i < size; i++) {
+            if (value == null && temp.value == null
+                    || value != null && value.equals(temp.value)) {
+                return temp;
+            }
+            temp = temp.next;
+        }
+        return null;
+    }
+
+    private void unLinc(Node<T> nodeToRemove) {
+        if (nodeToRemove.prev == null) {
+            first = nodeToRemove.next;
+        } else {
+            nodeToRemove.prev.next = nodeToRemove.next;
+        }
+        if (nodeToRemove.next == null) {
+            last = nodeToRemove.prev;
+        } else {
+            nodeToRemove.next.prev = nodeToRemove.prev;
+        }
+        size--;
+    }
+
+    private static class Node<T> {
+        private Node<T> next;
+        private Node<T> prev;
+        private T value;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.next = next;
+            this.value = value;
+        }
     }
 }
