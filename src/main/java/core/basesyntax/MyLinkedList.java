@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import core.basesyntax.util.ObjectUtil;
-
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
