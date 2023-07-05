@@ -13,16 +13,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private T item;
         private Node<T> next;
 
-        public Node(Node<T> prevNode, T value, Node<T> nextNode) {
-            prev = prevNode;
+        public Node(T value) {
             item = value;
-            next = nextNode;
         }
     }
 
     @Override
     public void add(T value) {
-        Node<T> current = new Node<>(null, value, null);
+        Node<T> current = new Node<>(value);
         if (size == 0) {
             head = current;
         } else {
@@ -40,7 +38,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        Node<T> newNode = new Node<>(null, value, null);
+        Node<T> newNode = new Node<>(value);
         if (index == 0) {
             newNode.next = head;
             head.prev = newNode;
@@ -58,30 +56,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         for (T value : list) {
-            Node<T> node = new Node<>(tail, value, null);
-            tail.next = node;
-            tail = node;
-            size++;
+            add(value);
         }
     }
 
     @Override
     public T get(int index) {
         indexValidator(index);
-        Node<T> node = head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
-        }
-        return node.item;
+        return getNodeAtIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         indexValidator(index);
-        Node<T> node = head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
-        }
+        Node<T> node = getNodeAtIndex(index);
         T oldItem = node.item;
         node.item = value;
         return oldItem;
@@ -94,9 +82,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             final T item = head.item;
             head.prev = null;
             head = head.next;
-            if (size == 1) {
-                tail = null;
-            }
             size--;
             return item;
         }
@@ -112,10 +97,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         if (head.item == object) {
             head = head.next;
-            if (head != null) {
-                head.prev = null;
-                tail = null;
-            }
             size--;
             return true;
         }
