@@ -36,39 +36,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int index = size;
-        checkPositionIndex(index);
-        Node<T> pred;
-        Node<T> such;
-        if (index == size) {
-            such = null;
-            pred = last;
-        } else {
-            such = node(index);
-            pred = such.prev;
-        }
         for (T element : list) {
-            Node<T> newNode = new Node<>(pred, element, null);
-            if (pred == null) {
-                first = newNode;
-            } else {
-                pred.next = newNode;
-            }
-            pred = newNode;
+            add(element);
         }
-        if (such == null) {
-            last = pred;
-        } else {
-            pred.next = such;
-            such.prev = pred;
-        }
-        size += list.size();
     }
 
     @Override
     public T get(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index out of bounds!!!");
         }
         Node<T> result = first;
         for (int i = 0; i < index; i++) {
@@ -94,22 +70,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T value) {
-        if (value == null) {
-            for (Node<T> node = first; node != null; node = node.next) {
-                if (node.value == null) {
-                    unlink(node);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> node = first; node != null; node = node.next) {
-                if (value.equals(node.value)) {
-                    unlink(node);
-                    return true;
-                }
-            }
+        int index = indexOf(value);
+        if (index < 0) {
+            return false;
         }
-        return false;
+        remove(index);
+        return true;
     }
 
     @Override
@@ -128,13 +94,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkPositionIndex(int index) {
         if (!isPositionIndex(index)) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index out of bounds!!!");
         }
     }
 
     private void checkElementIndex(int index) {
         if (!isElementIndex(index)) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index out of bounds!!!");
         }
     }
 
@@ -201,5 +167,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         node.value = null;
         size--;
         return element;
+    }
+
+    private int indexOf(T element) {
+        int index = 0;
+        if (element == null) {
+            for (Node<T> node = first; node != null; node = node.next) {
+                if (node.value == null) {
+                    return index;
+                }
+                index++;
+            }
+        } else {
+            for (Node<T> node = first; node != null; node = node.next) {
+                if (element.equals(node.value)) {
+                    return index;
+                }
+                index++;
+            }
+        }
+        return -1;
     }
 }
