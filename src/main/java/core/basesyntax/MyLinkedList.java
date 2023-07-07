@@ -27,20 +27,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         if (index == 0) {
-            Node<T> newNodeTop = new Node<>(value, null, head);
-            head = newNodeTop;
+            head = new Node<>(value, null, head);
             size++;
             return;
         }
         rangeCheckForAdd(index);
-        Node<T> currentNode = head;
-        int count = 0;
-
-        while (count != index) {
-            count++;
-            currentNode = currentNode.next;
-        }
-
+        Node<T> currentNode = getNodeByIndex(index);
         Node<T> newNode = new Node<>(value, currentNode.prev, currentNode);
         currentNode.prev.next = newNode;
         currentNode.prev = newNode;
@@ -57,24 +49,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         rangeCheckForAdd(index);
-        Node<T> currentNode = head;
-        int count = 0;
-        while (count != index) {
-            count++;
-            currentNode = currentNode.next;
-        }
+        Node<T> currentNode = getNodeByIndex(index);
         return currentNode.value;
     }
 
     @Override
     public T set(T value, int index) {
         rangeCheckForAdd(index);
-        Node<T> currentNode = head;
-        int count = 0;
-        while (count != index) {
-            count++;
-            currentNode = currentNode.next;
-        }
+        Node<T> currentNode = getNodeByIndex(index);
         T element = currentNode.value;
         currentNode.value = value;
         return element;
@@ -83,12 +65,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         rangeCheckForAdd(index);
-        Node<T> currentNode = head;
-        int count = 0;
-        while (count != index) {
-            count++;
-            currentNode = currentNode.next;
-        }
+        Node<T> currentNode = getNodeByIndex(index);
         T element = currentNode.value;
         unlink(currentNode);
 
@@ -97,15 +74,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> x = head; x != null; x = x.next) {
+        for (Node<T> x = head; x != null; x = x.next) {
+            if (object == null) {
                 if (x.value == null) {
                     unlink(x);
                     return true;
                 }
-            }
-        } else {
-            for (Node<T> x = head; x != null; x = x.next) {
+            } else {
                 if (object.equals(x.value)) {
                     unlink(x);
                     return true;
@@ -123,6 +98,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private Node<T> getNodeByIndex(int index) {
+        Node<T> currentNode = head;
+        int count = 0;
+        while (count != index) {
+            count++;
+            currentNode = currentNode.next;
+        }
+        return currentNode;
     }
 
     private void rangeCheckForAdd(int index) {
