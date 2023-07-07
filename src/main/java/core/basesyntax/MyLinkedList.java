@@ -26,11 +26,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkPositionIndex(index);
         if (index == size) {
             linkLast(value);
         } else {
-            linkBefore(value, node(index));
+            linkBefore(value, getNode(index));
         }
     }
 
@@ -43,20 +42,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of bounds!!!");
-        }
-        Node<T> result = first;
-        for (int i = 0; i < index; i++) {
-            result = result.next;
-        }
-        return result.value;
+        return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkElementIndex(index);
-        Node<T> node = node(index);
+        Node<T> node = getNode(index);
         T oldVal = node.value;
         node.value = value;
         return oldVal;
@@ -64,8 +55,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkElementIndex(index);
-        return unlink(node(index));
+        return unlink(getNode(index));
     }
 
     @Override
@@ -88,32 +78,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private boolean isPositionIndex(int index) {
-        return index >= 0 && index <= size;
-    }
-
-    private void checkPositionIndex(int index) {
-        if (!isPositionIndex(index)) {
-            throw new IndexOutOfBoundsException("Index out of bounds!!!");
-        }
-    }
-
     private void checkElementIndex(int index) {
         if (!isElementIndex(index)) {
             throw new IndexOutOfBoundsException("Index out of bounds!!!");
         }
     }
 
-    private Node<T> node(int index) {
+    private Node<T> getNode(int index) {
+        checkElementIndex(index);
         Node<T> node;
         if (index < (size >> 1)) {
             node = first;
-            for (int i = 0; i < index; i++) {
+            for (int secondIndex = 0; secondIndex < index; secondIndex++) {
                 node = node.next;
             }
         } else {
             node = last;
-            for (int i = size - 1; i > index; i--) {
+            for (int secondIndex = size - 1; secondIndex > index; secondIndex--) {
                 node = node.prev;
             }
         }
@@ -124,21 +105,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return index >= 0 && index < size;
     }
 
-    private void linkLast(T e) {
-        Node<T> l = last;
-        Node<T> newNode = new Node<>(l, e, null);
+    private void linkLast(T element) {
+        Node<T> oldLast = last;
+        Node<T> newNode = new Node<>(oldLast, element, null);
         last = newNode;
-        if (l == null) {
+        if (oldLast == null) {
             first = newNode;
         } else {
-            l.next = newNode;
+            oldLast.next = newNode;
         }
         size++;
     }
 
-    private void linkBefore(T e, Node<T> such) {
+    private void linkBefore(T element, Node<T> such) {
         Node<T> pred = such.prev;
-        Node<T> newNode = new Node<>(pred, e, such);
+        Node<T> newNode = new Node<>(pred, element, such);
         such.prev = newNode;
         if (pred == null) {
             first = newNode;
