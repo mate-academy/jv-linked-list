@@ -31,7 +31,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size++;
             return;
         }
-        rangeCheckForAdd(index);
         Node<T> currentNode = getNodeByIndex(index);
         Node<T> newNode = new Node<>(value, currentNode.prev, currentNode);
         currentNode.prev.next = newNode;
@@ -48,14 +47,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        rangeCheckForAdd(index);
         Node<T> currentNode = getNodeByIndex(index);
         return currentNode.value;
     }
 
     @Override
     public T set(T value, int index) {
-        rangeCheckForAdd(index);
         Node<T> currentNode = getNodeByIndex(index);
         T element = currentNode.value;
         currentNode.value = value;
@@ -64,7 +61,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        rangeCheckForAdd(index);
         Node<T> currentNode = getNodeByIndex(index);
         T element = currentNode.value;
         unlink(currentNode);
@@ -101,6 +97,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
+        rangeCheckForAdd(index);
         Node<T> currentNode = head;
         int count = 0;
         while (count != index) {
