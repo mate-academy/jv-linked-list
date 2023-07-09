@@ -38,7 +38,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             newTail.prev = tail;
             tail.next = newTail;
             tail = newTail;
-        } else  {
+        } else {
             Node<T> nodeByIndex = getNode(index);
             Node<T> middleCurrent = new Node<>(nodeByIndex.prev, value, nodeByIndex);
             nodeByIndex.prev.next = middleCurrent;
