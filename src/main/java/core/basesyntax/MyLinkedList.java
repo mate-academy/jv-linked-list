@@ -146,10 +146,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Invalid index: " + index);
         }
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        if (index < (size / 2)) {
+            Node<T> firstNode = head;
+            for (int i = 0; i < index; i++) {
+                firstNode = firstNode.next;
+            }
+            return firstNode;
+        } else {
+            Node<T> lastNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                lastNode = lastNode.prev;
+            }
+            return lastNode;
         }
-        return current;
     }
 }
