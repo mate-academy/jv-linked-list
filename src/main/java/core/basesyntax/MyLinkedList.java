@@ -152,20 +152,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private int indexOf(T element) {
         int index = 0;
-        if (element == null) {
-            for (Node<T> node = first; node != null; node = node.next) {
-                if (node.value == null) {
-                    return index;
-                }
-                index++;
+        for (Node<T> node = first; node != null; node = node.next) {
+            if (element == null && node.value == null) {
+                return index;
+            } else if (element != null && element.equals(node.value)) {
+                return index;
             }
-        } else {
-            for (Node<T> node = first; node != null; node = node.next) {
-                if (element.equals(node.value)) {
-                    return index;
-                }
-                index++;
-            }
+            index++;
         }
         return -1;
     }
