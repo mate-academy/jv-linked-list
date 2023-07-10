@@ -142,6 +142,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 currentNode = currentNode.next;
             }
         }
-        throw new IndexOutOfBoundsException();
+        throw new IndexOutOfBoundsException("Can't find element with index " + index);
     }
 }
