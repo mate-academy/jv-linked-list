@@ -75,7 +75,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node nodeToRemove = getNodeByIndex(index);
-        return unlink(nodeToRemove).value;
+        unlink(nodeToRemove);
+        return nodeToRemove.value;
     }
 
     @Override
@@ -89,24 +90,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             currentNode = currentNode.next;
         }
         return false;
-    }
-
-    private Node unlink(Node unlink) {
-        if (listSize == 1) {
-            head = null;
-            tail = null;
-        } else if (unlink == head) {
-            head = head.next;
-            head.prev = null;
-        } else if (unlink == tail) {
-            tail = tail.prev;
-            tail.next = null;
-        } else {
-            unlink.prev.next = unlink.next;
-            unlink.next.prev = unlink.prev;
-        }
-        listSize--;
-        return unlink;
     }
 
     @Override
@@ -128,23 +111,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private void unlink(Node nodeToUnlink) {
+        if (listSize == 1) {
+            head = null;
+            tail = null;
+        } else if (nodeToUnlink == head) {
+            head = head.next;
+            head.prev = null;
+        } else if (nodeToUnlink == tail) {
+            tail = tail.prev;
+            tail.next = null;
+        } else {
+            nodeToUnlink.prev.next = nodeToUnlink.next;
+            nodeToUnlink.next.prev = nodeToUnlink.prev;
+        }
+        listSize--;
+    }
+
     private Node getNodeByIndex(int index) {
         checkIndexIsValid(index);
-        int numberOfIterations;
-
         if (index <= listSize / 2) {
             Node currentNode = head;
-            numberOfIterations = index;
-
-            while (numberOfIterations-- > 0) {
+            for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
             }
             return currentNode;
         } else {
             Node currentNode = tail;
-            numberOfIterations = listSize - 1 - index;
-
-            while (numberOfIterations-- > 0) {
+            for (int i = listSize - 1; i > index; i--) {
                 currentNode = currentNode.prev;
             }
             return currentNode;
