@@ -130,10 +130,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node getNodeByIndex(int index) {
         checkIndexIsValid(index);
-        Node currentNode = head;
-        while (index-- > 0) {
-            currentNode = currentNode.next;
+        int numberOfIterations;
+
+        if (index <= listSize / 2) {
+            Node currentNode = head;
+            numberOfIterations = index;
+
+            while (numberOfIterations-- > 0) {
+                currentNode = currentNode.next;
+            }
+            return currentNode;
+        } else {
+            Node currentNode = tail;
+            numberOfIterations = listSize - 1 - index;
+
+            while (numberOfIterations-- > 0) {
+                currentNode = currentNode.prev;
+            }
+            return currentNode;
         }
-        return currentNode;
     }
 }
