@@ -13,14 +13,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private T item;
         private Node<T> next;
 
-        public Node(T value) {
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
             item = value;
+            this.next = next;
         }
     }
 
     @Override
     public void add(T value) {
-        Node<T> current = new Node<>(value);
+        Node<T> current = new Node<>(null, value, null);
         if (size == 0) {
             head = current;
         } else {
@@ -38,7 +40,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(null, value, null);
         if (index == 0) {
             newNode.next = head;
             head.prev = newNode;
@@ -62,13 +64,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexValidator(index);
+        validateIndex(index);
         return getNodeAtIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        indexValidator(index);
+        validateIndex(index);
         Node<T> node = getNodeAtIndex(index);
         T oldItem = node.item;
         node.item = value;
@@ -77,7 +79,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexValidator(index);
+        validateIndex(index);
         if (index == 0) {
             final T item = head.item;
             head.prev = null;
@@ -145,7 +147,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void indexValidator(int index) {
+    private void validateIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Invalid index value: " + index);
         }
