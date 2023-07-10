@@ -64,13 +64,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        validateIndex(index);
         return getNodeAtIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        validateIndex(index);
         Node<T> node = getNodeAtIndex(index);
         T oldItem = node.item;
         node.item = value;
@@ -79,14 +77,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        validateIndex(index);
-        if (index == 0) {
-            final T item = head.item;
-            head.prev = null;
-            head = head.next;
-            size--;
-            return item;
-        }
         Node<T> current = getNodeAtIndex(index);
         unlink(current);
         return current.item;
@@ -94,14 +84,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (size == 0) {
-            return false;
-        }
-        if (head.item == object) {
-            head = head.next;
-            size--;
-            return true;
-        }
         Node<T> current = head;
         while (!ObjectUtil.equals(current.item, object)) {
             if (current.next == null) {
@@ -124,19 +106,32 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> node) {
-        if (node.prev != null) {
+        if (head == node) {
+            head = node.next;
+        } else {
             node.prev.next = node.next;
         }
-        if (node.next != null) {
+        if (tail == node) {
+            tail = node.prev;
+        } else {
             node.next.prev = node.prev;
         }
         size--;
     }
 
     private Node<T> getNodeAtIndex(int index) {
+        validateIndex(index);
         Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        int halfOfSize = size / 2;
+        if (index < halfOfSize) {
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
         return current;
     }
