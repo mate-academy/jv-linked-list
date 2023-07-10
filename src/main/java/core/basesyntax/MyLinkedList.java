@@ -14,8 +14,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         private Node(T item, Node<T> prev, Node<T> next) {
             this.item = item;
-            this.next = next;
             this.prev = prev;
+            this.next = next;
         }
     }
 
@@ -61,24 +61,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (size / 2 < index) {
-            Node<T> currentNode = tail;
-            for (int i = size - 1; i >= 0; i--) {
-                if (index == i) {
-                    return currentNode.item;
-                }
-                currentNode = currentNode.prev;
-            }
-        } else {
-            Node<T> currentNode = head;
-            for (int i = 0; i < size; i++) {
-                if (index == i) {
-                    return currentNode.item;
-                }
-                currentNode = currentNode.next;
-            }
-        }
-        throw new IndexOutOfBoundsException();
+        return (T) getNodeById(index).item;
     }
 
     @Override
