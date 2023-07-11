@@ -13,8 +13,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> prev;
         private Node<T> next;
 
-        public Node(T data) {
+        public Node(Node<T> prev, T data, Node<T> next) {
+            this.prev = prev;
             this.data = data;
+            this.next = next;
         }
     }
 
