@@ -150,9 +150,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node getNodeByIndex(int index) {
         checkIndex(index);
+        if (size / 2 < index) {
+            return searchFromHead(index);
+        }
+        return searchFromTail(index);
+    }
+
+    private Node searchFromHead(int index) {
         Node node = head;
         for (int i = 0; i < index; i++) {
             node = node.next;
+        }
+        return node;
+    }
+
+    private Node searchFromTail(int index) {
+        Node node = tail;
+        for (int i = index; i < size - 1; i++) {
+            node = node.prev;
         }
         return node;
     }
