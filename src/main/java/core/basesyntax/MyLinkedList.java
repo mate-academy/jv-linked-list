@@ -19,7 +19,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node head;
     private Node tail;
 
-    private int listSize = 0;
+    private int listSize;
 
     @Override
     public void add(T value) {
