@@ -150,7 +150,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node getNodeByIndex(int index) {
         checkIndex(index);
-        if (size / 2 < index) {
+        if (size >> 1 < index) {
             return searchFromHead(index);
         }
         return searchFromTail(index);
