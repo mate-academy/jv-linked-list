@@ -116,12 +116,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void checkIndexAdd(int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("The index is out of bounds!");
-        }
-    }
-
     private Node<T> getNode(int index) {
         Node<T> node = head;
         if (size != 0) {
@@ -131,6 +125,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return node;
     }
+
+    private void checkIndexAdd(int index) {
+        if (index > size || index < 0) {
+            throw new IndexOutOfBoundsException("The index is out of bounds!");
+        }
+    }
+
 
     private int getIndex(T value) {
         Node<T> node = head;
