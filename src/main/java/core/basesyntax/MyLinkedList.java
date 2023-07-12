@@ -83,7 +83,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node currentNode = head;
         while (currentNode != null) {
-            if ((currentNode.value == object) || (currentNode.value != null && currentNode.value.equals(object))) {
+            if ((currentNode.value == object)
+                    || (currentNode.value != null && currentNode.value.equals(object))) {
                 unlink(currentNode);
                 return true;
             }
