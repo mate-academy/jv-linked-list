@@ -11,7 +11,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> node = new Node<>(tail, value, null);
-
         if (head == null) {
             head = node;
         }
@@ -25,23 +24,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkAddIndexOfBoundsException(index);
-        if (size == 0) {
+        if (size == 0 || size == index) {
             add(value);
             return;
         }
         Node<T> foundedNode = getNodeByIndex(index);
         if (foundedNode != null) {
-            Node<T> newNode = new Node<>(foundedNode.prev, value, foundedNode);
-            if (foundedNode.prev != null) {
-                foundedNode.prev.next = newNode;
-            } else {
-                head = newNode;
-            }
-            foundedNode.prev = newNode;
+            insertNewNode(value, foundedNode);
         } else {
-            Node<T> newNode = new Node<>(null, value, null);
-            tail.next = newNode;
-            tail = newNode;
+            createNewNodeAtTail(value);
         }
         size++;
     }
@@ -56,8 +47,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndexOfBoundsException(index);
-        Node<T> currentNode = getNodeByIndex(index);
-        return currentNode.item;
+        Node<T> foundedNode = getNodeByIndex(index);
+        return foundedNode.item;
     }
 
     @Override
@@ -76,12 +67,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndexOfBoundsException(index);
-        Node<T> currentNode = getNodeByIndex(index);
-        if (unlinkIfObjectHead(currentNode.item)) {
-            return currentNode.item;
+        Node<T> foundedNode = getNodeByIndex(index);
+        if (unlinkIfObjectHead(foundedNode.item)) {
+            return foundedNode.item;
         }
-        unlink(currentNode);
-        return currentNode.item;
+        unlink(foundedNode);
+        return foundedNode.item;
     }
 
     @Override
@@ -92,9 +83,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (unlinkIfObjectHead(object)) {
             return true;
         }
-        Node<T> findedNode = getNodeByValue(object);
-        if (findedNode != null) {
-            unlink(findedNode);
+        Node<T> foundedNode = getNodeByValue(object);
+        if (foundedNode != null) {
+            unlink(foundedNode);
             return true;
         }
         return false;
@@ -123,9 +114,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
+        if (index < size / 2 || index < 2) {
+            return searchFromHead(index);
+        } else {
+            return searchFromTail(index);
+        }
+    }
+
+    private Node<T> searchFromHead(int index) {
         Node<T> currentNode = head;
         for (int i = 0; i < index; i++) {
             currentNode = currentNode.next;
+        }
+        return currentNode;
+    }
+
+    private Node<T> searchFromTail(int index) {
+        Node<T> currentNode = tail;
+        for (int i = size - 1; i > index; i--) {
+            currentNode = currentNode.prev;
         }
         return currentNode;
     }
@@ -157,6 +164,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return true;
         }
         return false;
+    }
+
+    private void insertNewNode(T value, Node<T> oldNodeForShift) {
+        Node<T> newNode = new Node<>(oldNodeForShift.prev, value, oldNodeForShift);
+        if (oldNodeForShift.prev != null) {
+            oldNodeForShift.prev.next = newNode;
+        } else {
+            head = newNode;
+        }
+        oldNodeForShift.prev = newNode;
+    }
+
+    private void createNewNodeAtTail(T value) {
+        Node<T> newNode = new Node<>(tail, value, null);
+        tail.next = newNode;
+        tail = newNode;
     }
 
     private static class Node<T> {
