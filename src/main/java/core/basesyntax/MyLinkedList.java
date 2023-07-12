@@ -25,12 +25,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == SIZE_OF_EMPTY_LIST) {
             head = node;
         } else {
-            Node<T> temp = head;
-            while (temp.next != null) {
-                temp = temp.next;
-            }
-            temp.next = node;
-            node.prev = temp;
+            int lastIndex = size - 1;
+            Node<T> currentNode = iterateToIndex(lastIndex);
+            currentNode.next = node;
+            node.prev = currentNode;
         }
         tail = node;
         size++;
@@ -45,14 +43,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             checkIndex(index);
             Node<T> node = new Node<>(value);
-            Node<T> temp = head;
-            for (int i = 0; i < index; i++) {
-                temp = temp.next;
-            }
-            node.next = temp;
-            node.prev = temp.prev;
-            temp.prev.next = node;
-            temp.prev = node;
+            Node<T> currentNode = iterateToIndex(index);
+            node.next = currentNode;
+            node.prev = currentNode.prev;
+            currentNode.prev.next = node;
+            currentNode.prev = node;
             size++;
         }
     }
@@ -67,63 +62,51 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        Node<T> temp = head;
-        for (int i = 0; i < index; i++) {
-            temp = temp.next;
-        }
-        if (temp == null) {
+        Node<T> currentNode = iterateToIndex(index);
+        if (currentNode == null) {
             return null;
         }
-        return temp.value;
+        return currentNode.value;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> temp = head;
-        for (int i = 0; i < index; i++) {
-            temp = temp.next;
-        }
-        T oldValue = temp.value;
-        temp.value = value;
+        Node<T> currentNode = iterateToIndex(index);
+        T oldValue = currentNode.value;
+        currentNode.value = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        Node<T> temp = head;
-        if (index == size) {
-            tail = tail.prev;
-            tail.next = null;
-        }
         checkIndex(index);
         if (index == STARTING_INDEX_OF_LIST) {
+            Node<T> oldHead = head;
             head = head.next;
             size--;
-            return temp.value;
+            return oldHead.value;
         }
-        for (int i = 0; i < index; i++) {
-            temp = temp.next;
-        }
-        unlink(temp);
-        return temp.value;
+        Node<T> currentNode = iterateToIndex(index);
+        unlink(currentNode);
+        return currentNode.value;
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> temp = head;
+        Node<T> currentNode = head;
         for (int i = 0; i < size; i++) {
-            if ((temp.value == null && object == null)
-                    || (temp.value != null && temp.value.equals(object))) {
+            if ((currentNode.value == null && object == null)
+                    || (currentNode.value != null && currentNode.value.equals(object))) {
                 if (i == STARTING_INDEX_OF_LIST) {
                     head = head.next;
                     size--;
                     return true;
                 }
-                unlink(temp);
+                unlink(currentNode);
                 return true;
             } else {
-                temp = temp.next;
+                currentNode = currentNode.next;
             }
         }
         return false;
@@ -167,4 +150,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         size--;
     }
+
+    private Node<T> iterateToIndex(int index) {
+        Node<T> currentNode;
+        int sizeOfHalfList = size / 2;
+        if (index <= sizeOfHalfList) {
+            currentNode = head;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+        } else {
+            currentNode = tail;
+            int lastIndex = size - 1;
+            for (int i = lastIndex; i > index; i--) {
+                currentNode = currentNode.prev;
+            }
+        }
+        return currentNode;
+    }
+
 }
