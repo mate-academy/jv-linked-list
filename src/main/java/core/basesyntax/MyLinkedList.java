@@ -1,26 +1,30 @@
 package core.basesyntax;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
     private Node<T> head;
     private Node<T> tail;
+
     class Node<T> {
         private T value;
         private Node<T> next;
         private Node<T> prev;
+
         public Node(T value) {
             this.value = value;
         }
     }
 
-    public MyLinkedList() {}
+    public MyLinkedList() {
+
+    }
+
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(value);
-        if(head == null) {
+        if (head == null) {
             tail = head = newNode;
         } else {
             tail.next = newNode;
@@ -35,7 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index > size || index < 0) {
             throw new IndexOutOfBoundsException("Invalid index " + index);
         }
-        if(head == null) {
+        if (head == null) {
             head = tail = newNode;
         } else if (index == 0) {
             newNode.next = head;
@@ -46,7 +50,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail.next = newNode;
             tail = newNode;
         } else {
-            Node<T> prev = getNodeByIndex(index-1);
+            Node<T> prev = getNodeByIndex(index - 1);
             newNode.prev = prev;
             newNode.next = prev.next;
             prev.next = newNode;
@@ -56,7 +60,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for(T value : list) {
+        for (T value : list) {
             add(value);
         }
     }
@@ -90,7 +94,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> prev = getNodeByIndex(index - 1);
             removedElement = prev.next.value;
             prev.next = prev.next.next;
-            if(index == size - 1) {
+            if (index == size - 1) {
                 tail = tail.prev;
             }
         }
@@ -133,7 +137,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIfIndexInBounds(int index) {
-        if(index < 0 || (index != 0 && index == size)) {
+        if (index < 0 || (index != 0 && index == size)) {
             throw new IndexOutOfBoundsException("Invalid index " + index);
         }
     }
