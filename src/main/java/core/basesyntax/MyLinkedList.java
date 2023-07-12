@@ -25,12 +25,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node newNode = new Node(value, null, null);
         if (isEmpty()) {
             head = newNode;
-            tail = head;
         } else {
             newNode.prev = tail;
             tail.next = newNode;
-            tail = newNode;
         }
+        tail = newNode;
         size++;
     }
 
