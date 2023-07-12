@@ -25,8 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == SIZE_OF_EMPTY_LIST) {
             head = node;
         } else {
-            int lastIndex = size - 1;
-            Node<T> currentNode = iterateToIndex(lastIndex);
+            Node<T> currentNode = tail;
             currentNode.next = node;
             node.prev = currentNode;
         }
