@@ -22,8 +22,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndexAdd(index);
-        Node<T> foundNode = getNode(index);
-        if (foundNode != null) {
+        if (index == size) {
+            add(value);
+        } else {
+            Node<T> foundNode = getNode(index);
             Node<T> prev = foundNode.prev;
             Node<T> newNode = new Node<>(prev, value, foundNode);
             foundNode.prev = newNode;
@@ -33,8 +35,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 prev.next = newNode;
             }
             size++;
-        } else {
-            add(value);
         }
     }
 
@@ -108,10 +108,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        Node<T> node = head;
+        Node<T> node = null;
         if (size != 0) {
-            for (int i = 0; i < index; i++) {
-                node = node.next;
+            if (index <= size/2) {
+                node = head;
+                for (int i = 0; i < index; i++) {
+                    node = node.next;
+                }
+            }
+            else if (index > size/2) {
+                node = tail;
+                for (int i = size - 1; i > index; i--) {
+                    node = node.prev;
+                }
             }
         }
         return node;
@@ -144,7 +153,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             previous.next = next;
         }
         if (next == null) {
-            tail = next;
+            tail = previous;
         } else {
             next.prev = previous;
         }
