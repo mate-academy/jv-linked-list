@@ -50,9 +50,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         checkIndex(index);
         Node<T> node = getNodeByIndex(index);
-        T replacedElement = node.element;
+        T replacedElementValue = node.element;
         node.element = value;
-        return replacedElement;
+        return replacedElementValue;
     }
 
     @Override
@@ -153,13 +153,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return first != null && first.equals(second) || first == second;
     }
 
+    private boolean isEqual(Node<T> first, Node<T> second) {
+        return first != null && first.equals(second) || first == second;
+    }
+
     private void removeNode(Node<T> node) {
-        if (node == head) {
+        if (isEqual(node, head)) {
             head = head.next;
             if (head != null) {
                 head.previous = null;
             }
-        } else if (node == tail) {
+        } else if (isEqual(node, tail)) {
             tail = tail.previous;
             tail.next = null;
         } else {
@@ -169,7 +173,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    public static class Node<T> {
+    private static class Node<T> {
         private T element;
         private Node<T> next;
         private Node<T> previous;
