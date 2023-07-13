@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private final BuilderNode<T> builderNode = new BuilderNode<T>();
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -20,83 +19,49 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public static class BuilderNode<E> {
-        private E item;
-        private Node<E> next;
-        private Node<E> prev;
-
-        public BuilderNode<E> setItem(E item) {
-            this.item = item;
-            return this;
-        }
-
-        public BuilderNode<E> setNext(Node<E> next) {
-            this.next = next;
-            return this;
-        }
-
-        public BuilderNode<E> setPrev(Node<E> prev) {
-            this.prev = prev;
-            return this;
-        }
-
-        public Node<E> build() {
-            return new Node<>(prev, item, next);
-        }
-    }
-
-
     @Override
     public void add(T value) {
-        Node<T> newNode;
-        builderNode.setItem(value);
+        Node<T> newNode = new Node<>(tail, value, null);
+        //якщо це початок LinkedList`a
         if (size == 0) {
-            newNode = builderNode
-                    .setPrev(tail)
-                    .setNext(head)
-                    .build();
             head = tail = newNode;
+            // Інакше замінити хвіст новою нодою
         } else {
-            newNode = builderNode
-                    .setPrev(tail)
-                    .build();
             tail.next = newNode;
             tail = newNode;
         }
         size++;
     }
 
-
     @Override
     public void add(T value, int index) {
-        if (index < 0) {
-            throw new IndexOutOfBoundsException("Negative index: " + index);
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Can't operate on index: " + index
+                    + ", with size: " + size);
         }
-        Node<T> newNode;
-        builderNode.setItem(value);
-        if (head == null) {
-            head = tail = builderNode.build();
-        } else if (index == 0) {
-            newNode = builderNode
-                    .setNext(head)
-                    .build();
-            head.prev = newNode;
+        if (index == 0) {
+            Node<T> newNode = new Node<>(null, value, head);
+            // якщо голова є - замінити її нової нодою
+            if (head != null) {
+                head.prev = newNode;
+            }
             head = newNode;
+            // якщо хвоста немає - призначити його
+            if (tail == null) {
+                tail = newNode;
+            }
+            // якщо це додавання в кінець:
         } else if (index == size) {
-            newNode = builderNode
-                    .setPrev(tail)
-                    .build();
+            Node<T> newNode = new Node<>(tail, value, null);
             tail.next = newNode;
             tail = newNode;
+            // якщо це додавання в середину:
         } else {
-            checkIndex(index);
             Node<T> prev = getNodeByIndex(index - 1);
-            newNode = builderNode
-                    .setNext(prev.next)
-                    .setPrev(prev)
-                    .build();
-            prev.next.prev = newNode;
+            Node<T> next = prev.next;
+            Node<T> newNode = new Node<>(prev, value, next);
             prev.next = newNode;
+            next.prev = newNode;
         }
         size++;
     }
@@ -129,6 +94,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         T removedElement;
         if (index == 0) {
             removedElement = head.item;
+            // якщо це єдина нода в лісті то видалити ноду повністю
+            // інакше зробити наступну ноду головою
             head = head.next;
             if (head == null) {
                 tail = null;
@@ -140,6 +107,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> nodeToRemove = prev.next;
             removedElement = nodeToRemove.item;
             prev.next = nodeToRemove.next;
+            // якщо це хвіст то призначити хвостом попередню ноду
+            // інакше якщо видалення з середини
+            // то призначити наступній ноді свого нового сусіда <-prev
             if (nodeToRemove == tail) {
                 tail = prev;
             } else {
@@ -190,15 +160,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Can`t operate on index: " + index
+            throw new IndexOutOfBoundsException("Can't operate on index: " + index
                     + ", with size: " + size);
         }
     }
 
     private Node<T> getNodeByIndex(int index) {
         Node<T> current = head;
-        for (int i = 0; i < index; i++) {
+        int currentIndex = 0;
+        while (current != null && currentIndex < index) {
             current = current.next;
+            currentIndex++;
         }
         return current;
     }
