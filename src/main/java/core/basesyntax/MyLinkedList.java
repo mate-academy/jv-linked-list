@@ -119,7 +119,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node getNodeByIndex(int index) {
         checkIndexIsValid(index);
-        if (index <= size) {
+        if (index <= size / 2) {
             Node currentNode = head;
             for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
