@@ -4,7 +4,7 @@ import core.basesyntax.service.ObjectService;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> head;
     private Node<T> tail;
 
@@ -23,11 +23,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkAddIndexOfBoundsException(index);
-        if (size == 0 || size == index) {
+        if ((index == 0 && size == 0) || size == index) {
             add(value);
             return;
         }
+        checkIndexOfBoundsException(index);
         Node<T> foundedNode = getNodeByIndex(index);
         if (foundedNode != null) {
             insertNewNode(value, foundedNode);
@@ -54,13 +54,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndexOfBoundsException(index);
-
         Node<T> foundedNode = getNodeByIndex(index);
-        T oldItem = null;
-        if (foundedNode != null) {
-            oldItem = foundedNode.item;
-            foundedNode.item = value;
-        }
+        T oldItem = foundedNode.item;
+        foundedNode.item = value;
         return oldItem;
     }
 
@@ -68,9 +64,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndexOfBoundsException(index);
         Node<T> foundedNode = getNodeByIndex(index);
-        if (unlinkIfObjectHead(foundedNode.item)) {
-            return foundedNode.item;
-        }
         unlink(foundedNode);
         return foundedNode.item;
     }
@@ -79,9 +72,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         if (size == 0) {
             return false;
-        }
-        if (unlinkIfObjectHead(object)) {
-            return true;
         }
         Node<T> foundedNode = getNodeByValue(object);
         if (foundedNode != null) {
@@ -104,12 +94,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void checkIndexOfBoundsException(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index " + index + " doesn't exist");
-        }
-    }
-
-    private void checkAddIndexOfBoundsException(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index " + index + " out of bound.");
         }
     }
 
@@ -149,21 +133,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> node) {
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
-        size--;
-    }
-
-    private boolean unlinkIfObjectHead(T object) {
-        if (ObjectService.equals(head.item, object)) {
-            if (head.next != null) {
-                head.next.prev = head.prev;
-            }
-            head = head.next;
-            size--;
-            return true;
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        } else {
+            head = node.next;
         }
-        return false;
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        } else {
+            tail = node.prev;
+        }
+        size--;
     }
 
     private void insertNewNode(T value, Node<T> oldNodeForShift) {
