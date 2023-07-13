@@ -7,50 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        private Node(Node<T> prev, T item, Node<T> next) {
-            this.prev = prev;
-            this.item = item;
-            this.next = next;
-        }
-    }
-
-    private void indexRangeValid(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException();
-        }
-    }
-
-    private Node<T> getNodeOfIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        int middleList = size / 2;
-        Node<T> iterator = head;
-        if (middleList >= index) {
-            for (int i = 0; i <= middleList; ++i) {
-                if (i == index) {
-                    break;
-                }
-                iterator = iterator.next;
-            }
-        } else if (middleList < index) {
-            iterator = tail;
-            for (int i = size - 1; i >= 0; --i) {
-                if (i == index) {
-                    break;
-                }
-                iterator = iterator.prev;
-            }
-        }
-        return iterator;
-    }
-
     @Override
     public void add(T value) {
         if (size == 0) {
@@ -92,8 +48,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Node<T> nodeOfIndex = getNodeOfIndex(index);
-        return nodeOfIndex.item;
+        return getNodeOfIndex(index).item;
     }
 
     @Override
@@ -156,5 +111,44 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void indexRangeValid(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Invalid Index!");
+        }
+    }
+
+    private Node<T> getNodeOfIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of range!");
+        }
+
+        int middleList = size / 2;
+        Node<T> iterator;
+        if (middleList >= index) {
+            iterator = head;
+            for (int i = 0; i < index; ++i) {
+                iterator = iterator.next;
+            }
+        } else {
+            iterator = tail;
+            for (int i = size - 1; i > index; --i) {
+                iterator = iterator.prev;
+            }
+        }
+        return iterator;
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        private Node(Node<T> prev, T item, Node<T> next) {
+            this.prev = prev;
+            this.item = item;
+            this.next = next;
+        }
     }
 }
