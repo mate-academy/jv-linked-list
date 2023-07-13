@@ -4,8 +4,8 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
-    private Node<T> first;
-    private Node<T> last;
+    private Node<T> head;
+    private Node<T> tail;
 
     @Override
     public void add(T value) {
@@ -14,7 +14,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        indexAddCheck(index);
+        indexCheck(index, true);
         if (index == size) {
             addLast(value);
         } else if (index == 0) {
@@ -33,13 +33,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexCheck(index);
+        indexCheck(index, false);
         return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        indexCheck(index);
+        indexCheck(index, false);
         Node<T> nodeForReplace = findNodeByIndex(index);
         T previous = nodeForReplace.item;
         nodeForReplace.item = value;
@@ -48,7 +48,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexCheck(index);
+        indexCheck(index, false);
         Node<T> nodeForRemove = findNodeByIndex(index);
         unlink(nodeForRemove);
         return nodeForRemove.item;
@@ -57,7 +57,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         int i = 0;
-        Node<T> nodeForRemove = first;
+        Node<T> nodeForRemove = head;
         while (i < size) {
             i++;
             if (nodeForRemove.item == object
@@ -84,25 +84,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (node.prev != null) {
             node.prev.next = node.next;
         } else {
-            first = node.next;
+            head = node.next;
         }
         if (node.next != null) {
             node.next.prev = node.prev;
         } else {
-            last = node.prev;
+            tail = node.prev;
         }
         size--;
     }
 
     private void addFirst(T object) {
-        Node<T> newFirst = new Node<>(null, object, first);
-        if (first != null) {
-            first.prev = newFirst;
+        Node<T> newFirst = new Node<>(null, object, head);
+        if (head != null) {
+            head.prev = newFirst;
         }
-        if (last == null) {
-            last = newFirst;
+        if (tail == null) {
+            tail = newFirst;
         }
-        first = newFirst;
+        head = newFirst;
         size++;
     }
 
@@ -115,22 +115,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addLast(T object) {
-        Node<T> newLast = new Node<>(last, object, null);
-        if (last != null) {
-            last.next = newLast;
+        Node<T> newLast = new Node<>(tail, object, null);
+        if (tail != null) {
+            tail.next = newLast;
         }
-        if (first == null) {
-            first = newLast;
+        if (head == null) {
+            head = newLast;
         }
-        last = newLast;
+        tail = newLast;
         size++;
     }
 
     private Node<T> findNodeByIndex(int index) {
         if (index > size / 2) {
-            return scrollFromLast(last, size - 1 - index);
+            return scrollFromLast(tail, size - 1 - index);
         }
-        return scrollFromFirst(first, index);
+        return scrollFromFirst(head, index);
     }
 
     private Node<T> scrollFromLast(Node<T> last, int steps) {
@@ -149,17 +149,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return scrollFromFirst(first.next, steps);
     }
 
-    private void indexCheck(int index) {
-        if (index < 0 || index >= size) {
+    private void indexCheck(int index, boolean addCheck) {
+        if (index < 0 || (addCheck ? index > size : index >= size)) {
             throw new IndexOutOfBoundsException("Index " + index
                     + " is out of bounds for size " + size);
-        }
-    }
-
-    private void indexAddCheck(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index " + index
-                    + " for add is out of bounds for size " + size);
         }
     }
 
