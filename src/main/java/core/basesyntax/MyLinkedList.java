@@ -110,13 +110,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNode(int index) {
         Node<T> node = null;
         if (size != 0) {
-            if (index <= size/2) {
+            if (index <= size / 2) {
                 node = head;
                 for (int i = 0; i < index; i++) {
                     node = node.next;
                 }
-            }
-            else if (index > size/2) {
+            } else {
                 node = tail;
                 for (int i = size - 1; i > index; i--) {
                     node = node.prev;
