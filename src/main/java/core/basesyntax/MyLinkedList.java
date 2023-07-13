@@ -35,10 +35,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Can't operate on index: " + index
-                    + ", with size: " + size);
-        }
+        checkIndexAdd(index);
         if (index == 0) {
             Node<T> newNode = new Node<>(null, value, head);
             // якщо голова є - замінити її нової нодою
@@ -160,6 +157,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Can't operate on index: " + index
+                    + ", with size: " + size);
+        }
+    }
+
+    private void checkIndexAdd(int index) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Can't operate on index: " + index
                     + ", with size: " + size);
         }
