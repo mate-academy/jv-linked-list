@@ -1,20 +1,20 @@
 package core.basesyntax;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String NEGATIVE_INDEX_MESSAGE = "Index must be positive number";
     private static final String INDEX_OUT_OF_BOUNDS_MESSAGE = "Index must be positive number";
-    private final ArrayList<Node<T>> data = new ArrayList<>();
+    private Node<T> head;
+    private Node<T> tail;
     private int size;
 
-    private static class Node<V> {
-        private V value;
-        private Node<V> next;
-        private Node<V> prev;
+    private static class Node<T> {
+        private Node<T> next;
+        private T value;
+        private Node<T> prev;
 
-        Node(Node<V> prev, V value, Node<V> next) {
+        Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
             this.value = value;
             this.next = next;
@@ -23,26 +23,32 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        data.add(new Node<>((size == 0) ? null : data.get(size - 1), value, null));
-        if (size > 0) {
-            data.get(size - 1).next = data.get(size);
+        Node<T> newNode = new Node<>((size == 0) ? null : tail, value, null);
+        if (size == 0) {
+            head = newNode;
+        } else {
+            tail.next = newNode;
         }
+        tail = newNode;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        indexValidator(index, false);
-        data.add(index, new Node<>(
-                (index > 0) ? data.get(index - 1) : null,
-                value,
-                (size > 0 && index < size - 1) ? data.get(index) : null));
-        if (index > 0) {
-            data.get(index - 1).next = data.get(index);
+        indexAddValidator(index);
+        if (index == size) {
+            add(value);
+            return;
         }
-        if (index < size) {
-            data.get(index + 1).prev = data.get(index);
+        Node<T> nextNode = findNodeByIndex(index);
+        Node<T> prevNode = nextNode.prev;
+        Node<T> newNode = new Node<>(prevNode, value, nextNode);
+        if (prevNode != null && prevNode.next != null) {
+            prevNode.next = newNode;
+        } else if (prevNode == null || prevNode.prev == null) {
+            head = newNode;
         }
+        nextNode.prev = newNode;
         size++;
     }
 
@@ -56,42 +62,57 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexValidator(index, true);
-        return data.get(index).value;
+        indexNotAddValidator(index);
+        return findNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        indexValidator(index, false);
-        T oldValue = data.get(index).value;
-        data.get(index).value = value;
+        indexNotAddValidator(index);
+        Node<T> indexNode = findNodeByIndex(index);
+        T oldValue = indexNode.value;
+        indexNode.value = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        indexValidator(index, true);
-        if (index > 0 && index < size - 1) {
-            data.get(index - 1).next = data.get(index + 1);
-            data.get(index + 1).prev = data.get(index - 1);
-        } else if (index == 0 && size > 1) {
-            data.get(index + 1).prev = null;
-        } else if (index > 0 && index == size - 1) {
-            data.get(index - 1).next = null;
+        indexNotAddValidator(index);
+        Node<T> deletedNode = findNodeByIndex(index);
+        if (size == 1) {
+            head = null;
+            tail = null;
+        } else {
+            Node<T> prevNode = (index > 0) ? deletedNode.prev : null;
+            Node<T> nextNode = (index < size) ? deletedNode.next : null;
+            if (index == 0) {
+                nextNode.prev = null;
+                head = nextNode;
+            } else if (index == size - 1) {
+                prevNode.next = null;
+                tail = prevNode;
+            } else {
+                prevNode.next = deletedNode.next;
+                nextNode.prev = deletedNode.prev;
+            }
         }
         size--;
-        return data.remove(index).value;
+        return deletedNode.value;
     }
 
     @Override
     public boolean remove(T object) {
-        for (int i = 0; i < size; i++) {
-            if ((data.get(i).value != null && data.get(i).value.equals(object))
-                    || (data.get(i).value == object)) {
-                remove(i);
+        Node<T> current = head;
+        int index = 0;
+        do {
+            if (object == current.value
+                    || (current.value != null && current.value.equals(object))) {
+                remove(index);
                 return true;
             }
-        }
+            index++;
+            current = current.next;
+        } while (current.next != null);
         return false;
     }
 
@@ -105,13 +126,39 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void indexValidator(int index, boolean deleteContacted) {
-        if (!deleteContacted && index > size) {
-            throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE);
-        } else if (deleteContacted && index >= size) {
+    private void indexAddValidator(int index) {
+        if (index > size) {
             throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE);
         } else if (index < 0) {
             throw new IndexOutOfBoundsException(NEGATIVE_INDEX_MESSAGE);
         }
+    }
+
+    private void indexNotAddValidator(int index) {
+        if (index >= size) {
+            throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE);
+        } else if (index < 0) {
+            throw new IndexOutOfBoundsException(NEGATIVE_INDEX_MESSAGE);
+        }
+    }
+
+    private Node<T> findNodeByIndex(int index) {
+        Node<T> current;
+        if (index < size / 2) {
+            current = head;
+            int i = 0;
+            while (i < index) {
+                current = current.next;
+                i++;
+            }
+        } else {
+            current = tail;
+            int i = size - 1;
+            while (i > index) {
+                current = current.prev;
+                i--;
+            }
+        }
+        return current;
     }
 }
