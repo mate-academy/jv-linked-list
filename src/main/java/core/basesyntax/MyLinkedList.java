@@ -3,17 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private class Node {
-        private T value;
-        private Node prev;
-        private Node next;
-
-        public Node(T value, Node prev, Node next) {
-            this.value = value;
-            this.prev = prev;
-            this.next = next;
-        }
-    }
 
     private Node head;
     private Node tail;
@@ -130,7 +119,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node getNodeByIndex(int index) {
         checkIndexIsValid(index);
-        if (index <= size / 2) {
+        if (index <= size) {
             Node currentNode = head;
             for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
@@ -142,6 +131,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 currentNode = currentNode.prev;
             }
             return currentNode;
+        }
+    }
+
+    private class Node {
+        private T value;
+        private Node prev;
+        private Node next;
+
+        public Node(T value, Node prev, Node next) {
+            this.value = value;
+            this.prev = prev;
+            this.next = next;
         }
     }
 }
