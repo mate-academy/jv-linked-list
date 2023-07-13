@@ -19,8 +19,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == size) {
             addLast(value);
         } else {
-            Node<T> prev = getNodeByIndex(index);
-            insertBefore(prev, value);
+            Node<T> next = getNodeByIndex(index);
+            insertBefore(next, value);
         }
     }
 
