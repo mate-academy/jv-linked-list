@@ -166,12 +166,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Node<T> current = head;
-        int currentIndex = 0;
-        while (current != null && currentIndex < index) {
-            current = current.next;
-            currentIndex++;
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Can't operate on index: " + index
+                    + ", with size: " + size);
         }
-        return current;
+        if (index <= size / 2) {
+            Node<T> current = head;
+            int currentIndex = 0;
+            while (current != null && currentIndex < index) {
+                current = current.next;
+                currentIndex++;
+            }
+            return current;
+        } else {
+            Node<T> current = tail;
+            int currentIndex = size - 1;
+            while (current != null && currentIndex > index) {
+                current = current.prev;
+                currentIndex--;
+            }
+            return current;
+        }
     }
+
 }
