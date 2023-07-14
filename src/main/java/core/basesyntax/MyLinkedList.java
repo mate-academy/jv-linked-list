@@ -52,19 +52,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> current = first; current != null; current = current.next) {
-                if (current.item == null) {
-                    unlink(current);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> current = first; current != null; current = current.next) {
-                if (object.equals(current.item)) {
-                    unlink(current);
-                    return true;
-                }
+        for (Node<T> current = first; current != null; current = current.next) {
+            if (current.item == object || current.item != null && current.item.equals(object)) {
+                unlink(current);
+                return true;
             }
         }
         return false;
@@ -78,30 +69,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        public Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
-            }
-            if (obj == null || this.item.getClass() != obj.getClass()) {
-                return false;
-            }
-            Node<T> current = (Node<T>) obj;
-            return (this.item != null && this.item.equals(current.item));
-        }
     }
 
     private T unlink(Node<T> node) {
@@ -177,5 +144,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return currentNode;
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (obj == null || this.item.getClass() != obj.getClass()) {
+                return false;
+            }
+            Node<T> current = (Node<T>) obj;
+            return (this.item != null && this.item.equals(current.item));
+        }
     }
 }
