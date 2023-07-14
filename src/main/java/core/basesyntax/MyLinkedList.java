@@ -3,15 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static class Node<T> {
-        private T element;
-        private Node<T> next;
-
-        public Node(T element) {
-            this.element = element;
-        }
-    }
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -72,29 +63,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Unable to set index: " + index);
-        }
-        T removedElement;
-        if (index == 0) {
-            removedElement = head.element;
-            head = head.next;
-            if (head == null) {
-                tail = null;
-            }
-        } else if (index == size - 1) {
-            Node<T> previous = getNodeByIndex(index - 1);
-            removedElement = tail.element;
-            previous.next = null;
-            tail = previous;
-        } else {
-            Node<T> previous = getNodeByIndex(index - 1);
-            Node<T> current = previous.next;
-            removedElement = current.element;
-            previous.next = current.next;
-        }
-        size--;
-        return removedElement;
+        indexCheck(index);
+        Node<T> nodeToRemove = getNodeByIndex(index);
+        return unlink(nodeToRemove);
     }
 
     @Override
@@ -122,6 +93,42 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return head == null;
+    }
+
+    private class Node<T> {
+        private T element;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(T element) {
+            this.element = element;
+        }
+    }
+
+    private Node<T> findPreviousNode(Node<T> node) {
+        Node<T> current = head;
+        while (current != null && current.next != node) {
+            current = current.next;
+        }
+        return current;
+    }
+
+    private T unlink(Node<T> nodeToRemove) {
+        T removedElement = nodeToRemove.element;
+        if (nodeToRemove == head) {
+            head = head.next;
+            if (head == null) {
+                tail = null;
+            }
+        } else {
+            Node<T> previous = findPreviousNode(nodeToRemove);
+            previous.next = nodeToRemove.next;
+            if (nodeToRemove == tail) {
+                tail = previous;
+            }
+        }
+        size--;
+        return removedElement;
     }
 
     private void indexCheck(int index) {
