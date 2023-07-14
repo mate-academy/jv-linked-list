@@ -92,51 +92,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         validateIndex(index);
-        final T removedElement;
         Node<T> node = getNodeByIndex(index);
-        if (index == 0 && size == 1) {
-            removedElement = node.item;
-            first = null;
-        } else if (index == 0) {
-            removedElement = node.item;
-            node.next.prev = node.prev;
-            first = node.next;
-        } else if (index == size - 1) {
-            removedElement = node.item;
-            node.prev.next = node.next;
-            last = node.prev;
-        } else {
-            removedElement = node.item;
-            node.prev.next = node.next;
-            node.next.prev = node.prev;
-        }
-        size--;
+        final T removedElement = node.item;
+        unlink(node);
         return removedElement;
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> node = first;
-        for (int i = 0; i < size; i++) {
-            if (node.item == object || (node.item != null && node.item.equals(object))) {
-                if (i == 0 && size == 1) {
-                    first = null;
-                } else if (i == 0) {
-                    node.next.prev = node.prev;
-                    first = node.next;
-                } else if (i == size - 1) {
-                    node.prev.next = node.next;
-                    last = node.prev;
-                } else {
-                    node.prev.next = node.next;
-                    node.next.prev = node.prev;
-                }
-                size--;
-                return true;
-            }
-            node = node.next;
-        }
-        return false;
+        Node<T> node = getNodeByValue(object);
+        return unlink(node);
     }
 
     @Override
@@ -170,6 +135,40 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node = node.next;
         }
         return null;
+    }
+
+    private Node<T> getNodeByValue(T object) {
+        Node<T> node = first;
+        for (int i = 0; i < size; i++) {
+            if (node.item == object || (node.item != null && node.item.equals(object))) {
+                return node;
+            }
+            node = node.next;
+        }
+        return null;
+    }
+
+    private boolean unlink(Node<T> node) {
+        if (node == null) {
+            return false;
+        }
+        if (size == 1) {
+            first = null;
+            last = null;
+        } else if (node == first) {
+            node.next.prev = null;
+            first = node.next;
+        } else if (node == last) {
+            node.prev.next = null;
+            last = node.prev;
+        } else {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        }
+        node.prev = null;
+        node.next = null;
+        size--;
+        return true;
     }
 
     private class Node<T> {
