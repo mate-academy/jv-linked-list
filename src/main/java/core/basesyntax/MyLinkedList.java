@@ -89,34 +89,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addElementInEmptyList(T value) {
-        Node newNode = new Node<>(value);
+        Node newNode = new Node<>(null, value, null);
         head = newNode;
         tail = newNode;
         size++;
     }
 
     private void addElementOnFirstPosition(T value) {
-        Node<T> node = new Node<>(value);
-        node.next = head;
+        Node<T> node = new Node<>(null, value, head);
         head.previous = node;
         head = node;
         size++;
     }
 
     private void addElementInTheMiddle(T value, int index) {
-        Node node = new Node<>(value);
         Node<T> prev = getNodeByIndex(index - 1);
-        node.next = prev.next;
-        node.previous = prev;
+        Node node = new Node<>(prev, value, prev.next);
         prev.next.previous = node;
         prev.next = node;
         size++;
     }
 
     private void addElementOnLastPosition(T value) {
-        Node node = new Node<>(value);
+        Node node = new Node<>(tail, value, null);
         tail.next = node;
-        node.previous = tail;
+        //node.previous = tail;
         tail = node;
         size++;
     }
@@ -177,8 +174,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> previous;
 
-        public Node(T element) {
+        public Node(Node<T> previous, T element, Node<T> next) {
             this.element = element;
+            this.next = next;
+            this.previous = previous;
         }
     }
 }
