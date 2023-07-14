@@ -7,12 +7,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<E> {
-        private E item;
-        private Node<E> next;
-        private Node<E> prev;
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
-        private Node(Node<E> prev, E element, Node<E> next) {
+        private Node(Node<T> prev, T element, Node<T> next) {
             this.item = element;
             this.next = next;
             this.prev = prev;
@@ -126,10 +126,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Can't operate on index: " + index
-                    + ", with size: " + size);
-        }
+        checkIndex(index);
         if (index <= size / 2) {
             Node<T> current = head;
             int currentIndex = 0;
