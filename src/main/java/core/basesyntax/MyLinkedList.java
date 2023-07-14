@@ -8,12 +8,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> lastElement;
 
     private static class Node<T> {
-        private T element;
+        private T value;
         private Node<T> next;
         private Node<T> prev;
 
         public Node(T element, Node<T> prev, Node<T> next) {
-            this.element = element;
+            this.value = element;
             this.prev = prev;
             this.next = next;
         }
@@ -68,15 +68,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return getNodeByIndex(index).element;
+        return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndexRange(index, false);
         Node<T> node = getNodeByIndex(index);
-        T oldValue = node.element;
-        node.element = value;
+        T oldValue = node.value;
+        node.value = value;
         return oldValue;
     }
 
@@ -84,7 +84,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndexRange(index, false);
         Node<T> nodeToRemove = getNodeByIndex(index);
-        T element = nodeToRemove.element;
+        T element = nodeToRemove.value;
         unlink(nodeToRemove);
         return element;
     }
@@ -93,12 +93,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> currentNode = firstElement;
         while (currentNode != null) {
-            if (currentNode.element == null) {
+            if (currentNode.value == null) {
                 if (object == null) {
                     unlink(currentNode);
                     return true;
                 }
-            } else if (currentNode.element.equals(object)) {
+            } else if (currentNode.value.equals(object)) {
                 unlink(currentNode);
                 return true;
             }
