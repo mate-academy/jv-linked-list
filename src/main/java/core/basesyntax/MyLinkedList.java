@@ -27,12 +27,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkIndexOfBoundsException(index);
+        checkIndex(index);
         Node<T> foundedNode = getNodeByIndex(index);
         if (foundedNode != null) {
             insertNewNode(value, foundedNode);
         } else {
-            createNewNodeAtTail(value);
+            add(value);
         }
         size++;
     }
@@ -46,14 +46,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndexOfBoundsException(index);
+        checkIndex(index);
         Node<T> foundedNode = getNodeByIndex(index);
         return foundedNode.item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndexOfBoundsException(index);
+        checkIndex(index);
         Node<T> foundedNode = getNodeByIndex(index);
         T oldItem = foundedNode.item;
         foundedNode.item = value;
@@ -62,7 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndexOfBoundsException(index);
+        checkIndex(index);
         Node<T> foundedNode = getNodeByIndex(index);
         unlink(foundedNode);
         return foundedNode.item;
@@ -91,14 +91,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkIndexOfBoundsException(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index " + index + " doesn't exist");
         }
     }
 
     private Node<T> getNodeByIndex(int index) {
-        if (index < size / 2 || index < 2) {
+        if (index < size / 2) {
             return searchFromHead(index);
         } else {
             return searchFromTail(index);
@@ -146,23 +146,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private void insertNewNode(T value, Node<T> oldNodeForShift) {
-        Node<T> newNode = new Node<>(oldNodeForShift.prev, value, oldNodeForShift);
-        if (oldNodeForShift.prev != null) {
-            oldNodeForShift.prev.next = newNode;
+    private void insertNewNode(T value, Node<T> oldNode) {
+        Node<T> newNode = new Node<>(oldNode.prev, value, oldNode);
+        if (oldNode.prev != null) {
+            oldNode.prev.next = newNode;
         } else {
             head = newNode;
         }
-        oldNodeForShift.prev = newNode;
+        oldNode.prev = newNode;
     }
 
-    private void createNewNodeAtTail(T value) {
-        Node<T> newNode = new Node<>(tail, value, null);
-        tail.next = newNode;
-        tail = newNode;
-    }
-
-    private static class Node<T> {
+    private class Node<T> {
         private T item;
         private Node<T> next;
         private Node<T> prev;
