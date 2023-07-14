@@ -2,7 +2,7 @@ package core.basesyntax;
 
 import java.util.List;
 
-public interface MyLinkedListInterface<T> extends Iterable<T> {
+public interface MyLinkedListInterface<T> {
     void add(T value);
 
     void add(T value, int index);

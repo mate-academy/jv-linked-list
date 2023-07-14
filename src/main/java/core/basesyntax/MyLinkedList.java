@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Iterator;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -24,7 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        isIndexValid(index);
+        isIndexValidToAddNode(index);
         Node<T> oldNode = findByIndex(index);
         Node<T> newNode = new Node<>(null, value, null);
 
@@ -59,13 +58,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        isIndexValidToRemoveNodeAndSetValue(index);
+        isIndexValid(index);
         return findByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        isIndexValidToRemoveNodeAndSetValue(index);
+        isIndexValid(index);
         Node<T> node = findByIndex(index);
         T oldValue = node.value;
         node.value = value;
@@ -74,7 +73,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        isIndexValidToRemoveNodeAndSetValue(index);
+        isIndexValid(index);
         Node<T> node = findByIndex(index);
         unlink(node);
         size--;
@@ -100,24 +99,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-        return new Iterator<T>() {
-            private Node<T> currentNode = head;
-            @Override
-            public boolean hasNext() {
-                return currentNode != null;
-            }
-
-            @Override
-            public T next() {
-                Node<T> node = currentNode;
-                currentNode = currentNode.next;
-                return node.value;
-            }
-        };
     }
 
     /**
@@ -187,14 +168,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return iteratorNode;
     }
 
-    private void isIndexValid(int index) {
+    private void isIndexValidToAddNode(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("The index - " + index + " is out of bound."
                     + "Because the size of LinkedList is " + size);
         }
     }
 
-    private void isIndexValidToRemoveNodeAndSetValue(int index) {
+    private void isIndexValid(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("The index - " + index + " is out of bound."
                     + "Because the size of LinkedList is " + size);
