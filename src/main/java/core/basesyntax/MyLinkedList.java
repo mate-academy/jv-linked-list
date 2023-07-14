@@ -7,11 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public MyLinkedList() {
-        this.head = null;
-        this.tail = null;
-    }
-
     private static class Node<T> {
         private T item;
         private Node<T> prev;
@@ -38,12 +33,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             Node<T> newNode = new Node<>(head, value, tail);
             Node<T> current = getNode(index);
-
             newNode.prev = current.prev;
             newNode.next = current;
             current.prev.next = newNode;
             current.prev = newNode;
-
             size++;
         }
     }
@@ -125,9 +118,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("The index must be greater"
+                                                + "  than zero and less than "
+                                                + size);
         }
-
         Node<T> current;
         if (index < size / 2) {
             current = head;
@@ -140,7 +134,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 current = current.prev;
             }
         }
-
         return current;
     }
 
@@ -150,13 +143,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             node.prev.next = node.next;
         }
-
         if (node == tail) {
             tail = node.prev;
         } else {
             node.next.prev = node.prev;
         }
-
         size--;
         return node.item;
     }
