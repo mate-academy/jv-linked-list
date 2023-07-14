@@ -105,8 +105,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNodeByIndex(int index) {
         Node<T> node = null;
         if (size != 0) {
-            node = runLoopFromHead(index);
-            node = node == null ? runLoopFromTail(index) : node;
+            if (index <= size / 2) {
+                node = runLoopFromHead(index);
+            } else {
+                node = runLoopFromTail(index);
+            }
         }
         return node;
     }
@@ -125,22 +128,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> runLoopFromHead(int index) {
         Node<T> node = null;
-        if (index <= size / 2) {
-            node = head;
-            for (int i = 0; i < index; i++) {
-                node = node.next;
-            }
+        node = head;
+        for (int i = 0; i < index; i++) {
+            node = node.next;
         }
         return node;
     }
 
     private Node<T> runLoopFromTail(int index) {
         Node<T> node = null;
-        if (index > size / 2) {
-            node = tail;
-            for (int i = size - 1; i > index; i--) {
-                node = node.prev;
-            }
+        node = tail;
+        for (int i = size - 1; i > index; i--) {
+            node = node.prev;
         }
         return node;
     }
