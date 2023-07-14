@@ -4,8 +4,8 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
-    private MyLinkedList.Node<T> first;
-    private MyLinkedList.Node<T> last;
+    private Node<T> first;
+    private Node<T> last;
 
     MyLinkedList() {
     }
@@ -173,18 +173,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private static class Node<E> {
-        private E item;
-        private MyLinkedList.Node<E> next;
-        private MyLinkedList.Node<E> prev;
+    private class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
-        Node(E element) {
+        Node(T element) {
             this.item = element;
             this.next = null;
             this.prev = null;
         }
 
-        Node(MyLinkedList.Node<E> prev, E element, MyLinkedList.Node<E> next) {
+        Node(Node<T> prev, T element, Node<T> next) {
             this.item = element;
             this.next = next;
             this.prev = prev;
