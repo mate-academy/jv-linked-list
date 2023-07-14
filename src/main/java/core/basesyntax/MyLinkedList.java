@@ -14,7 +14,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        indexCheck(index, true);
+        indexCheck(index, size);
         if (index == size) {
             addLast(value);
         } else if (index == 0) {
@@ -33,13 +33,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexCheck(index, false);
+        indexCheck(index, size - 1);
         return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        indexCheck(index, false);
+        indexCheck(index, size - 1);
         Node<T> nodeForReplace = findNodeByIndex(index);
         T previous = nodeForReplace.item;
         nodeForReplace.item = value;
@@ -48,7 +48,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexCheck(index, false);
+        indexCheck(index, size - 1);
         Node<T> nodeForRemove = findNodeByIndex(index);
         unlink(nodeForRemove);
         return nodeForRemove.item;
@@ -149,10 +149,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return scrollFromFirst(first.next, steps);
     }
 
-    private void indexCheck(int index, boolean addCheck) {
-        if (index < 0 || (addCheck ? index > size : index >= size)) {
+    private void indexCheck(int index, int range) {
+        if (index < 0 || index > range) {
             throw new IndexOutOfBoundsException("Index " + index
-                    + " is out of bounds for size " + size);
+                    + " is out of bounds for valid range " + range);
         }
     }
 
