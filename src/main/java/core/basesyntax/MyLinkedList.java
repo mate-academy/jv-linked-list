@@ -22,10 +22,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(tail, value, null);
-        //якщо це початок LinkedList`a
         if (size == 0) {
             head = tail = newNode;
-            // Інакше замінити хвіст новою нодою
         } else {
             tail.next = newNode;
             tail = newNode;
@@ -38,21 +36,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndexAdd(index);
         if (index == 0) {
             Node<T> newNode = new Node<>(null, value, head);
-            // якщо голова є - замінити її нової нодою
             if (head != null) {
                 head.prev = newNode;
             }
             head = newNode;
-            // якщо хвоста немає - призначити його
             if (tail == null) {
                 tail = newNode;
             }
-            // якщо це додавання в кінець:
         } else if (index == size) {
             Node<T> newNode = new Node<>(tail, value, null);
             tail.next = newNode;
             tail = newNode;
-            // якщо це додавання в середину:
         } else {
             Node<T> prev = getNodeByIndex(index - 1);
             Node<T> next = prev.next;
@@ -64,16 +58,32 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
+    public T remove(int index) {
+        checkIndex(index);
+        Node<T> nodeToRemove = getNodeByIndex(index);
+        unlink(nodeToRemove);
+        return nodeToRemove.item;
+    }
+
+    @Override
+    public boolean remove(T object) {
+        Node<T> current = head;
+        while (current != null) {
+            if ((current.item == null && object == null)
+                    || (current.item != null && current.item.equals(object))) {
+                unlink(current);
+                return true;
+            }
+            current = current.next;
+        }
+        return false;
+    }
+
+    @Override
     public void addAll(List<T> list) {
         for (T item : list) {
             add(item);
         }
-    }
-
-    @Override
-    public T get(int index) {
-        checkIndex(index);
-        return getNodeByIndex(index).item;
     }
 
     @Override
@@ -86,63 +96,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public T remove(int index) {
+    public T get(int index) {
         checkIndex(index);
-        T removedElement;
-        if (index == 0) {
-            removedElement = head.item;
-            // якщо це єдина нода в лісті то видалити ноду повністю
-            // інакше зробити наступну ноду головою
-            head = head.next;
-            if (head == null) {
-                tail = null;
-            } else {
-                head.prev = null;
-            }
-        } else {
-            Node<T> prev = getNodeByIndex(index - 1);
-            Node<T> nodeToRemove = prev.next;
-            removedElement = nodeToRemove.item;
-            prev.next = nodeToRemove.next;
-            // якщо це хвіст то призначити хвостом попередню ноду
-            // інакше якщо видалення з середини
-            // то призначити наступній ноді свого нового сусіда <-prev
-            if (nodeToRemove == tail) {
-                tail = prev;
-            } else {
-                nodeToRemove.next.prev = prev;
-            }
-        }
-        size--;
-        return removedElement;
-    }
-
-    @Override
-    public boolean remove(T object) {
-        Node<T> current = head;
-        while (current != null) {
-            if ((current.item == null && object == null)
-                    || (current.item != null && current.item.equals(object))) {
-                if (current == head) {
-                    head = head.next;
-                    if (head == null) {
-                        tail = null;
-                    } else {
-                        head.prev = null;
-                    }
-                } else if (current == tail) {
-                    tail = tail.prev;
-                    tail.next = null;
-                } else {
-                    current.prev.next = current.next;
-                    current.next.prev = current.prev;
-                }
-                size--;
-                return true;
-            }
-            current = current.next;
-        }
-        return false;
+        return getNodeByIndex(index).item;
     }
 
     @Override
@@ -193,4 +149,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private void unlink(Node<T> node) {
+        if (node == head) {
+            head = head.next;
+            if (head == null) {
+                tail = null;
+            } else {
+                head.prev = null;
+            }
+        } else if (node == tail) {
+            tail = tail.prev;
+            tail.next = null;
+        } else {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        }
+        size--;
+    }
 }
