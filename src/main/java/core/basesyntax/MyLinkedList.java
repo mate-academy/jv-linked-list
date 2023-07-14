@@ -113,7 +113,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void addElementOnLastPosition(T value) {
         Node node = new Node<>(tail, value, null);
         tail.next = node;
-        //node.previous = tail;
         tail = node;
         size++;
     }
