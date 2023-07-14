@@ -45,6 +45,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> prev = getNodeByIndex(index - 1);
             newNode.prev = prev;
             newNode.next = prev.next;
+            prev.next.prev = newNode;
             prev.next = newNode;
             size++;
         }
@@ -118,9 +119,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeByIndex(int index) {
         checkIfIndexInBounds(index);
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        Node<T> current;
+        if (index <= (size >> 1)) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
         return current;
     }
