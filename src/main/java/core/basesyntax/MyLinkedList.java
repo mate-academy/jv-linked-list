@@ -26,11 +26,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkPositionIndex(index);
+        if (!(index >= 0 && index <= size)) {
+            throw new IndexOutOfBoundsException("Index: " + index + "out of size, Size: " + size);
+        }
         if (index == size) {
             linkLast(value);
         } else {
-            linkBefore(value, node(index));
+            linkBefore(value, getNodeByIndex(index));
         }
     }
 
@@ -43,16 +45,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (!isElementIndex(index)) {
-            throw new IndexOutOfBoundsException("Index: " + index + "out of size, Size: " + size);
-        }
-        return node(index).item;
+        checkElementIndex(index);
+        return getNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         checkElementIndex(index);
-        Node<T> oldNode = node(index);
+        Node<T> oldNode = getNodeByIndex(index);
         T oldVal = oldNode.item;
         oldNode.item = value;
         return oldVal;
@@ -61,23 +61,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkElementIndex(index);
-        Node<T> removedElement = node(index);
+        Node<T> removedElement = getNodeByIndex(index);
         unlink(removedElement);
         return removedElement.item;
     }
 
     @Override
     public boolean remove(T object) {
-        for (Node<T> removedElement = head; removedElement != null; removedElement =
-                removedElement.next) {
+        Node<T> removedElement = head;
+        while (removedElement != null) {
             if (removedElement.item == object
                     || object != null && object.equals(removedElement.item)) {
                 unlink(removedElement);
                 return true;
             }
+            removedElement = removedElement.next;
         }
         return false;
-
     }
 
     @Override
@@ -102,16 +102,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void checkPositionIndex(int index) {
-        if (!isPositionIndex(index)) {
-            throw new IndexOutOfBoundsException("Index: " + index + "out of size, Size: " + size);
-        }
-    }
-
-    private boolean isPositionIndex(int index) {
-        return index >= 0 && index <= size;
-    }
-
     private void linkBefore(T value, Node<T> tail) {
         Node<T> prev = tail.prev;
         Node<T> newNode = new Node<>(prev, value, tail);
@@ -124,7 +114,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private Node<T> node(int index) {
+    private Node<T> getNodeByIndex(int index) {
+        checkElementIndex(index);
         if (index < (size >> 1)) {
             Node<T> headNode = head;
             for (int i = 0; i < index; i++) {
@@ -155,13 +146,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkElementIndex(int index) {
-        if (!isElementIndex(index)) {
+        if (!(index >= 0 && index < size)) {
             throw new IndexOutOfBoundsException("Index: " + index + " is outside the array, "
                     + "size" + " is: " + size);
         }
-    }
-
-    private boolean isElementIndex(int index) {
-        return index >= 0 && index < size;
     }
 }
