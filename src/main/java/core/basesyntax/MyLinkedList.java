@@ -10,7 +10,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (isEmpty()) {
-            addElementIfListIsEmpty(value);
+            addElementInEmptyList(value);
         } else {
             addElementOnLastPosition(value);
         }
@@ -22,7 +22,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             checkIndex(index);
         }
         if (isEmpty()) {
-            addElementIfListIsEmpty(value);
+            addElementInEmptyList(value);
         } else if (index == size) {
             addElementOnLastPosition(value);
         } else if (index == 0) {
@@ -57,16 +57,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> removedNode = getNodeByIndex(index);
-        removeNode(removedNode);
-        return removedNode.element;
+        Node<T> nodeToRemove = getNodeByIndex(index);
+        unlink(nodeToRemove);
+        return nodeToRemove.element;
     }
 
     @Override
     public boolean remove(T value) {
         Node<T> nodeToRemove = getNodeByValue(value);
         if (nodeToRemove != null) {
-            removeNode(nodeToRemove);
+            unlink(nodeToRemove);
             return true;
         }
         return false;
@@ -88,7 +88,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void addElementIfListIsEmpty(T value) {
+    private void addElementInEmptyList(T value) {
         Node newNode = new Node<>(value);
         head = newNode;
         tail = newNode;
@@ -156,7 +156,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return first != null && first.equals(second) || first == second;
     }
 
-    private void removeNode(Node<T> node) {
+    private void unlink(Node<T> node) {
         if (isEqual(node, head)) {
             head = head.next;
             if (head != null) {
@@ -172,7 +172,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private static class Node<T> {
+    private class Node<T> {
         private T element;
         private Node<T> next;
         private Node<T> previous;
