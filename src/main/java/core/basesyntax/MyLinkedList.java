@@ -21,7 +21,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index == size && index >= 0) {
+        if (index == size) {
             add(value);
             return;
         }
@@ -101,9 +101,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        Node<T> current = first;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        Node<T> current;
+        if (index < size / 2) {
+            current = first;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = last;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
         return current;
     }
