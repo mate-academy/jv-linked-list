@@ -5,19 +5,7 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
-    private int listSize;
-
-    public static class Node<T> {
-        private T element;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T lement, Node<T> next) {
-            this.element = lement;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
+    private int size;
 
     @Override
     public void add(T value) {
@@ -33,7 +21,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndexToAdd(index);
         if (index == 0) {
             linkFirstElement(value);
-        } else if (index == listSize) {
+        } else if (index == size) {
             linkLastElement(value);
         } else {
             linkBeforeElement(value, getNodeByIndex(index));
@@ -65,6 +53,94 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Node<T> nodeByIndex = getNodeByIndex(index);
         final T removedElement = nodeByIndex.element;
+        unlink(nodeByIndex);
+        return removedElement;
+    }
+
+    @Override
+    public boolean remove(T object) {
+        int index = getIndexOfValue(object);
+        if (index != -1) {
+            remove(index);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    private void linkFirstElement(T value) {
+        Node<T> newNode = new Node<>(null, value, head);
+        head = newNode;
+        tail = newNode;
+        size++;
+    }
+
+    private void linkLastElement(T value) {
+        Node<T> newNode = new Node<>(tail, value, null);
+        tail.next = newNode;
+        tail = newNode;
+        size++;
+    }
+
+    private void linkBeforeElement(T value, Node<T> node) {
+        Node<T> prevNode = node.prev;
+        Node<T> newNode = new Node<>(prevNode, value, node);
+        prevNode.next = newNode;
+        node.prev = newNode;
+        size++;
+    }
+
+    private Node<T> getNodeByIndex(int index) {
+        Node<T> currentNode = head;
+        int middleListSizePosition = size / 2;
+        checkIndex(index);
+        if (index < middleListSizePosition || index == middleListSizePosition) {
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+        }
+        if (index > middleListSizePosition) {
+            currentNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                currentNode = currentNode.prev;
+            }
+        }
+        return currentNode;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of range: " + index);
+        }
+    }
+
+    private void checkIndexToAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index out of range: " + index);
+        }
+    }
+
+    private int getIndexOfValue(T element) {
+        for (int i = 0; i < size; i++) {
+            Node<T> node = getNodeByIndex(i);
+            if (node.element == element || (node.element != null
+                    && node.element.equals(element))) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private void unlink(Node<T> nodeByIndex) {
         if (nodeByIndex == head) {
             head = head.next;
         } else {
@@ -75,81 +151,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             nodeByIndex.next.prev = nodeByIndex.prev;
         }
-        listSize--;
-        return removedElement;
+        size--;
     }
 
-    @Override
-    public boolean remove(T object) {
-        int index = getCorrectIndex(object);
-        if (index != -1) {
-            remove(index);
-            return true;
+    private class Node<T> {
+        private T element;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T element, Node<T> next) {
+            this.element = element;
+            this.next = next;
+            this.prev = prev;
         }
-        return false;
-    }
-
-    @Override
-    public int size() {
-        return listSize;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return listSize == 0;
-    }
-
-    private void linkFirstElement(T value) {
-        Node<T> newNode = new Node<>(null, value, head);
-        head = newNode;
-        tail = newNode;
-        listSize++;
-    }
-
-    private void linkLastElement(T value) {
-        Node<T> newNode = new Node<>(tail, value, null);
-        tail.next = newNode;
-        tail = newNode;
-        listSize++;
-    }
-
-    private void linkBeforeElement(T value, Node<T> node) {
-        Node<T> prevNode = node.prev;
-        Node<T> newNode = new Node<>(prevNode, value, node);
-        prevNode.next = newNode;
-        node.prev = newNode;
-        listSize++;
-    }
-
-    private Node<T> getNodeByIndex(int index) {
-        checkIndex(index);
-        Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
-        return currentNode;
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= listSize) {
-            throw new IndexOutOfBoundsException("Index out of range: " + index);
-        }
-    }
-
-    private void checkIndexToAdd(int index) {
-        if (index < 0 || index > listSize) {
-            throw new IndexOutOfBoundsException("Index out of range: " + index);
-        }
-    }
-
-    private int getCorrectIndex(T element) {
-        for (int i = 0; i < listSize; i++) {
-            Node<T> node = getNodeByIndex(i);
-            if (node.element == element || (node.element != null
-                    && node.element.equals(element))) {
-                return i;
-            }
-        }
-        return -1;
     }
 }
