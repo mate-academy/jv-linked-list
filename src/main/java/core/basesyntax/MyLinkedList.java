@@ -15,13 +15,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0) {
             first = new Node<>(null, value, null);
             last = first;
-            size++;
         } else {
             Node<T> node = new Node<>(last, value, null);
             last.next = node;
             last = node;
-            size++;
         }
+        size++;
     }
 
     @Override
@@ -31,19 +30,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0) {
             first = newNode;
             last = newNode;
-            size++;
-            return;
-        }
-        Node<T> node = getNodeByIndex(index);
-        if (node == null) {
+        } else if (index == 0) {
+            newNode.next = first;
+            first.prev = newNode;
+            first = newNode;
+        } else if (index == size) {
             last.next = newNode;
             newNode.prev = last;
             last = newNode;
-        } else if (index == 0) {
-            node.prev = newNode;
-            newNode.next = node;
-            first = newNode;
         } else {
+            Node<T> node = getNodeByIndex(index);
             newNode.prev = node.prev;
             node.prev.next = newNode;
             node.prev = newNode;
@@ -54,7 +50,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Node<T> node = last;
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -63,30 +58,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         validateIndex(index);
-        Node<T> node = first;
-        for (int i = 0; i < size; i++) {
-            if (index == i) {
-                return node.item;
-            }
-            node = node.next;
-        }
-        return null;
+        Node<T> node = getNodeByIndex(index);
+        return node.item;
     }
 
     @Override
     public T set(T value, int index) {
         validateIndex(index);
-        final T replacedElement;
-        Node<T> node = first;
-        for (int i = 0; i < size; i++) {
-            if (index == i) {
-                replacedElement = node.item;
-                node.item = value;
-                return replacedElement;
-            }
-            node = node.next;
+        Node<T> node = getNodeByIndex(index);
+        if (node != null) {
+            final T replacedElement = node.item;
+            node.item = value;
+            return replacedElement;
+        } else {
+            return null;
         }
-        return null;
     }
 
     @Override
@@ -127,12 +113,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Node<T> node = first;
-        for (int i = 0; i <= size; i++) {
-            if (index == i) {
-                return node;
+        Node<T> node;
+        int middle = size / 2;
+        if (index <= middle) {
+            node = first;
+            for (int i = 0; i <= middle; i++) {
+                if (index == i) {
+                    return node;
+                } else {
+                    node = node.next;
+                }
             }
-            node = node.next;
+        } else {
+            node = last;
+            for (int i = size - 1; i > middle; i--) {
+                if (index == i) {
+                    return node;
+                } else {
+                    node = node.prev;
+                }
+            }
         }
         return null;
     }
