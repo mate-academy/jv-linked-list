@@ -5,8 +5,8 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     static class Node<T> {
-        T element;
-        Node<T> next;
+        private T element;
+        private Node<T> next;
 
         public Node(T element) {
             this.element = element;
@@ -111,7 +111,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
         int index = 0;
         do {
-            if (object == current.element || (current.element != null && current.element.equals(object))) {
+            if (object == current.element
+                    || (current.element != null
+                    && current.element.equals(object))) {
                 remove(index);
                 return true;
             }
@@ -131,13 +133,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return head == null;
     }
 
-    private void indexCheck (int index) {
+    private void indexCheck(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Unable to set index: " + index);
         }
     }
 
-    private Node<T> getNodeByIndex (int index) {
+    private Node<T> getNodeByIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Unable to set index: " + index);
         }
