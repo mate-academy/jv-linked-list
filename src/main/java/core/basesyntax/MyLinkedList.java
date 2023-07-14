@@ -152,16 +152,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void unlink(Node<T> node) {
         if (node == head) {
             head = head.next;
+            // якщо головою стало нічого то хвіст також нічого
             if (head == null) {
                 tail = null;
             } else {
+                // інакше засетити новій голові нульового сусіда prev
                 head.prev = null;
             }
         } else if (node == tail) {
+            // зробити сусіда хвоста хвостом
             tail = tail.prev;
             tail.next = null;
         } else {
+            // сусіду prev призначити next сусіда від next нашої видаленої ноди
             node.prev.next = node.next;
+            // сусіду next призначити prev сусіда від prev нашої видаленої ноди
             node.next.prev = node.prev;
         }
         size--;
