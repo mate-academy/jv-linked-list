@@ -94,20 +94,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void indexAddCheck(int listIndex) {
         if (listIndex < 0 || listIndex > size) {
-            throw new IndexOutOfBoundsException("Index is out of bounds" + listIndex);
+            throw new IndexOutOfBoundsException("Index is out of bounds " + listIndex);
         }
     }
 
     private void indexCheck(int listIndex) {
         if (listIndex < 0 || listIndex >= size) {
-            throw new IndexOutOfBoundsException("Index is out of bounds" + listIndex);
+            throw new IndexOutOfBoundsException("Index is out of bounds " + listIndex);
         }
     }
 
     private Node<T> getNodeByTheIndex(int index) {
         indexCheck(index);
         Node<T> temp;
-        if (index <= size / 2 ) {
+        if (index <= size / 2) {
             temp = head;
             for (int i = 0; i < index; i++) {
                 temp = temp.next;
