@@ -262,7 +262,7 @@ public class MyLinkedListTest {
 
         exception.expect(IndexOutOfBoundsException.class);
         myLinkedList.remove(3);
-    }
+    ka
 
     @Test(expected = IndexOutOfBoundsException.class)
     public void testRemoveByNegativeIndex() {
