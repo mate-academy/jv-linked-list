@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -61,21 +62,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node<T> nodeOfIndex = getNodeOfIndex(index);
-        if (head.equals(nodeOfIndex)) {
-            head = nodeOfIndex.next;
-        } else if (tail.equals(nodeOfIndex)) {
-            tail = nodeOfIndex.prev;
-        } else {
-            Node<T> prevNode = nodeOfIndex.prev;
-            Node<T> nextNode = nodeOfIndex.next;
-            if (prevNode != null) {
-                prevNode.next = nextNode;
-            }
-            nextNode.prev = prevNode;
+        Node<T> nodeToRemove = getNodeOfIndex(index);
+        if (nodeToRemove != null) {
+            removeNode(nodeToRemove);
+            return nodeToRemove.item;
         }
-        --size;
-        return nodeOfIndex.item;
+        return null;
     }
 
     @Override
@@ -84,18 +76,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return false;
         }
 
-        if (head.item.equals(object)) {
-            head = head.next;
-            --size;
-            return true;
-        }
-
         Node<T> currentNode = head;
-        while (currentNode.next != null) {
-            if (object == currentNode.next.item || object != null
-                    && object.equals(currentNode.next.item)) {
-                currentNode.next = currentNode.next.next;
-                --size;
+        while (currentNode != null) {
+            if (object == currentNode.item || object != null && object.equals(currentNode.item)) {
+                removeNode(currentNode);
                 return true;
             }
             currentNode = currentNode.next;
@@ -138,6 +122,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return iterator;
+    }
+
+    private void removeNode(Node<T> node) {
+        if (node == null) {
+            return;
+        }
+
+        if (node == head) {
+            head = node.next;
+        } else {
+            Node<T> prevNode = node.prev;
+            prevNode.next = node.next;
+            if (node.next != null) {
+                node.next.prev = prevNode;
+            } else {
+                tail = prevNode;
+            }
+        }
+        --size;
     }
 
     private static class Node<T> {
