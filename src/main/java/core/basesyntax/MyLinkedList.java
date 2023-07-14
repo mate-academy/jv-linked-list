@@ -28,7 +28,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         validateAddIndex(index);
         Node node = first;
-        Node newNode = new Node<>(value);
+        Node newNode = new Node<>(null, value, null);
         if (node == null) {
             first = newNode;
             last = newNode;
@@ -177,12 +177,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private T item;
         private Node<T> next;
         private Node<T> prev;
-
-        Node(T element) {
-            this.item = element;
-            this.next = null;
-            this.prev = null;
-        }
 
         Node(Node<T> prev, T element, Node<T> next) {
             this.item = element;
