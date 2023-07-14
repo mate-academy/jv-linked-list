@@ -8,18 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private Node<T> prev;
-        private T item;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            item = value;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> current = new Node<>(null, value, null);
@@ -122,8 +110,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNodeAtIndex(int index) {
         validateIndex(index);
         Node<T> current = head;
-        int halfOfSize = size / 2;
-        if (index < halfOfSize) {
+        if (index < size / 2) {
             for (int i = 0; i < index; i++) {
                 current = current.next;
             }
@@ -145,6 +132,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void validateIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Invalid index value: " + index);
+        }
+    }
+
+    private class Node<T> {
+        private Node<T> prev;
+        private T item;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            item = value;
+            this.next = next;
         }
     }
 }
