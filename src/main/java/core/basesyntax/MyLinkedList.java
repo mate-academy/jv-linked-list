@@ -29,17 +29,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             addNode(value);
         } else if (index == 0) {
             addFirst(value);
+        } else if (size / 2 >= index) {
+            addFromHead(value, index);
         } else {
-            Node<T> newNode = new Node<>(value);
-            Node<T> current = head;
-            for (int i = 0; i < index - 1; i++) {
-                current = current.next;
-            }
-            newNode.next = current.next;
-            newNode.prev = current;
-            current.next.prev = newNode;
-            current.next = newNode;
-            size++;
+            addFromTail(value, index);
         }
     }
 
@@ -53,23 +46,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         findIndexGet(index);
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
-        return current.item;
+        return size / 2 >= index ? getFromHead(index) : getFromTail(index);
     }
 
     @Override
     public T set(T value, int index) {
         findIndexGet(index);
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
-        T oldValue = current.item;
-        current.item = value;
-        return oldValue;
+        return size / 2 >= index ? setFromHead(value, index) : setFromTail(value, index);
     }
 
     @Override
@@ -124,6 +107,68 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private T setFromHead(T value, int index) {
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        T oldValue = current.item;
+        current.item = value;
+        return oldValue;
+    }
+
+    private T setFromTail(T value, int index) {
+        Node<T> current = tail;
+        for (int i = size - 1; i > index; i--) {
+            current = current.prev;
+        }
+        T oldValue = current.item;
+        current.item = value;
+        return oldValue;
+    }
+
+    private T getFromHead(int index) {
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        return current.item;
+    }
+
+    private T getFromTail(int index) {
+        Node<T> current = tail;
+        for (int i = size - 1; i > index; i--) {
+            current = current.prev;
+        }
+        return current.item;
+    }
+
+    private void addFromHead(T value, int index) {
+        Node<T> newNode = new Node<>(value);
+        Node<T> current = head;
+        for (int i = 0; i < index - 1; i++) {
+            current = current.next;
+        }
+        newNode.next = current.next;
+        newNode.prev = current;
+        current.next.prev = newNode;
+        current.next = newNode;
+        size++;
+    }
+
+    private void addFromTail(T value, int index) {
+        Node<T> newNode = new Node<>(value);
+        Node<T> current = tail;
+        for (int i = size - 1; i > index; i--) {
+            current = current.prev;
+        }
+        newNode.next = current;
+        newNode.prev = current.prev;
+        current.prev.next = newNode;
+        current.prev = newNode;
+        size++;
     }
 
     private void addNode(T value) {
