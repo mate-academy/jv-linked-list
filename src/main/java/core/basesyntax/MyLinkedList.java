@@ -8,18 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private int size;
 
-    private static class Node<T> {
-        private Node<T> prev;
-        private T data;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T data, Node<T> next) {
-            this.prev = prev;
-            this.data = data;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         if (size == 0) {
@@ -80,7 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Node<T> nodeToRemove = getNodeByIndex(index);
         T removedValue = nodeToRemove.data;
-        removeByNode(nodeToRemove);
+        unlink(nodeToRemove);
         return removedValue;
     }
 
@@ -96,7 +84,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             current = current.next;
         }
-        removeByNode(current);
+        unlink(current);
         return true;
     }
 
@@ -129,7 +117,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private void removeByNode(Node<T> nodeToRemove) {
+    private void unlink(Node<T> nodeToRemove) {
         if (nodeToRemove == head) {
             head = nodeToRemove.next;
             if (head != null) {
@@ -146,9 +134,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             prev.next = next;
             next.prev = prev;
         }
-        nodeToRemove.prev = null;
-        nodeToRemove.next = null;
-        nodeToRemove.data = null;
         size--;
+    }
+
+    private class Node<T> {
+        private Node<T> prev;
+        private T data;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T data, Node<T> next) {
+            this.prev = prev;
+            this.data = data;
+            this.next = next;
+        }
     }
 }
