@@ -81,7 +81,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             currentNode = currentNode.next;
             nodeIndex++;
             if (nodeIndex == size) {
-                nodeIndex = 0;
                 return false;
             }
         }
@@ -118,11 +117,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        int nodeIndex = 0;
-        Node<T> currentNode = head;
-        while (nodeIndex != index) {
-            currentNode = currentNode.next;
-            nodeIndex++;
+        Node<T> currentNode;
+        if (index > size / 2) {
+            int nodeIndex = size - 1;
+            currentNode = tail;
+            while (nodeIndex != index) {
+                currentNode = currentNode.prev;
+                nodeIndex--;
+            }
+        } else {
+            int nodeIndex = 0;
+            currentNode = head;
+            while (nodeIndex != index) {
+                currentNode = currentNode.next;
+                nodeIndex++;
+            }
         }
         return currentNode;
     }
