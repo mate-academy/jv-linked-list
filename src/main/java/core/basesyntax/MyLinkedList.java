@@ -103,7 +103,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 } else {
                     tail = nodePrevious;
                 }
-
                 size--;
                 return true;
             }
