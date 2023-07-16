@@ -23,7 +23,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-
         Node<T> newNode = new Node<>(value);
 
         if (index == size) {
@@ -70,7 +69,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-
         Node<T> current = getNodeByIndex(index);
         T value;
 
