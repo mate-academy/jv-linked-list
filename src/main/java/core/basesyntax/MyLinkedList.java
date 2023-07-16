@@ -170,7 +170,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> prev;
 
         public Node(T value) {
+            this.prev = prev;
             this.value = value;
+            this.next = next;
         }
     }
 }
