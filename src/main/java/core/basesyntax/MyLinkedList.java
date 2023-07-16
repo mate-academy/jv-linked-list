@@ -8,22 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private T value;
-        private Node<T> next;
-        private Node<T> previous;
-
-        public Node(T value) {
-            this.value = value;
-        }
-
-        public Node(T value, Node<T> previous, Node<T> next) {
-            this.value = value;
-            this.previous = previous;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         if (head == null) {
@@ -199,7 +183,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return newNode;
     }
 
-    private boolean equals(Object object1, Object object2) {
-        return object1 == object2 || (object1 != null && object1.equals(object2));
+    private boolean equals(T firstObject, T secondObject) {
+        return firstObject == secondObject || (firstObject != null && firstObject.equals(secondObject));
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> previous;
+
+        public Node(T value) {
+            this.value = value;
+        }
+
+        public Node(T value, Node<T> previous, Node<T> next) {
+            this.value = value;
+            this.previous = previous;
+            this.next = next;
+        }
     }
 }
