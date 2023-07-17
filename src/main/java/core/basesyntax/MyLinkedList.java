@@ -110,25 +110,35 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Node<T> node;
         int middle = size / 2;
         if (index <= middle) {
-            node = first;
-            for (int i = 0; i <= middle; i++) {
-                if (index == i) {
-                    return node;
-                } else {
-                    node = node.next;
-                }
-            }
+            return iterateFromStart(index, middle);
         } else {
-            node = last;
-            for (int i = size - 1; i > middle; i--) {
-                if (index == i) {
-                    return node;
-                } else {
-                    node = node.prev;
-                }
+            return iterateFromEnd(index, middle);
+        }
+    }
+
+    private Node<T> iterateFromStart(int index, int middle) {
+        Node<T> node;
+        node = first;
+        for (int i = 0; i <= middle; i++) {
+            if (index == i) {
+                return node;
+            } else {
+                node = node.next;
+            }
+        }
+        return null;
+    }
+
+    private Node<T> iterateFromEnd(int index, int middle) {
+        Node<T> node;
+        node = last;
+        for (int i = size - 1; i > middle; i--) {
+            if (index == i) {
+                return node;
+            } else {
+                node = node.prev;
             }
         }
         return null;
