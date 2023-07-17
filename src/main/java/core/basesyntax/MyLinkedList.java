@@ -13,12 +13,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0) {
             head = newNode;
             tail = newNode;
+            size++;
         } else {
-            tail.next = newNode;
-            newNode.prev = tail;
-            tail = newNode;
+            addAfterTail(newNode);
         }
-        size++;
     }
 
     @Override
@@ -32,7 +30,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
         } else if (index == size) {
             addAfterTail(newNode);
-        } else if (oldNode != null) {
+        } else {
             addInMiddle(oldNode, newNode);
         }
     }
