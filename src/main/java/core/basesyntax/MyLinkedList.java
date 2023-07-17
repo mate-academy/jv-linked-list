@@ -6,7 +6,7 @@ import java.util.Objects;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node head;
     private Node tail;
-    private int size = 0;
+    private int size;
 
     @Override
     public void add(T value) {
@@ -29,17 +29,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         if (index == size) {
             add(value);
-        } else {
-            Node nodeAtIndex = getNode(index);
-            Node newNode = new Node(nodeAtIndex.previous, value, nodeAtIndex);
-            if (nodeAtIndex.previous != null) {
-                nodeAtIndex.previous.next = newNode;
-            } else {
-                head = newNode;
-            }
-            nodeAtIndex.previous = newNode;
-            size++;
+            return;
         }
+
+        Node nodeAtIndex = getNode(index);
+        Node newNode = new Node(nodeAtIndex.previous, value, nodeAtIndex);
+
+        if (nodeAtIndex.previous != null) {
+            nodeAtIndex.previous.next = newNode;
+        } else {
+            head = newNode;
+        }
+        nodeAtIndex.previous = newNode;
+        size++;
     }
 
     @Override
@@ -94,7 +96,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node getNode(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index: " + index);
+            throw new IndexOutOfBoundsException("Invalid index: " + index + " " + size);
         }
 
         Node node;
