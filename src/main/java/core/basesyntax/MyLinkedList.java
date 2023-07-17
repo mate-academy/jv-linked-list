@@ -25,7 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkIndexToAdd(index);
+        validateIndex(index);
         Node<T> prevNode = getNodeByIndex(index);
         Node<T> newNode = new Node<>(value, prevNode, prevNode.prev);
         if (index == 0) {
@@ -46,13 +46,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexValidator(index);
+        validateIndex(index);
         return getNodeByIndex(index).element;
     }
 
     @Override
     public T set(T value, int index) {
-        indexValidator(index);
+        validateIndex(index);
         Node<T> node = getNodeByIndex(index);
         T oldNode = node.element;
         node.element = value;
@@ -61,7 +61,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexValidator(index);
+        validateIndex(index);
         Node<T> removedElement = getNodeByIndex(index);
         unlink(removedElement);
         return removedElement.element;
@@ -105,15 +105,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void indexValidator(int index) {
+    private void validateIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException("Index out of bound: " + index);
-        }
-    }
-
-    private void checkIndexToAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException("Can't add value by index: " + index);
         }
     }
 
