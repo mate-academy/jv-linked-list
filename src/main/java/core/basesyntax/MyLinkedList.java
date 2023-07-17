@@ -22,7 +22,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexForAdd(index);
+        checkIndex(index, true);
         Node<T> newNode = new Node<>(value);
 
         if (index == size) {
@@ -53,13 +53,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        checkIndex(index, false);
         return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
+        checkIndex(index, false);
         Node<T> node = getNodeByIndex(index);
         T oldValue = node.value;
         node.value = value;
@@ -68,7 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
+        checkIndex(index, false);
         Node<T> current = getNodeByIndex(index);
         return unlink(current);
     }
@@ -147,15 +147,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds.");
-        }
-    }
-
-    private void checkIndexForAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for add.");
+    private void checkIndex(int index, boolean forAdd) {
+        if ((forAdd && (index < 0 || index > size))
+                || (!forAdd && (index < 0 || index >= size))) {
+            throw new IndexOutOfBoundsException("Index " + index
+                    + " is out of bounds"
+                    + (forAdd ? " for add." : "."));
         }
     }
 
