@@ -127,8 +127,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> runLoopFromHead(int index) {
-        Node<T> node = null;
-        node = head;
+        Node<T> node = head;
         for (int i = 0; i < index; i++) {
             node = node.next;
         }
@@ -136,8 +135,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> runLoopFromTail(int index) {
-        Node<T> node = null;
-        node = tail;
+        Node<T> node = tail;
         for (int i = size - 1; i > index; i--) {
             node = node.prev;
         }
