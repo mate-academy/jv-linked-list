@@ -102,13 +102,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void validateIndex(int index) {
         if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Incorrect index provided");
+            throw new IndexOutOfBoundsException("Incorrect index provided: " + index);
         }
     }
 
     private void validateAddIndex(int index) {
         if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Incorrect index provided");
+            throw new IndexOutOfBoundsException("Incorrect index provided: " + index);
         }
     }
 
