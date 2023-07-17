@@ -99,11 +99,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void clear() {
-        head = tail = null;
-        size = 0;
-    }
-
     private T unlink(Node<T> current) {
         final T element = current.value;
         final Node<T> next = current.next;
