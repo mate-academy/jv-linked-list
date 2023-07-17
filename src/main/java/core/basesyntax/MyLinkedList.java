@@ -22,7 +22,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        indexRangeValid(index);
+        checkIndexForAdd(index);
         if (index == 0 && size > 0) {
             Node<T> oldHeadNode = head;
             head = new Node<>(null, value, oldHeadNode);
@@ -41,8 +41,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T elem : list) {
-            add(elem);
+        for (T node : list) {
+            add(node);
         }
     }
 
@@ -71,10 +71,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (head == null) {
-            return false;
-        }
-
         Node<T> currentNode = head;
         while (currentNode != null) {
             if (object == currentNode.item || object != null && object.equals(currentNode.item)) {
@@ -96,15 +92,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void indexRangeValid(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Invalid Index!");
+    private void checkIndexForAdd(int index) {
+        if (index < 0) {
+            throw new IndexOutOfBoundsException("Invalid Index! Index cant be negative");
+        }
+        if (index > size) {
+            throw new IndexOutOfBoundsException("Invalid Index! Index cant be "
+                    + "more than size: " + size);
         }
     }
 
     private Node<T> getNodeByIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of range!");
+        if (index < 0) {
+            throw new IndexOutOfBoundsException("Invalid Index! Index cant be negative");
+        }
+        if (index >= size) {
+            throw new IndexOutOfBoundsException("Index out of range! Index cant be "
+                    + "more than size: " + (size - 1));
         }
 
         Node<T> iterator;
