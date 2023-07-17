@@ -30,13 +30,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == 0) {
             addFirst(value, index);
         } else {
-            Node<T> actual = getNodeByIndex(index);
-            Node<T> newNode = new Node<>(actual.prev, value, actual.next);
-            newNode.prev = actual.prev;
-            actual.prev.next = newNode;
-            actual.prev = newNode;
-            newNode.next = actual;
-            size++;
+            addMiddle(value, index);
         }
     }
 
@@ -99,6 +93,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(null, value, actual);
         actual.prev = newNode;
         head = newNode;
+        size++;
+    }
+
+    private void addMiddle(T value, int index) {
+        Node<T> actual = getNodeByIndex(index);
+        Node<T> newNode = new Node<>(actual.prev, value, actual.next);
+        newNode.prev = actual.prev;
+        actual.prev.next = newNode;
+        actual.prev = newNode;
+        newNode.next = actual;
         size++;
     }
 
