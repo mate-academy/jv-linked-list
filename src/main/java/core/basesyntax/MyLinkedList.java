@@ -59,9 +59,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        int index = getIndexOfValue(object);
-        if (index != -1) {
-            remove(index);
+        Node<T> node = getNodeByValue(object);
+        if (node != null) {
+            unlink(node);
             return true;
         }
         return false;
@@ -99,11 +99,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
+    private Node<T> getNodeByValue(T value) {
+        Node<T> currentNode = head;
+        while (currentNode != null) {
+            if (checkValue(value, currentNode)) {
+                return currentNode;
+            }
+            currentNode = currentNode.next;
+        }
+        return null;
+    }
+
     private Node<T> getNodeByIndex(int index) {
         Node<T> currentNode = head;
         int middleListSizePosition = size / 2;
         checkIndex(index);
-        if (index < middleListSizePosition || index == middleListSizePosition) {
+        if (index <= middleListSizePosition) {
             for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
             }
@@ -129,15 +140,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private int getIndexOfValue(T element) {
-        for (int i = 0; i < size; i++) {
-            Node<T> node = getNodeByIndex(i);
-            if (node.element == element || (node.element != null
-                    && node.element.equals(element))) {
-                return i;
-            }
-        }
-        return -1;
+    private boolean checkValue(T element, Node<T> node) {
+        return (node.element == element || (node.element != null
+                && node.element.equals(element)));
     }
 
     private void unlink(Node<T> nodeByIndex) {
