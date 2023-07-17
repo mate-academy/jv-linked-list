@@ -26,7 +26,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkIndexIsValid(index);
         if (index == 0) {
             head = new Node(value, null, head);
             head.next.prev = head;
@@ -92,9 +91,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndexIsValid(int index) {
         if (index < 0) {
-            throw new IndexOutOfBoundsException("Index cant be < 0; ");
+            throw new IndexOutOfBoundsException("Index cant be < 0; Index is " + index);
         } else if (index >= size) {
-            throw new IndexOutOfBoundsException("index cant be >= LinkedList size; ");
+            throw new IndexOutOfBoundsException(
+                    "index cant be >= LinkedList size; Index is " + index + "; Size is " + size
+            );
         }
     }
 
@@ -132,7 +133,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private static class Node<T> {
+    private class Node<T> {
         private T value;
         private Node<T> prev;
         private Node<T> next;
