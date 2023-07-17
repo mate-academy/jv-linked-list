@@ -99,17 +99,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndexInBounds(index);
         if (index == 0) {
-            T oldValue = firstNode.value;
             if (firstNode.next != null) {
                 firstNode.next.prev = null;
             }
+            T oldValue = firstNode.value;
             firstNode = firstNode.next;
             size--;
             return oldValue;
         }
         if (index == size - 1) {
-            T oldValue = lastNode.value;
             lastNode.prev.next = null;
+            T oldValue = lastNode.value;
             lastNode = lastNode.prev;
             size--;
             return oldValue;
@@ -118,9 +118,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         int i = 1;
         do {
             if (i == index) {
-                T oldValue = currentNode.value;
                 currentNode.prev.next = currentNode.next;
                 currentNode.next.prev = currentNode.prev;
+                T oldValue = currentNode.value;
                 currentNode.value = currentNode.next.value;
                 size--;
                 return oldValue;
@@ -164,9 +164,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private class Node<T> {
-        T value;
-        Node<T> prev;
-        Node<T> next;
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
 
         Node(Node<T> prev, T value, Node<T> next) {
             this.value = value;
