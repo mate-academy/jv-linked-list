@@ -114,7 +114,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("The index must be greater"
+                    + "  than zero and less than "
+                    + size);
         }
         Node<T> current;
         if (index < size / 2) {
