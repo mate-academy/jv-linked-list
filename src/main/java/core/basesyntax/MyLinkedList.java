@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
@@ -24,7 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Invalid index");
+            throw new IndexOutOfBoundsException("Invalid index " + index);
         }
         if (size == 0 || index == size) {
             add(value);
@@ -46,8 +45,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T el : list) {
-            add(el);
+        for (T nodeData : list) {
+            add(nodeData);
         }
     }
 
@@ -59,9 +58,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         Node<T> current = getNodeByIndex(index);
-        T old = current.data;
+        T oldValue = current.data;
         current.data = value;
-        return old;
+        return oldValue;
     }
 
     @Override
@@ -78,7 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return false;
         }
         Node<T> current = head;
-        while (!Objects.equals(current.data, object)) {
+        while (current.data == null ? object != null : !current.data.equals(object)) {
             if (current.next == null) {
                 return false;
             }
@@ -100,7 +99,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeByIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index");
+            throw new IndexOutOfBoundsException("Invalid index " + index);
         }
         Node<T> current;
         if (index < size / 2) {
