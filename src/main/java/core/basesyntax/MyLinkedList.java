@@ -22,7 +22,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
+        checkIndexForAdd(index);
         if (index == 0) {
             Node<T> headNode = head;
             Node<T> newNode = new Node<>(null, value, headNode);
@@ -36,11 +36,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == size) {
             add(value);
         } else {
-            if (index < (size / 2)) {
-                linkBetween(value, getNodeByIndexFromHead(index));
-            } else {
-                linkBetween(value, getNodeByIndexFromTail(index));
-            }
+            linkBetween(value, currentNodePosition(index));
         }
     }
 
@@ -53,34 +49,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndexExist(index);
-        if (index < (size / 2)) {
-            return getNodeByIndexFromHead(index).item;
-        }
-        return getNodeByIndexFromTail(index).item;
+        checkIndex(index);
+        return currentNodePosition(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndexExist(index);
-        Node<T> current;
-        if (index < (size / 2)) {
-            current = getNodeByIndexFromHead(index);
-        } else {
-            current = getNodeByIndexFromTail(index);
-        }
-        T oldItem = current.item;
-        current.item = value;
+        checkIndex(index);
+        T oldItem = currentNodePosition(index).item;
+        currentNodePosition(index).item = value;
         return oldItem;
     }
 
     @Override
     public T remove(int index) {
-        checkIndexExist(index);
-        if (index < (size / 2)) {
-            return unlink(getNodeByIndexFromHead(index));
-        }
-        return unlink(getNodeByIndexFromTail(index));
+        checkIndex(index);
+        return unlink(currentNodePosition(index));
     }
 
     @Override
@@ -138,14 +122,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void checkIndex(int index) {
+    private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index: "
                     + index + " is out of bounds of size: " + size);
         }
     }
 
-    private void checkIndexExist(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: "
                     + index + " is non existing index");
@@ -166,6 +150,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             currentNode = currentNode.prev;
         }
         return currentNode;
+    }
+    private Node<T> currentNodePosition(int index) {
+        return index < (size / 2) ? getNodeByIndexFromHead(index) : getNodeByIndexFromTail(index);
     }
 
     private class Node<T> {
