@@ -151,6 +151,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return currentNode;
     }
+
     private Node<T> currentNodePosition(int index) {
         return index < (size / 2) ? getNodeByIndexFromHead(index) : getNodeByIndexFromTail(index);
     }
