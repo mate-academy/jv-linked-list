@@ -23,18 +23,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         validateAddIndex(index);
+        if (index == size) {
+            add(value);
+            return;
+        }
         Node<T> newNode = new Node<>(null, value, null);
-        if (size == 0) {
-            first = newNode;
-            last = newNode;
-        } else if (index == 0) {
+        if (index == 0) {
             newNode.next = first;
             first.prev = newNode;
             first = newNode;
-        } else if (index == size) {
-            last.next = newNode;
-            newNode.prev = last;
-            last = newNode;
         } else {
             Node<T> node = getNodeByIndex(index);
             newNode.prev = node.prev;
@@ -63,13 +60,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         validateIndex(index);
         Node<T> node = getNodeByIndex(index);
-        if (node != null) {
-            final T replacedElement = node.item;
-            node.item = value;
-            return replacedElement;
-        } else {
-            return null;
-        }
+        final T replacedElement = node.item;
+        node.item = value;
+        return replacedElement;
     }
 
     @Override
@@ -112,36 +105,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNodeByIndex(int index) {
         int middle = size / 2;
         if (index <= middle) {
-            return iterateFromStart(index, middle);
-        } else {
-            return iterateFromEnd(index, middle);
+            return iterateFromStart(index);
         }
+        return iterateFromEnd(index);
     }
 
-    private Node<T> iterateFromStart(int index, int middle) {
-        Node<T> node;
-        node = first;
-        for (int i = 0; i <= middle; i++) {
-            if (index == i) {
-                return node;
-            } else {
-                node = node.next;
-            }
+    private Node<T> iterateFromStart(int index) {
+        Node<T> node = first;
+        for (int i = 0; i < index; i++) {
+            node = node.next;
         }
-        return null;
+        return node;
     }
 
-    private Node<T> iterateFromEnd(int index, int middle) {
+    private Node<T> iterateFromEnd(int index) {
         Node<T> node;
         node = last;
-        for (int i = size - 1; i > middle; i--) {
-            if (index == i) {
-                return node;
-            } else {
-                node = node.prev;
-            }
+        for (int i = size - 1; i > index; i--) {
+            node = node.prev;
         }
-        return null;
+        return node;
     }
 
     private Node<T> getNodeByValue(T object) {
@@ -183,7 +166,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        Node(Node<T> prev, T element, Node<T> next) {
+        private Node(Node<T> prev, T element, Node<T> next) {
             this.item = element;
             this.next = next;
             this.prev = prev;
