@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -26,10 +25,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndex(index);
-        if (index == size && index != 0) {
-            addLast(value);
-        } else if (index == 0) {
+        if (index == 0) {
             addFirst(value);
+        } else if (index == size) {
+            addLast(value);
         } else if (size / 2 >= index) {
             addFromHead(value, index);
         } else {
@@ -58,7 +57,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node<T> current = findNode(index, null);
+        Node<T> current = findNodeByIndex(index);
         removeNode(current);
         return current.item;
     }
@@ -108,27 +107,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
-    private Node<T> findNode(int index, T value) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(INVALID_INDEX_EXCEPTION + index);
-        }
-
+    private Node<T> findNodeByIndex(int index) {
+        checkIndexGet(index);
         Node<T> current = head;
-        if (value != null) {
-            while (current != null) {
-                if (Objects.equals(current.item, value)) {
-                    return current;
-                }
-                current = current.next;
-            }
-        } else {
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
-            return current;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
         }
-
-        throw new NoSuchElementException(OBJECT_NOT_FOUND_EXCEPTION + value);
+        return current;
     }
 
     private T setFromHead(T value, int index) {
