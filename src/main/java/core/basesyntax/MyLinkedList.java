@@ -116,39 +116,43 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T setFromHead(T value, int index) {
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
+        Node<T> current = headIteration(index);
         T oldValue = current.item;
         current.item = value;
         return oldValue;
     }
 
     private T setFromTail(T value, int index) {
-        Node<T> current = tail;
-        for (int i = size - 1; i > index; i--) {
-            current = current.prev;
-        }
+        Node<T> current = tailIteration(index);
         T oldValue = current.item;
         current.item = value;
         return oldValue;
     }
 
     private T getFromHead(int index) {
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
+        Node<T> current = headIteration(index);
         return current.item;
     }
 
     private T getFromTail(int index) {
+        Node<T> current = tailIteration(index);
+        return current.item;
+    }
+
+    private Node<T> headIteration(int index) {
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        return current;
+    }
+
+    private Node<T> tailIteration(int index) {
         Node<T> current = tail;
         for (int i = size - 1; i > index; i--) {
             current = current.prev;
         }
-        return current.item;
+        return current;
     }
 
     private void addFromHead(T value, int index) {
