@@ -5,7 +5,6 @@ import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String INVALID_INDEX_EXCEPTION = "Invalid index: ";
-    private static final String OBJECT_NOT_FOUND_EXCEPTION = "Object not found: ";
     private int size;
     private Node<T> head;
     private Node<T> tail;
