@@ -40,7 +40,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         nextNode.prev = node;
         size++;
-        return;
     }
 
     @Override
@@ -80,7 +79,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode = firstNode;
         int i = 0;
         while (currentNode != null) {
-            if ((currentNode.value != null && currentNode.value.equals(object))
+            if (currentNode.value != null && currentNode.value.equals(object)
                     || currentNode.value == object) {
                 unlink(currentNode);
                 size--;
@@ -122,14 +121,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findByIndex(int index) {
-        Node<T> currentNode = firstNode;
-        int i = 0;
-        while (currentNode != null) {
-            if (i == index) {
-                return currentNode;
+        if (index <= (size - 1) / 2) {
+            Node<T> currentNode = firstNode;
+            for (int j = 0; j <= (size - 1) / 2; j++) {
+                if (j == index) {
+                    return currentNode;
+                }
+                currentNode = currentNode.next;
             }
-            currentNode = currentNode.next;
-            i++;
+        } else {
+            Node<T> currentNode = lastNode;
+            for (int j = size - 1; j >= (size - 1) / 2; j--) {
+                if (j == index) {
+                    return currentNode;
+                }
+                currentNode = currentNode.prev;
+            }
         }
         return null;
     }
