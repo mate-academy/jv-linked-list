@@ -8,22 +8,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    private class Node<T> {
-        private T data;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node<T> prev, T data, Node<T> next) {
-            this.data = data;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     @Override
     public void add(T value) {
         linkLast(value);
-        size++;
     }
 
     @Override
@@ -37,7 +24,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             linkAtMiddle(value, index);
         }
-        size++;
     }
 
     @Override
@@ -49,14 +35,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-
         return getNodeByIndex(index).data;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> node = getNodeByIndex(index);
         T oldData = node.data;
         node.data = value;
@@ -65,7 +48,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         var node = getNodeByIndex(index);
         unlink(node);
         return node.data;
@@ -96,7 +78,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private class Node<T> {
+        private T data;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T data, Node<T> next) {
+            this.data = data;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+
     private Node<T> getNodeByIndex(int index) {
+        checkIndex(index);
+
         Node<T> current;
         if (index < (size >> 1)) {
             current = head;
@@ -136,6 +132,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             l.next = newNode;
         }
+        size++;
     }
 
     private void linkFirst(T value) {
@@ -147,6 +144,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             oldHead.prev = newHead;
         }
+        size++;
     }
 
     private void linkAtMiddle(T value, int index) {
@@ -154,6 +152,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(current.prev, value, current);
         current.prev.next = newNode;
         current.prev = newNode;
+        size++;
     }
 
     private void checkIndexForAdd(int index) {
