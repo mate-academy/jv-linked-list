@@ -14,7 +14,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index, size + 1);
         if (index == 0) {
             addFirstEntry(value);
         } else if (index == size) {
@@ -33,13 +32,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, size);
         return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index, size);
         Node<T> setNode = findNodeByIndex(index);
         T element = setNode.item;
         setNode.item = value;
@@ -48,7 +45,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index, size);
         Node<T> removeNode = findNodeByIndex(index);
         unlink(removeNode);
         return removeNode.item;
@@ -78,7 +74,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkIndex(int index, int size) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index:" + index + ", Size:"
                                                 + size);
@@ -133,6 +129,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
+        checkIndex(index);
         if (index < size / 2) {
             return scrollFirstPart(head, index);
         }
