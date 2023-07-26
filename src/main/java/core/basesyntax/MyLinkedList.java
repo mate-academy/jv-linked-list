@@ -49,10 +49,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        T valueRemoved = getElementOnIndex(index).value;
-        remove(index);
-        add(value, index);
-        return valueRemoved;
+        Node<T> node = getElementOnIndex(index);
+        T prevValue = node.value;
+        node.value = value;
+        return prevValue;
     }
 
     @Override
