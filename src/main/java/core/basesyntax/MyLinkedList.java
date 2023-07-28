@@ -40,8 +40,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T node : list) {
+            add(node);
         }
     }
 
@@ -53,7 +53,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        isIndexValid(index);
         Node<T> currentNode = getNode(index);
         T oldValue = currentNode.value;
         currentNode.value = value;
@@ -90,7 +89,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void isIndexValid(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Can't get value by index: " + index);
+            throw new IndexOutOfBoundsException("Can't get value by index: " + index
+                    + " for size: " + size);
         }
     }
 
@@ -130,11 +130,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> prev;
         private Node<T> next;
 
-        public Node(T value) {
+        Node(T value) {
             this.value = value;
         }
 
-        public Node(Node<T> prev, T value, Node<T> next) {
+        Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
             this.value = value;
             this.next = next;
