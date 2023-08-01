@@ -4,22 +4,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
-    private Node<T> head; // The first node of the linked list
-    private Node<T> tail; // The last node of the linked list
+    private Node<T> head;
+    private Node<T> tail;
     private int size; // The number of elements in the linked list
-
-    private static class Node<T> {
-        private T value; // The value stored in the node
-        private Node<T> prev; // Reference to the previous node
-        private Node<T> next; // Reference to the next node
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
 
     @Override
     public void add(T value) {
@@ -70,16 +57,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     // Helper method to get the node at the specified index
-    private Node<T> getNode(int index) {
-        checkIndex(index); // Check if the index is valid
-        int count = 0;
-        Node<T> node = head;
-        while (count != index) {
-            node = node.next;
-            count++;
-        }
-        return node;
-    }
 
     @Override
     public T set(T value, int index) {
@@ -115,11 +92,39 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size;
     }
 
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    private static class Node<T> {
+        private T value; // The value stored in the node
+        private Node<T> prev; // Reference to the previous node
+        private Node<T> next; // Reference to the next node
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
+    }
+
     // Helper method to check if the index is valid
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Non-existent list index");
         }
+    }
+
+    private Node<T> getNode(int index) {
+        checkIndex(index); // Check if the index is valid
+        int count = 0;
+        Node<T> node = head;
+        while (count != index) {
+            node = node.next;
+            count++;
+        }
+        return node;
     }
 
     // Helper method to unlink (remove) a node from the linked list
@@ -134,10 +139,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             currentNode.next.prev = currentNode.prev;
         }
         size--;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
     }
 }
