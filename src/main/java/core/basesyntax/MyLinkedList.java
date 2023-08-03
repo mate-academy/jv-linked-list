@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -10,11 +9,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(null, value, null);
+        Node<T> newNode = new Node<>(tail, value, null);
         if (size == 0) {
             head = newNode; // If the list is empty, set the new node as head
         } else {
-            newNode.prev = tail; // Connect the new node to the current tail
             tail.next = newNode; // Connect the current tail to the new node
         }
         tail = newNode; // Update the tail to the new node
@@ -56,11 +54,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return getNode(index).value; // Get the value at the specified index
     }
 
-    // Helper method to get the node at the specified index
-
     @Override
     public T set(T value, int index) {
-        checkIndex(index); // Check if the index is valid
         Node<T> node = getNode(index);
         T replacedValue = node.value;
         node.value = value; // Set the new value at the specified index
@@ -78,7 +73,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> currentNode = head;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(currentNode.value, object)) {
+            if ((currentNode == object) || (currentNode != null && currentNode.equals(object))) {
                 unlink(currentNode); // Remove the node with the specified value
                 return true;
             }
@@ -118,13 +113,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         checkIndex(index); // Check if the index is valid
-        int count = 0;
-        Node<T> node = head;
-        while (count != index) {
-            node = node.next;
-            count++;
+        Node<T> currentNode = head;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
         }
-        return node;
+        return currentNode;
     }
 
     // Helper method to unlink (remove) a node from the linked list
