@@ -6,15 +6,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
 
-    private static class Node<T> {
-        private T data;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(T data, Node<T> prev, Node<T> next) {
-            this.data = data;
-            this.prev = prev;
-            this.next = next;
+    private void checkIndex(int index) {
+        if (index < 0 || index > size()) {
+            throw new IndexOutOfBoundsException("Index out of range: " + index);
         }
     }
 
@@ -31,9 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size()) {
-            throw new IndexOutOfBoundsException("Index out of range: " + index);
-        }
+        checkIndex(index);
 
         if (index == size()) {
             add(value);
@@ -114,9 +106,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        if (index < 0 || index >= size()) {
-            throw new IndexOutOfBoundsException("Index out of range: " + index);
-        }
+        checkIndex(index);
 
         Node<T> current;
         int currentIndex;
@@ -154,6 +144,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             nextNode.prev = prevNode;
         } else {
             last = prevNode;
+        }
+    }
+
+    private static class Node<T> {
+        private T data;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(T data, Node<T> prev, Node<T> next) {
+            this.data = data;
+            this.prev = prev;
+            this.next = next;
         }
     }
 }
