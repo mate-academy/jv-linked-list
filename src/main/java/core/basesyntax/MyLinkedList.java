@@ -1,18 +1,11 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node head;
     private Node tail;
     private int size;
-
-    public MyLinkedList() {
-        head = null;
-        tail = null;
-        size = 0;
-    }
 
     @Override
     public void add(T data) {
@@ -21,23 +14,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T data, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index out of range");
-        }
         if (index == size) {
             addLast(data);
             return;
         }
-
-        Node newNode = new Node(data);
         if (index == 0) {
+            Node newNode = new Node(null, data, null);
             newNode.next = head;
             head.prev = newNode;
             head = newNode;
         } else {
             Node prevNode = getNode(index - 1);
-            newNode.next = prevNode.next;
-            newNode.prev = prevNode;
+            Node newNode = new Node(prevNode, data, prevNode.next);
             prevNode.next.prev = newNode;
             prevNode.next = newNode;
         }
@@ -53,9 +41,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of range");
-        }
         return getNode(index).data;
     }
 
@@ -72,20 +57,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         final Node node = getNode(index);
         final T removedValue = node.data;
         unlink(node);
-        size--;
         return removedValue;
     }
 
     @Override
     public boolean remove(T object) {
-        Node current = head;
-        while (current != null) {
-            if (Objects.equals(current.data, object)) {
+        for (Node current = head; current != null; current = current.next) {
+            if ((object == null && current.data == null) || (current.data != null
+                    && current.data.equals(object))) {
                 unlink(current);
-                size--;
                 return true;
             }
-            current = current.next;
         }
         return false;
     }
@@ -105,13 +87,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node prev;
         private Node next;
 
-        public Node(T data) {
+        public Node(Node prev, T data, Node next) {
+            this.prev = prev;
             this.data = data;
+            this.next = next;
         }
     }
 
     private void addLast(T data) {
-        Node newNode = new Node(data);
+        Node newNode = new Node(null, data, null);
         if (isEmpty()) {
             head = newNode;
         } else {
@@ -126,7 +110,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index out of range");
         }
-
         Node current;
         if (index < size / 2) {
             current = head;
@@ -154,5 +137,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             tail = node.prev;
         }
+        size--;
     }
 }
