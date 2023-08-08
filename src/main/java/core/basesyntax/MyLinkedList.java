@@ -19,8 +19,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         if (index == 0) {
-            Node newNode = new Node(null, data, null);
-            newNode.next = head;
+            Node newNode = new Node(null, data, head);
             head.prev = newNode;
             head = newNode;
         } else {
@@ -95,12 +94,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addLast(T data) {
-        Node newNode = new Node(null, data, null);
+        Node newNode = new Node(tail, data, null);
         if (isEmpty()) {
             head = newNode;
         } else {
             tail.next = newNode;
-            newNode.prev = tail;
         }
         tail = newNode;
         size++;
@@ -108,7 +106,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node getNode(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of range");
+            throw new IndexOutOfBoundsException("Index - " + index
+                    + " is incorrect. Check Your index");
         }
         Node current;
         if (index < size / 2) {
