@@ -25,7 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        isIndexValid(index);
+        get(index);
         Node<T> oldNode = getNode(index);
         Node<T> newNode = new Node<>(oldNode.prev, value, oldNode);
         if (index == 0) {
@@ -52,7 +52,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        isIndexValid(index);
+        get(index);
         Node<T> currentNode = getNode(index);
         T oldValue = currentNode.value;
         currentNode.value = value;
