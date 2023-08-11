@@ -55,41 +55,33 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return oldValue;
     }
 
-    @Override
-    public T remove(int index) {
-        Node<T> removedNode = getNodeByIndex(index);
-        T value = removedNode.value;
-        if (size == 1) {
-            head = null;
-            tail = null;
-        } else if (index == 0) {
-            head = removedNode.next;
-            head.prev = null;
-        } else if (index == size - 1) {
-            tail = removedNode.prev;
-            tail.next = null;
+    private void unlink(Node<T> node) {
+        Node<T> prevNode = node.prev;
+        Node<T> nextNode = node.next;
+        if (prevNode == null) {
+            head = nextNode;
         } else {
-            Node<T> prev = removedNode.prev;
-            Node<T> next = removedNode.next;
-            prev.next = next;
-            next.prev = prev;
+            prevNode.next = nextNode;
+        }
+        if (nextNode == null) {
+            tail = prevNode;
+        } else {
+            nextNode.prev = prevNode;
         }
         size--;
-        return value;
     }
 
-    @Override
-    public boolean remove(T object) {
-        Node<T> nodeToRemove = head;
-        int index = 0;
-        while (nodeToRemove != null) {
-            if (nodeToRemove.value == object || (nodeToRemove.value
-                    != null && nodeToRemove.value.equals(object))) {
-                remove(index);
-                return true;
-            }
-            nodeToRemove = nodeToRemove.next;
-            index++;
+    public T remove(int index) {
+        Node<T> nodeToRemove = getNodeByIndex(index);
+        unlink(nodeToRemove);
+        return nodeToRemove.value;
+    }
+
+    public boolean remove(T value) {
+        Node<T> nodeToRemove = findNodeByValue(value);
+        if (nodeToRemove != null) {
+            unlink(nodeToRemove);
+            return true;
         }
         return false;
     }
@@ -102,6 +94,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private Node<T> findNodeByValue(T value) {
+        for (Node<T> current = head; current != null; current = current.next) {
+            if ((value == null && current.value == null) || (value != null && value.equals(current.value))) {
+                return current;
+            }
+        }
+        return null;
     }
 
     private Node<T> getNodeByIndex(int index) {
