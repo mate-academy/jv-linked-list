@@ -98,7 +98,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNodeByValue(T value) {
         for (Node<T> current = head; current != null; current = current.next) {
-            if ((value == null && current.value == null) || (value != null && value.equals(current.value))) {
+            if ((value == null && current.value == null)
+                    || (value != null && value.equals(current.value))) {
                 return current;
             }
         }
