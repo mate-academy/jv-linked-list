@@ -106,7 +106,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeByIndex(int index) {
         if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Index:" + index + " is bigger than linked list size!");
+            throw new IndexOutOfBoundsException("Index:"
+                    + index + " is bigger than linked list size!");
         }
         Node<T> current = head;
         for (int i = 0; i < index; i++) {
@@ -114,7 +115,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return current;
     }
-
 
     private void addFirst(T value) {
         Node<T> newHead = new Node<>(null, value, head);
