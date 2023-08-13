@@ -8,26 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node last;
     private int size;
 
-    private class Node<T> {
-        private T data;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(T data, Node<T> prev, Node<T> next) {
-            this.data = data;
-            this.prev = prev;
-            this.next = next;
-        }
-
-        public T getData() {
-            return data;
-        }
-
-        public void setData(T data) {
-            this.data = data;
-        }
-    }
-
     @Override
     public void add(T value) {
         if (first == null) {
@@ -76,25 +56,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return getNode(index).data;
     }
 
-    private Node<T> getNode(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
-        if (index < size / 2) {
-            Node<T> current = first;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
-            return current;
-        } else {
-            Node<T> current = last;
-            for (int i = size - 1; i > index; i--) {
-                current = current.prev;
-            }
-            return current;
-        }
-    }
-
     @Override
     public T set(T value, int index) {
         Node<T> node = getNode(index);
@@ -126,6 +87,55 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return false;
     }
 
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    private class Node<T> {
+        private T data;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(T data, Node<T> prev, Node<T> next) {
+            this.data = data;
+            this.prev = prev;
+            this.next = next;
+        }
+
+        public T getData() {
+            return data;
+        }
+
+        public void setData(T data) {
+            this.data = data;
+        }
+    }
+
+    private Node<T> getNode(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        if (index < size / 2) {
+            Node<T> current = first;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+            return current;
+        } else {
+            Node<T> current = last;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
+            return current;
+        }
+    }
+
     private void unlink(Node<T> node) {
         Node<T> prevNode = node.prev;
         Node<T> nextNode = node.next;
@@ -141,15 +151,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             last = prevNode;
         }
         size--;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
     }
 }
