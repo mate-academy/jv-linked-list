@@ -5,70 +5,45 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
-    private int size = 0;
+    private int size;
 
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(tail, value, null);
         if (tail == null) {
             head = newNode;
+            tail = newNode;
+            head.next = tail;
+            tail.prev = head;
         } else {
             tail.next = newNode;
+            tail = newNode;
         }
-        tail = newNode;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
         checkAddIndex(index);
-        if (index == 0 && head != null) {
-            Node<T> newNode = new Node<>(null, value, head);
-            head.prev = newNode;
+        if (index == size) {
+            add(value);
+            return;
+        }
+        Node<T> currentNode = getNodeByIndex(index);
+        Node<T> previous = currentNode.prev;
+        Node<T> newNode = new Node<>(previous, value, currentNode);
+        previous.next = newNode;
+        currentNode.prev = newNode;
+        if (index == 0) {
             head = newNode;
-        } else if (index == 0 && head == null) {
-            Node<T> newNode = new Node<>(null, value, null);
-            head = newNode;
-            tail = newNode;
-            head.next = tail;
-            tail.prev = head;
-        } else if (index == size) {
-            Node<T> newNode = new Node<>(tail, value, null);
-            tail.next = newNode;
-            tail = newNode;
-        } else {
-            Node<T> currentNode = getNodeByIndex(index);
-            Node<T> previous = currentNode.prev;
-            Node<T> newNode = new Node<>(previous, value, currentNode);
-            previous.next = newNode;
-            currentNode.prev = newNode;
         }
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (tail == null) {
-            Node<T> firstNode = new Node<>(null, list.get(0), null);
-            head = firstNode;
-            tail = firstNode;
-            head.next = tail;
-            tail.prev = head;
-            size++;
-            for (int i = 1; i < list.size(); i++) {
-                T element = list.get(i);
-                Node<T> newNode = new Node<>(tail, element, null);
-                tail.next = newNode;
-                tail = newNode;
-                size++;
-            }
-        } else {
-            for (T element : list) {
-                Node<T> newNode = new Node<>(tail, element, null);
-                tail.next = newNode;
-                tail = newNode;
-                size++;
-            }
+        for (T element: list) {
+            add(element);
         }
     }
 
@@ -164,6 +139,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void unlink(Node<T> node) {
         Node<T> previous = node.prev;
         Node<T> next = node.next;
+        if (size == 1) {
+            head = null;
+            tail = null;
+        }
         if (previous != null) {
             previous.next = next;
         }
@@ -181,6 +160,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeByObject(T object) {
         Node<T> node = head;
+        System.out.println("node.item: " + node.item);
         for (int i = 0; i < size; i++) {
             if (node.item == object || (node.item != null && node.item.equals(object))) {
                 return node;
