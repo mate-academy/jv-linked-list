@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private int size = 0;
     private Node<T> first;
     private Node<T> last;
