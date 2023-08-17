@@ -9,12 +9,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node newNode;
+        Node newNode = new Node(tail, value, null);
         if (head == null) {
-            newNode = new Node(null, value, null);
             head = newNode;
         } else {
-            newNode = new Node(tail, value, null);
             tail.next = newNode;
         }
         tail = newNode;
@@ -35,7 +33,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             source.previous = toAdd;
             count++;
         }
-
     }
 
     @Override
@@ -129,21 +126,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean unlink(Node node) {
-        if (node != null) {
-            if (node != head && node != tail) {
-                node.previous.next = node.next;
-                node.next.previous = node.previous;
-            }
-            if (node == head) {
-                head = node.next;
-            }
-            if (node == tail) {
-                tail = node.previous;
-            }
-            count--;
-            return true;
+        if (node == null) {
+            return false;
         }
-        return false;
+        if (node == head) {
+            head = node.next;
+        } else {
+            node.previous.next = node.next;
+        }
+        if (node == tail) {
+            tail = node.previous;
+        } else {
+            node.next.previous = node.previous;
+        }
+        count--;
+        return true;
+
     }
 
     private void addToHead(T value) {
