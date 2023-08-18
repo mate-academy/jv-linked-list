@@ -3,19 +3,20 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node head;
-    private Node tail;
+    private Node<T> head;
+    private Node<T> tail;
     private int count;
 
     @Override
     public void add(T value) {
-        Node newNode = new Node(tail, value, null);
-        if (head == null) {
-            head = newNode;
-        } else {
+        Node<T> newNode = new Node<>(tail, value, null);
+        if (tail != null) {
             tail.next = newNode;
         }
         tail = newNode;
+        if (head == null) {
+            head = newNode;
+        }
         count++;
     }
 
@@ -27,8 +28,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == 0) {
             addToHead(value);
         } else {
-            Node source = getNodeByIndex(index);
-            Node toAdd = new Node(source.previous, value, source);
+            Node<T> source = getNodeByIndex(index);
+            Node<T> toAdd = new Node<>(source.previous, value, source);
             source.previous.next = toAdd;
             source.previous = toAdd;
             count++;
@@ -49,7 +50,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndexToGet(index);
-        Node toSet = getNodeByIndex(index);
+        Node<T> toSet = getNodeByIndex(index);
         T oldValue = toSet.value;
         toSet.value = value;
         return oldValue;
@@ -58,9 +59,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndexToGet(index);
-        Node toRemove = getNodeByIndex(index);
+        Node<T> toRemove = getNodeByIndex(index);
         unlink(toRemove);
-        return toRemove.value;
+        return (T) toRemove.value;
     }
 
     @Override
@@ -90,31 +91,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node getNodeByIndex(int index) {
+    private Node<T> getNodeByIndex(int index) {
         return index <= size() / 2 ? getNodeFromHead(index) :
                 getNodeFromTail(index);
     }
 
-    private Node getNodeFromTail(int index) {
+    private Node<T> getNodeFromTail(int index) {
         int backCounter = size();
-        Node current = tail;
+        Node<T> current = tail;
         while (--backCounter > index) {
             current = current.previous;
         }
         return current;
     }
 
-    private Node getNodeFromHead(int index) {
+    private Node<T> getNodeFromHead(int index) {
         int counter = 0;
-        Node current = head;
+        Node<T> current = head;
         while (counter++ < index) {
             current = current.next;
         }
         return current;
     }
 
-    private Node getNodeByValue(T value) {
-        Node current = head;
+    private Node<T> getNodeByValue(T value) {
+        Node<T> current = head;
         while (current != null) {
             if (current.value == value || current.value != null
                     && current.value.equals(value)) {
@@ -125,7 +126,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private boolean unlink(Node node) {
+    private boolean unlink(Node<T> node) {
         if (node == null) {
             return false;
         }
@@ -145,18 +146,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addToHead(T value) {
-        Node toAdd = new Node(null, value, head);
+        Node<T> toAdd = new Node<>(null, value, head);
         head.previous = toAdd;
         head = toAdd;
         count++;
     }
 
-    class Node {
-        private Node previous;
+    class Node<T> {
+        private Node<T> previous;
         private T value;
-        private Node next;
+        private Node<T> next;
 
-        public Node(Node previous, T value, Node next) {
+        public Node(Node<T> previous, T value, Node<T> next) {
             this.previous = previous;
             this.value = value;
             this.next = next;
