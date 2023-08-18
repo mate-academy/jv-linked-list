@@ -61,7 +61,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndexToGet(index);
         Node<T> toRemove = getNodeByIndex(index);
         unlink(toRemove);
-        return (T) toRemove.value;
+        return toRemove.value;
     }
 
     @Override
