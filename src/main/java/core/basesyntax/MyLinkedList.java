@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
@@ -14,26 +15,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         Node(T data) {
             this.data = data;
-        }
-
-        public T getData() {
-            return data;
-        }
-
-        public Node<T> getPrev() {
-            return prev;
-        }
-
-        public void setPrev(Node<T> prev) {
-            this.prev = prev;
-        }
-
-        public Node<T> getNext() {
-            return next;
-        }
-
-        public void setNext(Node<T> next) {
-            this.next = next;
         }
     }
 
@@ -55,7 +36,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             insertFirst(newNode);
         } else {
             Node<T> currentNode = getNodeAtIndex(index);
-            Node<T> prevNode = currentNode.getPrev();
+            Node<T> prevNode = currentNode.prev;
             insertNode(newNode, currentNode, prevNode);
         }
 
@@ -71,37 +52,45 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Invalid index");
+        }
         Node<T> node = getNodeAtIndex(index);
-        return node.getData();
+        return node.data;
     }
 
     @Override
     public T set(T value, int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Invalid index");
+        }
         Node<T> node = getNodeAtIndex(index);
-        T oldValue = node.getData();
+        T oldValue = node.data;
         node.data = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Invalid index");
+        }
         Node<T> node = getNodeAtIndex(index);
         unlink(node);
         size--;
-        return node.getData();
+        return node.data;
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> currentNode = first;
         while (currentNode != null) {
-            if (object == null
-                    ? currentNode.getData() == null : object.equals(currentNode.getData())) {
+            if (Objects.equals(object, currentNode.data)) {
                 unlink(currentNode);
                 size--;
                 return true;
             }
-            currentNode = currentNode.getNext();
+            currentNode = currentNode.next;
         }
         return false;
     }
@@ -117,44 +106,41 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void insertNode(Node<T> newNode, Node<T> currentNode, Node<T> prevNode) {
-        prevNode.setNext(newNode);
-        newNode.setPrev(prevNode);
-        newNode.setNext(currentNode);
-        currentNode.setPrev(newNode);
+        prevNode.next = newNode;
+        newNode.prev = prevNode;
+        newNode.next = currentNode;
+        currentNode.prev = newNode;
     }
 
     private Node<T> getNodeAtIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index");
-        }
         Node<T> currentNode = first;
         for (int i = 0; i < index; i++) {
-            currentNode = currentNode.getNext();
+            currentNode = currentNode.next;
         }
         return currentNode;
     }
 
     private void unlink(Node<T> node) {
-        Node<T> prevNode = node.getPrev();
-        Node<T> nextNode = node.getNext();
+        Node<T> prevNode = node.prev;
+        Node<T> nextNode = node.next;
 
         if (prevNode != null) {
-            prevNode.setNext(nextNode);
+            prevNode.next = nextNode;
         } else {
             first = nextNode;
         }
 
         if (nextNode != null) {
-            nextNode.setPrev(prevNode);
+            nextNode.prev = prevNode;
         } else {
             last = prevNode;
         }
     }
 
     private void insertFirst(Node<T> newNode) {
-        newNode.setNext(first);
+        newNode.next = first;
         if (first != null) {
-            first.setPrev(newNode);
+            first.prev = newNode;
         } else {
             last = newNode;
         }
@@ -162,9 +148,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void insertLast(Node<T> newNode) {
-        newNode.setPrev(last);
+        newNode.prev = last;
         if (last != null) {
-            last.setNext(newNode);
+            last.next = newNode;
         } else {
             first = newNode;
         }
