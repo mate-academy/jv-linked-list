@@ -81,13 +81,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndexToGet(int index) {
         if (index < 0 || index >= size()) {
-            throw new IndexOutOfBoundsException("Invalid index");
+            throw new IndexOutOfBoundsException("Invalid index " + index + " for size " + size());
         }
     }
 
     private void checkIndexToAdd(int index) {
         if (index < 0 || index > size()) {
-            throw new IndexOutOfBoundsException("Invalid index");
+            throw new IndexOutOfBoundsException(
+                    String.format("Index %d out of bound for size %d", index, size()));
         }
     }
 
