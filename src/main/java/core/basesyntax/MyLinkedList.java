@@ -95,7 +95,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 unlink(currentNode);
                 return true;
             }
-            
+
             currentNode = currentNode.next;
         } while (currentNode != null);
 
