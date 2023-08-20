@@ -8,7 +8,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    public static class Node<T> {
+    private static class Node<T> {
         private T items;
         private Node<T> next;
         private Node<T> prev;
@@ -53,9 +53,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             newNode.prev = tail;
             tail = newNode;
         } else {
-            Node<T> current = head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
+            Node<T> current;
+            if (index <= size / 2) {
+                current = head;
+                for (int i = 0; i < index; i++) {
+                    current = current.next;
+                }
+            } else {
+                current = tail;
+                for (int i = size - 1; i > index; i--) {
+                    current = current.prev;
+                }
             }
             newNode.next = current;
             newNode.prev = current.prev;
