@@ -75,7 +75,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         T oldValue;
 
         oldValue = node.value;
-        updateHeadAndTail(node, index);
         unlink(node);
 
         return oldValue;
@@ -83,7 +82,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        int currentIndex = 0;
         Node<T> currentNode = this.head;
 
         if (this.size == 0) {
@@ -94,12 +92,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if ((object == null)
                     ? (currentNode.value == null)
                     : (object.equals(currentNode.value))) {
-                updateHeadAndTail(currentNode, currentIndex);
                 unlink(currentNode);
                 return true;
             }
-
-            currentIndex++;
+            
             currentNode = currentNode.next;
         } while (currentNode != null);
 
@@ -117,6 +113,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> node) {
+        if (node == head) {
+            head = node.next;
+        }
+
+        if (node == tail) {
+            tail = tail.prev;
+        }
 
         if (node.prev != null) {
             node.prev.next = node.next;
@@ -130,33 +133,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        boolean headOrTail;
+        boolean iterateFromHead;
 
         if (index < 0 || index >= this.size) {
             throw new IndexOutOfBoundsException("Invalid element index!");
         }
 
-        headOrTail = index <= size / 2;
+        iterateFromHead = index <= size / 2;
 
-        int currentIndex = (headOrTail) ? (0) : (size - 1);
-        Node<T> result = (headOrTail) ? (head) : (tail);
+        int currentIndex = (iterateFromHead) ? (0) : (size - 1);
+        Node<T> result = (iterateFromHead) ? (head) : (tail);
 
         while (currentIndex != index) {
-            result = (headOrTail) ? (result.next) : (result.prev);
-            currentIndex = (headOrTail) ? (currentIndex + 1) : (currentIndex - 1);
+            result = (iterateFromHead) ? (result.next) : (result.prev);
+            currentIndex = (iterateFromHead) ? (currentIndex + 1) : (currentIndex - 1);
         }
 
         return result;
-    }
-
-    private void updateHeadAndTail(Node<T> node, int index) {
-        if (index == this.size - 1) {
-            tail = node.prev;
-        }
-
-        if (index == 0) {
-            head = node.next;
-        }
     }
 
     private class Node<E> {
