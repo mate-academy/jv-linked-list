@@ -91,7 +91,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkRangeForIndex(int index) {
         if (index != 0 && (index < 0 || index >= size)) {
-            throw new IndexOutOfBoundsException("The index is not valid");
+            throw new IndexOutOfBoundsException("The index " + index
+                    + " is not valid for size: " + size);
         }
     }
 
