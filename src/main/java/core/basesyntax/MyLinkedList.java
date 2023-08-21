@@ -8,18 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    private static class Node<T> {
-        private T items;
-        private Node<T> next;
-        private Node<T> prev;
-
-        private Node(Node<T> prev, T items, Node<T> next) {
-            this.prev = prev;
-            this.items = items;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> node = new Node<>(tail, value, null);
@@ -84,25 +72,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        Node<T> node = head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
-        }
-        return (T) node.items;
+        Node<T> node = getNodeAtIndex(index);
+        return node.items;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> node = head;
-
-        for (int i = 0; i < index; i++) {
-            node = node.next;
-        }
-
+        Node<T> node = getNodeAtIndex(index);
         T oldValue = node.items;
         node.items = value;
-
         return oldValue;
     }
 
@@ -175,6 +154,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private static class Node<T> {
+        private T items;
+        private Node<T> next;
+        private Node<T> prev;
+
+        private Node(Node<T> prev, T items, Node<T> next) {
+            this.prev = prev;
+            this.items = items;
+            this.next = next;
+        }
+    }
+
+    private Node<T> getNodeAtIndex(int index) {
+        Node<T> node = head;
+        for (int i = 0; i < index; i++) {
+            node = node.next;
+        }
+        return node;
     }
 
     private void checkIndex(int index) {
