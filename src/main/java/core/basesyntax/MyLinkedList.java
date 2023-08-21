@@ -55,45 +55,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkRangeForIndex(index);
-        Node<T> x = getElement(index);
-        T oldValue = x.value;
-        x.value = value;
+        Node<T> node = getElement(index);
+        T oldValue = node.value;
+        node.value = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
         checkRangeForIndex(index);
-        Node<T> x = getElement(index);
-        if (x.prev == null) {
-            head = x.next;
-        } else {
-            x.prev.next = x.next;
-        }
-        if (x.next == null) {
-            tail = x.prev;
-        } else {
-            x.next.prev = x.prev;
-        }
-        size--;
-        return x.value;
+        return unlink(getElement(index)).value;
     }
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (int i = 0; i < size; i++) {
-                if (getElement(i).value == null) {
-                    remove(i);
-                    return true;
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (object.equals(getElement(i).value)) {
-                    remove(i);
-                    return true;
-                }
+        for (Node<T> node = head; node != null; node = node.next) {
+            if (node.value == object || (object != null
+                    && object.equals(node.value))) {
+                unlink(node);
+                return true;
             }
         }
         return false;
@@ -116,11 +96,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getElement(int index) {
-        Node<T> x = head;
+        Node<T> node = head;
         for (int i = 0; i < index; i++) {
-            x = x.next;
+            node = node.next;
         }
-        return x;
+        return node;
+    }
+
+    private Node<T> unlink(Node<T> node) {
+        if (node.prev == null) {
+            head = node.next;
+        } else {
+            node.prev.next = node.next;
+        }
+        if (node.next == null) {
+            tail = node.prev;
+        } else {
+            node.next.prev = node.prev;
+        }
+        size--;
+        return node;
     }
 
     private static class Node<T> {
