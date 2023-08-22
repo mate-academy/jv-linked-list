@@ -7,19 +7,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    static class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node<T> next;
         private Node<T> prev;
 
-        public Node(T value) {
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
             this.value = value;
+            this.next = next;
         }
     }
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
+        Node<T> prev = tail;
+        Node<T> newNode = new Node<>(prev, value, null);
         if (head == null) {
             head = tail = newNode;
         } else {
@@ -31,33 +34,36 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (isIndexLessThenZero(index)) {
-            throw new IndexOutOfBoundsException("Index can't be less then zero");
-        } else if (isIndexGreaterThanSize(index)) {
-            throw new IndexOutOfBoundsException("Index can't be greater then size");
-        } else {
-            Node<T> newNode = new Node<>(value);
-            if (head == null) {
-                head = tail = newNode;
-            } else if (index == 0) {
-                newNode.next = head;
-                head = newNode;
-            } else if (index == size) {
-                tail.next = newNode;
-                tail = newNode;
-            } else {
-                Node<T> node = getNodeByIndex(index - 1);
-                newNode.next = node.next;
-                node.next = newNode;
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index can't be less"
+                    + " then zero or greater then size");
+        }
+        if (index == 0) {
+            head = new Node<>(null, value, head);
+            if (size == 0) {
+                tail = head;
             }
             size++;
+            return;
         }
+        if (index == size) {
+            tail = new Node<>(tail, value, null);
+            tail.prev.next = tail;
+            size++;
+            return;
+        }
+        Node<T> newNode = new Node<>(null, value, null);
+        newNode.prev = getNodeByIndex(index - 1);
+        newNode.next = newNode.prev.next;
+        newNode.prev.next = newNode;
+        newNode.next.prev = newNode;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         for (T value : list) {
-            Node<T> newNode = new Node<>(value);
+            Node<T> newNode = new Node<>(null, value, null);
             if (head == null) {
                 head = tail = newNode;
             } else {
