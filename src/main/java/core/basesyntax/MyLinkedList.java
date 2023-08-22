@@ -5,34 +5,33 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
-    private int count;
+    private int size;
 
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(tail, value, null);
-        if (tail != null) {
-            tail.next = newNode;
-        }
-        tail = newNode;
         if (head == null) {
-            head = newNode;
+            head = tail = newNode;
+        } else {
+            tail.next = newNode;
+            tail = newNode;
         }
-        count++;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndexToAdd(index);
-        if (index == size()) {
+        checkElementIndex(index);
+        if (index == size) {
             add(value);
         } else if (index == 0) {
-            addToHead(value);
+            linkFirst(value);
         } else {
-            Node<T> source = getNodeByIndex(index);
+            Node<T> source = node(index);
             Node<T> toAdd = new Node<>(source.previous, value, source);
             source.previous.next = toAdd;
             source.previous = toAdd;
-            count++;
+            size++;
         }
     }
 
@@ -43,14 +42,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndexToGet(index);
-        return getNodeByIndex(index).value;
+        checkPositionIndex(index);
+        return node(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndexToGet(index);
-        Node<T> toSet = getNodeByIndex(index);
+        checkPositionIndex(index);
+        Node<T> toSet = node(index);
         T oldValue = toSet.value;
         toSet.value = value;
         return oldValue;
@@ -58,58 +57,60 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndexToGet(index);
-        Node<T> toRemove = getNodeByIndex(index);
+        checkPositionIndex(index);
+        Node<T> toRemove = node(index);
         unlink(toRemove);
         return toRemove.value;
     }
 
     @Override
     public boolean remove(T object) {
-        return unlink(getNodeByValue(object));
+        Node<T> toRemove = getNodeByValue(object);
+        if (toRemove == null) {
+            return false;
+        }
+        unlink(toRemove);
+        return true;
     }
 
     @Override
     public int size() {
-        return count;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return size() == 0;
+        return size == 0;
     }
 
-    private void checkIndexToGet(int index) {
-        if (index < 0 || index >= size()) {
+    private void checkPositionIndex(int index) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Invalid index " + index + " for size " + size());
         }
     }
 
-    private void checkIndexToAdd(int index) {
-        if (index < 0 || index > size()) {
+    private void checkElementIndex(int index) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException(
                     String.format("Index %d out of bound for size %d", index, size()));
         }
     }
 
-    private Node<T> getNodeByIndex(int index) {
-        return index <= size() / 2 ? getNodeFromHead(index) :
-                getNodeFromTail(index);
+    private Node<T> node(int index) {
+        return index <= size() / 2 ? getNodeFromHead(index) : getNodeFromTail(index);
     }
 
     private Node<T> getNodeFromTail(int index) {
-        int backCounter = size();
         Node<T> current = tail;
-        while (--backCounter > index) {
+        for (int i = size - 1; i > index; i--) {
             current = current.previous;
         }
         return current;
     }
 
     private Node<T> getNodeFromHead(int index) {
-        int counter = 0;
         Node<T> current = head;
-        while (counter++ < index) {
+        for (int i = 0; i < index; i++) {
             current = current.next;
         }
         return current;
@@ -120,17 +121,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (current != null) {
             if (current.value == value || current.value != null
                     && current.value.equals(value)) {
-                break;
+                return current;
             }
             current = current.next;
         }
-        return current;
+        return null;
     }
 
-    private boolean unlink(Node<T> node) {
-        if (node == null) {
-            return false;
-        }
+    private void unlink(Node<T> node) {
         if (node == head) {
             head = node.next;
         } else {
@@ -141,16 +139,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             node.next.previous = node.previous;
         }
-        count--;
-        return true;
-
+        size--;
     }
 
-    private void addToHead(T value) {
+    private void linkFirst(T value) {
         Node<T> toAdd = new Node<>(null, value, head);
         head.previous = toAdd;
         head = toAdd;
-        count++;
+        size++;
     }
 
     class Node<T> {
