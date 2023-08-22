@@ -87,14 +87,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkPositionIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index " + index + " for size " + size());
+            throw new IndexOutOfBoundsException(outOfBoundMessage(index));
         }
     }
 
     private void checkElementIndex(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(
-                    String.format("Index %d out of bound for size %d", index, size()));
+            throw new IndexOutOfBoundsException(outOfBoundMessage(index));
         }
     }
 
@@ -137,6 +136,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         head.previous = toAdd;
         head = toAdd;
         size++;
+    }
+
+    private String outOfBoundMessage(int index) {
+        return String.format("Index %d out of bound for size %d", index, size);
     }
 
     class Node<T> {
