@@ -9,26 +9,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> node = new Node<>(tail, value, null);
         if (size == 0) {
-            head = node;
-            tail = node;
+            linkFirst(value);
         } else {
-            tail.next = node;
-            tail = node;
+            linkLast(value);
         }
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkSizeAdd(index);
-        if (index == 0 && size == 0 || index > 0 && index == size) {
-            add(value);
+        checkIndexInBoundsStrict(index);
+        if (index == 0) {
+            linkFirst(value);
+        } else if (index > 0 && index == size) {
+            linkLast(value);
         } else {
             link(value, index);
-            size++;
         }
+        size++;
     }
 
     @Override
@@ -40,13 +39,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        checkIndexInBounds(index);
         return find(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
+        checkIndexInBounds(index);
         Node<T> node = find(index);
         T oldValue = node.value;
         node.value = value;
@@ -55,9 +54,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        T oldValue = find(index).value;
-        unlink(find(index));
+        checkIndexInBounds(index);
+        Node<T> node = find(index);
+        T oldValue = node.value;
+        unlink(node);
         size--;
         return oldValue;
     }
@@ -85,15 +85,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkIndex(int index) {
+    private void checkIndexInBounds(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of bounds " + index);
+            throw new IndexOutOfBoundsException(outOfBoundsMessage() + index);
         }
     }
 
-    private void checkSizeAdd(int index) {
+    private void checkIndexInBoundsStrict(int index) {
         if (!(index >= 0 && index <= size)) {
-            throw new IndexOutOfBoundsException("Can't add element to index " + index);
+            throw new IndexOutOfBoundsException(outOfBoundsMessage() + index);
         }
     }
 
@@ -120,34 +120,45 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
+    private void linkFirst(T value) {
+        Node<T> node = new Node<>(null, value, head);
+        if (size > 0) {
+            node.next.prev = node;
+            head = node;
+        } else {
+            head = tail = node;
+        }
+    }
+
+    private void linkLast(T value) {
+        Node<T> node = new Node<>(tail, value, null);
+        tail.next = node;
+        tail = node;
+    }
+
     private void link(T value, int index) {
         Node<T> next = find(index);
         Node<T> newNode = new Node<>(null, value, next);
-        if (size > 0 && index == 0) {
-            next.prev = newNode;
-            head = newNode;
-        } else {
-            newNode.prev = next.prev;
-            next.prev.next = newNode;
-            next.prev = newNode;
-        }
+        newNode.prev = next.prev;
+        next.prev.next = newNode;
+        next.prev = newNode;
     }
 
     private void unlink(Node<T> node) {
         if (node == head) {
-            if (size > 1) {
-                node.next.prev = null;
-                head = node.next;
-            }
-        } else if (node == tail) {
-            if (size > 1) {
-                node.prev.next = null;
-                tail = node.prev;
-            }
+            head = node.next;
         } else {
             node.prev.next = node.next;
+        }
+        if (node == tail) {
+            node.prev = tail;
+        } else {
             node.next.prev = node.prev;
         }
+    }
+
+    private String outOfBoundsMessage() {
+        return "Index out of bounds ";
     }
 
     private static class Node<T> {
