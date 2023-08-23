@@ -7,32 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size;
 
-    private Node<T> getNodeAtIndex(int index) {
-        if (index < size / 2) {
-            Node<T> current = first;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
-            return current;
-        } else {
-            Node<T> current = last;
-            for (int i = size - 1; i > index; i--) {
-                current = current.prev;
-            }
-            return current;
-        }
-    }
-
-    private static class Node<T> {
-        private T data;
-        private Node<T> prev;
-        private Node<T> next;
-
-        Node(T data) {
-            this.data = data;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(value);
@@ -82,19 +56,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
-
+        checkIndex(index);
         return getNodeAtIndex(index).data;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
-
+        checkIndex(index);
         Node<T> node = getNodeAtIndex(index);
         T oldValue = node.data;
         node.data = value;
@@ -103,10 +71,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
-
+        checkIndex(index);
         Node<T> current = getNodeAtIndex(index);
         if (current == first) {
             first = current.next;
@@ -132,26 +97,32 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = first;
         while (current != null) {
             if (object == null ? current.data == null : object.equals(current.data)) {
-                if (current == first) {
-                    first = current.next;
-                    if (first != null) {
-                        first.prev = null;
-                    }
-                } else if (current == last) {
-                    last = current.prev;
-                    if (last != null) {
-                        last.next = null;
-                    }
-                } else {
-                    current.prev.next = current.next;
-                    current.next.prev = current.prev;
-                }
+                unlink(current);
                 size--;
                 return true;
             }
             current = current.next;
         }
         return false;
+    }
+
+    private void unlink(Node<T> node) {
+        Node<T> prevNode = node.prev;
+        Node<T> nextNode = node.next;
+
+        if (prevNode != null) {
+            prevNode.next = nextNode;
+        } else {
+            first = nextNode;
+        }
+
+        if (nextNode != null) {
+            nextNode.prev = prevNode;
+        } else {
+            last = prevNode;
+        }
+        node.prev = null;
+        node.next = null;
     }
 
     @Override
@@ -163,4 +134,38 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean isEmpty() {
         return size == 0;
     }
+
+    private Node<T> getNodeAtIndex(int index) {
+        if (index < size / 2) {
+            Node<T> current = first;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+            return current;
+        } else {
+            Node<T> current = last;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
+            return current;
+        }
+    }
+
+    private static class Node<T> {
+        private T data;
+        private Node<T> prev;
+        private Node<T> next;
+
+        Node(T data) {
+            this.data = data;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Invalid index");
+        }
+    }
+
 }
+
