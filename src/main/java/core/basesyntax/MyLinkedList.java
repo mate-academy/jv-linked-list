@@ -11,7 +11,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> node = new Node<>(tail, value, null);
-        if (head == null && tail == null) {
+        if (head == null) {
             head = tail = node;
         } else {
             node.prev = tail;
@@ -27,17 +27,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkIndex(index);
         Node<T> newNode = new Node<>(null, value, null);
 
         if (index == 0) {
             newNode.next = head;
             head.prev = newNode;
             head = newNode;
-        } else if (index == size) {
-            tail.next = newNode;
-            newNode.prev = tail;
-            tail = newNode;
         } else {
             Node<T> current = getNodeAtIndex(index);
             newNode.next = current;
@@ -51,21 +46,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T item : list) {
+            add(item);
         }
     }
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         Node<T> node = getNodeAtIndex(index);
         return node.items;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> node = getNodeAtIndex(index);
         T oldValue = node.items;
         node.items = value;
@@ -74,7 +67,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> removeNode = getNodeAtIndex(index);
         unlink(removeNode);
         size--;
@@ -119,7 +111,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeAtIndex(int index) {
-        checkIndex(index);
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Invalid index");
+        }
+
         Node<T> current;
         if (index <= size / 2) {
             current = head;
@@ -134,12 +129,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
         return current;
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index");
-        }
     }
 
     private void unlink(Node<T> node) {
