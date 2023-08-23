@@ -5,7 +5,7 @@ import java.util.List;
 public interface MyLinkedListInterface<T> {
     void add(T value);
 
-    void add(T value, int index) throws IndexOutOfBoundsException;
+    void add(T value, int index);
 
     void addAll(List<T> list);
 
