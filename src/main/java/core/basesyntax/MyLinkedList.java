@@ -9,53 +9,41 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> node = new Node<>(tail, value, null);
-        if (tail != null) {
-            tail.next = node;
+        if (isEmpty()) {
+            head = tail = new Node<>(null, value, null);
+            size++;
+        } else {
+            addLast(value);
         }
-        tail = node;
-        if (head == null) {
-            head = node;
-        }
-        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkAddedPosition(index);
+        checkIndexInBoundsStrict(index);
         if (index == 0) {
             addFirst(value);
-            return;
+        } else if (index == size) {
+            addLast(value);
+        } else {
+            addMiddle(value, index);
         }
-        if (index == size) {
-            add(value);
-            return;
-        }
-
-        Node<T> node = findNodeByIndex(index);
-        Node<T> newNode = new Node<>(node.prev, value, node);
-        node.prev.next = newNode;
-        node.prev = newNode;
-        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (T element : list) {
-            add(element);
-        }
+        list.forEach(this::add);
     }
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-        return findNodeByIndex(index).value;
+        checkIndexInBounds(index);
+        return node(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
-        Node<T> node = findNodeByIndex(index);
+        checkIndexInBounds(index);
+        Node<T> node = node(index);
         T oldValue = node.value;
         node.value = value;
         return oldValue;
@@ -63,15 +51,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        Node<T> node = findNodeByIndex(index);
+        checkIndexInBounds(index);
+        Node<T> node = node(index);
         unlink(node);
         return node.value;
     }
 
     @Override
     public boolean remove(T object) {
-        return unlink(findNodeByValue(object));
+        Node<T> node = head;
+        while (node != null) {
+            if (node.value == object || node.value != null && node.value.equals(object)) {
+                unlink(node);
+                return true;
+            }
+            node = node.next;
+        }
+        return false;
     }
 
     @Override
@@ -81,34 +77,40 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return head == null;
+        return size == 0;
     }
 
     private void addFirst(T value) {
-        Node<T> newNode = new Node<>(null, value, head);
-        if (head != null) {
+        if (isEmpty()) {
+            head = tail = new Node<>(null, value, null);
+        } else {
+            Node<T> newNode = new Node<>(null, value, head);
             head.prev = newNode;
+            head = newNode;
         }
-        head = newNode;
-        if (tail == null) {
+        size++;
+    }
+
+    private void addLast(T value) {
+        if (isEmpty()) {
+            head = tail = new Node<>(null, value, null);
+        } else {
+            Node<T> newNode = new Node<>(tail, value, null);
+            tail.next = newNode;
             tail = newNode;
         }
         size++;
     }
 
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
-        }
+    private void addMiddle(T value, int index) {
+        Node<T> node = node(index);
+        Node<T> newNode = new Node<>(node.prev, value, node);
+        node.prev.next = newNode;
+        node.prev = newNode;
+        size++;
     }
 
-    private void checkAddedPosition(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("You can't add value in position " + index);
-        }
-    }
-
-    private Node<T> findNodeByIndex(int index) {
+    private Node<T> node(int index) {
         Node<T> current;
         if (index < size / 2) {
             current = head;
@@ -124,21 +126,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private Node<T> findNodeByValue(T value) {
-        Node<T> node = head;
-        while (node != null) {
-            if (node.value == value || node.value != null && node.value.equals(value)) {
-                break;
-            }
-            node = node.next;
-        }
-        return node;
-    }
-
-    private boolean unlink(Node<T> node) {
-        if (node == null) {
-            return false;
-        }
+    private void unlink(Node<T> node) {
         if (node.prev != null) {
             node.prev.next = node.next;
         } else {
@@ -150,7 +138,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = node.prev;
         }
         size--;
-        return true;
+    }
+
+    private void checkIndexInBounds(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(outOfBoundsMessage() + index);
+        }
+    }
+
+    private void checkIndexInBoundsStrict(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException(outOfBoundsMessage() + index);
+        }
+    }
+
+    private static String outOfBoundsMessage() {
+        return "Index out of bounds: ";
     }
 
     private static class Node<T> {
