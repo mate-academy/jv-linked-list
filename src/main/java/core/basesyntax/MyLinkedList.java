@@ -11,22 +11,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value) {
         if (isEmpty()) {
             head = tail = new Node<>(null, value, null);
-            size++;
         } else {
             addLast(value);
         }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexInBoundsStrict(index);
-        if (index == 0) {
+        if (isEmpty()) {
+            head = tail = new Node<>(null, value, null);
+        } else if (index == 0) {
             addFirst(value);
         } else if (index == size) {
             addLast(value);
         } else {
-            addMiddle(value, index);
+            addAt(value, index);
         }
+        size++;
     }
 
     @Override
@@ -81,33 +84,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addFirst(T value) {
-        if (isEmpty()) {
-            head = tail = new Node<>(null, value, null);
-        } else {
-            Node<T> newNode = new Node<>(null, value, head);
-            head.prev = newNode;
-            head = newNode;
-        }
-        size++;
+        Node<T> newNode = new Node<>(null, value, head);
+        head.prev = newNode;
+        head = newNode;
     }
 
     private void addLast(T value) {
-        if (isEmpty()) {
-            head = tail = new Node<>(null, value, null);
-        } else {
-            Node<T> newNode = new Node<>(tail, value, null);
-            tail.next = newNode;
-            tail = newNode;
-        }
-        size++;
+        Node<T> newNode = new Node<>(tail, value, null);
+        tail.next = newNode;
+        tail = newNode;
     }
 
-    private void addMiddle(T value, int index) {
+    private void addAt(T value, int index) {
         Node<T> node = node(index);
         Node<T> newNode = new Node<>(node.prev, value, node);
         node.prev.next = newNode;
         node.prev = newNode;
-        size++;
     }
 
     private Node<T> node(int index) {
@@ -142,18 +134,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndexInBounds(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(outOfBoundsMessage() + index);
+            throw new IndexOutOfBoundsException(outOfBoundsMessage(index));
         }
     }
 
     private void checkIndexInBoundsStrict(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(outOfBoundsMessage() + index);
+            throw new IndexOutOfBoundsException(outOfBoundsMessage(index));
         }
     }
 
-    private static String outOfBoundsMessage() {
-        return "Index out of bounds: ";
+    private String outOfBoundsMessage(int index) {
+        return "Index out of bounds: " + index;
     }
 
     private static class Node<T> {
