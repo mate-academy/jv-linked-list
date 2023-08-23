@@ -89,13 +89,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head.prev = null;
         } else if (index == size - 1) {
             removedValue = tail.value;
+            tail.prev.next = null;
             tail = tail.prev;
-            tail.next = null;
         } else {
             Node<T> previous = getNodeByIndex(index - 1);
             removedValue = previous.next.value;
-            previous.next.prev = previous;
             previous.next = previous.next.next;
+            previous.next.prev = previous;
         }
         size--;
         return removedValue;
@@ -137,8 +137,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeByIndex(int index) {
         Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        if (size / 2 >= index) {
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
         return current;
     }
