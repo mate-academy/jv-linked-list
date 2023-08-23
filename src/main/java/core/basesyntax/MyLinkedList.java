@@ -9,13 +9,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        if (size == 0) {
-            addIfSize0(value);
-            return;
-        }
-
-        if (size == 1) {
-            addIfSize1(value);
+        if (size < 2) {
+            addHead(value);
             return;
         }
 
@@ -66,14 +61,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T)takeIndexNode(index).value;
+        return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
 
-        Node indexNode = takeIndexNode(index);
+        Node indexNode = getNode(index);
         T returnNode = (T)indexNode.value;
         indexNode.value = value;
 
@@ -84,7 +79,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
 
-        Node returnNode = takeIndexNode(index);
+        Node returnNode = getNode(index);
         unlink(returnNode);
         size--;
 
@@ -160,13 +155,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void addIfSize0(T value) {
-        head = new Node<>(null, value, null);
-        tail = new Node<>(null, value, null);
-        size++;
-    }
-
-    private void addIfSize1(T value) {
+    private void addHead(T value) {
+        if (size == 0) {
+            head = new Node<>(null, value, null);
+            tail = new Node<>(null, value, null);
+            size++;
+            return;
+        }
         Node node = new Node<>(head, value, null);
         tail = node;
         tail.prev = head;
@@ -181,7 +176,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private Node takeIndexNode(int index) {
+    private Node <T> getNode(int index) {
         Node currentNode = head;
         Node indexNode = null;
         for (int i = 0; i <= index; i++) {
