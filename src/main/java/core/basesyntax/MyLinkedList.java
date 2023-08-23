@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private T value;
-        private Node<T> next;
-        private Node<T> prev;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> prev = tail;
@@ -63,51 +51,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         for (T value : list) {
-            Node<T> newNode = new Node<>(null, value, null);
-            if (head == null) {
-                head = tail = newNode;
-            } else {
-                tail.next = newNode;
-                newNode.prev = tail;
-                tail = newNode;
-            }
-            size++;
+            add(value);
         }
     }
 
     @Override
     public T get(int index) {
-        if (isIndexLessThenZero(index)) {
-            throw new IndexOutOfBoundsException("Index can't be less then zero");
-        } else if (isIndexGreaterThanOrEqualsToSize(index)) {
-            throw new IndexOutOfBoundsException("Index can't be greater then or equal to size");
-        } else {
-            return getNodeByIndex(index).value;
-        }
+        checkIndex(index);
+        return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        if (isIndexLessThenZero(index)) {
-            throw new IndexOutOfBoundsException("Index can't be less then zero");
-        } else if (isIndexGreaterThanOrEqualsToSize(index)) {
-            throw new IndexOutOfBoundsException("Index can't be greater then or equal to size");
-        } else {
-            T oldElement = getNodeByIndex(index).value;
-            Node<T> node = getNodeByIndex(index);
-            node.value = value;
-            return oldElement;
-        }
+        checkIndex(index);
+        T oldElement = getNodeByIndex(index).value;
+        Node<T> node = getNodeByIndex(index);
+        node.value = value;
+        return oldElement;
     }
 
     @Override
     public T remove(int index) {
         T deletedEllement;
-        if (isIndexLessThenZero(index)) {
-            throw new IndexOutOfBoundsException("Index can't be less then zero");
-        } else if (isIndexGreaterThanOrEqualsToSize(index)) {
-            throw new IndexOutOfBoundsException("Index can't be greater then or equal to size");
-        } else if (index == 0) {
+        checkIndex(index);
+        if (index == 0) {
             deletedEllement = head.value;
             head = head.next;
             if (head == null) {
@@ -128,20 +95,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> current = head;
-        int index = -1;
         for (int i = 0; i < size; i++) {
             if (isEqual(current.value, object)) {
-                index = i;
-                break;
+                remove(i);
+                return true;
             }
             current = current.next;
         }
-        if (index == -1) {
-            return false;
-        } else {
-            remove(index);
-            return true;
-        }
+        return false;
     }
 
     @Override
@@ -154,33 +115,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return head == null;
     }
 
-    private Node<T> getNodeByIndex(int index) {
-        if (isIndexLessThenZero(index)) {
-            throw new IndexOutOfBoundsException("Index can't be less then zero");
-        } else if (isIndexGreaterThanOrEqualsToSize(index)) {
-            throw new IndexOutOfBoundsException("Index can't be greater then or equal to size");
-        } else {
-            Node<T> temp = head;
-            for (int i = 0; i < index; i++) {
-                temp = temp.next;
-                if (temp == null) {
-                    throw new IndexOutOfBoundsException("Index is out of bounds");
-                }
-            }
-            return temp;
+    private static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        private Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
         }
     }
 
-    private boolean isIndexLessThenZero(int index) {
-        return index < 0;
-    }
-
-    private boolean isIndexGreaterThanSize(int index) {
-        return index > size;
-    }
-
-    private boolean isIndexGreaterThanOrEqualsToSize(int index) {
-        return index >= size;
+    private Node<T> getNodeByIndex(int index) {
+        checkIndex(index);
+        Node<T> temp = head;
+        for (int i = 0; i < index; i++) {
+            temp = temp.next;
+            if (temp == null) {
+                throw new IndexOutOfBoundsException("Index is out of bounds");
+            }
+        }
+        return temp;
     }
 
     private boolean isEqual(T value1, T value2) {
@@ -188,5 +144,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return value2 == null;
         }
         return value1.equals(value2);
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0) {
+            throw new IndexOutOfBoundsException("Index can't be less then zero");
+        } else if (index >= size) {
+            throw new IndexOutOfBoundsException("Index can't be greater then or equal to size");
+        }
     }
 }
