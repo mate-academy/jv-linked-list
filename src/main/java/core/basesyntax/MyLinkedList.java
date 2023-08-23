@@ -22,7 +22,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndexInBoundsStrict(index);
         if (index == 0) {
             linkFirst(value);
-        } else if (index > 0 && index == size) {
+        } else if (index == size) {
             linkLast(value);
         } else {
             link(value, index);
@@ -87,13 +87,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndexInBounds(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(outOfBoundsMessage() + index);
+            throw new IndexOutOfBoundsException(outOfBoundsMessage(index));
         }
     }
 
     private void checkIndexInBoundsStrict(int index) {
         if (!(index >= 0 && index <= size)) {
-            throw new IndexOutOfBoundsException(outOfBoundsMessage() + index);
+            throw new IndexOutOfBoundsException(outOfBoundsMessage(index));
         }
     }
 
@@ -123,7 +123,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void linkFirst(T value) {
         Node<T> node = new Node<>(null, value, head);
         if (size > 0) {
-            node.next.prev = node;
+            head.prev = node;
             head = node;
         } else {
             head = tail = node;
@@ -151,14 +151,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.prev.next = node.next;
         }
         if (node == tail) {
-            node.prev = tail;
+            tail = node.prev;
         } else {
             node.next.prev = node.prev;
         }
     }
 
-    private String outOfBoundsMessage() {
-        return "Index out of bounds ";
+    private String outOfBoundsMessage(int index) {
+        return "Index out of bounds " + index;
     }
 
     private static class Node<T> {
