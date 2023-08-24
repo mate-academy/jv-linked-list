@@ -3,8 +3,8 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node first;
-    private Node last;
+    private Node<T> first;
+    private Node<T> last;
     private int size;
 
     @Override
@@ -100,14 +100,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.data = data;
             this.prev = prev;
             this.next = next;
-        }
-
-        public T getData() {
-            return data;
-        }
-
-        public void setData(T data) {
-            this.data = data;
         }
     }
 
