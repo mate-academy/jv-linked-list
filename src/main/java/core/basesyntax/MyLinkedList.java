@@ -118,13 +118,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private T unlink(int index) {
         if (size == 1) {
             return unlinkTheOne();
-        } else if (index == 0) {
-            return unlinkFirst();
-        } else if (index == size - 1) {
-            return unlinkLast();
-        } else {
-            return unlinkWithin(index);
         }
+        if (index == 0) {
+            return unlinkFirst();
+        }
+        if (index == size - 1) {
+            return unlinkLast();
+        }
+        return unlinkWithin(index);
     }
 
     private T unlinkTheOne() {
@@ -207,8 +208,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
 
         public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
             this.value = value;
+            this.next = next;
         }
     }
 }
-
