@@ -37,13 +37,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
         checkIndex(index);
-        Node currentNode = head.next;
-        Node indexNode = null;
-        for (int i = 0; i < index; i++) {
-            indexNode = currentNode;
-            currentNode = indexNode.next;
-        }
-
+        Node indexNode = getNode(index);
         Node insertNode = new Node(indexNode.prev, value, indexNode);
         indexNode.prev.next = insertNode;
         indexNode.prev = insertNode;
