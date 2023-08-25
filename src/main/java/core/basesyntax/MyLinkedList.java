@@ -24,12 +24,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == size) {
             addAsTail(value);
         } else {
-            Node<T> prev = findByIndex(index - 1);
-            Node<T> node = new Node<>(prev, value, prev.next);
-            prev.next.prev = node;
-            prev.next = node;
-            size++;
+            addInsideList(value, index);
         }
+    }
+
+    private void addInsideList(T value, int index) {
+        Node<T> prev = findByIndex(index - 1);
+        Node<T> node = new Node<>(prev, value, prev.next);
+        prev.next.prev = node;
+        prev.next = node;
+        size++;
     }
 
     @Override
@@ -42,8 +46,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index, size);
-        Node<T> node = findByIndex(index);
-        return node.value;
+        return findByIndex(index).value;
     }
 
     @Override
@@ -58,16 +61,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index, size);
-        T oldValue;
-        if (index == 0) {
-            oldValue = unlink(head);
-        } else if (index == size - 1) {
-            oldValue = unlink(tail);
-        } else {
-            Node<T> node = findByIndex(index);
-            oldValue = unlink(node);
-        }
-        return oldValue;
+        return unlink(findByIndex(index));
     }
 
     @Override
@@ -164,6 +158,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
             this.prev = prev;
         }
-
     }
 }
