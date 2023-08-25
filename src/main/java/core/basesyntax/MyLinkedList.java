@@ -7,7 +7,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    static class Node<T> {
+    private static class Node<T> {
         private Node<T> prev;
         private T element;
         private Node<T> next;
