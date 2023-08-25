@@ -142,12 +142,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> node;
         if (index < size / 2) {
             node = head;
-            for (int i = 0; i < index; index++) {
+            for (int i = 0; i < index; i++) {
                 node = node.next;
             }
         } else {
             node = tail;
-            for (int i = size; i > index; index--) {
+            for (int i = size - 1; i > index; i--) {
                 node = node.prev;
             }
         }
