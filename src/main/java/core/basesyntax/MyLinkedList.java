@@ -143,10 +143,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void connect(T element, int index) {
-        Node<T> newNode = new Node<>(null, element, null);
         Node<T> previous = getNodeByIndex(index - 1);
-        newNode.prev = previous;
-        newNode.next = previous.next;
+        Node<T> newNode = new Node<>(previous, element, previous.next);
         previous.next.prev = newNode;
         previous.next = newNode;
     }
