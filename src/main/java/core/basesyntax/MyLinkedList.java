@@ -40,8 +40,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        T oldValue = getNodeByIndex(index).value;
-        getNodeByIndex(index).value = value;
+        Node<T> newNode = getNodeByIndex(index);
+        T oldValue = newNode.value;
+        newNode.value = value;
         return oldValue;
     }
 
@@ -104,13 +105,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int getIndexIfContains(T object) {
         int index = -1;
         Node<T> current = head;
-        int iteration = 0;
-        while (current != null) {
+        for (int i = 0; i < size; i++) {
             if (current.value == object || current.value != null && current.value.equals(object)) {
-                return iteration;
+                return i;
             }
             current = current.next;
-            iteration++;
         }
         return index;
     }
@@ -156,10 +155,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private T unlinkWithin(int index) {
         T removedValue;
-        Node<T> previous = getNodeByIndex(index - 1);
-        removedValue = previous.next.value;
-        previous.next = previous.next.next;
-        previous.next.prev = previous;
+        Node<T> removedNode = getNodeByIndex(index);
+        removedValue = removedNode.value;
+        removedNode.next.prev = removedNode.prev;
+        removedNode.prev.next = removedNode.next;
         size--;
         return removedValue;
     }
