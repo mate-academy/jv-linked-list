@@ -8,9 +8,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
 
     static class Node<T> {
-        Node<T> prev;
-        T element;
-        Node<T> next;
+        private Node<T> prev;
+        private T element;
+        private Node<T> next;
 
         public Node(Node<T> prev, T element, Node<T> next) {
             this.prev = prev;
@@ -39,7 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             connect(value, index);
         }
-        size ++;
+        size++;
     }
 
     @Override
@@ -77,7 +77,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if (current.element == object || (current.element != null && current.element.equals(object))) {
+            if (current.element == object || (current.element != null
+                    && current.element.equals(object))) {
                 unlink(current);
                 size--;
                 return true;
