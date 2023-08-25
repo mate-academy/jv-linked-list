@@ -7,7 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(tail, value, null);
