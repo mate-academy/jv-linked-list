@@ -73,6 +73,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> current = getNodeAtIndex(index);
+
         if (current == first) {
             first = current.next;
             if (first != null) {
@@ -84,11 +85,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 last.next = null;
             }
         } else {
-            current.prev.next = current.next;
-            current.next.prev = current.prev;
+            unlink(current); // Reuse the unlink logic
         }
         size--;
-
         return current.data;
     }
 
