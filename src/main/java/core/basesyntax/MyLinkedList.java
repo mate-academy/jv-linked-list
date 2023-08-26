@@ -106,7 +106,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     public void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index is wrong" + index);
+            throw new IndexOutOfBoundsException("Index is wrong for add method" + index);
         }
     }
 
