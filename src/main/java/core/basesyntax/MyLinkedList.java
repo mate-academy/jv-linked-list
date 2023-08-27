@@ -106,13 +106,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
         for (int i = 0; i < size; i++) {
             if (current.value != null && current.value.equals(object) || current.value == object) {
-                if (current == head) {
-                    head = head.next;
-                } else if (current == tail) {
-                    tail = tail.previous;
-                } else {
-                    unlink(current);
-                }
+                unlink(current);
                 size--;
                 return true;
             }
@@ -137,9 +131,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void unlink(Node node) {
-        node.previous.next = node.next;
-        node.next.previous = node.previous;
+    private void unlink(Node current) {
+        if (current == head) {
+            head = head.next;
+        } else if (current == tail) {
+            tail = tail.previous;
+        } else {
+            current.previous.next = current.next;
+            current.next.previous = current.previous;
+        }
     }
 
     private Node<T> getNodeByIndex(int index) {
