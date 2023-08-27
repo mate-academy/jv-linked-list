@@ -35,8 +35,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        ifIndexOutOfBounds(index, size);
-        if (size <= 1 || index == size) {
+        if (index < 0) {
+            throw new IndexOutOfBoundsException("Index " + index + " is out of range");
+        } else if (size <= 1 || index == size) {
             add(value);
             return;
         } else if (index == 0) {
@@ -51,14 +52,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private Node<T> getNodeByIndex(int index) {
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
-        return current;
-    }
-
     @Override
     public void addAll(List<T> list) {
         for (T entry : list) {
@@ -68,49 +61,32 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        ifIndexOutOfBounds(index, size - 1);
-        if (index == 0) {
-            return head.value;
-        }
-        Node<T> current = getNodeByIndex(index);
-        return current.value;
+        return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        ifIndexOutOfBounds(index, size - 1);
-        T valueToReturn = head.value;
-        if (index == 0) {
-            head.value = value;
-            return valueToReturn;
-        }
         Node<T> current = getNodeByIndex(index);
-        valueToReturn = current.value;
+        T valueToReturn = current.value;
         current.value = value;
         return valueToReturn;
     }
 
     @Override
     public T remove(int index) {
-        ifIndexOutOfBounds(index, size - 1);
         Node<T> current = getNodeByIndex(index);
         T valueToReturn = current.value;
         unlink(current);
-        size--;
         return valueToReturn;
     }
 
     @Override
     public boolean remove(T object) {
-        if (isEmpty()) {
-            return false;
-        }
         Node<T> current = head;
         for (int i = 0; i < size; i++) {
             if (current.value == object || (current.value != null
                     && current.value.equals(object))) {
                 unlink(current);
-                size--;
                 return true;
             }
             current = current.next;
@@ -128,8 +104,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    public void ifIndexOutOfBounds(int index, int upperBound) {
-        if (index < 0 || index > upperBound) {
+    private Node<T> getNodeByIndex(int index) {
+        ifIndexOutOfBounds(index);
+        Node<T> current = index <= size / 2 ? head : tail;
+        if (index <= size / 2) {
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
+        }
+        return current;
+    }
+
+    private void ifIndexOutOfBounds(int index) {
+        if (index < 0 || index > size - 1) {
             throw new IndexOutOfBoundsException("Index " + index + " is out of range");
         }
     }
@@ -147,5 +138,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current.prev.next = current.next;
             current.next.prev = current.prev;
         }
+        size--;
     }
 }
