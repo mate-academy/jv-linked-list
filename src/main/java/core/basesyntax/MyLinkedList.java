@@ -29,10 +29,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == size) {
             addLast(value);
         } else {
-            Node<T> prev = getNodeByIndex(index - 1);
-            Node<T> node = new Node<>(prev, value, prev.next);
-            prev.next.prev = node;
-            prev.next = node;
+            AddEach(value, index);
         }
         size++;
     }
@@ -105,9 +102,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         last = newNode;
     }
 
+    private void AddEach(T value, int index) {
+        Node<T> prev = getNodeByIndex(index - 1);
+        Node<T> node = new Node<>(prev, value, prev.next);
+        prev.next.prev = node;
+        prev.next = node;
+    }
+
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Can't add value by index" + index);
+            throw new IndexOutOfBoundsException("Non-valid index" + index);
         }
     }
 
