@@ -47,18 +47,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail.next = newNode;
             tail = newNode;
         } else {
-            Node<T> current;
-            if (index < size / 2) {
-                current = head;
-                for (int i = 0; i < index; i++) {
-                    current = current.next;
-                }
-            } else {
-                current = tail;
-                for (int i = 0; i < size - index - 1; i++) {
-                    current = current.previous;
-                }
-            }
+            Node<T> current = getNodeByIndex(index);
             newNode.next = current;
             newNode.previous = current.previous;
             current.previous.next = newNode;
@@ -77,36 +66,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         outOfBoundsCheck(index);
-        Node<T> current;
-        if (index < size / 2) {
-            current = head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
-        } else {
-            current = tail;
-            for (int i = 0; i < size - index - 1; i++) {
-                current = current.previous;
-            }
-        }
+        Node<T> current = getNodeByIndex(index);
         return (T) current.value;
     }
 
     @Override
     public T set(T value, int index) {
         outOfBoundsCheck(index);
-        Node<T> current;
-        if (index < size / 2) {
-            current = head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
-        } else {
-            current = tail;
-            for (int i = 0; i < size - index - 1; i++) {
-                current = current.previous;
-            }
-        }
+        Node<T> current = getNodeByIndex(index);
         T removedValue = current.value;
         current.value = value;
         return removedValue;
@@ -127,18 +94,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return removedElement;
         }
         T removedElement;
-        Node<T> current;
-        if (index < size / 2) {
-            current = head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
-        } else {
-            current = tail;
-            for (int i = 0; i < size - index - 1; i++) {
-                current = current.previous;
-            }
-        }
+        Node<T> current = getNodeByIndex(index);
         removedElement = (T) current.value;
         unlink(current);
         size--;
@@ -184,5 +140,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void unlink(Node node) {
         node.previous.next = node.next;
         node.next.previous = node.previous;
+    }
+
+    private Node<T> getNodeByIndex(int index) {
+        Node<T> current;
+        if (index <= size / 2) {
+            current = head;
+        } else {
+            current = tail;
+        }
+        if (current == head) {
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            for (int i = size - 1; i > index; i--) {
+                current = current.previous;
+            }
+        }
+        return current;
     }
 }
