@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
@@ -23,10 +24,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException();
-        }
-
+        checkIndexForAdd(index);
         if (index == size) {
             add(value);
             return;
@@ -71,33 +69,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> current = getNodeAtIndex(index);
-
-        if (current == first) {
-            first = current.next;
-            if (first != null) {
-                first.prev = null;
-            }
-        } else if (current == last) {
-            last = current.prev;
-            if (last != null) {
-                last.next = null;
-            }
-        } else {
-            unlink(current); // Reuse the unlink logic
-        }
-        size--;
-        return current.data;
+        checkIndex(index);
+        T removedData = current.data;
+        unlink(current);
+        return removedData;
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> current = first;
         while (current != null) {
-            if (object == null ? current.data == null : object.equals(current.data)) {
+            if (Objects.equals(object, current.data)) {
                 unlink(current);
-                size--;
                 return true;
             }
             current = current.next;
@@ -120,8 +104,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             last = prevNode;
         }
+
+        if (first == null) {
+            last = null; // Если удаляется последний элемент, обнуляем last
+        }
+
         node.prev = null;
         node.next = null;
+        size--;
     }
 
     @Override
@@ -162,9 +152,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index");
+            throw new IndexOutOfBoundsException();
         }
     }
 
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException();
+        }
+    }
 }
 
