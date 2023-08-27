@@ -29,7 +29,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == size) {
             addLast(value);
         } else {
-            AddEach(value, index);
+            addEach(value, index);
         }
         size++;
     }
@@ -102,7 +102,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         last = newNode;
     }
 
-    private void AddEach(T value, int index) {
+    private void addEach(T value, int index) {
         Node<T> prev = getNodeByIndex(index - 1);
         Node<T> node = new Node<>(prev, value, prev.next);
         prev.next.prev = node;
