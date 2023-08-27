@@ -22,7 +22,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexForValidation(index, size + 1);
+        checkIndexValidation(index, size + 1);
         Node<T> newNode = new Node<>(value);
         if (isEmpty()) {
             addIfFirstNode(new Node<>(value));
@@ -51,13 +51,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndexForValidation(index, size);
+        checkIndexValidation(index, size);
         return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndexForValidation(index, size);
+        checkIndexValidation(index, size);
         Node<T> changeNode = getNodeByIndex(index);
         T removedValue = changeNode.value;
         changeNode.value = value;
@@ -66,7 +66,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndexForValidation(index, size);
+        checkIndexValidation(index, size);
         Node<T> removedNode = getNodeByIndex(index);
         T removedValue = removedNode.value;
         removeLink(removedNode);
@@ -114,7 +114,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private void checkIndexForValidation(int index, int size) {
+    private void checkIndexValidation(int index, int size) {
         if (index < 0 || index > size - 1) {
             throw new IndexOutOfBoundsException("Index " + index + " isn't in valid range");
         }
