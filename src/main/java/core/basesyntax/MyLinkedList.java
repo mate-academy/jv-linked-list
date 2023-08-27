@@ -22,11 +22,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (head == null) {
-            head = tail = new Node<>(null, value, null);
+            addFirst(value);
         } else {
-            Node<T> node = new Node<>(tail, value, null);
-            tail.next = node;
-            tail = node;
+            addLast(value);
         }
         size++;
     }
@@ -37,21 +35,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 || (index > size || index < 0)) {
             throw new IndexOutOfBoundsException("Incorrect index");
         }
-        Node<T> node;
         if (tail == null && head == null) {
-            add(value);
-            return;
+            addFirst(value);
         } else if (index == 0) {
-            node = new Node<>(null, value, head);
+            Node<T> node = new Node<>(null, value, head);
             head.prev = node;
             head = node;
         } else if (index == size) {
-            node = new Node<>(tail, value, null);
-            tail.next = node;
-            tail = node;
+            addLast(value);
         } else {
             Node<T> prev = getNodeByIndex(index - 1);
-            node = new Node<>(prev, value, prev.next);
+            Node<T> node = new Node<>(prev, value, prev.next);
             prev.next.prev = node;
             prev.next = node;
         }
@@ -131,6 +125,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node = node.next;
         }
         return -1;
+    }
+
+    private void addFirst(T value) {
+        head = tail = new Node<>(null, value, null);
+    }
+
+    private void addLast(T value) {
+        Node<T> node = new Node<>(tail, value, null);
+        tail.next = node;
+        tail = node;
     }
 
     private Node<T> getNodeByIndex(int index) {
