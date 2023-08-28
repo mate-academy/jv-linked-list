@@ -22,9 +22,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("Wrong index: " + index);
-        }
+        checkAddedIndex(index);
         Node<T> newNode = new Node<>(value);
         if (head == null) {
             head = tail = newNode;
@@ -121,6 +119,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private void checkAddedIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayIndexOutOfBoundsException("Wrong index: " + index);
+        }
+    }
+
     private void unlink(Node current) {
         if (current == head) {
             head = head.next;
@@ -155,6 +159,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         private Node(T value) {
             this.value = value;
+            this.next = next;
+            this.prev = prev;
         }
     }
 }
