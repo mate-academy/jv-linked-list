@@ -9,7 +9,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> node = new Node<>(value);
+        Node<T> node = new Node<>(value, null, null);
         if (size == 0) {
             head = node;
             tail = node;
@@ -23,7 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Node<T> node = new Node<>(value);
+        Node<T> node = new Node<>(value, null, null);
         checkIndex(index, size);
         if (size == index) {
             add(value);
@@ -77,15 +77,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> current = head;
-        while (current != null
-                && !(object == current.value || object != null && object.equals(current.value))) {
+        while (current != null) {
+            if (object == current.value || object != null && object.equals(current.value)) {
+                unlink(current);
+                return true;
+            }
             current = current.next;
         }
-        if (current == null) {
-            return false;
-        }
-        unlink(current);
-        return true;
+        return false;
     }
 
     @Override
@@ -115,17 +114,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private static class Node<T> {
-        private T value;
-        private Node<T> next;
-        private Node<T> prev;
-
-        private Node(T value) {
-            this.value = value;
-        }
-
-    }
-
     private void checkIndex(int index, int size) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Wrong index: " + index);
@@ -136,25 +124,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 1) {
             head = null;
             tail = null;
-            size--;
-            return;
-        }
-        if (current == head) {
+        } else if (current == head) {
             head = current.next;
             current.next = null;
             head.prev = null;
-            size--;
-            return;
-        }
-        if (current == tail) {
+        } else if (current == tail) {
             tail = current.prev;
             current.prev = null;
             tail.next = null;
-            size--;
-            return;
+        } else {
+            current.prev.next = current.next;
+            current.next.prev = current.prev;
         }
-        current.prev.next = current.next;
-        current.next.prev = current.prev;
         size--;
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        private Node(T value, Node<T> prev, Node<T> next) {
+            this.next = next;
+            this.value = value;
+            this.prev = prev;
+        }
     }
 }
