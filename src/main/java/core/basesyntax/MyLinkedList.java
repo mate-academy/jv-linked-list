@@ -7,16 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private int size;
 
-    static class Node<T> {
-        private T value;
-        private Node next;
-        private Node previous;
-
-        public Node(T value) {
-            this.value = value;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(value);
@@ -32,28 +22,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
+        if (index < 0 || index > size) {
             throw new ArrayIndexOutOfBoundsException("Incorrect index: " + index);
         }
         Node<T> newNode = new Node<>(value);
-        if (head == null) {
-            head = tail = newNode;
+        if (index == size) {
+            add(value);
         } else if (index == 0) {
             newNode.next = head;
             head.previous = newNode;
             head = newNode;
-        } else if (index == size) {
-            newNode.previous = tail;
-            tail.next = newNode;
-            tail = newNode;
+            size++;
         } else {
             Node<T> current = getNodeByIndex(index);
             newNode.next = current;
             newNode.previous = current.previous;
             current.previous.next = newNode;
             current.previous = newNode;
+            size++;
         }
-        size++;
     }
 
     @Override
@@ -65,14 +52,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        outOfBoundsCheck(index);
+        checkIndexValidity(index);
         Node<T> current = getNodeByIndex(index);
         return (T) current.value;
     }
 
     @Override
     public T set(T value, int index) {
-        outOfBoundsCheck(index);
+        checkIndexValidity(index);
         Node<T> current = getNodeByIndex(index);
         T removedValue = current.value;
         current.value = value;
@@ -81,22 +68,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        outOfBoundsCheck(index);
-        if (index == 0) {
-            T removedElement = (T) head.value;
-            head = head.next;
-            size--;
-            return removedElement;
-        } else if (index == size - 1) {
-            T removedElement = (T) tail.value;
-            tail = tail.previous;
-            size--;
-            return removedElement;
-        }
-        T removedElement;
-        Node<T> current = getNodeByIndex(index);
-        removedElement = (T) current.value;
-        unlink(current);
+        checkIndexValidity(index);
+        T removedElement = unlink(getNodeByIndex(index));
         size--;
         return removedElement;
     }
@@ -125,39 +98,49 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void outOfBoundsCheck(int index) {
+    private void checkIndexValidity(int index) {
         if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Incorrect index: " + index);
         }
     }
 
-    private void unlink(Node current) {
+    private T unlink(Node current) {
         if (current == head) {
             head = head.next;
+            return (T) current.value;
         } else if (current == tail) {
             tail = tail.previous;
+            return (T) current.value;
         } else {
             current.previous.next = current.next;
             current.next.previous = current.previous;
         }
+        return (T) current.value;
     }
 
     private Node<T> getNodeByIndex(int index) {
         Node<T> current;
-        if (index <= size / 2) {
+        if (index < size / 2) {
             current = head;
-        } else {
-            current = tail;
-        }
-        if (current == head) {
             for (int i = 0; i < index; i++) {
                 current = current.next;
             }
         } else {
+            current = tail;
             for (int i = size - 1; i > index; i--) {
                 current = current.previous;
             }
         }
         return current;
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node next;
+        private Node previous;
+
+        public Node(T value) {
+            this.value = value;
+        }
     }
 }
