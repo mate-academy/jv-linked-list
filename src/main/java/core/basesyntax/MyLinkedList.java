@@ -8,14 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public static void main(String[] args) {
-        MyLinkedList<String> myLinkedList = new MyLinkedList<>();
-        myLinkedList.add("FIRST_ITEM");
-        myLinkedList.add("SECOND_ITEM");
-        myLinkedList.add("THIRD_ITEM");
-        myLinkedList.set("test", 3);
-    }
-
     @Override
     public void add(T value) {
         if (head == null) {
