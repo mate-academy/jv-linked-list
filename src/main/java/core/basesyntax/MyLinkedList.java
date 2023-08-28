@@ -22,11 +22,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        if (index == 0) {
-            connectFirst(value);
-        } else if (index == size) {
+        if (index == size) {
             add(value);
             return;
+        }
+        if (index == 0) {
+            connectFirst(value);
         } else {
             connect(value, index);
         }
