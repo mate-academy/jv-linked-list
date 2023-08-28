@@ -64,9 +64,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index");
-        }
+        isExist(index);
         return getNode(index).value;
     }
 
@@ -88,9 +86,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index");
-        }
+        isExist(index);
         Node<T> current = getNode(index);
         T oldValue = current.value;
         current.value = value;
@@ -99,9 +95,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index");
-        }
+        isExist(index);
         Node<T> current = getNode(index);
         if (index == 0) {
             first = first.next;
@@ -134,6 +128,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current = current.next;
         }
         return false;
+    }
+
+    private void isExist(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Element does not exist by entered index");
+        }
     }
 
     @Override
