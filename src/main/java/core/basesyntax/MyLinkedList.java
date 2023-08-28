@@ -121,20 +121,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> current) {
-        if (size == 1) {
-            head = null;
-            tail = null;
-        } else if (current == head) {
-            head = current.next;
-            current.next = null;
-            head.prev = null;
-        } else if (current == tail) {
-            tail = current.prev;
-            current.prev = null;
-            tail.next = null;
+        Node<T> next = current.next;
+        Node<T> prev = current.prev;
+        if (prev == null) {
+            head = next;
         } else {
-            current.prev.next = current.next;
-            current.next.prev = current.prev;
+            prev.next = next;
+            current.prev = null;
+        }
+        if (next == null) {
+            current = prev;
+        } else {
+            next.prev = prev;
+            current.next = null;
         }
         size--;
     }
