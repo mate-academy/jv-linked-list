@@ -21,7 +21,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             linkLast(value);
         } else if (isEmpty()) {
-            head = tail = new Node<>(null, value, null);
+            add(value);
 
         } else if (index == 0) {
             Node<T> newNode = new Node<>(null, value, head);
@@ -57,25 +57,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndexInBounds(index);
         Node<T> node = getNodeByIndex(index);
-        if (node.prev != null) {
-            node.prev.next = node.next;
-        } else {
-            head = node.next;
-        }
-        if (node.next != null) {
-            node.next.prev = node.prev;
-        } else {
-            tail = node.prev;
-        }
-        size--;
+        unlink(node);
         return node.value;
     }
 
     @Override
     public boolean remove(T object) {
+        T value;
         for (int i = 0; i < size; i++) {
-            if (getNodeByIndex(i).value == object || getNodeByIndex(i).value != null
-                    && getNodeByIndex(i).value.equals(object)) {
+            value = getNodeByIndex(i).value;
+            if (value == object || value != null && value.equals(object)) {
                 remove(i);
                 return true;
             }
@@ -109,6 +100,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
+    private void unlink(Node<T> node) {
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        } else {
+            head = node.next;
+        }
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        } else {
+            tail = node.prev;
+        }
+        size--;
+    }
+
     private void checkIndexInBounds(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Incorrect index: " + index);
@@ -127,14 +132,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void linkBefore(T e, Node<T> before) {
+    private void linkBefore(T value, Node<T> before) {
         Node<T> pred = before.prev;
-        Node<T> newNode = new Node<>(pred, e, before);
+        Node<T> newNode = new Node<>(pred, value, before);
         before.prev = newNode;
         pred.next = newNode;
     }
 
-    static class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node<T> prev;
         private Node<T> next;
