@@ -14,14 +14,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         Node(T value) {
             this.value = value;
-            prev = null;
-            next = null;
+            Node<T> prev;
+            Node<T> next;
         }
     }
 
     @Override
     public void add(T value) {
-        Node<T> addedNode = createNode(value);
+        Node<T> addedNode = new Node<>(value);
         if (head == null) {
             head = tail = addedNode;
         } else {
@@ -33,7 +33,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndex(index, size + 1);
-        Node<T> addedNode = createNode(value);
+        Node<T> addedNode = new Node<>(value);
         if (head == null) {
             head = tail = addedNode;
         } else if (index == 0) {
@@ -102,10 +102,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private Node<T> createNode(T value) {
-        return new Node<T>(value);
     }
 
     private void addLastNode(Node<T> addedNode) {
