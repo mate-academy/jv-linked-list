@@ -140,7 +140,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int getIndexByNode(T value) {
         Node<T> node = head;
         for (int i = 0; i < size; i++) {
-            if ((value == null && value == node.value)
+            if ((value == null && null == node.value)
                     || (value != null && value.equals(node.value))) {
                 return i;
             }
