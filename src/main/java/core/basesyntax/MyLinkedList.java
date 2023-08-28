@@ -10,10 +10,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> addedNode = new Node<>(null, value, null);
-        if (head == null) {
+        if (size == 0) {
             head = tail = addedNode;
         } else {
-            addLastNode(addedNode);
+            tail.next = addedNode;
+            addedNode.prev = tail;
+            tail = addedNode;;
         }
         size++;
     }
@@ -22,12 +24,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         checkIndex(index, size + 1);
         Node<T> addedNode = new Node<>(null, value, null);
-        if (head == null) {
-            head = tail = addedNode;
-        } else if (index == 0) {
+        if (index == size) {
+            add(addedNode.value);
+            return;
+        }
+        if (index == 0) {
             addFirstNode(addedNode);
-        } else if (index == size) {
-            addLastNode(addedNode);
         } else {
             addMiddleNode(index, addedNode);
         }
@@ -68,7 +70,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> currentNode = head;
         for (int index = 0; index < size; index++) {
-            if (areEqual(currentNode.value, object)) {
+            if (currentNode.value == object || currentNode.value != null
+                    && currentNode.value.equals(object)) {
                 unlink(currentNode);
                 return true;
             }
@@ -87,10 +90,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void addLastNode(Node<T> addedNode) {
-        tail.next = addedNode;
-        addedNode.prev = tail;
-        tail = addedNode;
+    private void addNode(Node<T> addedNode, int index) {
+        if (index == 0) {
+            addFirstNode(addedNode);
+        } else if (index == size) {
+            add(addedNode.value);
+        } else {
+            addMiddleNode(index, addedNode);
+        }
     }
 
     private void checkIndex(int index, int bound) {
@@ -150,10 +157,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         node.value = null;
         size--;
         return value;
-    }
-
-    private boolean areEqual(T value1, T value2) {
-        return value1 == value2 || value1 != null && value1.equals(value2);
     }
 
     private static class Node<T> {
