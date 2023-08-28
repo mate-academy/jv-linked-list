@@ -25,8 +25,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> prev;
         Node<T> next = null;
         prev = size == 0 ? null : tail;
-        Node newNode = new Node<>(prev, value, next);
-        if (size == 0) {
+        Node<T> newNode = new Node<>(prev, value, next);
+        if (isEmpty()) {
             head = newNode;
         }
         if (size > 0) {
@@ -112,10 +112,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNodeByIndex(int index) {
         checkIndex(index);
-        Node<T> helperNode = head;
-        for (int i = 0; i < index; i++) {
-            if (helperNode.next != null) {
-                helperNode = helperNode.next;
+        Node<T> helperNode;
+        if (index < size / 2) {
+            helperNode = head;
+            for (int i = 0; i < index; i++) {
+                if (helperNode.next != null) {
+                    helperNode = helperNode.next;
+                }
+            }
+        } else {
+            helperNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                if (helperNode.prev != null) {
+                    helperNode = helperNode.prev;
+                }
             }
         }
         return helperNode;
@@ -131,6 +141,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         if (next != null) {
             next.prev = prev;
+        } else {
+            tail = prev;
         }
         size--;
     }
