@@ -21,15 +21,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndex(index, size + 1);
+        if (index == size) {
+            add(value);
+            return;
+        }
         if (tail == null && head == null) {
             addFirst(value);
         } else if (index == 0) {
             Node<T> node = new Node<>(null, value, head);
             head.prev = node;
             head = node;
-        } else if (index == size) {
-            add(value);
-            size--;
         } else {
             Node<T> prev = getNodeByIndex(index - 1);
             Node<T> node = new Node<>(prev, value, prev.next);
@@ -73,7 +74,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        int index = getNodeIndexByValue(object);
+        int index = getIndexByValue(object);
         if (index == -1) {
             return false;
         }
@@ -92,7 +93,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private int getNodeIndexByValue(T value) {
+    private int getIndexByValue(T value) {
         Node<T> node = head;
         for (int i = 0; i < size; i++) {
             if (Objects.equals(value, node.value)) {
@@ -146,7 +147,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index, int size) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Incorrect index");
+            throw new IndexOutOfBoundsException("IndexOutOfBoundsException: "
+                    + "Incorrect index to do this action.");
         }
     }
 
@@ -162,4 +164,3 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 }
-
