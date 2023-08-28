@@ -16,13 +16,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("error " + index);
+            throw new IndexOutOfBoundsException("Incorrect index:  " + index);
         }
         if (index == size) {
             linkLast(value);
         } else if (isEmpty()) {
             add(value);
-
         } else if (index == 0) {
             Node<T> newNode = new Node<>(null, value, head);
             head = newNode;
@@ -67,7 +66,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < size; i++) {
             value = getNodeByIndex(i).value;
             if (value == object || value != null && value.equals(object)) {
-                remove(i);
+                unlink(getNodeByIndex(i));
                 return true;
             }
         }
@@ -132,11 +131,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void linkBefore(T value, Node<T> before) {
-        Node<T> pred = before.prev;
-        Node<T> newNode = new Node<>(pred, value, before);
-        before.prev = newNode;
-        pred.next = newNode;
+    private void linkBefore(T value, Node<T> node) {
+        Node<T> prev = node.prev;
+        Node<T> newNode = new Node<>(prev, value, node);
+        node.prev = newNode;
+        prev.next = newNode;
     }
 
     private static class Node<T> {
