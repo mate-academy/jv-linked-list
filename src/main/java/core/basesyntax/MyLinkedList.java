@@ -22,7 +22,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkAddedIndex(index);
+        checkIndexForAdd(index);
         if (head == null && tail == null) {
             head = tail = new Node<>(null, value, null);
         } else if (index == 0) {
