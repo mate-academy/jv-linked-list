@@ -3,17 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static class Node<T> {
-        private T value;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.next = next;
-            this.value = value;
-        }
-    }
 
     private Node<T> head;
     private Node<T> tail;
@@ -49,7 +38,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> newNode = new Node<>(current.prev, value, current);
             current.prev.next = newNode;
             current.prev = newNode;
-
         }
         size++;
     }
@@ -80,19 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> node = getNodeByIndex(index);
-        if (tail == head) {
-            head = tail = null;
-        } else if (node == head) {
-            node.next.prev = null;
-            head = node.next;
-        } else if (node == tail) {
-            node.prev.next = null;
-            tail = node.prev;
-        } else {
-            node.prev.next = node.next;
-            node.next.prev = node.prev;
-        }
-        size--;
+        unlink(node);
         return node.value;
     }
 
@@ -102,7 +78,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == -1) {
             return false;
         } else {
-            remove(index);
+            unlink(getNodeByIndex(index));
             return true;
         }
     }
@@ -148,4 +124,33 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return -1;
     }
+
+    private void unlink(Node<T> node) {
+        if (tail == head) {
+            head = tail = null;
+        } else if (node == head) {
+            node.next.prev = null;
+            head = node.next;
+        } else if (node == tail) {
+            node.prev.next = null;
+            tail = node.prev;
+        } else {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        }
+        size--;
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.next = next;
+            this.value = value;
+        }
+    }
 }
+
