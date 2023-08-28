@@ -62,11 +62,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        T value;
+        Node<T> node;
         for (int i = 0; i < size; i++) {
-            value = getNodeByIndex(i).value;
-            if (value == object || value != null && value.equals(object)) {
-                unlink(getNodeByIndex(i));
+            node = getNodeByIndex(i);
+            if (node.value == object || node.value != null && node.value.equals(object)) {
+                unlink(node);
                 return true;
             }
         }
@@ -122,8 +122,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void linkLast(T value) {
         Node<T> newNode = new Node<>(null, value, null);
         if (isEmpty()) {
-            tail = newNode;
-            head = newNode;
+            head = tail = newNode;
         } else {
             newNode.prev = tail;
             tail.next = newNode;
