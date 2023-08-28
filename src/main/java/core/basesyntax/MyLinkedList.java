@@ -14,7 +14,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkPositionIndex(index);
         if (index == size) {
             linkLast(value);
         } else {
@@ -31,13 +30,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkElementIndex(index);
         return getNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkElementIndex(index);
         Node<T> node = getNode(index);
         T oldVal = node.item;
         node.item = value;
@@ -46,7 +43,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkElementIndex(index);
         return unlink(getNode(index));
     }
 
@@ -72,12 +68,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkPositionIndex(int index) {
-        if (!isPositionIndex(index)) {
-            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
-        }
-    }
-
     private void checkElementIndex(int index) {
         if (!isElementIndex(index)) {
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
@@ -92,11 +82,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return index >= 0 && index < size;
     }
 
-    private boolean isPositionIndex(int index) {
-        return index >= 0 && index <= size;
-    }
-
     private Node<T> getNode(int index) {
+        checkElementIndex(index);
         Node<T> node;
         if (index < (size / 2)) {
             node = first;
@@ -113,7 +100,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     T unlink(Node<T> nodeToUnlink) {
-        // assert nodeToUnlink != null;
         final T element = nodeToUnlink.item;
         final Node<T> next = nodeToUnlink.next;
         final Node<T> prev = nodeToUnlink.prev;
@@ -150,7 +136,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     void linkBefore(T value, Node<T> beforeThis) {
-        // assert beforeThis != null;
         final Node<T> oldPrev = beforeThis.prev;
         final Node<T> newNode = new Node<>(oldPrev, value, beforeThis);
         beforeThis.prev = newNode;
