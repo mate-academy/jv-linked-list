@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -74,13 +73,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        int index = getIndexByValue(object);
-        if (index == -1) {
-            return false;
+        Node<T> node = head;
+        for (int i = 0; i < size; i++) {
+            if ((object == node.value) || (object != null && object.equals(node.value))) {
+                unlink(node);
+                size--;
+                return true;
+            }
+            node = node.next;
         }
-        unlink(getNodeByIndex(index));
-        size--;
-        return true;
+        return false;
     }
 
     @Override
@@ -96,7 +98,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int getIndexByValue(T value) {
         Node<T> node = head;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(value, node.value)) {
+            if ((value == node.value) || (value != null && value.equals(node.value))) {
                 return i;
             }
             node = node.next;
@@ -147,8 +149,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index, int size) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("IndexOutOfBoundsException: "
-                    + "Incorrect index to do this action.");
+            throw new IndexOutOfBoundsException("Particular index is out of bounds for the size");
         }
     }
 

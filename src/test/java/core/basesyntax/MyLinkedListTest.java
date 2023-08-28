@@ -72,7 +72,7 @@ public class MyLinkedListTest {
 
     @Test
     public void testAddByIndexToTheTop() {
-         myLinkedList.add(FIRST_ITEM, 0);
+        myLinkedList.add(FIRST_ITEM, 0);
         myLinkedList.add(SECOND_ITEM, 1);
         myLinkedList.add(THIRD_ITEM, 2);
 
