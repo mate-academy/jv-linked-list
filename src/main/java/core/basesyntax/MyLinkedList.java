@@ -144,11 +144,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         head = newNode;
     }
 
-    private void addLastElement(T value) {
-        Node<T> newNode = new Node<>(tail, value, null);
-        tail.next = newNode;
-        tail = newNode;
-    }
 
     private static class Node<T> {
         private T element;
