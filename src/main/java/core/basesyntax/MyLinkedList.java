@@ -133,14 +133,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
-        int i = 0;
-        Node<T> node = head;
-        while (i != index) {
-            node = node.next;
-            i++;
+        Node<T> current;
+        if (index < size / 2) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
-
-        return node;
+        return current;
     }
 
     private void checkIndex(int index) {
