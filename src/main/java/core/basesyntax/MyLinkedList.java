@@ -67,22 +67,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index, size - 1);
         Node<T> current = findByIndex(index);
-        T oldValue = current.item;
-        unlink(current);
-        return oldValue;
+        return unlink(current);
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> current = head;
-        while (current != null && !isEqual(object, current.item)) {
+        while (current != null) {
+            if (isEqual(object, current.item)) {
+                unlink(current);
+                return true;
+            }
             current = current.next;
         }
-        if (current == null) {
-            return false;
-        }
-        unlink(current);
-        return true;
+        return false;
     }
 
     @Override
@@ -99,30 +97,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return object == currentObject || object != null && object.equals(currentObject);
     }
 
-    private void unlink(Node<T> node) {
-        if (size == 1) {
-            head = null;
-            tail = null;
-            size--;
-            return;
-        }
-        if (node == head) {
-            head = node.next;
-            node.next = null;
-            head.prev = null;
-            size--;
-            return;
-        }
-        if (node == tail) {
-            tail = node.prev;
+    private T unlink(Node<T> node) {
+        Node<T> next = node.next;
+        Node<T> prev = node.prev;
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
             node.prev = null;
-            tail.next = null;
-            size--;
-            return;
         }
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.prev = prev;
+            node.next = null;
+        }
+        T value = node.item;
+        node.item = null;
         size--;
+        return value;
     }
 
     private void checkIndex(int index, int size) {
@@ -148,7 +141,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-
         private T item;
         private Node<T> next;
         private Node<T> prev;
