@@ -1,26 +1,15 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
     private int size;
 
-    public static class Node<T> {
-        private T value;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(T value) {
-            this.value = value;
-        }
-    }
-
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(null, value, null);
         if (size == 0) {
             head = tail = newNode;
         } else {
@@ -33,24 +22,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Objects.checkIndex(index, size + 1);
+        checkIndex(index, size + 1);
         if (size == 0) {
-            Node<T> newNode = new Node<>(value);
+            Node<T> newNode = new Node<>(null, value, null);
             head = tail = newNode;
         } else if (index == 0 && size > 0) {
-            Node<T> newNode = new Node<>(value);
-            newNode.next = head;
+            Node<T> newNode = new Node<>(null, value, head);
             head.prev = newNode;
             head = newNode;
         } else if (index == size) {
-            Node<T> newNode = new Node<>(value);
-            newNode.prev = tail;
+            Node<T> newNode = new Node<>(tail, value, null);
             tail.next = newNode;
             tail = newNode;
         } else {
-            Node<T> newNode = new Node<>(value);
-            newNode.prev = findNodeByIndex(index - 1);
-            newNode.next = findNodeByIndex(index);
+            Node<T> prev = findNodeByIndex(index - 1);
+            Node<T> next = findNodeByIndex(index);
+            Node<T> newNode = new Node<>(prev, value, next);
             findNodeByIndex(index - 1).next = newNode;
             findNodeByIndex(index).prev = newNode;
         }
@@ -66,13 +53,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Objects.checkIndex(index, size);
+        checkIndex(index, size);
         return findNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        Objects.checkIndex(index, size);
+        checkIndex(index, size);
         T oldValue = findNodeByIndex(index).value;
         findNodeByIndex(index).value = value;
         return oldValue;
@@ -80,7 +67,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Objects.checkIndex(index, size);
+        checkIndex(index, size);
         T removedValue = findNodeByIndex(index).value;
         if (index == 0 && size > 1) {
             findNodeByIndex(index + 1).prev = null;
@@ -142,5 +129,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             index++;
         }
         return -1;
+    }
+
+    private void checkIndex(int index, int length) {
+        if (index < 0 || index >= length) {
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds");
+        }
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        private Node(Node<T> prev, T value, Node<T> next) {
+            this.value = value;
+            this.prev = prev;
+            this.next = next;
+        }
     }
 }
