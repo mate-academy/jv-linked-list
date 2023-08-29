@@ -49,8 +49,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         for (Node<T> node = first; node != null; node = node.next) {
-            if ((object != null && object.equals(node.item))
-                    || (object == null && node.item == null)) {
+            if (object == node.item || object != null && object.equals(node.item)) {
                 unlink(node);
                 return true;
             }
@@ -99,7 +98,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    T unlink(Node<T> nodeToUnlink) {
+    private T unlink(Node<T> nodeToUnlink) {
         final T element = nodeToUnlink.item;
         final Node<T> next = nodeToUnlink.next;
         final Node<T> prev = nodeToUnlink.prev;
@@ -123,7 +122,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return element;
     }
 
-    void linkLast(T value) {
+    private void linkLast(T value) {
         final Node<T> oldLast = last;
         final Node<T> newNode = new Node<>(oldLast, value, null);
         last = newNode;
@@ -135,7 +134,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    void linkBefore(T value, Node<T> beforeThis) {
+    private void linkBefore(T value, Node<T> beforeThis) {
         final Node<T> oldPrev = beforeThis.prev;
         final Node<T> newNode = new Node<>(oldPrev, value, beforeThis);
         beforeThis.prev = newNode;
@@ -147,12 +146,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private static class Node<E> {
-        private E item;
-        private Node<E> next;
-        private Node<E> prev;
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
-        private Node(Node<E> prev, E element, Node<E> next) {
+        private Node(Node<T> prev, T element, Node<T> next) {
             this.item = element;
             this.next = next;
             this.prev = prev;
