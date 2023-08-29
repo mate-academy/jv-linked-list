@@ -24,9 +24,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        if (tail == null && head == null) {
-            addFirst(value);
-        } else if (index == 0) {
+        if (index == 0) {
             Node<T> node = new Node<>(null, value, head);
             head.prev = node;
             head = node;
@@ -67,7 +65,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index, size);
         Node<T> node = getNodeByIndex(index);
         unlink(node);
-        size--;
         return node.value;
     }
 
@@ -75,9 +72,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> node = head;
         for (int i = 0; i < size; i++) {
-            if ((object == node.value) || (object != null && object.equals(node.value))) {
+            if (object == node.value || object != null && object.equals(node.value)) {
                 unlink(node);
-                size--;
                 return true;
             }
             node = node.next;
@@ -93,17 +89,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private int getIndexByValue(T value) {
-        Node<T> node = head;
-        for (int i = 0; i < size; i++) {
-            if ((value == node.value) || (value != null && value.equals(node.value))) {
-                return i;
-            }
-            node = node.next;
-        }
-        return -1;
     }
 
     private void addFirst(T value) {
@@ -145,11 +130,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.next.prev = node.prev;
             node.prev.next = node.next;
         }
+        size--;
     }
 
     private void checkIndex(int index, int size) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Particular index is out of bounds for the size");
+            throw new IndexOutOfBoundsException("Particular index :"
+                    + index + " is out of bounds for the size");
         }
     }
 
