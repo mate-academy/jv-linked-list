@@ -9,11 +9,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        if (isEmpty()) {
-            addAsHead(value);
+        Node<T> newNode = new Node<>(tail, value, null);
+        if (size == 0) {
+            head = newNode;
         } else {
-            addAsTail(value);
+            tail.next = newNode;
         }
+        tail = newNode;
+        size++;
     }
 
     @Override
@@ -22,18 +25,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == 0) {
             addAsHead(value);
         } else if (index == size) {
-            addAsTail(value);
+            add(value);
         } else {
             addInsideList(value, index);
         }
-    }
-
-    private void addInsideList(T value, int index) {
-        Node<T> prev = findByIndex(index - 1);
-        Node<T> node = new Node<>(prev, value, prev.next);
-        prev.next.prev = node;
-        prev.next = node;
-        size++;
     }
 
     @Override
@@ -87,6 +82,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private void addInsideList(T value, int index) {
+        Node<T> prev = findByIndex(index - 1);
+        Node<T> node = new Node<>(prev, value, prev.next);
+        prev.next.prev = node;
+        prev.next = node;
+        size++;
+    }
+
     private void addAsHead(T value) {
         if (isEmpty()) {
             head = new Node<>(null, value, null);
@@ -96,13 +99,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head.prev = node;
             head = node;
         }
-        size++;
-    }
-
-    private void addAsTail(T value) {
-        Node<T> node = new Node<>(tail, value, null);
-        tail.next = node;
-        tail = node;
         size++;
     }
 
