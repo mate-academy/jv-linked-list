@@ -52,7 +52,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             newNode.next = previousToNew.next;
             newNode.prev = previousToNew;
             previousToNew.next = newNode;
-            previousToNew.next.prev = newNode;
+            newNode.next.prev = newNode;
         }
         size++;
     }
@@ -134,9 +134,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
-        Node<T> node = head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
+        Node<T> node;
+        if (index < size / 2) {
+            node = head;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+        } else {
+            node = tail;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
         }
         return node;
     }
@@ -151,4 +159,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return -1;
     }
+
 }
