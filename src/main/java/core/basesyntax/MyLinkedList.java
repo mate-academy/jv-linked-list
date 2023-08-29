@@ -120,17 +120,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private int getIndexByNode(T value) {
-        Node<T> node = head;
-        for (int i = 0; i < size; i++) {
-            if (null == node.value || value != null && value.equals(node.value)) {
-                return i;
-            }
-            node = node.next;
-        }
-        return -1;
-    }
-
     private void unlink(Node<T> node) {
         if (tail == head) {
             head = tail = null;
