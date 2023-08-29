@@ -60,9 +60,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
+        Node<T> currentNode = getCurrentNode(index);
         checkIndex(index, size);
-        T result = get(index);
-        unlink(getCurrentNode(index));
+        T result = currentNode.value;
+        unlink(currentNode);
         return result;
     }
 
@@ -88,16 +89,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void addNode(Node<T> addedNode, int index) {
-        if (index == 0) {
-            addFirstNode(addedNode);
-        } else if (index == size) {
-            add(addedNode.value);
-        } else {
-            addMiddleNode(index, addedNode);
-        }
     }
 
     private void checkIndex(int index, int bound) {
