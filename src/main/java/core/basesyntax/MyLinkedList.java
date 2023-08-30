@@ -14,7 +14,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkPositionIndex(index);
         if (index == size) {
             linkLast(value);
         } else {
@@ -43,13 +42,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkElementIndex(index);
         return getNode(index).item;
     }
 
     @Override
     public T set(T item, int index) {
-        checkElementIndex(index);
         Node<T> nodeValueByIndex = getNode(index);
         T oldItem = nodeValueByIndex.item;
         nodeValueByIndex.item = item;
@@ -58,7 +55,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkElementIndex(index);
         return unlink(getNode(index));
     }
 
@@ -140,31 +136,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return item;
     }
 
-    private boolean isElementIndex(int index) {
-        return (index >= 0) && (index < size);
-    }
-
-    private boolean isPositionIndex(int index) {
-        return (index >= 0) && (index <= size);
-    }
-
-    private String outOfBoundsMsg(int index) {
-        return "Index: " + index + ", Size: " + size;
-    }
-
-    private void checkElementIndex(int index) {
-        if (!isElementIndex(index)) {
-            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
-        }
-    }
-
-    private void checkPositionIndex(int index) {
-        if (!isPositionIndex(index)) {
-            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+    private void checkIndexRange(int index) {
+        if ((index < 0) || (index >= size)) {
+            throw new IndexOutOfBoundsException("Invalid index: " + index);
         }
     }
 
     Node<T> getNode(int index) {
+        checkIndexRange(index);
         if (index < (size >> 1)) {
             Node<T> nodeElement = first;
             for (int i = 0; i < index; i++) {
