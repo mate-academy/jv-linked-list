@@ -8,18 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private T item;
-        private MyLinkedList.Node<T> next;
-        private MyLinkedList.Node<T> prev;
-
-        Node(MyLinkedList.Node<T> prev, T element, MyLinkedList.Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> prev;
@@ -28,8 +16,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(prev, value, next);
         if (isEmpty()) {
             head = newNode;
-        }
-        if (size > 0) {
+        } else {
             tail.next = newNode;
         }
         tail = newNode;
@@ -60,7 +47,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         for (T element : list) {
-            this.add(element);
+            add(element);
         }
     }
 
@@ -86,16 +73,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> helperNode = head;
-        for (int i = 0; i < size; i++) {
-            if (object == null && helperNode.item == null) {
-                unlink(helperNode);
-                return true;
-            } else if (object != null && object.equals(helperNode.item)) {
-                unlink(helperNode);
+        Node<T> currentNode = head;
+        while (currentNode != null) {
+            if (currentNode.item == object || currentNode.item != null
+                    && currentNode.item.equals(object)) {
+                unlink(currentNode);
                 return true;
             }
-            helperNode = helperNode.next;
+            currentNode = currentNode.next;
         }
         return false;
     }
@@ -131,6 +116,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return helperNode;
     }
 
+    private static class Node<T> {
+        private T item;
+        private MyLinkedList.Node<T> next;
+        private MyLinkedList.Node<T> prev;
+
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Index is incorrect!");
+        }
+    }
+
     private void unlink(Node<T> toRemove) {
         Node<T> prev = toRemove.prev;
         Node<T> next = toRemove.next;
@@ -145,11 +148,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = prev;
         }
         size--;
-    }
-
-    private void checkIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Index is incorrect!");
-        }
     }
 }
