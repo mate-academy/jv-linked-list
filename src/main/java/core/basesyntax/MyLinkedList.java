@@ -29,20 +29,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else if (index == 0) {
-            addFirst(newNode);
+            addElementToBeginning(newNode);
         } else {
-            addTo(newNode,index);
+            addElementAtIndex(newNode,index);
         }
     }
 
-    private void addFirst(Node<T> newNode) {
+    private void addElementToBeginning(Node<T> newNode) {
         newNode.next = head;
         head.prev = newNode;
         head = newNode;
         size++;
     }
 
-    private void addTo(Node<T> newNode,int index) {
+    private void addElementAtIndex(Node<T> newNode,int index) {
         Node<T> current = getNodeByIndex(index);
         newNode.next = current;
         newNode.prev = current.prev;
