@@ -62,7 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T get(int index) {
         checkIndex(index);
         Node<T> current = getNodeByIndex(index);
-        return (T) current.value;
+        return current.value;
     }
 
     @Override
@@ -121,7 +121,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current.prev.next = current.next;
             current.next.prev = current.prev;
         }
-        return (T) current.value;
+        return current.value;
     }
 
     private Node<T> getNodeByIndex(int index) {
