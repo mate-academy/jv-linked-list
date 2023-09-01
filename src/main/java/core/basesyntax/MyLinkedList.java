@@ -26,9 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         checkAddedIndex(index);
         Node<T> newNode = new Node<>(value);
-        if (head == null && tail == null) {
-            head = tail = newNode;
-        } else if (index == size) {
+        if (index == size) {
             add(value);
             return;
         } else if (index == 0) {
