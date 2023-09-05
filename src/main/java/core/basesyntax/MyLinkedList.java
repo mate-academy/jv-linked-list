@@ -26,17 +26,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T element, int index) {
         if (index == size) {
-        add(element);
-        return;
+            add(element);
+            return;
         }
         isIndexOk(index);
         Node<T> newNode = new Node(element);
         if (index == 0) {
-        Node<T> oldNode = first;
-        oldNode.previous = newNode;
-        newNode.next = oldNode;
-        first = newNode;
-        size++;
+            Node<T> oldNode = first;
+            oldNode.previous = newNode;
+            newNode.next = oldNode;
+            first = newNode;
+            size++;
         } else {
             Node<T> oldNode = getNode(index);
             Node<T> oldPrevious = oldNode.previous;
@@ -99,7 +99,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T value) {
         Node<T> node = first;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(value, node.element))  {
+            if (Objects.equals(value, node.element)) {
                 remove(i);
                 return true;
             }
