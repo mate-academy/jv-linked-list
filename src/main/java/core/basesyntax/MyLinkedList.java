@@ -16,8 +16,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (first != null) {
-            Node<T> newNode = new Node<>(last, value, null);
-            last.next = newNode;
+            Node<T> node = getNode(size - 1);
+            Node<T> newNode = new Node<>(node, value, null);
+            node.next = newNode;
             last = newNode;
         } else {
             Node<T> newNode = new Node<>(null, value, null);
@@ -65,15 +66,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
+
         final T oldValue = get(index);
+        Node<T> nodeToRemove = getNode(index);
         if (index == 0) {
-            removeFirst(index);
+            removeFirst();
         } else if (index == size - 1) {
-            removeLast(index);
+            removeLast();
         } else {
-            removeInside(index);
+            removeInside(nodeToRemove);
         }
-        size--;
         if (isEmpty()) {
             first = null;
             last = null;
@@ -144,7 +146,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(previousNode, value, nextNode);
         previousNode.next = newNode;
         nextNode.prev = newNode;
-
         size++;
     }
 
@@ -157,20 +158,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         throw new NoSuchElementException("haven't this element");
     }
 
-    private void removeFirst(int index) {
-        getNode(index + 1).prev = null;
-        first = getNode(index + 1);
+    private void removeFirst() {
+        Node<T> nextNode = getNode(1);
+        nextNode.prev = null;
+        first = nextNode;
+        size--;
     }
 
-    private void removeLast(int index) {
-        getNode(index - 1).next = null;
-        last = getNode(index - 1);
+    private void removeLast() {
+        Node<T> previousNode = getNode(size - 1);
+        previousNode.next = null;
+        last = previousNode;
+        size--;
     }
 
-    private void removeInside(int index) {
-        getNode(index - 1).next = getNode(index + 1);
-        getNode(index + 1).prev = getNode(index - 1);
-        getNode(index).prev = null;
-        getNode(index).next = null;
+    private void removeInside(Node<T> nodeToRemove) {
+        Node<T> previousNode = nodeToRemove.prev;
+        Node<T> nextNode = nodeToRemove.next;
+        previousNode.next = nextNode;
+        nextNode.prev = previousNode;
+        size--;
     }
 }
