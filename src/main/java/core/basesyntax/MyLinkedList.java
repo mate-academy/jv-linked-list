@@ -6,11 +6,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
     private Node<T> head;
     private Node<T> tail;
-    private Node<T> current;
 
     @Override
     public void add(T value) {
-        Node<T> temp = new Node<T>(tail, value, null);
+        Node<T> temp = new Node<>(tail, value, null);
         if (size == 0) {
             head = temp;
         } else {
@@ -28,7 +27,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             checkIndex(index);
             Node<T> temp = getNodeByIndex(index);
             Node<T> tempPrev = temp.prev;
-            Node<T> current = new Node<T>(tempPrev, value, temp);
+            Node<T> current = new Node<>(tempPrev, value, temp);
             temp.prev = current;
             if (index == 0) {
                 head = current;
