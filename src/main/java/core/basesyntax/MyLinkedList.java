@@ -19,45 +19,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> getNode(int index) {
-        Node<T> pointer;
-        if (index < size / 2) {
-            pointer = head;
-            for (int i = 0; i < index; i++) {
-                pointer = pointer.next;
-            }
-        } else {
-            pointer = tail;
-            for (int i = size - 1; i > index; i--) {
-                pointer = pointer.prev;
-            }
-        }
-        return pointer;
-    }
-
-    private void unlink(Node<T> node) {
-        if (size == 1) {
-            head = null;
-            tail = null;
-        } else if (node.prev == null) {
-            head = node.next;
-            head.prev = null;
-        } else if (node.next == null) {
-            tail = node.prev;
-            tail.next = null;
-        } else {
-            node.prev.next = node.next;
-            node.next.prev = node.prev;
-        }
-        size--;
-    }
-
-    private void checkIndex(int index) {
-        if ((index >= size) || (index < 0)) {
-            throw new IndexOutOfBoundsException("Wrong index");
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(tail, value, null);
@@ -142,5 +103,44 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size() == 0;
+    }
+
+    private Node<T> getNode(int index) {
+        Node<T> pointer;
+        if (index < size / 2) {
+            pointer = head;
+            for (int i = 0; i < index; i++) {
+                pointer = pointer.next;
+            }
+        } else {
+            pointer = tail;
+            for (int i = size - 1; i > index; i--) {
+                pointer = pointer.prev;
+            }
+        }
+        return pointer;
+    }
+
+    private void unlink(Node<T> node) {
+        if (size == 1) {
+            head = null;
+            tail = null;
+        } else if (node.prev == null) {
+            head = node.next;
+            head.prev = null;
+        } else if (node.next == null) {
+            tail = node.prev;
+            tail.next = null;
+        } else {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        }
+        size--;
+    }
+
+    private void checkIndex(int index) {
+        if ((index >= size) || (index < 0)) {
+            throw new IndexOutOfBoundsException("Wrong index");
+        }
     }
 }
