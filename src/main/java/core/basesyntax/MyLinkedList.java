@@ -140,7 +140,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if ((index >= size) || (index < 0)) {
-            throw new IndexOutOfBoundsException("Wrong index");
+            throw new IndexOutOfBoundsException("Index must be between 0 and " + (size - 1) + ", but was: " + index);
         }
     }
 }
