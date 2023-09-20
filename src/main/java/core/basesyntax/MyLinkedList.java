@@ -61,7 +61,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        if ((index >= size) || (index < 0)) {
+            throw new IndexOutOfBoundsException("Index must be between 0 and "
+                    + (size - 1)
+                    + ", but was: "
+                    + index);
+        }
         return getNode(index).value;
     }
 
@@ -140,7 +145,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if ((index >= size) || (index < 0)) {
-            throw new IndexOutOfBoundsException("Index must be between 0 and " + (size - 1) + ", but was: " + index);
+            throw new IndexOutOfBoundsException("Index must be between 0 and "
+                    + (size - 1)
+                    + ", but was: "
+                    + index);
         }
     }
 }
