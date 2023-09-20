@@ -3,21 +3,10 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size;
+
     private Node<T> head;
     private Node<T> tail;
-
-    static class Node<T> {
-        private T value;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
+    private int size;
 
     @Override
     public void add(T value) {
@@ -38,7 +27,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkIndex(index);
         if (index == 0) {
             Node<T> newNode = new Node<>(null, value, head);
             head.prev = newNode;
@@ -61,18 +49,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if ((index >= size) || (index < 0)) {
-            throw new IndexOutOfBoundsException("Index must be between 0 and "
-                    + (size - 1)
-                    + ", but was: "
-                    + index);
-        }
         return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> node = getNode(index);
         T setValue = node.value;
         node.value = value;
@@ -81,7 +62,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> current = getNode(index);
         unlink(current);
         return current.value;
@@ -110,7 +90,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size() == 0;
     }
 
+    static class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
+    }
+
     private Node<T> getNode(int index) {
+        checkIndex(index);
         Node<T> pointer;
         if (index < size / 2) {
             pointer = head;
