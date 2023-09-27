@@ -20,4 +20,6 @@ public interface MyLinkedListInterface<T> {
     int size();
 
     boolean isEmpty();
+
+    boolean equals(T value1, T value2);
 }
