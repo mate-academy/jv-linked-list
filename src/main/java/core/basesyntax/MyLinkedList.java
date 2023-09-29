@@ -5,7 +5,7 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
-    private int size = 0;
+    private int size;
 
     @Override
     public void add(T value) {
@@ -39,8 +39,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T note : list) {
+            add(note);
         }
     }
 
@@ -68,8 +68,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> deletedNode;
         for (int i = 0; i < size; i++) {
             deletedNode = getIndexedElement(i);
-            if ((deletedNode.item != null && deletedNode.item.equals(object))
-                    || (deletedNode.item == null && object == null)) {
+            if (deletedNode.item != null && deletedNode.item.equals(object)
+                    || deletedNode.item == null && object == null) {
                 unlink(deletedNode);
                 return true;
             }
@@ -135,11 +135,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.item = element;
             this.next = next;
             this.prev = prev;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return super.equals(obj);
         }
     }
 }
