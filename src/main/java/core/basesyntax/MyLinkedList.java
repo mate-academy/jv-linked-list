@@ -62,17 +62,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new NullPointerException("Input is null");
         }
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i) == null) {
-                throw new NullPointerException("List contains null");
+            if (list.get(i) != null) {
+                add(list.get(i));
             }
-            Node<T> newNode = new Node<>(tail, list.get(i), null);
-            if (head == null) {
-                head = tail = newNode;
-            } else {
-                tail.next = newNode;
-                tail = newNode;
-            }
-            listSize++;
         }
     }
 
