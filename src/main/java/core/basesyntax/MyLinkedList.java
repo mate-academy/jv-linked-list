@@ -3,12 +3,12 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final String indexError = "Index is wrong";
+    private static final String INDEX_ERROR = "Index is wrong";
     private int listSize = 0;
     private Node<T> head;
     private Node<T> tail;
 
-    class Node<T> {
+    private class Node<T> {
         private T value;
         private Node<T> prev;
         private Node<T> next;
@@ -20,22 +20,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private void connection(Node<T> node) {
+        if (head == null) {
+            head = tail = node;
+        } else {
+            tail.next = node;
+            tail = node;
+        }
+    }
+
+    private Node<T> stepBystep(int index) {
+        Node<T> currentNode = head;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
+        }
+        return currentNode;
+    }
+
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(tail, value, null);
-        if (head == null) {
-            head = tail = newNode;
-        } else {
-            tail.next = newNode;
-            tail = newNode;
-        }
+        connection(newNode);
         listSize++;
     }
 
     @Override
     public void add(T value, int index) {
         if (index > listSize || index < 0) {
-            throw new IndexOutOfBoundsException(indexError);
+            throw new IndexOutOfBoundsException(INDEX_ERROR);
         }
         Node<T> newNode = new Node<>(null, value, null);
         if (index == 0) {
@@ -59,11 +71,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         if (list == null) {
-            throw new NullPointerException("Input is null");
+            throw new NullPointerException("List is null");
         }
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i) != null) {
-                add(list.get(i));
+            T element = list.get(i);
+            if (element != null) {
+                add(element);
             }
         }
     }
@@ -71,24 +84,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         if (index >= listSize || index < 0 || listSize == 0) {
-            throw new IndexOutOfBoundsException(indexError);
+            throw new IndexOutOfBoundsException(INDEX_ERROR);
         }
-        Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
+        Node<T> currentNode = stepBystep(index);
         return currentNode.value;
     }
 
     @Override
     public T set(T value, int index) {
         if (index >= listSize || index < 0 || listSize == 0) {
-            throw new IndexOutOfBoundsException(indexError);
+            throw new IndexOutOfBoundsException(INDEX_ERROR);
         }
-        Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
+        Node<T> currentNode = stepBystep(index);
         T oldValue = currentNode.value;
         currentNode.value = value;
         return oldValue;
@@ -97,12 +104,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         if (index >= listSize || index < 0 || listSize == 0) {
-            throw new IndexOutOfBoundsException(indexError);
+            throw new IndexOutOfBoundsException(INDEX_ERROR);
         }
-        Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
+        Node<T> currentNode = stepBystep(index);
         T removedValue = currentNode.value;
         unlink(currentNode);
         listSize--;
@@ -112,7 +116,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         if (listSize == 0) {
-            throw new IndexOutOfBoundsException(indexError);
+            throw new IndexOutOfBoundsException(INDEX_ERROR);
         }
         Node<T> appropriateNode = head;
         while (appropriateNode != null) {
