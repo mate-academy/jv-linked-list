@@ -73,21 +73,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void linkLast(T value) {
-        final Node<T> l = tail;
-        final Node<T> newNode = new Node<>(l, value, null);
+        final Node<T> last = tail;
+        final Node<T> newNode = new Node<>(last, value, null);
         tail = newNode;
-        if (l == null) {
+        if (last == null) {
             head = newNode;
         } else {
-            l.next = newNode;
+            last.next = newNode;
         }
         size++;
     }
 
-    private void linkBefore(T value, Node<T> succ) {
-        final Node<T> pred = succ.prev;
-        final Node<T> newNode = new Node<>(pred, value, succ);
-        succ.prev = newNode;
+    private void linkBefore(T value, Node<T> target) {
+        final Node<T> pred = target.prev;
+        final Node<T> newNode = new Node<>(pred, value, target);
+        target.prev = newNode;
         if (pred == null) {
             head = newNode;
         } else {
