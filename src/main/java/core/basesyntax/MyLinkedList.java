@@ -20,7 +20,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void connection(Node<T> node) {
+    private void makeConnections(Node<T> node) {
         if (head == null) {
             head = tail = node;
         } else {
@@ -40,7 +40,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(tail, value, null);
-        connection(newNode);
+        makeConnections(newNode);
         listSize++;
     }
 
