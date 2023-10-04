@@ -55,10 +55,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list != null) {
-            for (int index = 0; index < list.size(); index++) {
-                add(list.get(index));
-            }
+        if (list == null) {
+            throw new RuntimeException("The list is null!");
+        }
+        for (T value : list) {
+            add(value);
         }
 
     }
@@ -72,8 +73,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        T valueToReturn = getNodeByIndex(index).value;
-        getNodeByIndex(index).value = value;
+        Node<T> nodeWithOldValue = getNodeByIndex(index);
+        T valueToReturn = nodeWithOldValue.value;
+        nodeWithOldValue.value = value;
         return valueToReturn;
     }
 
@@ -125,7 +127,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is invalid!");
+            throw new IndexOutOfBoundsException("Index " + index + " is invalid!");
         }
     }
 
