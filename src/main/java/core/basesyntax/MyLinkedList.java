@@ -85,14 +85,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
 
         boolean removed = false;
-        do {
+
+        for (int i = 0; i < size; i++) {
             if (valuesAreEqual(object, current)) {
                 unlink(current);
                 removed = true;
                 break;
             }
             current = current.next;
-        } while (current != tail);
+        }
 
         return removed;
     }
@@ -104,7 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size < 1;
+        return size == 0;
     }
 
     private void unlink(Node<T> nodeToRemove) {
