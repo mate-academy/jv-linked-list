@@ -52,17 +52,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(null, value, null);
         if (index == 0) {
             newNode.next = head;
+            if (head != null) {
+                head.prev = newNode;
+            }
+            checkNextNode(newNode);
             head = newNode;
             listSize++;
             return;
         }
         Node<T> currentNode = getNodeByIndex(index - 1);
-        newNode.next = currentNode.next;
+        Node<T> nextNode = currentNode.next;
+        newNode.next = nextNode;
+        checkNextNode(newNode);
+        if (nextNode != null) {
+            nextNode.prev = newNode;
+        }
+        newNode.prev = currentNode;
         currentNode.next = newNode;
         listSize++;
-        if (newNode.next == null) {
-            tail = newNode;
-        }
     }
 
     @Override
@@ -119,7 +126,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             appropriateNode = appropriateNode.next;
         }
         return false;
-
     }
 
     @Override
@@ -150,6 +156,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void checkIndex(int index) {
         if (index >= listSize || index < 0 || listSize == 0) {
             throw new IndexOutOfBoundsException(INDEX_ERROR);
+        }
+    }
+
+    private void checkNextNode(Node<T> node) {
+        if (node.next == null) {
+            tail = node;
         }
     }
 }
