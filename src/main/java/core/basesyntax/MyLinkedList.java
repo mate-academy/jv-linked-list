@@ -123,26 +123,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         if (next == null) {
             tail = prev;
+            size--;
+            return current.value;
         }
 
         if (prev == null) {
             head = next;
+            size--;
+            return current.value;
         }
-        
-        if (next != null && prev != null) {
-            next.prev = prev;
-            prev.next = next;
-        }
+
+        next.prev = prev;
+        prev.next = next;
 
         size--;
         return current.value;
     }
     
     private Node<T> findNodeByIndex(int index) {
-        Node<T> current = head;
+        int halvedSize = size / 2;
+        Node<T> current = null;
 
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        if (halvedSize >= index) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
 
         return current;
@@ -150,13 +161,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndexPositionException(int index) {
         if (!(index >= 0 && index <= size)) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Cannot add value on index " + index);
         }
     }
 
     private void checkIndexElementException(int index) {
         if (!(index >= 0 && index < size)) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index " + index +" is not correct");
         }
     }
 
@@ -165,7 +176,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private T value;
         private Node<T> prev;
 
-        public Node(Node<T> next, T value, Node<T> prev) {
+        private Node(Node<T> next, T value, Node<T> prev) {
             this.next = next;
             this.value = value;
             this.prev = prev;
