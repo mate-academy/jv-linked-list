@@ -167,7 +167,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndexElementException(int index) {
         if (!(index >= 0 && index < size)) {
-            throw new IndexOutOfBoundsException("Index " + index +" is not correct");
+            throw new IndexOutOfBoundsException("Index " + index + " is not correct");
         }
     }
 
