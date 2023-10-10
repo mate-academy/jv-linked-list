@@ -148,35 +148,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private Node<T> findNodeByValue(T value) {
-        Node<T> current = head;
-
-        for (int i = 0; i < size; i++) {
-            if (current.value != null && current.value.equals(value)) {
-                return current;
-            }
-            current = current.next;
-        }
-
-        return null;
-    }
-
-    private boolean checkIndexPosition(int index) {
-        return index >= 0 && index <= size;
-    }
-
-    private boolean checkIndexElement(int index) {
-        return index >= 0 && index < size;
-    }
-
     private void checkIndexPositionException(int index) {
-        if (!checkIndexPosition(index)) {
+        if (!(index >= 0 && index <= size)) {
             throw new IndexOutOfBoundsException();
         }
     }
 
     private void checkIndexElementException(int index) {
-        if (!checkIndexElement(index)) {
+        if (!(index >= 0 && index < size)) {
             throw new IndexOutOfBoundsException();
         }
     }
