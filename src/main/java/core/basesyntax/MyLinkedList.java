@@ -167,7 +167,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public class Node<V> {
+    private class Node<V> {
         private V value;
         private Node<V> next;
         private Node<V> prev;
