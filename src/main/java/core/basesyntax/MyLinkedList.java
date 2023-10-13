@@ -27,7 +27,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException(EXCEPTION + index);
         }
-
         if (index == size) {
             add(value);
         } else {
@@ -56,17 +55,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(EXCEPTION + index);
-        }
+        checkRangSize(index);
         return getNode(index).data;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(EXCEPTION + index);
-        }
+        checkRangSize(index);
         Node current = getNode(index);
         T oldValue = current.data;
         current.data = value;
@@ -75,9 +70,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(EXCEPTION + index);
-        }
+        checkRangSize(index);
         Node value = getNode(index);
 
         if (value.prev != null) {
@@ -144,6 +137,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             last = node.prev;
         }
         size--;
+    }
+
+    private void checkRangSize(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(EXCEPTION + index);
+        }
     }
 
     private class Node {
