@@ -192,6 +192,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private Node<T> getNodeByValue(T value) {
+        Node<T> currentNode = head;
+        if (Objects.equals(value, head.item)) {
+            return head;
+        }
+        while (currentNode.next != null) {
+            if (Objects.equals(value, currentNode.item)) {
+                return currentNode;
+            }
+            currentNode = currentNode.next;
+        }
+        return null;
+    }
+
     private Node<T> getNodeByIndex(int index) {
         checkIndex(index);
         if (index > size / 2 + 1) {
@@ -220,19 +234,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current = current.prev;
         }
         return current;
-    }
-
-    private Node<T> getNodeByValue(T value) {
-        Node<T> currentNode = head;
-        if (Objects.equals(value, head.item)) {
-            return head;
-        }
-        while (currentNode.next != null) {
-            if (Objects.equals(value, currentNode.item)) {
-                return currentNode;
-            }
-            currentNode = currentNode.next;
-        }
-        return null;
     }
 }
