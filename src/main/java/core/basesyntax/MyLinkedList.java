@@ -5,6 +5,10 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String INDEX_OUT_OF_BOUNDS_MESSAGE = "Index %d "
             + "does not exist in this LinkedList!";
+    private static final int DEFAULT_DIVISOR = 2;
+    private static final int INDEX_STOPPING_FROM_TAIL = 1;
+    private static final int FIRST_ELEMENT_INDEX = 0;
+    private static final int EMPTY_LIST_VALUE = 0;
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -27,7 +31,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         checkAddIndexExistence(index);
         Node<T> current;
-        if (index == 0) {
+        if (index == FIRST_ELEMENT_INDEX) {
             head = new Node<>(null, value, head);
             tail = head;
         } else if (index == size) {
@@ -103,7 +107,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0;
+        return size == EMPTY_LIST_VALUE;
     }
 
     private static class Node<T> {
@@ -120,18 +124,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeByIndex(int index) {
         checkIndexExistence(index);
-        boolean isIndexLessHalf = index <= size / 2;
+        boolean isIndexLessHalf = index <= size / DEFAULT_DIVISOR;
         Node<T> node;
         if (isIndexLessHalf) {
             node = head;
-            while (index != 0) {
+            while (index != EMPTY_LIST_VALUE) {
                 node = node.next;
                 index--;
             }
         } else {
             node = tail;
             int stepCounter = size - index;
-            while (stepCounter != 1) {
+            while (stepCounter != INDEX_STOPPING_FROM_TAIL) {
                 node = node.prev;
                 stepCounter--;
             }
