@@ -3,8 +3,8 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node head;
-    private Node tail;
+    private Node<T> head;
+    private Node<T> tail;
     private int size;
     private final String exceptionMessage = "The index %s"
             + " is not valid for size: %d";
@@ -28,7 +28,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkindexValidity(index);
+        checkIndexValidity(index);
         Node<T> newNext = getElement(index);
         Node<T> newPref = newNext.prev;
         Node<T> newNode = new Node<>(newPref, value, newNext);
@@ -66,13 +66,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkindexValidity(index);
+        checkIndexValidity(index);
         return getElement(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkindexValidity(index);
+        checkIndexValidity(index);
         Node<T> node = getElement(index);
         T oldValue = node.value;
         node.value = value;
@@ -81,7 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkindexValidity(index);
+        checkIndexValidity(index);
         return unlink(getElement(index)).value;
     }
 
@@ -107,7 +107,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkindexValidity(int index) {
+    private void checkIndexValidity(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(String.format(exceptionMessage, index, size));
         }
@@ -130,10 +130,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private static class Node<T> {
         private T value;
-        private Node prev;
-        private Node next;
+        Node<T> prev;
+        Node<T> next;
 
-        Node(Node<T> prev, T value, Node<T> next) {
+        private Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
             this.value = value;
             this.next = next;
