@@ -11,11 +11,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final int EMPTY_LIST_VALUE = 0;
     private Node<T> head;
     private Node<T> tail;
+    private Node<T> current;
     private int size;
 
     @Override
     public void add(T value) {
-        Node<T> current = new Node<>(null, value, null);
+        current = new Node<>(null, value, null);
         if (tail == null) {
             tail = current;
             head = tail;
@@ -30,7 +31,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkAddIndexExistence(index);
-        Node<T> current;
         if (index == FIRST_ELEMENT_INDEX) {
             head = new Node<>(null, value, head);
             tail = head;
@@ -60,7 +60,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        Node<T> current = getNodeByIndex(index);
+        current = getNodeByIndex(index);
         T oldObject = current.item;
         current.item = value;
         return oldObject;
@@ -68,7 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node<T> current = getNodeByIndex(index);
+        current = getNodeByIndex(index);
         if (current.next == null && current.prev == null) {
             head = null;
             tail = null;
@@ -88,7 +88,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> current = head;
+        current = head;
         for (int i = 0; i < size; i++) {
             if ((object == current.item)
                     || (object != null && object.equals(current.item))) {
@@ -112,10 +112,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private static class Node<T> {
         private T item;
-        private MyLinkedList.Node<T> next;
-        private MyLinkedList.Node<T> prev;
+        private Node<T> next;
+        private Node<T> prev;
 
-        Node(MyLinkedList.Node<T> prev, T element, MyLinkedList.Node<T> next) {
+        public Node(Node<T> prev, T element, Node<T> next) {
             this.item = element;
             this.next = next;
             this.prev = prev;
