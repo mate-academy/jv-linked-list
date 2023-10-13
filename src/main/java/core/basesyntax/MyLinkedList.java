@@ -62,14 +62,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return getNode(index).data;
     }
 
-    public Node getNode(int index) {
-        Node value = first;
-        for (int i = 0; i < index; i++) {
-            value = value.next;
-        }
-        return value;
-    }
-
     @Override
     public T set(T value, int index) {
         if (index < 0 || index >= size) {
@@ -122,6 +114,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return false;
     }
 
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    private Node getNode(int index) {
+        Node value = first;
+        for (int i = 0; i < index; i++) {
+            value = value.next;
+        }
+        return value;
+    }
+
     private void removeNode(Node node) {
         if (node.prev != null) {
             node.prev.next = node.next;
@@ -134,16 +144,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             last = node.prev;
         }
         size--;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
     }
 
     private class Node {
