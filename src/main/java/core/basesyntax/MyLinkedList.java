@@ -3,87 +3,79 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final String MESSAGE_OF_ADD_VALUE_EXCEPTION = "can't add a value into "
+    private static final String MESSAGE_ADD_EXCEPTION = "can't add a value into "
             + "this index because length is ";
-    private static final String MESSAGE_OF_GET_VALUE_EXCEPTION = "can't get a value into "
+    private static final String MESSAGE_GET_EXCEPTION = "can't get a value into "
             + "this index because length is ";
-    private static final String MESSAGE_OF_SET_VALUE_EXCEPTION = "can't set a value into "
+    private static final String MESSAGE_SET_EXCEPTION = "can't set a value into "
             + "this index because length is ";
-    private static final String MESSAGE_OF_REMOVE_VALUE_EXCEPTION = "can't remove a value in "
+    private static final String MESSAGE_REMOVE_EXCEPTION = "can't remove a value in "
             + "this index because length is ";
     private static final int ACCURACY_OF_ONE = 1;
     private static final int EMPTY = 0;
     private static final int HEAD_INDEX = 0;
     private Node head;
     private Node tail;
-    private int usedSpace;
+    private int size;
 
     @Override
     public void add(T value) {
-        if (usedSpace == EMPTY) {
+        if (size == EMPTY) {
             head = new Node(null, value, null);
             tail = head;
-            usedSpace++;
+            size++;
             return;
         }
         tail = new Node(tail, value, null);
         tail.prev.next = tail;
-        usedSpace++;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIfIndexOutOfBoundsException(MESSAGE_OF_ADD_VALUE_EXCEPTION, index);
-        if (usedSpace == EMPTY) {
+        checkIfIndexOutOfBoundsException(MESSAGE_ADD_EXCEPTION, index);
+        if (size == EMPTY) {
             head = new Node(null, value, null);
             tail = head;
-            usedSpace++;
+            size++;
             return;
         }
         if (index == HEAD_INDEX) {
             head = new Node(null, value, head);
             head.next.prev = head;
-            usedSpace++;
+            size++;
             return;
         }
-        if (usedSpace == index) {
+        if (size == index) {
             tail = new Node(tail, value, null);
             tail.prev.next = tail;
-            usedSpace++;
+            size++;
             return;
         }
         Node targerNode = findNodeByIndex(index - ACCURACY_OF_ONE);
         Node newNode = new Node(targerNode, value, targerNode.next);
         newNode.prev.next = newNode;
-        usedSpace++;
+        newNode.next.prev = newNode;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         for (T value : list) {
-            if (usedSpace == EMPTY) {
-                head = new Node(null, value, null);
-                tail = head;
-                usedSpace++;
-                return;
-            }
-            tail = new Node(tail,value,null);
-            tail.prev.next = tail;
-            usedSpace++;
+            add(value);
         }
     }
 
     @Override
     public T get(int index) {
-        checkIfIndexOutOfBoundsException(MESSAGE_OF_GET_VALUE_EXCEPTION,
+        checkIfIndexOutOfBoundsException(MESSAGE_GET_EXCEPTION,
                 index < HEAD_INDEX ? index : index + ACCURACY_OF_ONE);
-        Node targetNode = findNodeByIndex(index);
-        return (T) targetNode.value;
+        return (T) findNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIfIndexOutOfBoundsException(MESSAGE_OF_SET_VALUE_EXCEPTION,
+        checkIfIndexOutOfBoundsException(MESSAGE_SET_EXCEPTION,
                 index < HEAD_INDEX ? index : index + ACCURACY_OF_ONE);
         Node targetNode = findNodeByIndex(index);
         T targetNodeValue = (T) targetNode.value;
@@ -93,46 +85,49 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIfIndexOutOfBoundsException(MESSAGE_OF_REMOVE_VALUE_EXCEPTION,
+        checkIfIndexOutOfBoundsException(MESSAGE_REMOVE_EXCEPTION,
                 index < HEAD_INDEX ? index : index + ACCURACY_OF_ONE);
         Node targetNode = findNodeByIndex(index);
         if (index == HEAD_INDEX) {
             head = targetNode.next;
         }
-        if (index == usedSpace) {
+        if (index == size) {
             tail = targetNode.prev;
         }
         unlink(targetNode);
-        usedSpace--;
+        size--;
         return (T) targetNode.value;
     }
 
     @Override
     public boolean remove(T object) {
-        Node currentNode = head;
-        for (int i = 0; i < usedSpace; i++) {
-            if (currentNode.value == object
-                    || currentNode.value != null && currentNode.value.equals(object)) {
+        Node current = head;
+        for (int i = 0; i < size; i++) {
+            if (current.value == object
+                    || current.value != null && current.value.equals(object)) {
                 if (i == HEAD_INDEX) {
-                    head = currentNode.next;
+                    head = current.next;
                 }
-                unlink(currentNode);
-                usedSpace--;
+                if (i == size - ACCURACY_OF_ONE) {
+                    tail = current.prev;
+                }
+                unlink(current);
+                size--;
                 return true;
             }
-            currentNode = currentNode.next;
+            current = current.next;
         }
         return false;
     }
 
     @Override
     public int size() {
-        return usedSpace;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return usedSpace == EMPTY;
+        return size == EMPTY;
     }
 
     private void unlink(Node node) {
@@ -145,38 +140,36 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node findNodeByIndex(int index) {
-        int halfOfUsedSpace = (int) Math.ceil((double) usedSpace / 2);
+        int halfOfUsedSpace = (int) Math.ceil((double) size / 2);
+        Node current = head;
         if (index <= halfOfUsedSpace) {
-            Node currentNode = head;
             for (int i = 0; i < index; i++) {
-                currentNode = currentNode.next;
+                current = current.next;
             }
-            return currentNode;
         } else {
-            Node currentNode = tail;
-            for (int i = usedSpace - ACCURACY_OF_ONE; i > index; i--) {
-                currentNode = currentNode.prev;
+            current = tail;
+            for (int i = size - ACCURACY_OF_ONE; i > index; i--) {
+                current = current.prev;
             }
-            return currentNode;
         }
+        return current;
     }
 
     private void checkIfIndexOutOfBoundsException(String message, int index) {
-        if (index > usedSpace || index < HEAD_INDEX) {
-            throw new IndexOutOfBoundsException(message + (usedSpace - ACCURACY_OF_ONE));
+        if (index > size || index < HEAD_INDEX) {
+            throw new IndexOutOfBoundsException(message + (size - ACCURACY_OF_ONE));
         }
     }
 
-    private class Node<V> {
-        private V value;
-        private Node<V> next;
-        private Node<V> prev;
+    private class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
 
-        private Node(Node<V> prev, V value, Node<V> next) {
+        private Node(Node<T> prev, T value, Node<T> next) {
             this.value = value;
             this.next = next;
             this.prev = prev;
         }
     }
-
 }
