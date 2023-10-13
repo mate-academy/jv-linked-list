@@ -3,9 +3,23 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
-    private Node<T> head = null;
-    private Node<T> tail = null;
+    private static final String INDEX_LESS_THAN_ZERO_MESSAGE = "Index can't be less than zero";
+    private static final String INDEX_NOT_FOUND_MESSAGE = "Not found index: ";
+    private int size;
+    private Node<T> head;
+    private Node<T> tail;
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
 
     @Override
     public void add(T value) {
@@ -86,18 +100,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     private Node<T> elementAt(int index) {
         Node<T> current;
         if (index <= size >> 1) {
@@ -120,11 +122,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0) {
-            throw new IndexOutOfBoundsException("Index can't be less than zero");
+            throw new IndexOutOfBoundsException(INDEX_LESS_THAN_ZERO_MESSAGE);
         }
         index++;
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Not found index: " + index);
+            throw new IndexOutOfBoundsException(INDEX_NOT_FOUND_MESSAGE + index);
         }
     }
 
