@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node tail;
     private int size;
 
-    public static class Node<T> {
-        private T value;
-        private Node prev;
-        private Node next;
-
-        Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         final Node<T> lastNode = tail;
@@ -30,7 +18,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             lastNode.next = newNode;
         }
         size++;
-
     }
 
     @Override
@@ -39,7 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkRangeForIndex(index);
+        checkindexValidity(index);
         Node<T> newNext = getElement(index);
         Node<T> newPref = newNext.prev;
         Node<T> newNode = new Node<>(newPref, value, newNext);
@@ -70,20 +57,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T obj : list) {
+            add(obj);
         }
     }
 
     @Override
     public T get(int index) {
-        checkRangeForIndex(index);
+        checkindexValidity(index);
         return getElement(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkRangeForIndex(index);
+        checkindexValidity(index);
         Node<T> node = getElement(index);
         T oldValue = node.value;
         node.value = value;
@@ -92,7 +79,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkRangeForIndex(index);
+        checkindexValidity(index);
         return unlink(getElement(index)).value;
     }
 
@@ -118,7 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkRangeForIndex(int index) {
+    private void checkindexValidity(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("The index " + index
                     + " is not valid for size: " + size);
@@ -138,5 +125,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         size--;
         return node;
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node prev;
+        private Node next;
+
+        Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
     }
 }
