@@ -13,36 +13,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(null, value, null);
         if (head == null) {
             head = newNode;
-            tail = newNode;
         } else {
             tail.next = newNode;
             newNode.prev = tail;
-            tail = newNode;
         }
+        tail = newNode;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
         validateIndex(index);
-        Node<T> newNode = new Node<T>(null, value, null);
-        if (index == 0 && size == 0) {
-            head = newNode;
-            tail = newNode;
-        } else if (index == 0) {
-            head.prev = newNode;
-            newNode.next = head;
-            head = newNode;
-        } else if (index == size) {
-            tail.next = newNode;
-            newNode.prev = tail;
-            tail = newNode;
+        Node<T> newNode = new Node<>(null, value, null);
+        if (index == 0) {
+            addToHead(newNode);
         } else {
-            Node<T> sameIndexNode = getNode(index);
-            newNode.prev = sameIndexNode.prev;
-            sameIndexNode.prev.next = newNode;
-            sameIndexNode.prev = newNode;
-            newNode.next = sameIndexNode;
+            addByIndex(newNode, index);
         }
         size++;
     }
@@ -61,9 +47,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
-        }
         T returnValue = getNode(index).item;
         getNode(index).item = value;
         return returnValue;
@@ -127,6 +110,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             returnNode = returnNode.prev;
         }
         return returnNode;
+    }
+
+    private void addByIndex(Node<T> node, int index) {
+        if (index == size) {
+            tail.next = node;
+            node.prev = tail;
+            tail = node;
+        } else {
+            Node<T> sameIndexNode = getNode(index);
+            node.prev = sameIndexNode.prev;
+            sameIndexNode.prev.next = node;
+            sameIndexNode.prev = node;
+            node.next = sameIndexNode;
+        }
+    }
+
+    private void addToHead(Node<T> node) {
+        if (head == null) {
+            head = node;
+            tail = node;
+        } else {
+            head.prev = node;
+            node.next = head;
+            head = node;
+        }
     }
 
     private void unlink(Node<T> node) {
