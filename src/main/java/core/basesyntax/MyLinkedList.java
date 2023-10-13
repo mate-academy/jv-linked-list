@@ -6,6 +6,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node head;
     private Node tail;
     private int size;
+    private final String exceptionMessage = "The index %s"
+            + " is not valid for size: %d";
 
     @Override
     public void add(T value) {
@@ -107,8 +109,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkindexValidity(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("The index " + index
-                    + " is not valid for size: " + size);
+            throw new IndexOutOfBoundsException(String.format(exceptionMessage, index, size));
         }
     }
 
