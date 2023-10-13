@@ -3,44 +3,10 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final String EXCEPTION_MESSAGE = "Provided index is out of valid range";
     private Node<T> head;
     private Node<T> tail;
     private int size;
-
-    private void validateIndex(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Your index is <0 or >size.");
-        }
-    }
-
-    private Node<T> getNode(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Your index is <0 or >=size.");
-        }
-        if (index < size / 2) {
-            Node<T> returnNode = head;
-            for (int i = 0; i < index; i++) {
-                returnNode = returnNode.next;
-            }
-            return returnNode;
-        }
-        Node<T> returnNode = tail;
-        for (int i = size - 1; i > index; i--) {
-            returnNode = returnNode.prev;
-        }
-        return returnNode;
-    }
-
-    private void unlink(Node<T> node) {
-        if (node.equals(head)) {
-            head = head.next;
-        } else if (node.equals(tail)) {
-            tail = tail.prev;
-        } else {
-            node.prev.next = node.next;
-            node.next.prev = node.prev;
-        }
-    }
 
     @Override
     public void add(T value) {
@@ -96,7 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Provided index is out of valid range");
+            throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
         }
         T returnValue = getNode(index).item;
         getNode(index).item = value;
@@ -137,6 +103,41 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void validateIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
+        }
+    }
+
+    private Node<T> getNode(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
+        }
+        if (index < size / 2) {
+            Node<T> returnNode = head;
+            for (int i = 0; i < index; i++) {
+                returnNode = returnNode.next;
+            }
+            return returnNode;
+        }
+        Node<T> returnNode = tail;
+        for (int i = size - 1; i > index; i--) {
+            returnNode = returnNode.prev;
+        }
+        return returnNode;
+    }
+
+    private void unlink(Node<T> node) {
+        if (node.equals(head)) {
+            head = head.next;
+        } else if (node.equals(tail)) {
+            tail = tail.prev;
+        } else {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        }
     }
 
     private static class Node<T> {
