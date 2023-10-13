@@ -2,14 +2,15 @@ package core.basesyntax;
 
 import java.util.List;
 
-public class MyLinkedList<T> implements MyLinkedListInterface<T>{
+public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
     private int size;
+
     private static class Node<E> {
-        E value;
-        Node<E> prev;
-        Node<E> next;
+        private E value;
+        private Node<E> prev;
+        private Node<E> next;
 
         public Node(Node<E> prev, E value, Node<E> next) {
             this.prev = prev;
@@ -45,9 +46,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T>{
             head = newNode;
             tail = newNode;
         } else if (index == 0) {
-           newNode.next = head;
-           head.prev = newNode;
-           head = newNode;
+            newNode.next = head;
+            head.prev = newNode;
+            head = newNode;
         } else if (index == size) {
             tail.next = newNode;
             newNode.prev = tail;
@@ -79,6 +80,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T>{
             throw new IndexOutOfBoundsException("Err");
         }
     }
+
     private Node<T> getNodeByIndex(int index) {
         Node<T> currentNode = head;
         for (int i = 0; i < index; i++) {
