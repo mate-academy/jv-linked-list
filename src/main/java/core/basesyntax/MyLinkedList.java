@@ -8,7 +8,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             "Index: is out of bound for length ";
     private Node<T> head;
     private Node<T> tail;
-    private int size = 0;
+    private int size;
 
     @Override
     public void add(T value) {
@@ -56,12 +56,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> nodeToRemove = getNodeByIndex(index);
-        if (index == 0) {
-            return unlinkHead(nodeToRemove);
-        }
-        if (index == size - 1) {
-            return unlinkTail(nodeToRemove);
-        }
         return unlink(nodeToRemove);
     }
 
@@ -132,52 +126,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         final T removeValue = nodeToUnlink.item;
         Node<T> nextNode = nodeToUnlink.next;
         Node<T> previous = nodeToUnlink.prev;
-        if (previous == null) {
-            head = nextNode;
+        if (nodeToUnlink.equals(head)) {
+            head = head.next;
+        } else if (nodeToUnlink.equals(tail)) {
+            tail = tail.prev;
         } else {
-            previous.next = nextNode;
-            nodeToUnlink.prev = null;
+            previous.next = nodeToUnlink.next;
+            nextNode.prev = nodeToUnlink.prev;
         }
-
-        if (nextNode == null) {
-            tail = previous;
-        } else {
-            nextNode.prev = previous;
-            nodeToUnlink.next = null;
-        }
-        nodeToUnlink.item = null;
         size--;
         return removeValue;
-    }
-
-    private T unlinkHead(Node<T> nodeToUnlink) {
-        final T removeItem = nodeToUnlink.item;
-        Node<T> nextNode = nodeToUnlink.next;
-        nodeToUnlink.item = null;
-        nodeToUnlink.next = null;
-        head = nextNode;
-        if (nextNode == null) {
-            tail = null;
-        } else {
-            nextNode.prev = null;
-        }
-        size--;
-        return removeItem;
-    }
-
-    private T unlinkTail(Node<T> nodeToUnlink) {
-        final T removeItem = nodeToUnlink.item;
-        Node<T> prev = nodeToUnlink.prev;
-        nodeToUnlink.item = null;
-        nodeToUnlink.prev = null;
-        tail = prev;
-        if (prev == null) {
-            head = null;
-        } else {
-            prev.next = null;
-        }
-        size--;
-        return removeItem;
     }
 
     private void checkIndex(int index) {
