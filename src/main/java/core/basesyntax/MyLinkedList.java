@@ -124,7 +124,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    void checkNodeNext(Node<T> node) {
+    private void checkNodeNext(Node<T> node) {
         if (node.next == null) {
             tail = node;
         }
