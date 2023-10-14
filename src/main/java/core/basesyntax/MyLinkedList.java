@@ -1,9 +1,10 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final String INDEX_OUT_OF_BOUND_EXCEPTION = "Index: %d out of bound!! Size: %d";
+    private static final int ONE = 1;
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -21,7 +22,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(value);
-        if (size == 0) {
+        if (isEmpty()) {
             head = tail = newNode;
         } else {
             tail.next = newNode;
@@ -62,13 +63,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Objects.checkIndex(index, size);
+        validateIndex(index);
         return getNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        Objects.checkIndex(index, size + 1);
+        validateIndex(index);
         Node<T> node = getNodeByIndex(index);
         T oldValue = node.item;
         node.item = value;
@@ -77,8 +78,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        validateIndex(index + 1);
-        Objects.checkIndex(index, size);
+        validateIndex(index);
         Node<T> removedNode = getNodeByIndex(index);
         if (removedNode.previous != null) {
             removedNode.previous.next = removedNode.next;
@@ -98,23 +98,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if (Objects.equals(current.item, object)) {
-                if (current.previous != null) {
-                    current.previous.next = current.next;
-                } else {
-                    head = current.next;
-                }
-                if (current.next != null) {
-                    current.next.previous = current.previous;
-                } else {
-                    tail = current.previous;
-                }
+            if ((current.item == object) || (current.item != null && current.item.equals(object))) {
+                unlink(current);
                 size--;
                 return true;
             }
             current = current.next;
         }
         return false;
+    }
+
+    private void unlink(Node<T> node) {
+        if (node.previous != null) {
+            node.previous.next = node.next;
+        } else {
+            head = node.next;
+        }
+        if (node.next != null) {
+            node.next.previous = node.previous;
+        } else {
+            tail = node.previous;
+        }
     }
 
     @Override
@@ -128,7 +132,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        validateIndex(index + 1);
+        validateIndex(index + ONE);
         if (index <= size / 2) {
             Node<T> current = head;
             for (int i = 0; i < index; i++) {
@@ -137,7 +141,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return current;
         } else {
             Node<T> current = tail;
-            for (int i = size - 1; i > index; i--) {
+            for (int i = size - ONE; i > index; i--) {
                 current = current.previous;
             }
             return current;
@@ -146,7 +150,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void validateIndex(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index: " + index + " out of bounds");
+            throw new IndexOutOfBoundsException(
+                    String.format(INDEX_OUT_OF_BOUND_EXCEPTION, index, size)
+            );
         }
     }
 }
