@@ -34,7 +34,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index is out of bounds");
+            throwOutOfBoundsException(index);
         }
 
         if (index == size) {
@@ -67,7 +67,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is out of bounds");
+            throwOutOfBoundsException(index);
         }
         return getNodeAtIndex(index).value;
     }
@@ -75,7 +75,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is out of bounds");
+            throwOutOfBoundsException(index);
         }
         Node<T> current = getNodeAtIndex(index);
         T oldValue = current.value;
@@ -86,7 +86,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is out of bounds");
+            throwOutOfBoundsException(index);
         }
 
         Node<T> current = getNodeAtIndex(index);
@@ -151,5 +151,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             return current;
         }
+    }
+
+    private void throwOutOfBoundsException(int index) {
+        throw new IndexOutOfBoundsException("Index is out of bounds, given index: " + index);
     }
 }
