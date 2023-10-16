@@ -92,7 +92,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    void linkLast(T node) {
+    private void linkLast(T node) {
         final MyLinkedList.Node<T> lastNode = tail;
         final MyLinkedList.Node<T> newNode = new MyLinkedList.Node<>(tail, node, null);
         tail = newNode;
