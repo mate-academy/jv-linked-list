@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        public Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     @Override
     public void add(T value) {
         linkLast(value);
@@ -64,19 +52,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> node = head; node != null; node = node.next) {
-                if (node.item == null) {
-                    unlink(node);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> node = head; node != null; node = node.next) {
-                if (object.equals(node.item)) {
-                    unlink(node);
-                    return true;
-                }
+        for (Node<T> node = head; node != null; node = node.next) {
+            if ((node.item == null && object == null)
+                    || node.item != null && node.item.equals(object)) {
+                unlink(node);
+                return true;
             }
         }
         return false;
@@ -130,7 +110,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             for (int i = size - 1; i > index; i--) {
                 node = node.prev;
             }
-        }return node;
+        }
+        return node;
     }
 
     private void checkPositionIndex(int index) {
@@ -179,5 +160,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         node.item = null;
         size--;
         return oldValue;
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
