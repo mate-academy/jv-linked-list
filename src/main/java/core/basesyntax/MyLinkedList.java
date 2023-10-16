@@ -125,26 +125,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    T unlink(Node<T> x) {
-        final T element = x.item;
-        final Node<T> next = x.next;
-        final Node<T> prev = x.prev;
+    T unlink(Node<T> item) {
+        final T element = item.item;
+        final Node<T> next = item.next;
+        final Node<T> prev = item.prev;
 
         if (prev == null) {
             first = next;
         } else {
             prev.next = next;
-            x.prev = null;
+            item.prev = null;
         }
 
         if (next == null) {
             last = prev;
         } else {
             next.prev = prev;
-            x.next = null;
+            item.next = null;
         }
 
-        x.item = null;
+        item.item = null;
         size--;
         return element;
     }
