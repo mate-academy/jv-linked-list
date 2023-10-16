@@ -3,7 +3,8 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final String ERROR_INDEX_OUTSIDE_LIST_MESSAGE = "Index outside list";
+    private static final String ERROR_INDEX_OUTSIDE_LIST_MESSAGE
+            = "The index %s outside list";
     private List<T> list;
     private int size;
     private Node<T> head;
@@ -126,7 +127,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(ERROR_INDEX_OUTSIDE_LIST_MESSAGE);
+            throw new IndexOutOfBoundsException(String.format(ERROR_INDEX_OUTSIDE_LIST_MESSAGE, index));
         }
     }
 
