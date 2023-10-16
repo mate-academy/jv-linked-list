@@ -6,9 +6,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String INDEX_OUT_OF_BOUNDS_MESSAGE = "Index %d "
             + "does not exist in this LinkedList!";
     private static final int DEFAULT_DIVISOR = 2;
-    private static final int INDEX_STOPPING_FROM_TAIL = 1;
     private static final int FIRST_ELEMENT_INDEX = 0;
-    private static final int EMPTY_LIST_VALUE = 0;
     private Node<T> head;
     private Node<T> tail;
     private Node<T> current;
@@ -17,9 +15,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         current = new Node<>(null, value, null);
-        if (tail == null) {
-            tail = current;
-            head = tail;
+        if (head == null) {
+            head = tail = current;
         } else {
             current.prev = tail;
             current.prev.next = current;
@@ -55,44 +52,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return getNodeByIndex(index).item;
+        return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         current = getNodeByIndex(index);
-        T oldObject = current.item;
-        current.item = value;
+        T oldObject = current.value;
+        current.value = value;
         return oldObject;
     }
 
     @Override
     public T remove(int index) {
-        current = getNodeByIndex(index);
-        if (current.next == null && current.prev == null) {
-            head = null;
-            tail = null;
-        } else if (current.next == null) {
-            current.prev.next = null;
-            tail = current.prev;
-        } else if (current.prev == null) {
-            current.next.prev = null;
-            head = current.next;
-        } else {
-            current.prev.next = current.next;
-            current.next.prev = current.prev;
-        }
-        size--;
-        return current.item;
+        return unlink(getNodeByIndex(index));
     }
 
     @Override
     public boolean remove(T object) {
         current = head;
         for (int i = 0; i < size; i++) {
-            if ((object == current.item)
-                    || (object != null && object.equals(current.item))) {
-                remove(i);
+            if ((object == current.value)
+                    || (object != null && object.equals(current.value))) {
+                unlink(current);
                 return true;
             }
             current = current.next;
@@ -107,16 +89,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == EMPTY_LIST_VALUE;
+        return size == 0;
     }
 
     private static class Node<T> {
-        private T item;
+        private T value;
         private Node<T> next;
         private Node<T> prev;
 
-        public Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
+        private Node(Node<T> prev, T element, Node<T> next) {
+            this.value = element;
             this.next = next;
             this.prev = prev;
         }
@@ -128,19 +110,35 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> node;
         if (isIndexLessHalf) {
             node = head;
-            while (index != EMPTY_LIST_VALUE) {
+            while (index != FIRST_ELEMENT_INDEX) {
                 node = node.next;
                 index--;
             }
         } else {
             node = tail;
-            int stepCounter = size - index;
-            while (stepCounter != INDEX_STOPPING_FROM_TAIL) {
+            for (int i = 1; i < size - index; i++) {
                 node = node.prev;
-                stepCounter--;
             }
         }
         return node;
+    }
+
+    private T unlink(Node<T> current) {
+        if (current.next == null && current.prev == null) {
+            head = null;
+            tail = null;
+        } else if (current.next == null) {
+            current.prev.next = null;
+            tail = current.prev;
+        } else if (current.prev == null) {
+            current.next.prev = null;
+            head = current.next;
+        } else {
+            current.prev.next = current.next;
+            current.next.prev = current.prev;
+        }
+        size--;
+        return current.value;
     }
 
     private void checkAddIndexExistence(int index) {
