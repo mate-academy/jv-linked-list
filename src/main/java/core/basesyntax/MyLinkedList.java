@@ -105,7 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    void linkBefore(T value, Node<T> existingNode) {
+    private void linkBefore(T value, Node<T> existingNode) {
         final MyLinkedList.Node<T> previousNode = existingNode.prev;
         final MyLinkedList.Node<T> newNode
                 = new MyLinkedList.Node<>(previousNode, value, existingNode);
