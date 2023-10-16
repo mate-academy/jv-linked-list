@@ -4,6 +4,7 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String FORMATTED_EXCEPTION_MESSAGE = "Index %d out of bounds. Size: %d";
+    private static final int NUMBER_ONE = 1;
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -13,12 +14,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> node = new Node<>(null, value, null);
         if (size == 0) {
             head = node;
-            tail = head;
         } else {
             tail.next = node;
             node.prev = tail;
-            tail = node;
         }
+        tail = node;
         size++;
     }
 
@@ -66,20 +66,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> node = getElement(index);
-        if (node.next == null && node.prev == null) {
-            head = tail = null;
-        } else if (node.prev == null) {
-            head = head.next;
-            head.prev = null;
-        } else if (node.next == null) {
-            tail = tail.prev;
-            tail.next = null;
-        } else {
-            node.prev.next = node.next;
-            node.next.prev = node.prev;
-        }
-        size--;
-        return node.value;
+        return removeLinks(node);
     }
 
     @Override
@@ -88,7 +75,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < size; i++) {
             if ((element.value == object)
                     || (element.value != null && element.value.equals(object))) {
-                remove(i);
+                removeLinks(element);
                 return true;
             }
             element = element.next;
@@ -114,11 +101,36 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getElement(int index) {
-        Node<T> element = head;
-        for (int i = 0; i < index; i++) {
-            element = element.next;
+        Node<T> element;
+        if (index < size >> NUMBER_ONE) {
+            element = head;
+            for (int i = 0; i < index; i++) {
+                element = element.next;
+            }
+        } else {
+            element = tail;
+            for (int i = size - NUMBER_ONE; i > index; i--) {
+                element = element.prev;
+            }
         }
         return element;
+    }
+
+    private T removeLinks(Node<T> node) {
+        if (node.next == null && node.prev == null) {
+            head = tail = null;
+        } else if (node.prev == null) {
+            head = head.next;
+            head.prev = null;
+        } else if (node.next == null) {
+            tail = tail.prev;
+            tail.next = null;
+        } else {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        }
+        size--;
+        return node.value;
     }
 
     private static class Node<T> {
@@ -126,7 +138,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        public Node(Node<T> prev, T value, Node<T> next) {
+        private Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
             this.value = value;
             this.next = next;
