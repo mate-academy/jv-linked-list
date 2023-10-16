@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String INVALID_INDEX = "The provided index is invalid: ";
@@ -10,9 +9,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
 
     private static class Node<E> {
-        E item;
-        Node<E> next;
-        Node<E> prev;
+        private E item;
+        private Node<E> next;
+        private Node<E> prev;
 
         Node(Node<E> prev, E element, Node<E> next) {
             this.item = element;
@@ -78,52 +77,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         validateIndexForGetAndRemove(index);
-        T removedElement;
-        if (index == 0) {
-            removedElement = (T) first.item;
-            first = first.next;
-            if (first == null) {
-                last = null;
-            } else {
-                first.prev = null;
-            }
-        } else {
-            Node<T> nodeAtIndex = getNodeByIndex(index - 1);
-            removedElement = nodeAtIndex.next.item;
-            nodeAtIndex.next = nodeAtIndex.next.next;
-            if (nodeAtIndex.next == null) {
-                last = nodeAtIndex;
-            } else {
-                nodeAtIndex.next.prev = nodeAtIndex;
-            }
-        }
-        size--;
-        return removedElement;
+        return unlink(getNodeByIndex(index));
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> current = first;
-        while (current != null) {
-            if (Objects.equals(current.item, object)) {
-                if (current.prev != null) {
-                    current.prev.next = current.next;
-                } else {
-                    first = current.next;
-                }
-
-                if (current.next != null) {
-                    current.next.prev = current.prev;
-                } else {
-                    last = current.prev;
-                }
-
-                size--;
-                return true; // Object successfully removed
-            }
-            current = current.next;
+        int index = getIndexByObject(object);
+        if (index != -1) {
+            unlink(getNodeByIndex(index));
+            return true;
         }
-        return false; // Object not found in the list
+        return false;
     }
 
     @Override
@@ -155,5 +119,39 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current = current.next;
         }
         return current;
+    }
+
+    private T unlink(Node<T> x) {
+        final T element = x.item;
+        Node<T> next = x.next;
+        Node<T> prev = x.prev;
+        if (prev == null) {
+            first = next;
+        } else {
+            prev.next = next;
+            x.prev = null;
+        }
+        if (next == null) {
+            last = prev;
+        } else {
+            next.prev = prev;
+            x.next = null;
+        }
+        x.item = null;
+        size--;
+        return element;
+    }
+
+    private int getIndexByObject(T object) {
+        Node<T> current = first;
+        int index = 0;
+        while (current != null) {
+            if ((current.item == object) || (current.item != null && current.item.equals(object))) {
+                return index;
+            }
+            current = current.next;
+            index++;
+        }
+        return -1;
     }
 }
