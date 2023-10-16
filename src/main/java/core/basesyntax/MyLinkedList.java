@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String EXCEPTION = "Wrong index - ";
@@ -17,26 +18,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             newNode.prev = last;
             last.next = newNode;
-            last = newNode;
+            last = last.next;
         }
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(EXCEPTION + index);
-        }
+        checkRangSizeEqualsZero(index);
+        Node newNode = new Node(value);
         if (index == size) {
             add(value);
         } else {
-            Node newNode = new Node(value);
             Node current = getNode(index);
-
             newNode.prev = current.prev;
             newNode.next = current;
             current.prev = newNode;
-
             if (newNode.prev != null) {
                 newNode.prev.next = newNode;
             } else {
@@ -93,12 +90,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node value = first;
         while (value != null) {
-            if (object == null) {
-                if (value.data == null) {
-                    removeNode(value);
-                    return true;
-                }
-            } else if (object.equals(value.data)) {
+            if (Objects.equals(object, value.data)) {
                 removeNode(value);
                 return true;
             }
@@ -118,9 +110,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node getNode(int index) {
-        Node value = first;
-        for (int i = 0; i < index; i++) {
-            value = value.next;
+        checkRangSize(index);
+        Node value;
+        if (index < size / 2) {
+            value = first;
+            for (int i = 0; i < index; i++) {
+                value = value.next;
+            }
+        } else {
+            value = last;
+            for (int i = size - 1; i > index; i--) {
+                value = value.prev;
+            }
         }
         return value;
     }
@@ -141,6 +142,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkRangSize(int index) {
         if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(EXCEPTION + index);
+        }
+    }
+
+    private void checkRangSizeEqualsZero(int index) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException(EXCEPTION + index);
         }
     }
