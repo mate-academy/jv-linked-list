@@ -12,7 +12,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        Node(MyLinkedList.Node<T> prev, T element, MyLinkedList.Node<T> next) {
+        public Node(Node<T> prev, T element, MyLinkedList.Node<T> next) {
             this.item = element;
             this.next = next;
             this.prev = prev;
