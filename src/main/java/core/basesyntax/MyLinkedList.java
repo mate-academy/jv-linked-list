@@ -3,6 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final String INDEX_ERROR_MSG = " index is out of range!!!";
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -115,27 +116,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkPositionIndex(int index) {
-        if (!isPositionIndex(index)) {
-            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+        if (!(index >= 0 && index <= size)) {
+            throw new IndexOutOfBoundsException(index + INDEX_ERROR_MSG);
         }
     }
 
     private void checkElementIndex(int index) {
-        if (!isElementIndex(index)) {
-            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+        if (!(index >= 0 && index < size)) {
+            throw new IndexOutOfBoundsException(index + INDEX_ERROR_MSG);
         }
-    }
-
-    private boolean isPositionIndex(int index) {
-        return index >= 0 && index <= size;
-    }
-
-    private boolean isElementIndex(int index) {
-        return index >= 0 && index < size;
-    }
-
-    private String outOfBoundsMsg(int index) {
-        return "Index: " + index + ", Size: " + size;
     }
 
     private T unlink(Node<T> node) {
