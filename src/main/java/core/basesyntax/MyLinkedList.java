@@ -118,15 +118,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    MyLinkedList.Node<T> getExistingNodeByIndex(int index) {
+    private Node<T> getExistingNodeByIndex(int index) {
         if (index < (size >> 1)) {
-            MyLinkedList.Node<T> node = head;
+            Node<T> node = head;
             for (int i = 0; i < index; i++) {
                 node = node.next;
             }
             return node;
         } else {
-            MyLinkedList.Node<T> node = tail;
+            Node<T> node = tail;
             for (int i = size - 1; i > index; i--) {
                 node = node.prev;
             }
