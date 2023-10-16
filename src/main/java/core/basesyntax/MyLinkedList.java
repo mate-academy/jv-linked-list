@@ -32,12 +32,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             insertFirst(value);
             return;
         }
-        Node<T> prevNode = elementAt(index - 1);
-        Node<T> newNode = new Node<>(prevNode, value, prevNode.next);
-        if (prevNode.next != null) {
-            prevNode.next.prev = newNode;
-        }
-        prevNode.next = newNode;
+        Node<T> nextNode = elementAt(index);
+        Node<T> newNode = new Node<>(nextNode.prev, value, nextNode);
+        nextNode.prev.next = newNode;
+        nextNode.prev = newNode;
         size++;
     }
 
