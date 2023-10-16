@@ -150,7 +150,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.prev.next = node.next;
             node.next.prev = node.prev;
         }
-
     }
 
     private void throwException() {
