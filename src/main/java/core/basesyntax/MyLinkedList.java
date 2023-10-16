@@ -9,19 +9,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> previous;
-
-        public Node(T item) {
-            this.item = item;
-        }
-    }
-
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(null, value, null);
         if (isEmpty()) {
             head = tail = newNode;
         } else {
@@ -35,7 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         validateIndex(index);
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(null, value, null);
         if (index == size) {
             add(value);
         } else if (index == 0) {
@@ -55,8 +45,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T value :
-                list) {
+        for (T value : list) {
             add(value);
         }
     }
@@ -64,15 +53,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         validateIndex(index);
-        return getNodeByIndex(index).item;
+        return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         validateIndex(index);
         Node<T> node = getNodeByIndex(index);
-        T oldValue = node.item;
-        node.item = value;
+        T oldValue = node.value;
+        node.value = value;
         return oldValue;
     }
 
@@ -80,25 +69,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         validateIndex(index);
         Node<T> removedNode = getNodeByIndex(index);
-        if (removedNode.previous != null) {
-            removedNode.previous.next = removedNode.next;
-        } else {
-            head = removedNode.next;
-        }
-        if (removedNode.next != null) {
-            removedNode.next.previous = removedNode.previous;
-        } else {
-            tail = removedNode.previous;
-        }
+        unlink(removedNode);
         size--;
-        return removedNode.item;
+        return removedNode.value;
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if ((current.item == object) || (current.item != null && current.item.equals(object))) {
+            if ((current.value == object)
+                    || (current.value != null && current.value.equals(object))) {
                 unlink(current);
                 size--;
                 return true;
@@ -133,19 +114,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeByIndex(int index) {
         validateIndex(index + ONE);
+        Node<T> current;
         if (index <= size / 2) {
-            Node<T> current = head;
+            current = head;
             for (int i = 0; i < index; i++) {
                 current = current.next;
             }
-            return current;
         } else {
-            Node<T> current = tail;
+            current = tail;
             for (int i = size - ONE; i > index; i--) {
                 current = current.previous;
             }
-            return current;
         }
+        return current;
     }
 
     private void validateIndex(int index) {
@@ -153,6 +134,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException(
                     String.format(INDEX_OUT_OF_BOUND_EXCEPTION, index, size)
             );
+        }
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> previous;
+
+        private Node(Node<T> previous, T value, Node<T> next) {
+            this.previous = previous;
+            this.value = value;
+            this.next = next;
         }
     }
 }
