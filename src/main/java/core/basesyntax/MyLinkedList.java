@@ -158,7 +158,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return "Index: " + index + ", Size: " + size;
     }
 
-    T unlink(MyLinkedList.Node<T> node) {
+    private T unlink(MyLinkedList.Node<T> node) {
         final T oldValue = node.item;
         final MyLinkedList.Node<T> next = node.next;
         final MyLinkedList.Node<T> prev = node.prev;
