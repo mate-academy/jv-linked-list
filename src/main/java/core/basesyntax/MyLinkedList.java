@@ -37,25 +37,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == EMPTY) {
             head = new Node(null, value, null);
             tail = head;
-            size++;
-            return;
-        }
-        if (index == HEAD_INDEX) {
+        } else if (index == HEAD_INDEX) {
             head = new Node(null, value, head);
             head.next.prev = head;
-            size++;
-            return;
-        }
-        if (size == index) {
+        } else if (index == size) {
             tail = new Node(tail, value, null);
             tail.prev.next = tail;
-            size++;
-            return;
+        } else {
+            Node targetNode = findNodeByIndex(index - 1);
+            Node newNode = new Node(targetNode, value, targetNode.next);
+            newNode.prev.next = newNode;
+            newNode.next.prev = newNode;
         }
-        Node targerNode = findNodeByIndex(index - ACCURACY_OF_ONE);
-        Node newNode = new Node(targerNode, value, targerNode.next);
-        newNode.prev.next = newNode;
-        newNode.next.prev = newNode;
         size++;
     }
 
@@ -88,12 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIfIndexOutOfBoundsException(MESSAGE_REMOVE_EXCEPTION,
                 index < HEAD_INDEX ? index : index + ACCURACY_OF_ONE);
         Node targetNode = findNodeByIndex(index);
-        if (index == HEAD_INDEX) {
-            head = targetNode.next;
-        }
-        if (index == size) {
-            tail = targetNode.prev;
-        }
+        tailOrHead(index,targetNode);
         unlink(targetNode);
         size--;
         return (T) targetNode.value;
@@ -105,12 +93,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < size; i++) {
             if (current.value == object
                     || current.value != null && current.value.equals(object)) {
-                if (i == HEAD_INDEX) {
-                    head = current.next;
-                }
-                if (i == size - ACCURACY_OF_ONE) {
-                    tail = current.prev;
-                }
+                tailOrHead(i,current);
                 unlink(current);
                 size--;
                 return true;
@@ -158,6 +141,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void checkIfIndexOutOfBoundsException(String message, int index) {
         if (index > size || index < HEAD_INDEX) {
             throw new IndexOutOfBoundsException(message + (size - ACCURACY_OF_ONE));
+        }
+    }
+
+    private void tailOrHead(int index,Node node) {
+        if (index == HEAD_INDEX) {
+            head = node.next;
+        }
+        if (index == size) {
+            tail = node.prev;
         }
     }
 
