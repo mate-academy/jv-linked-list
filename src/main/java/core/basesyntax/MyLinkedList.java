@@ -27,6 +27,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         validateIndex(index);
         if (index == size) {
             add(value);
+            return;
         }
         Node<T> newNode = new Node<>(null, value, null);
         if (index == 0) {
