@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String EXCEPTION = "Wrong index - ";
@@ -69,20 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkRangSize(index);
         Node value = getNode(index);
-
-        if (value.prev != null) {
-            value.prev.next = value.next;
-        } else {
-            first = value.next;
-        }
-
-        if (value.next != null) {
-            value.next.prev = value.prev;
-        } else {
-            last = value.prev;
-        }
-
-        size--;
+        removeNode(value);
         return value.data;
     }
 
@@ -90,7 +76,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node value = first;
         while (value != null) {
-            if (Objects.equals(object, value.data)) {
+            if (object == null ? value.data == null : object.equals(value.data)) {
                 removeNode(value);
                 return true;
             }
