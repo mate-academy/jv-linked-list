@@ -149,10 +149,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> node) {
-        if (!node.equals(head)) {
+        if (node.prev != null) {
             node.prev.next = node.next;
         }
-        if (!node.equals(tail)) {
+        if (node.next != null) {
             node.next.prev = node.prev;
         }
         tail = node.equals(tail) ? node.prev : tail;
