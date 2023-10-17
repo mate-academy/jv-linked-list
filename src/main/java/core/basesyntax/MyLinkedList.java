@@ -5,7 +5,6 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String ERROR_INDEX_OUTSIDE_LIST_MESSAGE
             = "The index %s outside list";
-    private List<T> list;
     private int size;
     private Node<T> head;
     private Node<T> tail;
@@ -52,34 +51,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return getNode(index).item;
+        return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
         Node<T> node = getNode(index);
-        T oldElement = node.item;
-        node.item = value;
+        T oldElement = node.value;
+        node.value = value;
         return oldElement;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        return unlink(getNode(index)).item;
+        return unlink(getNode(index)).value;
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> currentNode = head;
-        while (currentNode != null) {
-            if (currentNode.item == object
-                    || currentNode.item != null && currentNode.item.equals(object)) {
-                unlink(currentNode);
+        Node<T> current = head;
+        while (current != null) {
+            if (current.value == object
+                    || current.value != null && current.value.equals(object)) {
+                unlink(current);
                 return true;
             }
-            currentNode = currentNode.next;
+            current = current.next;
         }
         return false;
     }
@@ -127,18 +126,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(String.format(ERROR_INDEX_OUTSIDE_LIST_MESSAGE, index));
+            throw new IndexOutOfBoundsException(String.format(
+                    ERROR_INDEX_OUTSIDE_LIST_MESSAGE, index));
         }
     }
 
     private static class Node<T> {
-        private T item;
+        private T value;
         private Node<T> prev;
         private Node<T> next;
 
-        Node(Node<T> prev, T element, Node<T> next) {
+        private Node(Node<T> prev, T element, Node<T> next) {
             this.prev = prev;
-            this.item = element;
+            this.value = element;
             this.next = next;
         }
     }
