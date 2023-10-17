@@ -88,34 +88,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         validateIndex(index);
         Node<T> removedNode = getNodeByIndex(index);
-        if (index == 0) {
-            if (removedNode.next == tail) {
-                tail.prev = head;
-            }
-            head = removedNode.next;
-        } else if (index == size - 1) {
-            if (removedNode.prev == head) {
-                head.next = tail;
-            }
-            tail = removedNode.prev;
-        } else {
-            unlink(removedNode);
-        }
-        size--;
+        unlink(removedNode);
         return removedNode.value;
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> currentNode = head;
-
-        for (int i = 0; i < size; i++) {
-            if (currentNode.value == object
-                    || (object != null && object.equals(currentNode.value))) {
-                unlink(currentNode);
-                return true;
-            }
-            currentNode = currentNode.next;
+        Node<T> removedNode = getNodeByValue(object);
+        if (removedNode != null) {
+            unlink(removedNode);
+            return true;
         }
         return false;
     }
@@ -137,10 +119,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> node) {
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
-        node.next = null;
-        node.prev = null;
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        }
+        if (node.next != null) {
+            node.next.prev = node.prev;
+            if (node == head) {
+                head = node.next;
+            }
+        }
+        size--;
     }
 
     private Node<T> getNodeByIndex(int index) {
@@ -157,5 +145,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return currentNode;
+    }
+
+    private Node<T> getNodeByValue(T value) {
+        Node<T> currentNode = head;
+        for (int i = 0; i < size; i++) {
+            if (currentNode.value == value
+                    || (value != null && value.equals(currentNode.value))) {
+                return currentNode;
+            }
+            currentNode = currentNode.next;
+        }
+        return null;
     }
 }
