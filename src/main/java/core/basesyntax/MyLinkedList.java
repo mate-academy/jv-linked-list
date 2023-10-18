@@ -52,9 +52,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         T oldValue = node.value;
         node.value = value;
 
-        if (index == 0) {
+        if (isHead(node)) {
             head = node;
-        } else if (index == size - 1) {
+        } else if (isTail(node)) {
             tail = node;
         }
         return oldValue;
@@ -70,6 +70,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
+        Node<T> currentNode = head;
+        while (currentNode != null) {
+            if (object == currentNode.value || (object != null
+                    && object.equals(currentNode.value))) {
+                unlink(currentNode);
+                return true;
+            }
+            currentNode = currentNode.next;
+        }
         return false;
     }
 
@@ -108,9 +117,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> node) {
+        size--;
+
+        if (isHead(node)) {
+            node.next.prev = null;
+            head = null;
+            return;
+        } else if (isTail(node)) {
+            node.prev.next = null;
+            tail = node;
+            return;
+        }
         node.prev.next = node.next;
         node.next.prev = node.prev;
-        size--;
+    }
+
+    private boolean isHead(Node<T> node) {
+        return head == node;
+    }
+
+    private boolean isTail(Node<T> node) {
+        return tail == node;
     }
 
     private static class Node<T> {
