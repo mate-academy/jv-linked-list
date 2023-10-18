@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final String INDEX_ERROR_MESSAGE = "The passed index is not allowed";
+    private static final String INDEX_ERROR_MESSAGE = "The passed index is not allowed: ";
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -64,16 +64,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         validateIndex(index, false);
-        Node<T> current = getNodeByIndex(index);
-        unlink(current);
+        Node<T> node = getNodeByIndex(index);
+        unlink(node);
         size--;
-        if (current == head) {
-            head = current.next;
-        }
-        if (current == tail) {
-            tail = current.prev;
-        }
-        return current.value;
+        return node.value;
     }
 
     @Override
@@ -84,12 +78,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         unlink(node);
         size--;
-        if (node == head) {
-            head = node.next;
-        }
-        if (node == tail) {
-            tail = node.prev;
-        }
         return true;
     }
 
@@ -110,14 +98,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (node.next != null) {
             node.next.prev = node.prev;
         }
+        if (node == head) {
+            head = node.next;
+        }
+        if (node == tail) {
+            tail = node.prev;
+        }
     }
 
     private void validateIndex(int index, boolean isForAdd) {
         if (isForAdd && (index < 0 || index > size)) {
-            throw new IndexOutOfBoundsException(INDEX_ERROR_MESSAGE);
+            throw new IndexOutOfBoundsException(INDEX_ERROR_MESSAGE + index);
         }
         if (!isForAdd && (index < 0 || index >= size)) {
-            throw new IndexOutOfBoundsException(INDEX_ERROR_MESSAGE);
+            throw new IndexOutOfBoundsException(INDEX_ERROR_MESSAGE + index);
         }
     }
 
@@ -155,7 +149,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> prev;
         private Node<T> next;
 
-        public Node(Node<T> prev, T value, Node<T> next) {
+        private Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
             this.value = value;
             this.next = next;
