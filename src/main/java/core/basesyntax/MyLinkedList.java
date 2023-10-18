@@ -33,26 +33,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-        Node<T> currentNode;
-
-        if (index >= size / 2) {
-            currentNode = tail;
-            for (int i = size - 1; i > index / 2; i--) {
-                currentNode = currentNode.prev;
-            }
-        } else {
-            currentNode = head;
-            for (int i = 0; i < index; i++) {
-                currentNode = currentNode.next;
-            }
-        }
-        return currentNode.item;
+        Node<T> node = getNodeAtIndex(index);
+        return node.value;
     }
 
     @Override
     public T set(T value, int index) {
-        return null;
+        Node<T> oldNode = getNodeAtIndex(index);
+        T oldValue = oldNode.value;
+        oldNode.value = value;
+        return oldValue;
     }
 
     @Override
@@ -81,13 +71,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private Node<T> getNodeAtIndex(int index) {
+        checkIndex(index);
+        Node<T> currentNode;
+
+        if (index >= size / 2) {
+            currentNode = tail;
+            for (int i = size - 1; i > index / 2; i--) {
+                currentNode = currentNode.prev;
+            }
+        } else {
+            currentNode = head;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+        }
+        return currentNode;
+    }
+
     private static class Node<T> {
-        T item;
+        T value;
         Node<T> next;
         Node<T> prev;
 
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
+        Node(Node<T> prev, T value, Node<T> next) {
+            this.value = value;
             this.next = next;
             this.prev = prev;
         }
