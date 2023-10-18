@@ -3,31 +3,20 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private static final String INDEX_OUT_OF_BOUND_MESSAGE = "Index out of bound";
-    private Node<T> first;
-    private Node<T> last;
+    private Node<T> head;
+    private Node<T> tail;
     private int size;
-
-    private static class Node<T> {
-        private T item;
-        private Node<T> prev;
-        private Node<T> next;
-
-        Node(T item) {
-            this.item = item;
-        }
-    }
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(value, tail, null);
         if (isEmpty()) {
-            first = last = newNode;
+            head = tail = newNode;
         } else {
-            last.next = newNode;
-            newNode.prev = last;
-            last = newNode;
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
         }
         size++;
     }
@@ -35,24 +24,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUND_MESSAGE + index);
+            throwIndexOutOfBoundsException(index);
         }
         if (index == size) {
             add(value);
             return;
         }
-
-        Node<T> newNode = new Node<>(value);
-        if (index == 0) {
-            newNode.next = first;
-            first.prev = newNode;
-            first = newNode;
+        Node<T> indexNode = getNode(index);
+        Node<T> prev = indexNode.prev;
+        Node<T> newNode = new Node<>(value, prev, indexNode);
+        indexNode.prev = newNode;
+        if (prev == null) {
+            head = newNode;
         } else {
-            Node<T> current = getNode(index);
-            newNode.next = current;
-            newNode.prev = current.prev;
-            current.prev.next = newNode;
-            current.prev = newNode;
+            prev.next = newNode;
         }
         size++;
     }
@@ -82,15 +67,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> current = getNode(index);
-        return unlink(current);
+        return unlink(getNode(index));
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> current = first;
+        Node<T> current = head;
         while (current != null) {
-            if ((current.item == null && object == null)
+            if ((current.item == object)
                     || (current.item != null && current.item.equals(object))) {
                 unlink(current);
                 return true;
@@ -112,17 +96,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUND_MESSAGE + index);
+            throwIndexOutOfBoundsException(index);
         }
     }
 
     private Node<T> getNode(int index) {
-        checkIndex(index);
-        Node<T> current = first;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        Node<T> currentNode;
+        if (index < (size / 2)) {
+            currentNode = head;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+        } else {
+            currentNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                currentNode = currentNode.prev;
+            }
         }
-        return current;
+        return currentNode;
     }
 
     T unlink(Node<T> item) {
@@ -131,21 +122,36 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         final Node<T> prev = item.prev;
 
         if (prev == null) {
-            first = next;
+            head = next;
         } else {
             prev.next = next;
             item.prev = null;
         }
 
         if (next == null) {
-            last = prev;
+            tail = prev;
         } else {
             next.prev = prev;
             item.next = null;
         }
 
-        item.item = null;
         size--;
         return element;
+    }
+
+    public void throwIndexOutOfBoundsException(int index) {
+        throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUND_MESSAGE + index);
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> prev;
+        private Node<T> next;
+
+        private Node(T item, Node<T> prev, Node<T> next) {
+            this.item = item;
+            this.prev = prev;
+            this.next = next;
+        }
     }
 }
