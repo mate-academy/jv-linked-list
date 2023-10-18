@@ -14,8 +14,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (head == null) {
             head = newNode;
         } else {
-            head.next = newNode;
             newNode.prev = tail;
+            tail.next = newNode;
         }
         tail = newNode;
     }
@@ -25,11 +25,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
             return;
+        } else if (index == 0) {
+            Node<T> newNode = new Node<>(null, value, head);
+            newNode.next.prev = newNode;
+            head = newNode;
+            size++;
+            return;
         }
         Node<T> node = getNodeAtIndex(index);
-        Node<T> newNode = new Node<>(node, value, node.next);
-        node.next.prev = newNode;
-        node.next = newNode;
+        Node<T> newNode = new Node<>(node.prev, value, node);
+        node.prev.next = newNode;
+        node.prev = newNode;
         size++;
     }
 
@@ -100,28 +106,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeAtIndex(int index) {
         checkIndex(index);
-        Node<T> currentNode;
+        Node<T> currentNode = head;
 
-        if (index >= size / 2) {
-            currentNode = tail;
-            for (int i = size - 1; i > index / 2; i--) {
-                currentNode = currentNode.prev;
-            }
-        } else {
-            currentNode = head;
-            for (int i = 0; i < index; i++) {
-                currentNode = currentNode.next;
-            }
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
         }
         return currentNode;
     }
 
     private void unlink(Node<T> node) {
         size--;
+        if (size == 0) {
+            node.value = null;
+            return;
+        }
 
         if (isHead(node)) {
             node.next.prev = null;
-            head = null;
+            head = node.next;
             return;
         } else if (isTail(node)) {
             node.prev.next = null;
