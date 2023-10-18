@@ -22,6 +22,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index == size) {
+            add(value);
+            return;
+        }
+        Node<T> node = getNodeAtIndex(index);
+        Node<T> newNode = new Node<>(node, value, node.next);
+        node.next.prev = newNode;
+        node.next = newNode;
+        size++;
     }
 
     @Override
@@ -39,15 +48,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        Node<T> oldNode = getNodeAtIndex(index);
-        T oldValue = oldNode.value;
-        oldNode.value = value;
+        Node<T> node = getNodeAtIndex(index);
+        T oldValue = node.value;
+        node.value = value;
+
+        if (index == 0) {
+            head = node;
+        } else if (index == size - 1) {
+            tail = node;
+        }
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        Node<T> node = getNodeAtIndex(index);
+        T removedValue = node.value;
+        unlink(node);
+        return removedValue;
     }
 
     @Override
@@ -87,6 +105,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return currentNode;
+    }
+
+    private void unlink(Node<T> node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+        size--;
     }
 
     private static class Node<T> {
