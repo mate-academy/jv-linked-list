@@ -116,7 +116,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    T unlink(Node<T> item) {
+    private T unlink(Node<T> item) {
         final T element = item.item;
         final Node<T> next = item.next;
         final Node<T> prev = item.prev;
