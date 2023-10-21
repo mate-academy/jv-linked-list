@@ -83,6 +83,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         Node<T> current = getNodeAtIndex(index);
 
+        unlinkNode((Node<T>) current);
+        return current.data;
+    }
+
+    private void unlinkNode(Node<T> current) {
         if (current.prev != null) {
             current.prev.next = current.next;
         } else {
@@ -96,7 +101,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
         size--;
-        return current.data;
     }
 
     @Override
@@ -105,19 +109,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (current != null) {
             if ((current.data == null && object == null)
                     || (current.data != null && current.data.equals(object))) {
-                if (current.prev != null) {
-                    current.prev.next = current.next;
-                } else {
-                    first = current.next;
-                }
-
-                if (current.next != null) {
-                    current.next.prev = current.prev;
-                } else {
-                    last = current.prev;
-                }
-
-                size--;
+                unlinkNode((Node<T>) current);
                 return true;
             }
             current = current.next;
