@@ -20,43 +20,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private int size;
-    private Node<T> head = null;
+    private Node<T> head;
     private Node<T> tail;
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
-        if (head == null) {
-            head = newNode;
-            tail = newNode;
-            size++;
-            return;
-        }
-        tail.nextNode = newNode;
-        newNode.prevNode = tail;
-        tail = newNode;
-        size++;
+        linkTail(value);
     }
 
     @Override
     public void add(T value, int index) {
         validateIndexAdd(index);
         if (index == size) {
-            add(value);
+            linkTail(value);
             return;
         }
         if (index == 0) {
-            Node<T> newNode = new Node<>(null, value, head);
-            head.prevNode = newNode;
-            newNode.nextNode = head;
-            head = newNode;
-            size++;
+            linkHead(value);
             return;
         }
         Node<T> current = getNodeByIndex(index);
         Node<T> newNode = new Node<>(current.prevNode, value, current);
-        newNode.prevNode = current.prevNode;
-        newNode.nextNode = current;
         if (current.prevNode != null) {
             current.prevNode.nextNode = newNode;
         }
@@ -66,8 +50,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T element : list) {
+            linkTail(element);
         }
     }
 
@@ -140,6 +124,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return current;
+    }
+
+    private void linkHead(T value) {
+        Node<T> newNode = new Node<>(null, value, head);
+        head.prevNode = newNode;
+        newNode.nextNode = head;
+        head = newNode;
+        size++;
+    }
+
+    private void linkTail(T value) {
+        Node<T> newNode = new Node<>(value);
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
+            size++;
+            return;
+        }
+        tail.nextNode = newNode;
+        newNode.prevNode = tail;
+        tail = newNode;
+        size++;
     }
 
     private void unlink(Node<T> current) {
