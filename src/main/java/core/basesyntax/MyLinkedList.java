@@ -9,7 +9,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        addNode(value, size, tail, null);
+        addLast(value);
     }
 
     @Override
