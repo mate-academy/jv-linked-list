@@ -57,7 +57,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode = head;
         while (currentNode != null) {
             if (currentNode.value == object || object != null && object.equals(currentNode.value)) {
-                break;
+            unlink(currentNode);
+            return true;
             }
             currentNode = currentNode.next;
         }
