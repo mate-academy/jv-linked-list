@@ -62,10 +62,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             currentNode = currentNode.next;
         }
-        if (currentNode != null) {
-            unlink(currentNode);
-            return true;
-        }
         return false;
     }
 
