@@ -57,8 +57,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode = head;
         while (currentNode != null) {
             if (currentNode.value == object || object != null && object.equals(currentNode.value)) {
-            unlink(currentNode);
-            return true;
+                unlink(currentNode);
+                return true;
             }
             currentNode = currentNode.next;
         }
@@ -76,38 +76,39 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        if (index < size / 2) {
-            Node<T> current = first;
-            for (int i = 0; i < index; i++) {
-                node = current.next;
-            }
-            return current;
-        } else {
-            Node<T> current = tail;
-            int i = size - 1;
-            while (current != null && i >= index) {
-                if (i == index) {
-                    return current;
-                }
-                i--;
-                current = current.prev;
-            }
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Wrong index");
         }
+        Node<T> current;
+        current = tail;
+        for (int i = size - 1; i > index; i--) {
+            current = current.prev;
+        }
+        return current;
     }
 
-    private Node<T> addNode(T value, int index, Node<T> previousNode, Node<T> nextNode) {
-        Node<T> newNode = new Node<>(previousNode, value, nextNode);
+    private void addLast(T value) {
+        Node<T> newNode = new Node<>(tail, value, null);
         if (newNode.prev != null) {
             newNode.prev.next = newNode;
         }
-        if (index == 0) {
+        if (size == 0) {
             head = newNode;
         }
-        if (index == size) {
-            tail = newNode;
-        }
+        tail = newNode;
         size++;
-        return newNode;
+    }
+
+    private void addBefore(T value, Node<T> target) {
+        Node<T> newNode = new Node<>(target.prev, value, target);
+        if (newNode.prev != null) {
+            newNode.prev.next = newNode;
+        }
+        if (head == target) {
+            head = newNode;
+        }
+        target.prev = newNode;
+        size++;
     }
 
     private void unlink(Node<T> node) {
