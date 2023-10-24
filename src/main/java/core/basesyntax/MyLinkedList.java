@@ -18,7 +18,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Wrong index");
         }
         if (index == size) {
-            add(value);
+            addLast(value);
         } else {
             Node<T> currentNode = getNode(index);
             currentNode.prev = addNode(value, index, currentNode.prev, currentNode);
