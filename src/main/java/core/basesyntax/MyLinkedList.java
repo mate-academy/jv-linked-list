@@ -18,7 +18,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             addLast(value);
         } else {
             Node<T> currentNode = getNode(index);
-            currentNode.prev = addNode(value, index, currentNode.prev, currentNode);
+            addBefore(value, currentNode);
         }
     }
 
