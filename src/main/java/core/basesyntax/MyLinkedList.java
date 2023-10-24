@@ -83,15 +83,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         if (index < size / 2) {
-            Node<T> current = head;
-            int i = 0;
-            while (current != null && i <= index) {
-                if (i == index) {
-                    return current;
-                }
-                i++;
-                current = current.next;
+            Node<T> current = first;
+            for (int i = 0; i < index; i++) {
+                node = current.next;
             }
+            return current;
         } else {
             Node<T> current = tail;
             int i = size - 1;
