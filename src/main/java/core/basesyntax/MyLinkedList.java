@@ -103,7 +103,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 current = current.prev;
             }
         }
-        return null;
     }
 
     private Node<T> addNode(T value, int index, Node<T> previousNode, Node<T> nextNode) {
