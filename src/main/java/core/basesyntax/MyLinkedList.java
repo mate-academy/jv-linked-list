@@ -80,20 +80,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Wrong index");
         }
         Node<T> current;
-        current = tail;
-        for (int i = size - 1; i > index; i--) {
-            current = current.prev;
+        if (index < size / 2) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
         return current;
     }
 
     private void addLast(T value) {
         Node<T> newNode = new Node<>(tail, value, null);
-        if (newNode.prev != null) {
-            newNode.prev.next = newNode;
-        }
         if (size == 0) {
             head = newNode;
+        }
+        if (tail != null) {
+            tail.next = newNode;
         }
         tail = newNode;
         size++;
