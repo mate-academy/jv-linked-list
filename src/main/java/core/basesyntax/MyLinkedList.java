@@ -5,18 +5,6 @@ import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
-    private static class Node<T> {
-        private T value;
-        private Node<T> next;
-        private Node<T> prev;
-
-        public Node(Node<T> next, T value, Node<T> prev) {
-            this.next = null;
-            this.value = value;
-            this.prev = null;
-        }
-    }
-
     private Node<T> head;
     private int size;
 
@@ -32,7 +20,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
+        if (isIndexOutForAddMethod(index)) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -41,10 +29,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             newNode.next = head;
             head = newNode;
         } else {
-            Node<T> current = head;
-            for (int i = 0; i < index - 1; i++) {
-                current = current.next;
-            }
+            Node<T> current = getNodeForAddAndRemoveMethods(index);
             newNode.next = current.next;
             current.next = newNode;
         }
@@ -60,28 +45,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
+        if (isIndexOutForOtherMethods(index)) {
             throw new IndexOutOfBoundsException();
         }
 
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
+        Node<T> current = getNodeForSetAndGetMethods(index);
 
         return current.value;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size) {
+        if (isIndexOutForOtherMethods(index)) {
             throw new IndexOutOfBoundsException();
         }
 
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
+        Node<T> current = getNodeForSetAndGetMethods(index);
 
         T oldValue = current.value;
         current.value = value;
@@ -90,7 +69,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
+        if (isIndexOutForOtherMethods(index)) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -100,15 +79,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size--;
             return removedValue;
         } else {
-            Node<T> current = head;
-            for (int i = 0; i < index - 1; i++) {
-                current = current.next;
-            }
+            Node<T> current = getNodeForAddAndRemoveMethods(index);
+
             if (current != null && current.next != null) {
                 T removedValue = current.next.value;
                 current.next = current.next.next;
                 size--;
                 return removedValue;
+
             } else {
                 throw new NoSuchElementException("Element not found");
             }
@@ -146,6 +124,43 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(Node<T> next, T value, Node<T> prev) {
+            this.next = next;
+            this.value = value;
+            this.prev = prev;
+        }
+    }
+
+    private boolean isIndexOutForAddMethod(int index) {
+        return index < 0 || index > size;
+    }
+
+    private boolean isIndexOutForOtherMethods(int index) {
+        return index < 0 || index >= size;
+    }
+
+    private Node<T> getNodeForSetAndGetMethods(int index) {
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        return current;
+    }
+
+    private Node<T> getNodeForAddAndRemoveMethods(int index) {
+        Node<T> current = head;
+        for (int i = 0; i < index - 1; i++) {
+            current = current.next;
+        }
+        return current;
     }
 
 }
