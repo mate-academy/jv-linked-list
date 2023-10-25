@@ -7,7 +7,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    private static class Node<T>{
+    private static class Node<T> {
         private T item;
         private Node<T> next;
         private Node<T> prev;
@@ -148,7 +148,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndexToAdd(int index) {
-        if (index < 0 || index > size ) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Invalid index: " + index);
         }
     }
@@ -157,12 +157,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> x;
         if (index < size / 2) {
             x = head;
-            for (int i = 0; i < index; i++ ) {
+            for (int i = 0; i < index; i++) {
                 x = x.next;
             }
         } else {
             x = tail;
-            for (int i = size -1; i > index; i--) {
+            for (int i = size - 1; i > index; i--) {
                 x = x.prev;
             }
         }
