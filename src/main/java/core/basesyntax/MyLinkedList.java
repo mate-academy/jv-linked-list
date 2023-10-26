@@ -90,7 +90,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Object[] a = list.toArray();
         int numNew = a.length;
 
-        Node<T> pred = null;
+        Node<T> pred = last;
         Node<T> succ = null;
 
         for (Object o : a) {
@@ -100,8 +100,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 first = newNode;
             } else {
                 pred.next = newNode;
-                pred = newNode;
             }
+            pred = newNode;
         }
 
         if (succ == null) {
@@ -133,8 +133,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkElementIndex(index);
         final Node<T> x = node(index);
-        unlink(x);
-        return (T) x;
+        return unlink(x);
     }
 
     @Override
