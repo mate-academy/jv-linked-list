@@ -51,36 +51,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(iOutOfBounds);
-        }
-
-        Node<T> current;
-
-        if (index < size / 2) {
-            current = head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
-        } else {
-            current = tail;
-            for (int i = size - 1; i > index; i--) {
-                current = current.prev;
-            }
-        }
-        return current.value;
-    }
-
-    private Node<T> getNode(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(iOutOfBounds);
-        }
-
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
-        return current;
+        Node<T> node = getNode(index);
+        return node.value;
     }
 
     @Override
@@ -98,7 +70,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
         Node<T> removedNode = getNode(index);
-        updateReferences(removedNode);
+        unlink(removedNode);
         return removedNode.value;
     }
 
@@ -106,13 +78,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if (object == null) {
-                if (current.value == null) {
-                    updateReferences(current);
-                    return true;
-                }
-            } else if (object.equals(current.value)) {
-                updateReferences(current);
+            if (object == current.value || object != null && object.equals(current.value)) {
+                unlink(current);
                 return true;
             }
             current = current.next;
@@ -120,7 +87,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return false;
     }
 
-    private void updateReferences(Node<T> node) {
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    private void unlink(Node<T> node) {
         if (node.prev != null) {
             node.prev.next = node.next;
         } else {
@@ -134,14 +111,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    @Override
-    public int size() {
-        return size;
-    }
+    private Node<T> getNode(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(iOutOfBounds);
+        }
 
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
+        Node<T> current;
+
+        if (index < size / 2) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
+        }
+        return current;
     }
 
     static class Node<T> {
