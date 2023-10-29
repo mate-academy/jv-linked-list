@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> head;
     private Node<T> tail;
 
@@ -38,7 +38,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
         } else {
             checkPositionIndex(index);
-            Node<T> foundNode = node(index);
+            Node<T> foundNode = getNode(index);
             Node<T> prev = foundNode.prev;
             Node<T> newNode = new Node<T>(prev, value, foundNode);
             foundNode.prev = newNode;
@@ -61,17 +61,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkElementIndex(index);
-        Node<T> foundNode = node(index);
-        if (foundNode == null) {
-            return null;
-        }
-        return foundNode.value;
+        return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkElementIndex(index);
-        Node<T> foundNode = node(index);
+        Node<T> foundNode = getNode(index);
         T oldValue = foundNode.value;
         foundNode.value = value;
         return oldValue;
@@ -80,7 +76,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkElementIndex(index);
-        Node<T> foundNode = node(index);
+        Node<T> foundNode = getNode(index);
         return unlink(foundNode);
     }
 
@@ -121,9 +117,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> node(int index) {
+    private Node<T> getNode(int index) {
         Node<T> nextNode;
-        if (index < (size << 1)) {
+        if (index < (size / 2)) {
             nextNode = head;
             for (int i = 0; i < index; i++) {
                 nextNode = nextNode.next;
