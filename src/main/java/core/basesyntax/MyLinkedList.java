@@ -14,9 +14,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Invalid index: " + index);
-        }
         if (index == size) {
             linkLast(value);
         } else {
@@ -53,7 +50,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         for (Node<T> node = head; node != null; node = node.next) {
-            if ((object == null && node.item == null)
+            if ((object == node.item)
                     || (object != null && object.equals(node.item))) {
                 unlink(node);
                 return true;
