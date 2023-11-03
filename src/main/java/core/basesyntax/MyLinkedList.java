@@ -3,14 +3,13 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final int HEAD_INDEX = 0;
     private Node<T> head;
     private Node<T> tail;
     private int size;
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(null, value, null);
         if (isEmpty()) {
             head = newNode;
         } else {
@@ -23,17 +22,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index, size);
-        if (isEmpty()
-                || index == size) {
+        checkIndexWithBound(index, size);
+        if (index == size) {
             add(value);
             return;
         }
-        if (index == HEAD_INDEX) {
-            addToHead(new Node<>(value));
+        if (index == 0) {
+            addToHead(value);
             return;
         }
-        addToIndex(new Node<>(value), findNode(index));
+        Node<T> newNode = new Node<>(findNode(index).prev,
+                value,
+                findNode(index));
+        findNode(index).prev.next = newNode;
+        findNode(index).prev = newNode;
+        size++;
     }
 
     @Override
@@ -45,14 +48,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         Node<T> targetNode = findNode(index);
         return targetNode.item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> targetNode = findNode(index);
         T tempValue = targetNode.item;
         targetNode.item = value;
@@ -61,7 +62,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> targetNode = findNode(index);
         removeNode(targetNode);
         return targetNode.item;
@@ -96,14 +96,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.prev = prev;
             this.item = item;
             this.next = next;
-        }
-
-        public Node(T item) {
-            this.item = item;
-        }
-
-        public Node() {
-
         }
 
         @Override
@@ -150,17 +142,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 && firstItem.equals(secondItem));
     }
 
-    private void checkIndex(int index) {
-        if (index < 0
-                || (index > (size - 1)
-                && index != 0)) {
+    private void checkIndexWithBound(int index) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index doesn't exist. "
                     + "You should enter a number between 0 and "
                     + (size - 1));
         }
     }
 
-    private void checkIndex(int index, int bound) {
+    private void checkIndexWithBound(int index, int bound) {
         if (index < 0
                 || (index > (bound)
                 && index != 0)) {
@@ -171,6 +161,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNode(int index) {
+        checkIndexWithBound(index);
         Node<T> targetNode;
         int nodeIndex;
         if (index < size / 2) {
@@ -194,26 +185,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> findNode(T object) {
         Node<T> targetNode = head;
         while (!compareItems(targetNode.item, object)) {
-            targetNode = targetNode.next;
             if (isTail(targetNode)) {
                 return tail;
             }
+            targetNode = targetNode.next;
         }
         return targetNode;
     }
 
-    private void addToHead(Node<T> newNode) {
-        newNode.next = head;
+    private void addToHead(T value) {
+        Node<T> newNode = new Node<>(null,
+                value,
+                head);
         head.prev = newNode;
         head = newNode;
-        size++;
-    }
-
-    private void addToIndex(Node<T> newNode, Node<T> targetNode) {
-        newNode.prev = targetNode.prev;
-        newNode.next = targetNode;
-        targetNode.prev.next = newNode;
-        targetNode.prev = newNode;
         size++;
     }
 
