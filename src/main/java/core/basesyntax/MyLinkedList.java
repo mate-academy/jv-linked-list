@@ -9,11 +9,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(null, value, null);
+        Node<T> newNode = new Node<>(tail, value, null);
         if (isEmpty()) {
             head = newNode;
         } else {
-            newNode.prev = tail;
             tail.next = newNode;
         }
         tail = newNode;
@@ -31,11 +30,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             addToHead(value);
             return;
         }
-        Node<T> newNode = new Node<>(findNode(index).prev,
+        Node<T> targetNode = findNode(index);
+        Node<T> newNode = new Node<>(targetNode.prev,
                 value,
-                findNode(index));
-        findNode(index).prev.next = newNode;
-        findNode(index).prev = newNode;
+                targetNode);
+        targetNode.prev.next = newNode;
+        targetNode.prev = newNode;
         size++;
     }
 
@@ -48,8 +48,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Node<T> targetNode = findNode(index);
-        return targetNode.item;
+        return findNode(index).item;
     }
 
     @Override
@@ -69,12 +68,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> targetNode = findNode(object);
-        if (isTail(targetNode)) {
-            return false;
+        for (Node<T> node = head; node != null; node = node.next) {
+            if (compareItems(node.item, object)) {
+                removeNode(node);
+                return true;
+            }
         }
-        removeNode(targetNode);
-        return true;
+        return false;
     }
 
     @Override
@@ -97,39 +97,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.item = item;
             this.next = next;
         }
-
-        @Override
-        public boolean equals(Object node) {
-            if (node == this) {
-                return true;
-            }
-            if (node == null) {
-                return false;
-            }
-            if (node.getClass().equals(Node.class)) {
-                Node<T> current = (Node<T>) node;
-                return ((this.item == current.item
-                        || (this.item != null
-                        && this.item.equals(current.item)))
-                        && (this.prev == current.prev
-                        || (this.prev != null
-                        && this.prev.equals(current.prev)))
-                        && ((this.next == current.next
-                        || (this.next != null
-                        && this.next.equals(current.next)))));
-            }
-            return false;
-        }
     }
 
     private boolean isTail(Node<T> node) {
-        return tail.equals(node)
-                && size > 1;
+        return node.next == null;
     }
 
     private boolean isHead(Node<T> node) {
-        return head.equals(node)
-                && size > 1;
+        return node.prev == null
+                    && size > 1;
     }
 
     private boolean isSingleElement() {
@@ -178,17 +154,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 targetNode = targetNode.prev;
                 nodeIndex--;
             }
-        }
-        return targetNode;
-    }
-
-    private Node<T> findNode(T object) {
-        Node<T> targetNode = head;
-        while (!compareItems(targetNode.item, object)) {
-            if (isTail(targetNode)) {
-                return tail;
-            }
-            targetNode = targetNode.next;
         }
         return targetNode;
     }
