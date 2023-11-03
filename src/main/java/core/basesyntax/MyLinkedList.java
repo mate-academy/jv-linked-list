@@ -9,23 +9,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
 
     @Override
-    public void add(T value) {
-        if (size == 0) {
-            head = new Node<>(value);
-            tail = head;
-        } else {
-            Node<T> newNode = new Node<>(tail, value);
-            tail.next = newNode;
-            tail = newNode;
-        }
-        size++;
-    }
-    @Override
-    public T get(int index) {
-        Node<T> currentNode = getNodeByIndex(index);
-        return currentNode.value;
-    }
-    @Override
     public void add(T value, int index) {
         if (index == size) {
             add(value);
@@ -42,6 +25,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             size++;
         }
+    }
+
+    @Override
+    public void add(T value) {
+        if (size == 0) {
+            head = new Node<>(value);
+            tail = head;
+        } else {
+            Node<T> newNode = new Node<>(tail, value);
+            tail.next = newNode;
+            tail = newNode;
+        }
+        size++;
+    }
+
+    @Override
+    public T get(int index) {
+        Node<T> currentNode = getNodeByIndex(index);
+        return currentNode.value;
     }
 
     @Override
@@ -96,6 +98,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("This index " + index + " is not exist!");
         }
     }
+
     private Node<T> getNodeByIndex(int index) {
         indexExist(index);
         Node<T> currentNode = head;
@@ -104,6 +107,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return currentNode;
     }
+
     private Node<T> nodeGetByIndex(int index) {
         indexExist(index);
         Node<T> currentNode = head;
