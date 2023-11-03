@@ -55,7 +55,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        Node<T> currentNode = nodeGetByIndex(index);
+        Node<T> currentNode = getNodeByIndex(index);
         T old = currentNode.value;
         currentNode.value = value;
         return old;
@@ -64,7 +64,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
 
-        Node<T> currentNode = nodeGetByIndex(index);
+        Node<T> currentNode = getNodeByIndex(index);
         unlink(currentNode);
         return currentNode.value;
     }
@@ -103,18 +103,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         indexExist(index);
         Node<T> currentNode = head;
         for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
-        return currentNode;
-    }
-
-    private Node<T> nodeGetByIndex(int index) {
-        indexExist(index);
-        Node<T> currentNode = head;
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                break;
-            }
             currentNode = currentNode.next;
         }
         return currentNode;
