@@ -56,27 +56,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            Node<T> node = first;
-            while (node != null) {
-                if (node.item == null) {
-                    deleteLink(node);
-                    return true;
-                }
-                node = node.next;
+        Node<T> fromFirstNode = first;
+        while (fromFirstNode != null) {
+            if (object == null && fromFirstNode.item == null) {
+                deleteLink(fromFirstNode);
+                return true;
+            } else if (object != null && object.equals(fromFirstNode.item)) {
+                deleteLink(fromFirstNode);
+                return true;
             }
-        } else {
-            Node<T> fromFirstNode = first;
-            while (fromFirstNode != null) {
-                if (object.equals(fromFirstNode.item)) {
-                    deleteLink(fromFirstNode);
-                    return true;
-                }
-                fromFirstNode = fromFirstNode.next;
-            }
+            fromFirstNode = fromFirstNode.next;
         }
+
         return false;
     }
+
 
     @Override
     public int size() {
@@ -101,9 +95,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> iterNode(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is out of bounds");
-        }
+        checkElementIndex(index);
         Node<T> node = first;
         int i = 0;
         while (i < index) {
