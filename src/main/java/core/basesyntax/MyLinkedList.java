@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size;
 
-    private void linkFirst(T element) {
-        Node<T> prevFirst = first;
-        Node<T> newNode = new Node<>(null, element, prevFirst);
-        first = newNode;
-        if (prevFirst == null) {
-            last = newNode;
-        } else {
-            prevFirst.prev = newNode;
-        }
-        size++;
-    }
-
     @Override
     public void add(T value) {
         linkLast(value);
@@ -129,6 +117,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size() == 0;
+    }
+
+    private void linkFirst(T element) {
+        Node<T> prevFirst = first;
+        Node<T> newNode = new Node<>(null, element, prevFirst);
+        first = newNode;
+        if (prevFirst == null) {
+            last = newNode;
+        } else {
+            prevFirst.prev = newNode;
+        }
+        size++;
     }
 
     private void linkBefore(T element, Node<T> exist) {
