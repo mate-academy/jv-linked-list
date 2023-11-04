@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static class Node<T> {
@@ -107,7 +106,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Objects.checkIndex(index, size);
+        checkIndex(index,size);
 
         if (index < size / 2) {
             Node<T> current = first;
