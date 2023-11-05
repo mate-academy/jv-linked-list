@@ -3,16 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private Node first;
     private Node last;
     private int size;
-
-    public MyLinkedList() {
-        int first;
-        int last;
-        int size;
-    }
 
     @Override
     public void add(T value) {
@@ -50,19 +43,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Cannot return an element with the specified "
-                    + "index - " + index);
-        }
+        checkIndexRange(index);
         return (T) getNode(index).data;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Сannot replace the element with the specified"
-                   + " index - " + index);
-        }
+        checkIndexRange(index);
         Node node = getNode(index);
         T oldValue = (T) node.data;
         node.data = value;
@@ -71,10 +58,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Сannot remove the element with the specified"
-                    + " index - " + index);
-        }
+        checkIndexRange(index);
         Node node = getNode(index);
         final T removedValue = (T) node.data;
         if (node == first) {
@@ -173,6 +157,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         Node(T data) {
             this.data = data;
+        }
+    }
+
+    private void checkIndexRange(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Сannot remove the element with the specified"
+                    + " index - " + index);
         }
     }
 }
