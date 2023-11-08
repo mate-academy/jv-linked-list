@@ -10,9 +10,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public MyLinkedList() {
-        nodes = new Node[MAX_LIST_SIZE];
-    }
 
     @Override
     public void add(T value) {
