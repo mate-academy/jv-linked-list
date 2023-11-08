@@ -6,7 +6,6 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final double GROWTH_FACTOR = 1.5;
     private static final int MAX_LIST_SIZE = 10;
-    private Node<T>[] nodes;
     private Node<T> head;
     private Node<T> tail;
     private int size;
