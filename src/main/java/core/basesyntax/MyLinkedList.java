@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private Node<T> prev;
-        private T value;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(null, value, null);
@@ -34,17 +22,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        addIndexValidator(index);
-
         if (index == size) {
             add(value);
         } else if (index == 0) {
             addToTheBegin(value);
         } else {
-            Node<T> newNode = new Node<>(null, value, null);
             Node<T> currentNode = getNodeByIndex(index);
-            newNode.prev = currentNode.prev;
-            newNode.next = currentNode;
+            Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
             currentNode.prev.next = newNode;
             currentNode.prev = newNode;
             size++;
@@ -60,14 +44,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexValidator(index);
         Node<T> currentNode = getNodeByIndex(index);
         return currentNode.value;
     }
 
     @Override
     public T set(T value, int index) {
-        indexValidator(index);
         Node<T> currentNode = getNodeByIndex(index);
         T oldValue = currentNode.value;
         currentNode.value = value;
@@ -76,7 +58,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexValidator(index);
         Node<T> currentNode = getNodeByIndex(index);
         T removedValue = currentNode.value;
         removeNode(currentNode);
@@ -112,16 +93,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private static class Node<T> {
+        private Node<T> prev;
+        private T value;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
+    }
+
     private Node<T> getNodeByIndex(int index) {
+        indexValidator(index);
         int currentIndex;
         Node<T> currentNode;
 
-        if (index == 0) {
-            return head;
-        }
-        if (index == size) {
-            return tail;
-        }
         if (index <= size / 2) {
             currentIndex = 0;
             currentNode = head;
@@ -159,23 +147,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addToTheBegin(T value) {
-        Node<T> newNode = new Node<>(null, value, null);
-        if (head != null) {
-            newNode.next = head;
-            head.prev = newNode;
-        }
+        Node<T> newNode = new Node<>(null, value, head);
+        head.prev = newNode;
         head = newNode;
         size++;
     }
 
     private void indexValidator(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is not valid");
-        }
-    }
-
-    private void addIndexValidator(int index) {
-        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index is not valid");
         }
     }
