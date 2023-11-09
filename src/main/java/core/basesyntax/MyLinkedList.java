@@ -107,7 +107,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         int index = 0;
         for (Node<T> someNode = head; someNode != null; someNode = someNode.nextNode) {
-            if (object == someNode.nodeItem || ((object != null) && object.equals(someNode.nodeItem))) {
+            if (object == someNode.nodeItem
+                    || ((object != null) && object.equals(someNode.nodeItem))) {
                 remove(index);
                 return true;
             }
@@ -128,7 +129,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " is Out of bounds for this ArrayList!");
+            throw new IndexOutOfBoundsException(
+                    "Index " + index + " is Out of bounds for this ArrayList!");
         }
     }
 
