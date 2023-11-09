@@ -39,11 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-        Node<T> nodeAtIndex = head;
-        for (int i = 0; i < index; i++) {
-            nodeAtIndex = nodeAtIndex.next;
-        }
+        Node<T> nodeAtIndex = getNode(index);
         return nodeAtIndex.data;
     }
 
@@ -94,11 +90,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         checkIndex(index);
-        Node<T> nodeAtIndex = head;
-        for (int i = 0; i < index; i++) {
-            nodeAtIndex = nodeAtIndex.next;
+
+        if (index < size / 2) {
+            Node<T> nodeAtIndex = head;
+            for (int i = 0; i < index; i++) {
+                nodeAtIndex = nodeAtIndex.next;
+            }
+            return nodeAtIndex;
+        } else {
+            Node<T> nodeAtIndex = tail;
+            for (int i = size - 1; i > index; i--) {
+                nodeAtIndex = nodeAtIndex.prev;
+            }
+            return nodeAtIndex;
         }
-        return nodeAtIndex;
     }
 
     private void linkBefore(T value, Node<T> target) {
