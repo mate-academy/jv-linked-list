@@ -45,16 +45,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkInclusively(index);
-        T oldValue = getNode(index).item;
-        getNode(index).item = value;
+        Node<T> node = getNode(index);
+        T oldValue = node.item;
+        node.item = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
         checkInclusively(index);
-        T removedValue = getNode(index).item;
-        unlink(getNode(index));
+        Node<T> node = getNode(index);
+        T removedValue = node.item;
+        unlink(node);
         return removedValue;
     }
 
@@ -65,9 +67,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (node.item == object || (node.item != null && node.item.equals(object))) {
                 unlink(node);
                 return true;
-            } else {
-                node = node.next;
             }
+            node = node.next;
         }
         return false;
     }
@@ -80,18 +81,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node<T> prev, T item, Node<T> next) {
-            this.item = item;
-            this.next = next;
-            this.prev = prev;
-        }
     }
 
     private void linkFirst(T item) {
@@ -163,5 +152,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private String indexMsq(int index) {
         return "There is no element with index " + index;
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T item, Node<T> next) {
+            this.item = item;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
