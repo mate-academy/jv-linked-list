@@ -24,7 +24,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             last = newNode;
         } else {
             setListSize(getListSize() + 1);
-            Node <T> newNode = new Node<>(last, value,null);
+            Node<T> newNode = new Node<>(last, value,null);
             last.next = newNode;
             last = newNode;
         }
@@ -32,13 +32,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index >= 0 && index == getListSize() ) {
+        if (index >= 0 && index == getListSize()) {
             add(value);
         } else {
             checkIndex(index);
             setListSize(getListSize() + 1);
-            Node <T> testNode = nodesIterate(index);
-            Node <T> newNode = new Node<>(testNode.prev,value,testNode);
+            Node<T> testNode = nodesIterate(index);
+            Node<T> newNode = new Node<>(testNode.prev,value,testNode);
             if (testNode.prev != null) {
                 testNode.prev.next = newNode;
             }
@@ -51,7 +51,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T listValue : list){
+        for (T listValue : list) {
             add(listValue);
         }
     }
@@ -75,16 +75,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         T oldItem;
-        Node <T> testNode  = nodesIterate(index);
+        Node<T> testNode = nodesIterate(index);
         oldItem = testNode.item;
-        if (testNode.prev != null){
+        if (testNode.prev != null) {
             testNode.prev.next = testNode.next;
         }
-        if (testNode.next != null){
+        if (testNode.next != null) {
             testNode.next.prev = testNode.prev;
         }
         unlink(testNode);
-        setListSize(getListSize()-1);
+        setListSize(getListSize() - 1);
         return oldItem;
     }
 
@@ -111,7 +111,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return getListSize() == 0;
     }
 
-    private Node <T> nodesIterate(int index) {
+    private Node<T> nodesIterate(int index) {
         Node<T> testNode;
         if (index <= getListSize() / 2) {
             testNode = first;
@@ -120,13 +120,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         } else {
             testNode = last;
-            for (int i = getListSize()-1; i > index; i--) {
+            for (int i = getListSize() - 1; i > index; i--) {
                 testNode = testNode.prev;
             }
         }
         return testNode;
     }
-
 
     private void unlink(Node<T> testNode) {
         Node<T> next = testNode.next;
@@ -148,13 +147,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean equals(T objOne, T objTwo) {
-        return  (objOne == objTwo || objOne != null && objOne.equals(objTwo));
+        return (objOne == objTwo || objOne != null && objOne.equals(objTwo));
     }
 
     private static class Node<T> {
-        T item;
-        MyLinkedList.Node<T> next;
-        MyLinkedList.Node<T> prev;
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
         Node(MyLinkedList.Node<T> prev, T value, MyLinkedList.Node<T> next) {
             this.item = value;
@@ -162,7 +161,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.prev = prev;
         }
     }
-    private void checkIndex(int index){
+
+    private void checkIndex(int index) {
         if (index >= getListSize() || index < 0) {
             throw new IndexOutOfBoundsException("Index " + index + " is out of bound");
         }
