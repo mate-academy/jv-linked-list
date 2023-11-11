@@ -46,10 +46,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> nodeAtIndex = head;
-        for (int i = 0; i < index; i++) {
-            nodeAtIndex = nodeAtIndex.next;
-        }
+        Node<T> nodeAtIndex = getNode(index);
         T oldValue = nodeAtIndex.data;
         nodeAtIndex.data = value;
         return oldValue;
@@ -58,10 +55,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> nodeAtIndex = head;
-        for (int i = 0; i < index; i++) {
-            nodeAtIndex = nodeAtIndex.next;
-        }
+        Node<T> nodeAtIndex = getNode(index);
         return unlink(nodeAtIndex);
     }
 
