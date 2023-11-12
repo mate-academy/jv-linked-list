@@ -100,19 +100,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return tail;
         }
         Node<T> currentNode;
-        int steps = stepsToTake(index);
-        currentNode = steps > 0 ? head : tail;
-
-        // Should I reverse if and for order ?
-        // It will add to readability, but it will execute a bit longer
-        if (steps > 0) {
-            for (int i = 0; i < steps; i++) {
+        boolean isRightSide = sideOfListToStart(index);
+        if (isRightSide) {
+            int currentIndex = 0;
+            currentNode = head;
+            while (currentIndex != index) {
                 currentNode = currentNode.next;
+                currentIndex++;
             }
         } else {
-            // Should change steps sign to plus
-            for (int i = 0; i < -steps; i++) {
+            int currentIndex = size - 1;
+            currentNode = tail;
+            while (currentIndex != index) {
                 currentNode = currentNode.prev;
+                currentIndex--;
             }
         }
         return currentNode;
@@ -132,12 +133,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     // Using true to start from head, false to start from tail
-    private int sideOfListToStart(int index) {
-        if (index <= size / 2) {
-            return index;
-        } else {
-            return -(size - 1 - index);
-        }
+    private boolean sideOfListToStart(int index) {
+        // Here in which half of the list index lies
+        return index <= size / 2;
     }
 
     private void insertBefore(Node<T> nodeToInsertAfter, Node<T> newNode) {
