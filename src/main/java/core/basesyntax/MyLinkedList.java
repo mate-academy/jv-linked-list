@@ -31,7 +31,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         int steps = stepsToTake(index);
         currentNode = steps > 0 ? head : tail;
 
-        // Should i reverse if and for order, it will add to readability, but it will execute a bit longer
+        // Should I reverse if and for order ?
+        // It will add to readability, but it will execute a bit longer
         if (steps > 0) {
             for (int i = 0; i < steps; i++) {
                 currentNode = currentNode.next;
@@ -74,7 +75,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public void printLinkedList() {
-        Node currentNode = head;  // Assuming 'head' is the reference to the first node in your list
+        Node currentNode = head;
 
         while (currentNode != null) {
             System.out.println(currentNode.data);
@@ -83,7 +84,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public void printReversedLinkedList() {
-        Node currentNode = tail;  // Assuming 'tail' is the reference to the last node in your list
+        Node currentNode = tail;
 
         while (currentNode != null) {
             System.out.println(currentNode.data);
@@ -167,7 +168,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         int index = getIndexOfNode(object);
         if (index == -1) {
-//            throw new NoSuchElementException("Node is not found");
             return false;
         }
         remove(index);
