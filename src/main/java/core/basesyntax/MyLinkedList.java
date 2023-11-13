@@ -9,7 +9,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(value, last, null); // new signature
         if (isEmpty()) {
             first = newNode;
             last = newNode;
@@ -23,16 +23,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size()) {
-            throw new ArrayIndexOutOfBoundsException("Index: " + index + ", Size: " + size());
-        }
+        checkIndex(index);
 
         if (index == size()) {
             add(value);
             return;
         }
 
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(value, last, null); // new signature
         Node<T> current = getNode(index);
 
         if (index == 0) {
@@ -45,6 +43,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         newNode.next = current;
         current.prev = newNode;
         size++;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index > size()) {
+            throw new ArrayIndexOutOfBoundsException("Index: " + index + ", Size: " + size());
+        }
     }
 
     @Override
@@ -134,10 +138,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private T data;
         private Node<T> prev;
         private Node<T> next;
-
-        Node(T data) {
-            this.data = data;
-        }
 
         Node(T data, Node<T> prev, Node<T> next) {
             this.data = data;
