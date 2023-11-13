@@ -14,30 +14,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        validateIndexExclusive(index);
-        Node<T> newNode = new Node<>(value, null, null);
+        validateIndexForAdding(index);
+        Node<T> newNode = new Node<>(null, value, null);
+
         if (isEmpty()) {
-            head = newNode;
-            tail = newNode;
+            addNodeToEmptyList(newNode);
         } else if (index == 0) {
-            newNode.next = head;
-            head.prev = newNode;
-            head = newNode;
+            addNodeAtBeginning(newNode);
         } else if (index == size) {
-            newNode.prev = tail;
-            tail.next = newNode;
-            tail = newNode;
+            addNodeAtEnd(newNode);
         } else {
-            Node<T> currentNode = getNode(index);
-            insertBefore(currentNode, newNode);
+            addNodeAtIndex(newNode, index);
         }
-        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T listNodeValue : list) {
+            add(listNodeValue);
         }
     }
 
@@ -80,27 +74,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void validateIndexExclusive(int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Wrong index provided");
-        }
-    }
-
     private void validateIndex(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Wrong index provided");
         }
     }
 
+    private void validateIndexForAdding(int index) {
+        // Same as function above, but index == size is OK (only used in adding elements)
+        if (index > size || index < 0) {
+            throw new IndexOutOfBoundsException("Wrong index provided");
+        }
+    }
+
     private Node<T> getNode(int index) {
         validateIndex(index);
-        if (index == 0) {
-            return head;
-        } else if (index == size - 1) {
-            return tail;
-        }
         Node<T> currentNode;
-        boolean isRightSide = sideOfListToStart(index);
+        boolean isRightSide = index <= size / 2;
         if (isRightSide) {
             int currentIndex = 0;
             currentNode = head;
@@ -132,50 +122,47 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return -1;
     }
 
-    // Using true to start from head, false to start from tail
-    private boolean sideOfListToStart(int index) {
-        // Here in which half of the list index lies
-        return index <= size / 2;
-    }
-
-    private void insertBefore(Node<T> nodeToInsertAfter, Node<T> newNode) {
-        newNode.prev = nodeToInsertAfter.prev;
-        newNode.next = nodeToInsertAfter;
-        nodeToInsertAfter.prev.next = newNode;
-        nodeToInsertAfter.prev = newNode;
-    }
-
-    private void printLinkedList() {
-        Node<T> currentNode = head;
-
-        while (currentNode != null) {
-            System.out.println(currentNode.data);
-            currentNode = currentNode.next;
-        }
-    }
-
-    private void printReversedLinkedList() {
-        Node<T> currentNode = tail;
-
-        while (currentNode != null) {
-            System.out.println(currentNode.data);
-            currentNode = currentNode.prev;
-        }
-    }
-
     private Node<T> unlink(Node<T> node) {
-        size--;
         if (node == tail) {
             tail = node.prev;
-            return node;
         }
-        if (node == head) {
+        else if (node == head) {
             head = node.next;
-            return node;
+        } else {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
         }
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
+        size--;
         return node;
+    }
+
+    private void addNodeToEmptyList(Node<T> newNode) {
+        head = newNode;
+        tail = newNode;
+        size++;
+    }
+
+    private void addNodeAtBeginning(Node<T> newNode) {
+        newNode.next = head;
+        head.prev = newNode;
+        head = newNode;
+        size++;
+    }
+
+    private void addNodeAtEnd(Node<T> newNode) {
+        newNode.prev = tail;
+        tail.next = newNode;
+        tail = newNode;
+        size++;
+    }
+
+    private void addNodeAtIndex(Node<T> newNode, int index) {
+        Node<T> nodeToInsertBefore = getNode(index);
+        newNode.prev = nodeToInsertBefore.prev;
+        newNode.next = nodeToInsertBefore;
+        nodeToInsertBefore.prev.next = newNode;
+        nodeToInsertBefore.prev = newNode;
+        size++;
     }
 
     private static class Node<E> {
@@ -183,10 +170,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<E> next;
         private Node<E> prev;
 
-        private Node(E data, Node<E> next, Node<E> prev) {
+        private Node(Node<E> prev, E data, Node<E> next) {
+            this.prev = prev;
             this.data = data;
             this.next = next;
-            this.prev = prev;
         }
     }
 }
