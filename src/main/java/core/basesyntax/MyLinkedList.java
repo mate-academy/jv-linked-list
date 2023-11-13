@@ -28,16 +28,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(tail, value);
         if (head == null) {
             head = newNode;
         } else {
             tail.next = newNode;
-            newNode.prev = tail;
         }
         tail = newNode;
         size++;
     }
+
 
     @Override
     public T get(int index) {
