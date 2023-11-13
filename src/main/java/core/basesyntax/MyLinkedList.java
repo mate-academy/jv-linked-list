@@ -3,9 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private Node<T> first;
     private Node<T> last;
+    private int size;
 
     @Override
     public void add(T value) {
@@ -18,6 +18,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             last.next = newNode;
             last = newNode;
         }
+        size++;
     }
 
     @Override
@@ -34,16 +35,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(value);
         Node<T> current = getNode(index);
 
-        if (current.prev == null) {
+        if (index == 0) {
             first = newNode;
         } else {
             Node<T> previous = current.prev;
             previous.next = newNode;
-            newNode.prev = current.prev;
+            newNode.prev = previous;
         }
-
         newNode.next = current;
         current.prev = newNode;
+        size++;
     }
 
     @Override
@@ -81,7 +82,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 unlink(current);
                 return true;
             }
-
             current = current.next;
         }
         return false;
@@ -89,45 +89,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        int count = 0;
-        Node<T> current = first;
-        while (current != null) {
-            count++;
-            current = current.next;
-        }
-        return count;
+        return getSize();
+    }
+
+    public int getSize() {
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return first == null;
-    }
-
-    private static class Node<T> {
-        private T data;
-        private Node<T> prev;
-        private Node<T> next;
-
-        Node(T data) {
-            this.data = data;
-        }
-
-        // Геттеры и сеттеры для prev и next
-        public Node<T> getPrev() {
-            return prev;
-        }
-
-        public void setPrev(Node<T> prev) {
-            this.prev = prev;
-        }
-
-        public Node<T> getNext() {
-            return next;
-        }
-
-        public void setNext(Node<T> next) {
-            this.next = next;
-        }
+        return size == 0;
     }
 
     private Node<T> getNode(int index) {
@@ -155,6 +126,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             last = previous;
         } else {
             next.prev = previous;
+        }
+        size--;
+    }
+
+    private static class Node<T> {
+        private T data;
+        private Node<T> prev;
+        private Node<T> next;
+
+        Node(T data) {
+            this.data = data;
+        }
+
+        Node(T data, Node<T> prev, Node<T> next) {
+            this.data = data;
+            this.prev = prev;
+            this.next = next;
         }
     }
 }
