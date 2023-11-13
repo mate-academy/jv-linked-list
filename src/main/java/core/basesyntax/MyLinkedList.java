@@ -38,7 +38,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-
     @Override
     public T get(int index) {
         return getNodeByIndex(index).value;
