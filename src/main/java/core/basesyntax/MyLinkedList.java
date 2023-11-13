@@ -26,6 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             addNodeAtIndex(newNode, index);
         }
+        size++;
     }
 
     @Override
@@ -125,8 +126,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> unlink(Node<T> node) {
         if (node == tail) {
             tail = node.prev;
-        }
-        else if (node == head) {
+        } else if (node == head) {
             head = node.next;
         } else {
             node.prev.next = node.next;
@@ -139,21 +139,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void addNodeToEmptyList(Node<T> newNode) {
         head = newNode;
         tail = newNode;
-        size++;
     }
 
     private void addNodeAtBeginning(Node<T> newNode) {
         newNode.next = head;
         head.prev = newNode;
         head = newNode;
-        size++;
     }
 
     private void addNodeAtEnd(Node<T> newNode) {
         newNode.prev = tail;
         tail.next = newNode;
         tail = newNode;
-        size++;
     }
 
     private void addNodeAtIndex(Node<T> newNode, int index) {
@@ -162,7 +159,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         newNode.next = nodeToInsertBefore;
         nodeToInsertBefore.prev.next = newNode;
         nodeToInsertBefore.prev = newNode;
-        size++;
     }
 
     private static class Node<E> {
