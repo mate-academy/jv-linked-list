@@ -14,7 +14,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexToAdd(index);
         if (size == index) {
             linkToTheEnd(value);
         } else {
@@ -24,21 +23,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        T[] array = (T[]) list.toArray();
-        for (T item : array) {
+        for (T item : list) {
             add(item);
         }
     }
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> current = getNode(index);
         T oldValue = current.value;
         current.value = value;
@@ -47,10 +43,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        Node<T> itemToRemove = getNode(index);
-        T oldValue = itemToRemove.value;
-        unlinkNode(itemToRemove);
+        Node<T> nodeToRemove = getNode(index);
+        T oldValue = nodeToRemove.value;
+        unlinkNode(nodeToRemove);
         return oldValue;
     }
 
@@ -90,13 +85,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void checkIndexToAdd(int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + " out of bound to Add");
-        }
-    }
-
     private Node<T> getNode(int index) {
+        checkIndex(index);
         if (index > size / 2) {
             Node<T> current = tail;
             for (int i = size - 1; i > index; i--) {
@@ -113,13 +103,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void linkToTheEnd(T value) {
-        Node<T> h = tail;
-        Node<T> newOne = new Node<>(h, value, null);
+        Node<T> previous = tail;
+        Node<T> newOne = new Node<>(previous, value, null);
         tail = newOne;
-        if (h == null) {
+        if (previous == null) {
             head = newOne;
         } else {
-            h.next = newOne;
+            previous.next = newOne;
         }
         size++;
     }
