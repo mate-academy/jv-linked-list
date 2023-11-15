@@ -9,13 +9,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value, last, null); // new signature
+        Node<T> newNode = new Node<>(value, last, null);
+
         if (isEmpty()) {
             first = newNode;
             last = newNode;
         } else {
-            newNode.prev = last;
             last.next = newNode;
+            newNode.prev = last;
             last = newNode;
         }
         size++;
@@ -23,30 +24,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
-
         if (index == size()) {
             add(value);
             return;
         }
 
-        Node<T> newNode = new Node<>(value, last, null); // new signature
+        Node<T> newNode = new Node<>(value, null, null);
         Node<T> current = getNode(index);
 
         if (index == 0) {
+            newNode.next = first;
+            first.prev = newNode;
             first = newNode;
         } else {
             Node<T> previous = current.prev;
             previous.next = newNode;
             newNode.prev = previous;
+            newNode.next = current;
+            current.prev = newNode;
         }
-        newNode.next = current;
-        current.prev = newNode;
         size++;
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index > size()) {
+        if (index < 0 || index >= size()) {
             throw new ArrayIndexOutOfBoundsException("Index: " + index + ", Size: " + size());
         }
     }
@@ -60,11 +61,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
+        checkIndex(index);
         return getNode(index).data;
     }
 
     @Override
     public T set(T value, int index) {
+        checkIndex(index);
         Node<T> node = getNode(index);
         T oldValue = node.data;
         node.data = value;
@@ -93,25 +96,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        return getSize();
-    }
-
-    public int getSize() {
         return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return size == 0;
+        return first == null;
     }
 
     private Node<T> getNode(int index) {
-        if (index < 0 || index >= size()) {
-            throw new ArrayIndexOutOfBoundsException("Index: " + index + ", Size: " + size());
-        }
-        Node<T> current = first;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        checkIndex(index);
+
+        Node<T> current;
+        if (index <= size() / 2) {
+            current = first;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = last;
+            for (int i = size() - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
         return current;
     }
