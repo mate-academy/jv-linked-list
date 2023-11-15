@@ -101,7 +101,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return first == null;
+        return size == 0;
     }
 
     private Node<T> getNode(int index) {
