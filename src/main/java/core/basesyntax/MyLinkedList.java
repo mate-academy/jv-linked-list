@@ -15,7 +15,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
         if (size == index) {
             addLast(value);
         } else {
@@ -35,7 +34,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndexInclusive(index);
         return getNode(index).value;
     }
 
@@ -104,6 +102,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
+        checkIndexInclusive(index);
         Node<T> currentNode = firstNode;
         for (int i = 0; i < index; i++) {
             currentNode = currentNode.next;
