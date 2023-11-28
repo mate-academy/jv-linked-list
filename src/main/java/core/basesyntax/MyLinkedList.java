@@ -52,13 +52,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         Node<T> node = getNode(index);
-        T prevValue = null;
-        if (node == null) {
-            add(value, index);
-        } else {
-            prevValue = node.value;
-            node.value = value;
-        }
+        T prevValue = node.value;
+        node.value = value;
         return prevValue;
     }
 
