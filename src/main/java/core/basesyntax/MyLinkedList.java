@@ -93,12 +93,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         validateIndex(index, 0);
         final T val;
-        if (index == 0) {
-            return removeFromHead();
-        }
-        if (index == size - 1) {
-            return removeFromTail();
-        }
         val = removeNode(findNode(index));
         return val;
     }
@@ -116,27 +110,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private T removeFromHead() {
-        T val;
-        val = head.value;
-        if (head.next != null) {
-            head = head.next;
-        } else {
-            head = null;
-        }
-        size--;
-        return val;
-    }
-
-    private T removeFromTail() {
-        T val;
-        val = tail.value;
-        tail = tail.prev;
-        tail.next = null;
-        size--;
-        return val;
     }
 
     private Node<T> findNode(int index) {
