@@ -17,7 +17,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             linkNodeToTail(value);
         } else {
-            linkNode(findNode(index), value);
+            linkBefore(findNode(index), value);
         }
     }
 
@@ -95,17 +95,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void linkNode(Node<T> node, T value) {
-        Node<T> newNode = new Node<>(value);
-        if (node.prev == null) {
+    private void linkBefore(Node<T> target, T value) {
+        Node<T> previous = target.prev;
+        Node<T> newNode = new Node<>(previous, value, target);
+        if (previous == null) {
             head.prev = newNode;
             newNode.next = head;
             head = newNode;
         } else {
-            node.prev.next = newNode;
-            node.prev = newNode;
-            newNode.prev = node.prev;
-            newNode.next = node;
+            previous.next = newNode;
+            target.prev = newNode;
         }
         size++;
     }
