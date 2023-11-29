@@ -14,7 +14,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexToAdd(index);
         if (index == size) {
             linkTail(value);
         } else if (index == 0) {
@@ -37,14 +36,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         Node<T> node = getNodeByIndex(index);
         return node.element;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> node = getNodeByIndex(index);
         T oldValue = node.element;
         node.element = value;
@@ -53,7 +50,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> nodeToRemove = getNodeByIndex(index);
         unlink(nodeToRemove);
         return nodeToRemove.element;
@@ -61,9 +57,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (isEmpty()) {
-            return false;
-        }
         Node<T> current = head;
         while (current != null) {
             Node<T> nextNode = current.next;
@@ -92,13 +85,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void checkIndexToAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-    }
-
     private Node<T> getNodeByIndex(int index) {
+        checkIndex(index);
         Node<T> indexNode = head;
         int halfOfSize = size / 2;
         if (halfOfSize < index) {
@@ -111,7 +99,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 indexNode = indexNode.prev;
             }
         }
-
         return indexNode;
     }
 
@@ -123,15 +110,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void linkTail(T value) {
+        Node<T> newNode = new Node<>(tail, value, null);
         if (isEmpty()) {
-            Node<T> newNode = new Node<>(null, value, null);
             head = newNode;
-            tail = newNode;
         } else {
-            Node<T> newNode = new Node<>(tail, value, null);
             tail.next = newNode;
-            tail = newNode;
         }
+        tail = newNode;
         size++;
     }
 
