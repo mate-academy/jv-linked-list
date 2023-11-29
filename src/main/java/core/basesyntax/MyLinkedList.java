@@ -49,7 +49,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        return findEqualsNode(object);
+        Node<T> node = head;
+        for (int i = 0; i < size; i++) {
+            if (object == node.value || (node.value != null && node.value.equals(object))) {
+                unLink(node);
+                return true;
+            }
+            node = node.next;
+        }
+        return false;
     }
 
     @Override
@@ -124,19 +132,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
         return value;
     }
-
-    private boolean findEqualsNode(T obj) {
-        Node<T> node = head;
-        for (int i = 0; i < size; i++) {
-            if (obj == node.value || (node.value != null && node.value.equals(obj))) {
-                unLink(node);
-                return true;
-            }
-            node = node.next;
-        }
-        return false;
-    }
-
+    
     private Node<T> iterFromHead(int index) {
         int currIndex = 0;
         Node<T> node = head;
