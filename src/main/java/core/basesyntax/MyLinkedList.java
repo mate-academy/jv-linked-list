@@ -78,7 +78,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> nodeToRemove = head;
         while (nodeToRemove != null) {
             if (object == nodeToRemove.data
-                || object != null && object.equals(nodeToRemove.data)) {
+                    || object != null && object.equals(nodeToRemove.data)) {
                 unlink(nodeToRemove);
                 return true;
             }
@@ -138,7 +138,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void validIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Wrong index: " + index + ", index must be from 0 till " + (size - 1));
+            throw new IndexOutOfBoundsException("Wrong index: " + index
+                    + ", index must be from 0 till " + (size - 1));
         }
     }
 
