@@ -50,6 +50,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         indexCheck(index);
+        if (index == size) {
+            throw new IndexOutOfBoundsException();
+        }
         MyLinkedList.Node<T> x = node(index);
         if (x != null) {
             T oldVal = x.item;
@@ -140,7 +143,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void indexCheck(int index) {
-        if ((index < 0 || index >= size)) {
+        if ((index < 0 || index > size)) {
             throw new IndexOutOfBoundsException("Non existed position "
                     + index + " when size is: " + size);
         }
