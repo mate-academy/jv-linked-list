@@ -1,17 +1,16 @@
 package core.basesyntax;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    transient Node<T> first;
-    transient Node<T> last;
+    private Node<T> first;
+    private Node<T> last;
     private int size;
 
-    private static class Node <T>{
-        T item;
-        Node<T> next;
-        Node<T> prev;
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
         public Node(Node<T> prev, T item, Node<T> next) {
             this.prev = prev;
@@ -19,6 +18,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
         }
     }
+
     @Override
     public void add(T value) {
         linkLast(value);
@@ -60,8 +60,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             x.item = value;
             return oldVal;
         } else {
-             add(value);
-             return value;
+            add(value);
+            return value;
         }
     }
 
@@ -105,13 +105,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     MyLinkedList.Node<T> node(int index) {
         if (index < (size >> 1)) {
             MyLinkedList.Node<T> x = first;
-            for (int i = 0; i < index; i++)
+            for (int i = 0; i < index; i++) {
                 x = x.next;
+            }
             return x;
         } else {
             MyLinkedList.Node<T> x = last;
-            for (int i = size - 1; i > index; i--)
+            for (int i = size - 1; i > index; i--) {
                 x = x.prev;
+            }
             return x;
         }
     }
@@ -120,10 +122,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         final MyLinkedList.Node<T> l = last;
         final MyLinkedList.Node<T> newNode = new MyLinkedList.Node<>(l, t, null);
         last = newNode;
-        if (l == null)
+        if (l == null) {
             first = newNode;
-        else
+        } else {
             l.next = newNode;
+        }
         size++;
     }
 
@@ -131,10 +134,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         final MyLinkedList.Node<T> pred = x.prev;
         final MyLinkedList.Node<T> newNode = new MyLinkedList.Node<>(pred, t, x);
         x.prev = newNode;
-        if (pred == null)
+        if (pred == null) {
             first = newNode;
-        else
+        } else {
             pred.next = newNode;
+        }
         size++;
     }
 
