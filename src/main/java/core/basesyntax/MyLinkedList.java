@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -68,31 +69,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkPositionIndex(index);
         MyLinkedList.Node<T> x = node(index);
-        final T element = x.item;
-        final MyLinkedList.Node<T> next = x.next;
-        final MyLinkedList.Node<T> prev = x.prev;
-
-        if (prev == null) {
-            first = next;
-        } else {
-            prev.next = next;
-            x.prev = null;
-        }
-
-        if (next == null) {
-            last = prev;
-        } else {
-            next.prev = prev;
-            x.next = null;
-        }
-
-        x.item = null;
-        size--;
-        return element;
+        return unlink(x);
     }
 
     @Override
     public boolean remove(T object) {
+        if (object == null) {
+            for (MyLinkedList.Node<T> x = first; x != null; x = x.next) {
+                if (x.item == null) {
+                    unlink(x);
+                    return true;
+                }
+            }
+        } else {
+            for (MyLinkedList.Node<T> x = first; x != null; x = x.next) {
+                if (object.equals(x.item)) {
+                    unlink(x);
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -154,5 +150,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Non existed position "
                     + index + " when size is: " + size);
         }
+    }
+
+    T unlink(Node<T> x) {
+        final T element = x.item;
+        final MyLinkedList.Node<T> next = x.next;
+        final MyLinkedList.Node<T> prev = x.prev;
+
+        if (prev == null) {
+            first = next;
+        } else {
+            prev.next = next;
+            x.prev = null;
+        }
+
+        if (next == null) {
+            last = prev;
+        } else {
+            next.prev = prev;
+            x.next = null;
+        }
+
+        x.item = null;
+        size--;
+        return element;
     }
 }
