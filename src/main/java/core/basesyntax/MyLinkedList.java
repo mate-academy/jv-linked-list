@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.lang.IndexOutOfBoundsException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     transient Node<T> first;
@@ -27,10 +26,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         indexCheck(index);
-        if (index == size)
+        if (index == size) {
             linkLast(value);
-        else
+        } else {
             linkBefore(value, node(index));
+        }
     }
 
     @Override
@@ -64,7 +64,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkPositionIndex(index);
-        return null;
+        MyLinkedList.Node<T> x = node(index);
+        final T element = x.item;
+        final MyLinkedList.Node<T> next = x.next;
+        final MyLinkedList.Node<T> prev = x.prev;
+
+        if (prev == null) {
+            first = next;
+        } else {
+            prev.next = next;
+            x.prev = null;
+        }
+
+        if (next == null) {
+            last = prev;
+        } else {
+            next.prev = prev;
+            x.next = null;
+        }
+
+        x.item = null;
+        size--;
+        return element;
     }
 
     @Override
@@ -107,25 +128,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    void linkBefore(T e, MyLinkedList.Node<T> succ) {
-        final MyLinkedList.Node<T> pred = succ.prev;
-        final MyLinkedList.Node<T> newNode = new MyLinkedList.Node<>(pred, e, succ);
-        succ.prev = newNode;
+    private void linkBefore(T t, MyLinkedList.Node<T> x) {
+        final MyLinkedList.Node<T> pred = x.prev;
+        final MyLinkedList.Node<T> newNode = new MyLinkedList.Node<>(pred, t, x);
+        x.prev = newNode;
         if (pred == null)
             first = newNode;
         else
             pred.next = newNode;
-        size++;
-    }
-
-    private void linkFirst(T t) {
-        final MyLinkedList.Node<T> f = first;
-        final MyLinkedList.Node<T> newNode = new MyLinkedList.Node<>(null, t, f);
-        first = newNode;
-        if (f == null)
-            last = newNode;
-        else
-            f.prev = newNode;
         size++;
     }
 
@@ -135,6 +145,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     + index + " when size is: " + size);
         }
     }
+
     private void checkPositionIndex(int index) {
         if (!(index >= 0 && index < size)) {
             throw new IndexOutOfBoundsException("Non existed position "
