@@ -30,7 +30,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             linkLast(value);
         } else {
-            linkBefore(value, node(index));
+            linkBefore(value, findNodeByIndex(index));
         }
     }
 
@@ -44,7 +44,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkPositionIndex(index);
-        MyLinkedList.Node<T> x = node(index);
+        MyLinkedList.Node<T> x = findNodeByIndex(index);
         return x.item;
     }
 
@@ -54,7 +54,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             throw new IndexOutOfBoundsException();
         }
-        MyLinkedList.Node<T> x = node(index);
+        MyLinkedList.Node<T> x = findNodeByIndex(index);
         if (x != null) {
             T oldVal = x.item;
             x.item = value;
@@ -68,25 +68,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkPositionIndex(index);
-        MyLinkedList.Node<T> x = node(index);
+        MyLinkedList.Node<T> x = findNodeByIndex(index);
         return unlink(x);
     }
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (MyLinkedList.Node<T> x = first; x != null; x = x.next) {
-                if (x.item == null) {
-                    unlink(x);
-                    return true;
-                }
-            }
-        } else {
-            for (MyLinkedList.Node<T> x = first; x != null; x = x.next) {
-                if (object.equals(x.item)) {
-                    unlink(x);
-                    return true;
-                }
+        for (MyLinkedList.Node<T> x = first; x != null; x = x.next) {
+            if (object == x.item || object != null && object.equals(x.item)) {
+                unlink(x);
+                return true;
             }
         }
         return false;
@@ -102,7 +93,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    MyLinkedList.Node<T> node(int index) {
+    MyLinkedList.Node<T> findNodeByIndex(int index) {
         if (index < (size >> 1)) {
             MyLinkedList.Node<T> x = first;
             for (int i = 0; i < index; i++) {
