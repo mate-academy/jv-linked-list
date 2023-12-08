@@ -10,12 +10,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> node = new Node<>(value);
-        if (isEmpty()) {
-            addElementToEmptyList(node);
-        } else {
-            addElementToEndOfTheList(node);
-        }
-        size++;
+        addElementToEndOfTheList(node);
     }
 
     @Override
@@ -24,23 +19,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
         Node<T> newNode = new Node<>(value);
-        if (isEmpty()) {
-            addElementToEmptyList(newNode);
-            size++;
-            return;
-        }
         if (index == 0) {
             addElementToFirstPosition(newNode);
-            size++;
             return;
         }
         if (index == size) {
             addElementToEndOfTheList(newNode);
-            size++;
             return;
         }
         addElementToTheMiddle(newNode, index);
-        size++;
     }
 
     @Override
@@ -73,7 +60,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             removedNode = removeFromTheMiddleOfTheList(index);
         }
-        size--;
         return removedNode.value;
     }
 
@@ -126,20 +112,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void addElementToEmptyList(Node<T> node) {
-        first = last = node;
-    }
-
     private void addElementToEndOfTheList(Node<T> node) {
-        last.next = node;
-        node.prev = last;
-        last = node;
+        if (last == null) {
+            last = first = node;
+        } else {
+            last.next = node;
+            node.prev = last;
+            last = node;
+        }
+        size++;
     }
 
     private void addElementToFirstPosition(Node<T> node) {
-        first.prev = node;
-        node.next = first;
-        first = node;
+        if (first == null) {
+            first = last = node;
+        } else {
+            first.prev = node;
+            node.next = first;
+            first = node;
+        }
+        size++;
     }
 
     private void addElementToTheMiddle(Node<T> newNode, int index) {
@@ -152,6 +144,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = newNode;
         }
         currentNodeAtIndex.prev = newNode;
+        size++;
     }
 
     private Node<T> removeFirstElementFromList() {
@@ -162,13 +155,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             first = last = null;
         }
+        size--;
         return removedNode;
     }
 
     private Node<T> removeElementFromOneElementList() {
+        first = null;
         Node<T> removedNode = last;
         last = null;
-        first = null;
+        size--;
         return removedNode;
     }
 
@@ -183,6 +178,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (currentNode == last) {
             last = currentNode.prev;
         }
+        size--;
         return currentNode;
     }
 
