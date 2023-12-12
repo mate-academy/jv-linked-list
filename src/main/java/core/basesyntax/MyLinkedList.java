@@ -3,19 +3,29 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node head;
-    private Node tail;
+    private Node<T> head;
+    private Node<T> tail;
     private int size;
 
     @Override
     public void add(T value) {
-        add(value, size);
+        Node<T> oldTail = tail;
+        if (size == 0) {
+            head = tail = new Node<>(oldTail,head,value);
+        } else {
+            tail = oldTail.next = new Node<>(null,tail,value);
+        }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        validateIndex(index,false);
-        newLink(value,index);
+        if (index == size) {
+            add(value);
+        } else {
+            Node<T> current = getNode(index);
+            linkBefore(value,current);
+        }
     }
 
     @Override
@@ -27,14 +37,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        validateIndex(index,true);
         return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        validateIndex(index,true);
-        Node current = getNode(index);
+        Node<T> current = getNode(index);
         T oldValue = current.value;
         current.value = value;
         return oldValue;
@@ -42,25 +50,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        validateIndex(index,true);
-        Node current = getNode(index);
+        Node<T> current = getNode(index);
         unlink(current);
-        updateIndex(current);
         return current.value;
     }
 
     @Override
     public boolean remove(T object) {
-        Node current = head;
-
-        while ((object != null && !object.equals(current.value))
-                || (current.value != null && object == null)) {
-            if (current.next == null) {
-                return false;
+        for (Node<T> current = head; current != null; current = current.next) {
+            if (current.value == object || current.value != null
+                    && current.value.equals(object)) {
+                unlink(current);
+                return true;
             }
-            current = current.next;
         }
-        return remove(current.index) != null || object == null;
+        return false;
     }
 
     @Override
@@ -73,110 +77,77 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private class Node {
-        private Node next;
-        private Node previous;
+    private class Node<T> {
+        private Node<T> next;
+        private Node<T> previous;
         private T value;
-        private int index;
 
-        public Node(Node next, Node previous, T value, int index) {
+        public Node(Node<T> next, Node<T> previous, T value) {
             this.next = next;
             this.previous = previous;
             this.value = value;
-            this.index = index;
         }
     }
 
-    private Node getNode(int index) {
-        Node current;
+    private Node<T> getNode(int index) {
+        validateIndex(index);
+        Node<T> current;
+        int currentIndex;
         if (size / 2 > index) {
             current = tail;
-            while (current.index > index) {
+            currentIndex = size - 1;
+            while (currentIndex > index) {
                 if (current.previous != null) {
                     current = current.previous;
+                    currentIndex--;
                 }
             }
         } else {
             current = head;
-            while (current.index < index) {
+            currentIndex = 0;
+            while (currentIndex < index) {
                 if (current.next != null) {
                     current = current.next;
+                    currentIndex++;
                 }
             }
         }
         return current;
     }
 
-    private void newLink(T value, int index) {
-        if (index == 0) {
-            if (size == 0) {
-                head = tail = new Node(tail, head, value, index);
-                size++;
-                return;
-            }
-            head.previous = new Node(head, null, value, index);
+    private void linkBefore(T value, Node<T> current) {
+        if (current == head) {
+            head.previous = new Node<>(head, null, value);
             head = head.previous;
-            updateIndex(head.next,index);
-            size++;
-        } else if (index == size) {
-            tail.next = new Node(null, tail, value, index);
-            tail = tail.next;
-            size++;
         } else {
-            Node current = getNode(index);
-            current.previous.next = new Node(current, current.previous, value, index);
+            current.previous.next = new Node<>(current, current.previous, value);
             current.previous = current.previous.next;
-            updateIndex(current,index);
-            size++;
         }
+        size++;
     }
 
-    private void unlink(Node node) {
-        int lastIndex = size - 1;
-
-        if (node.index == 0) {
+    private void unlink(Node<T> node) {
+        if (node == head) {
             if (size == 1) {
                 size--;
                 return;
             }
             node.next.previous = null;
             head = node.next;
-            size--;
-        } else if (node.index == lastIndex) {
+        } else if (node == tail) {
             node.previous.next = null;
             tail = node.previous;
             node.previous = null;
-            size--;
         } else {
             node.previous.next = node.next;
             node.next.previous = node.previous;
             node.previous = null;
-            size--;
         }
+        size--;
     }
 
-    private void updateIndex(Node current) {
-        while (current.next != null) {
-            current = current.next;
-            current.index--;
-        }
-    }
-
-    private void updateIndex(Node current, int index) {
-        for (int i = index + 1; i <= size; i++) {
-            current.index = i;
-            if (current.next != null) {
-                current = current.next;
-            }
-        }
-    }
-
-    private void validateIndex(int index, boolean exclusive) {
-        if (exclusive) {
-            if (index < 0 || index >= size) {
-                throw new IndexOutOfBoundsException("Index: " + index + " out of size:" + size);
-            }
-        } else if (index < 0 || index > size) {
+    private void validateIndex(int index) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + " out of size:" + size);
         }
     }
