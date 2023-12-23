@@ -107,9 +107,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void getIndexedNode(int index) {
-        currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
+        if (index >= size / 2) {
+            currentNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                currentNode = currentNode.prev;
+            }
+        } else {
+            currentNode = head;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
         }
     }
 
