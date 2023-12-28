@@ -6,6 +6,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
     transient Node<T> first;
     transient Node<T> last;
+    private static class Node<T> {
+        T item;
+        Node<T> next;
+        Node<T> prev;
+
+        Node(Node<T> prev, T item, Node<T> next) {
+            this.item = item;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
 
     @Override
     public void add(T value) {
