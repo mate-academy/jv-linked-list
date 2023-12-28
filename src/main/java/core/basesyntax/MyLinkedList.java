@@ -74,8 +74,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = newNode;
         } else {
             Node finderNode = finderNode(index);
-            newNode.next = finderNode.next;
-            newNode.prev = finderNode.prev;
             finderNode.next.prev = newNode;
             finderNode.prev.next = newNode;
         }
