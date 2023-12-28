@@ -12,12 +12,12 @@ public class MyLinkedList <T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (isEmpty()) {
-            Node <T> newNode = new Node(null, value, null);
+            Node <T> newNode = new Node<> (null, value, null);
             first = newNode;
             last = newNode;
 
         } else {
-            Node newNode = new Node(last, value, null);
+            Node <T> newNode = new Node<> (last, value, null);
             last.next = newNode;
             last = newNode;
         }
@@ -31,7 +31,7 @@ public class MyLinkedList <T> implements MyLinkedListInterface<T> {
             return;
         }
         if (index == 0) {
-            Node newNode = new Node(null, value, first);
+            Node <T> newNode = new Node(null, value, first);
             first.prev = newNode;
             first = newNode;
             size++;
