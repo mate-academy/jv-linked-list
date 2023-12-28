@@ -3,13 +3,14 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private Node<T> first;
+    private Node<T> last;
     private int size;
-    transient Node<T> first;
-    transient Node<T> last;
+
     private static class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> prev;
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
         Node(Node<T> prev, T item, Node<T> next) {
             this.item = item;
@@ -21,11 +22,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (isEmpty()) {
-            Node<T> newNode = new Node<> (null, value, null);
+            Node<T> newNode = new Node<>(null, value, null);
             first = newNode;
             last = newNode;
         } else {
-            Node<T> newNode = new Node<> (last, value, null);
+            Node<T> newNode = new Node<>(last, value, null);
             last.next = newNode;
             last = newNode;
         }
@@ -72,7 +73,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public T set (T value, int index)  {
+    public T set (T value, int index) {
         Node<T> node = indexSearch(index);
         T oldValue = node.item;
         node.item = value;
