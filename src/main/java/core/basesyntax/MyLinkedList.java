@@ -2,17 +2,17 @@ package core.basesyntax;
 
 import java.util.List;
 
-public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    int size;
-    transient Node<T> first;
-    transient Node<T> last;
+public class MyLinkedList <T> implements MyLinkedListInterface<T> {
+    private int size;
+    transient Node <T> first;
+    transient Node <T> last;
     MyLinkedList() {
     }
 
     @Override
     public void add(T value) {
         if (isEmpty()) {
-            Node newNode = new Node(null, value, null);
+            Node <T> newNode = new Node(null, value, null);
             first = newNode;
             last = newNode;
 
@@ -37,8 +37,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size++;
             return;
         }
-        Node node = indexSearch(index);
-        Node newNode = new Node(node.prev, value, node);
+        Node <T> node = indexSearch(index);
+        Node <T> newNode = new Node(node.prev, value, node);
         node.prev.next = newNode;
         node.prev = newNode;
         size++;
@@ -46,7 +46,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
     }
@@ -55,26 +55,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T get(int index) {
         indexSearch(index);
         int i = 0;
-        Node node = first;
+        Node <T> node = first;
         while (i != index){
             node = node.next;
             i++;
         }
-        return (T) node.item;
+        return node.item;
     }
 
     @Override
     public T set(T value, int index)  {
-        Node node = indexSearch(index);
+        Node <T> node = indexSearch(index);
         node.item = value;
-        return (T) node.item;
+        return node.item;
     }
 
     @Override
     public T remove(int index)  {
-        Node node = indexSearch(index);
+        Node <T> node = indexSearch(index);
         unlink(node);
-        return (T) node.item;
+        return node.item;
     }
 
 
@@ -83,14 +83,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (isEmpty()){
             return false;
         }
-        Node node = first;
-        while (node != null){
+        Node <T> node = first;
+        while (node != null) {
             if (object != null) {
-            if (object.equals(node.item) ){
+            if (object.equals(node.item)){
                 unlink(node);
                 return true;
             }} else {
-                if (node.item == null ){
+                if (node.item == null) {
                     unlink(node);
                     return true;
             }}
@@ -109,29 +109,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return first == null;
     }
 
-    private Node indexSearch(int index) throws IndexOutOfBoundsException {
+    private Node <T> indexSearch(int index) throws IndexOutOfBoundsException {
         if ((index >= size()) || (index<0)) {
             throw new IndexOutOfBoundsException("Index dosn't much");
         }
         if ( index <= size / 2 ) {
             int i = 0;
-            Node node = first;
-            while (i != index){
+            Node <T> node = first;
+            while (i != index) {
                 node = node.next;
                 i++;
             }
             return node;
         } else {
             int i = size-1;
-            Node node = last;
-            while (i != index){
+            Node <T> node = last;
+            while (i != index) {
                 node = node.prev;
                 i--;
             }
             return node;
         }
     }
-    private void unlink(Node node) {
+    private void unlink(Node <T> node) {
         if (node.prev == null) {
             if (node.next != null) {
                 node.next.prev = null;
