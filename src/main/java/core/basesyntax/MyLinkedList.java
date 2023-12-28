@@ -31,14 +31,14 @@ public class MyLinkedList <T> implements MyLinkedListInterface<T> {
             return;
         }
         if (index == 0) {
-            Node <T> newNode = new Node(null, value, first);
+            Node <T> newNode = new Node<> (null, value, first);
             first.prev = newNode;
             first = newNode;
             size++;
             return;
         }
         Node <T> node = indexSearch(index);
-        Node <T> newNode = new Node(node.prev, value, node);
+        Node <T> newNode = new Node<> (node.prev, value, node);
         node.prev.next = newNode;
         node.prev = newNode;
         size++;
@@ -46,8 +46,8 @@ public class MyLinkedList <T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T t : list) {
+            add(t);
         }
     }
 
