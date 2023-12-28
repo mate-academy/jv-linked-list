@@ -2,12 +2,10 @@ package core.basesyntax;
 
 import java.util.List;
 
-public class MyLinkedList <T> implements MyLinkedListInterface<T> {
+public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
     transient Node<T> first;
     transient Node<T> last;
-    MyLinkedList() {
-    }
 
     @Override
     public void add(T value) {
@@ -15,7 +13,6 @@ public class MyLinkedList <T> implements MyLinkedListInterface<T> {
             Node<T> newNode = new Node<> (null, value, null);
             first = newNode;
             last = newNode;
-
         } else {
             Node<T> newNode = new Node<> (last, value, null);
             last.next = newNode;
@@ -25,20 +22,20 @@ public class MyLinkedList <T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public void add(T value, int index)  {
+    public void add(T value, int index) {
         if (index == size()) {
             add(value);
             return;
         }
         if (index == 0) {
-            Node<T> newNode = new Node<> (null, value, first);
+            Node<T> newNode = new Node<>(null, value, first);
             first.prev = newNode;
             first = newNode;
             size++;
             return;
         }
         Node<T> node = indexSearch(index);
-        Node<T> newNode = new Node<> (node.prev, value, node);
+        Node<T> newNode = new Node<>(node.prev, value, node);
         node.prev.next = newNode;
         node.prev = newNode;
         size++;
@@ -56,7 +53,7 @@ public class MyLinkedList <T> implements MyLinkedListInterface<T> {
         indexSearch(index);
         int i = 0;
         Node<T> node = first;
-        while (i != index){
+        while (i != index) {
             node = node.next;
             i++;
         }
@@ -64,14 +61,14 @@ public class MyLinkedList <T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public T set(T value, int index)  {
+    public T set (T value, int index)  {
         Node<T> node = indexSearch(index);
         node.item = value;
         return node.item;
     }
 
     @Override
-    public T remove(int index)  {
+    public T remove (int index)  {
         Node<T> node = indexSearch(index);
         unlink(node);
         return node.item;
@@ -79,8 +76,8 @@ public class MyLinkedList <T> implements MyLinkedListInterface<T> {
 
 
     @Override
-    public boolean remove(T object) {
-        if (isEmpty()){
+    public boolean remove (T object) {
+        if (isEmpty()) {
             return false;
         }
         Node<T> node = first;
@@ -89,11 +86,13 @@ public class MyLinkedList <T> implements MyLinkedListInterface<T> {
             if (object.equals(node.item)){
                 unlink(node);
                 return true;
-            }} else {
+            }
+            } else {
                 if (node.item == null) {
                     unlink(node);
                     return true;
-            }}
+            }
+            }
             node = node.next;
         }
         return false;
@@ -110,10 +109,10 @@ public class MyLinkedList <T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> indexSearch(int index) throws IndexOutOfBoundsException {
-        if ((index >= size()) || (index<0)) {
+        if ((index >= size()) || (index < 0)) {
             throw new IndexOutOfBoundsException("Index dosn't much");
         }
-        if ( index <= size / 2 ) {
+        if (index <= size / 2) {
             int i = 0;
             Node<T> node = first;
             while (i != index) {
@@ -122,7 +121,7 @@ public class MyLinkedList <T> implements MyLinkedListInterface<T> {
             }
             return node;
         } else {
-            int i = size-1;
+            int i = size - 1;
             Node<T> node = last;
             while (i != index) {
                 node = node.prev;
@@ -131,17 +130,17 @@ public class MyLinkedList <T> implements MyLinkedListInterface<T> {
             return node;
         }
     }
-    private void unlink(Node<T> node) {
+    private void unlink (Node<T> node) {
         if (node.prev == null) {
             if (node.next != null) {
                 node.next.prev = null;
                 first = node.next;
                 size--;
-                return ;
+                return;
             } else {
                 first = null;
                 size = 0;
-                return ;
+                return;
             }
         }
         if (node.next != null) {
