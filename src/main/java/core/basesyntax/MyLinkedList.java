@@ -73,7 +73,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public T set (T value, int index) {
+    public T set(T value, int index) {
         Node<T> node = indexSearch(index);
         T oldValue = node.item;
         node.item = value;
@@ -81,30 +81,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public T remove (int index)  {
+    public T remove(int index) {
         Node<T> node = indexSearch(index);
         unlink(node);
         return node.item;
     }
 
-
     @Override
-    public boolean remove (T object) {
+    public boolean remove(T object) {
         if (isEmpty()) {
             return false;
         }
         Node<T> node = first;
         while (node != null) {
             if (object != null) {
-            if (object.equals(node.item)){
-                unlink(node);
-                return true;
-            }
+                if (object.equals(node.item)) {
+                    unlink(node);
+                    return true;
+                }
             } else {
                 if (node.item == null) {
                     unlink(node);
                     return true;
-            }
+                }
             }
             node = node.next;
         }
@@ -143,7 +142,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return node;
         }
     }
-    private void unlink (Node<T> node) {
+
+    private void unlink(Node<T> node) {
         if (node.prev == null) {
             if (node.next != null) {
                 node.next.prev = null;
