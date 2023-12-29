@@ -62,14 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexSearch(index);
-        int i = 0;
-        Node<T> node = first;
-        while (i != index) {
-            node = node.next;
-            i++;
-        }
-        return node.item;
+        return indexSearch(index).item;
     }
 
     @Override
