@@ -3,69 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private int size = 0;
     private Node<T> first;
     private Node<T> last;
-
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
-    void linkLast(T e) {
-        final Node<T> l = last;
-        final Node<T> newNode = new Node<>(l, e, null);
-        last = newNode;
-        if (l == null) {
-            first = newNode;
-        } else {
-            l.next = newNode;
-        }
-        size++;
-    }
-
-    void linkBefore(T e, Node<T> succ) {
-
-        final Node<T> pred = succ.prev;
-        final Node<T> newNode = new Node<>(pred, e, succ);
-        succ.prev = newNode;
-        if (pred == null) {
-            first = newNode;
-        } else {
-            pred.next = newNode;
-        }
-        size++;
-
-    }
-
-    T unlink(Node<T> n) {
-        final T x = n.item;
-        final Node<T> nextX = n.next;
-        final Node<T> prevX = n.prev;
-
-        if (prevX == null) {
-            first = nextX;
-        } else {
-            prevX.next = nextX;
-        }
-
-        if (nextX == null) {
-            last = prevX;
-        } else {
-            nextX.prev = prevX;
-        }
-
-        size--;
-        return x;
-    }
 
     @Override
     public void add(T value) {
@@ -87,14 +27,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
 
-        Object[] a = list.toArray();
-        int numNew = a.length;
+        int numNew = 0;
 
         Node<T> pred = last;
         Node<T> succ = null;
 
-        for (Object o : a) {
-            T e = (T) o;
+        for (T e : list) {
+            add(e);
+
             Node<T> newNode = new Node<>(pred, e, null);
             if (pred == null) {
                 first = newNode;
@@ -138,19 +78,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> x = first; x != null; x = x.next) {
-                if (x.item == null) {
-                    unlink(x);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> x = first; x != null; x = x.next) {
-                if (object.equals(x.item)) {
-                    unlink(x);
-                    return true;
-                }
+        for (Node<T> x = first; x != null; x = x.next) {
+            if ((object == null && x.item == null) || (object != null && object.equals(x.item))) {
+                unlink(x);
+                return true;
             }
         }
         return false;
@@ -166,27 +97,86 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private boolean isElementIndex(int index) {
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        private Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+
+    private void linkLast(T e) {
+        final Node<T> linkLast = last;
+        final Node<T> newNode = new Node<>(linkLast, e, null);
+        last = newNode;
+        if (linkLast == null) {
+            first = newNode;
+        } else {
+            linkLast.next = newNode;
+        }
+        size++;
+    }
+
+    private void linkBefore(T e, Node<T> succ) {
+
+        final Node<T> pred = succ.prev;
+        final Node<T> newNode = new Node<>(pred, e, succ);
+        succ.prev = newNode;
+        if (pred == null) {
+            first = newNode;
+        } else {
+            pred.next = newNode;
+        }
+        size++;
+
+    }
+
+    private T unlink(Node<T> n) {
+        final T x = n.item;
+        final Node<T> nextX = n.next;
+        final Node<T> prevX = n.prev;
+
+        if (prevX == null) {
+            first = nextX;
+        } else {
+            prevX.next = nextX;
+        }
+
+        if (nextX == null) {
+            last = prevX;
+        } else {
+            nextX.prev = prevX;
+        }
+
+        size--;
+        return x;
+    }
+
+    private boolean isElementIndexValid(int index) {
         return index >= 0 && index < size;
     }
 
     private void checkElementIndex(int index) {
-        if (!isElementIndex(index)) {
+        if (!isElementIndexValid(index)) {
             throw new IndexOutOfBoundsException(index);
         }
     }
 
-    private boolean isPositionIndex(int index) {
+    private boolean isPositionIndexValid(int index) {
         return index >= 0 && index <= size;
     }
 
     private void checkPositionIndex(int index) {
-        if (!isPositionIndex(index)) {
+        if (!isPositionIndexValid(index)) {
             throw new IndexOutOfBoundsException(index);
         }
     }
 
-    Node<T> node(int index) {
+    private Node<T> node(int index) {
         if (index < (size >> 1)) {
             Node<T> x = first;
             for (int i = 0; i < index; i++) {
