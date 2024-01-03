@@ -4,18 +4,6 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
-    public static class Node<T> {
-        private T data;
-        private Node<T> prev;
-        private Node<T> next;
-
-        Node(Node<T> prev,T data,Node<T> next) {
-            this.data = data;
-            this.prev = prev;
-            this.next = next;
-        }
-    }
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -35,15 +23,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index out of bounds");
-        }
         if (index == size) {
             add(value);
             return;
         }
+        checkIndexOutOfBounds(index);
         Node<T> current = getNodeAtIndex(index);
-        Node<T> newNode = new Node<>(current.prev,value,current);
+        Node<T> newNode = new Node<>(current.prev, value, current);
         linkBefore(newNode, current);
     }
 
@@ -100,10 +86,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node<T> getNodeAtIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of bounds");
+    private static class Node<T> {
+        private T data;
+        private Node<T> prev;
+        private Node<T> next;
+
+        Node(Node<T> prev, T data, Node<T> next) {
+            this.data = data;
+            this.prev = prev;
+            this.next = next;
         }
+    }
+
+    private Node<T> getNodeAtIndex(int index) {
+        checkIndexOutOfBounds(index);
         Node<T> current;
         int mid = size / 2;
 
@@ -144,6 +140,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = node.prev;
         } else {
             node.next.prev = node.prev;
+        }
+    }
+
+    private void checkIndexOutOfBounds(int index) {
+        if (index < 0 || (index > size) || (index == size)) {
+            throw new IndexOutOfBoundsException("Index out of bounds");
         }
     }
 }
