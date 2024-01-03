@@ -12,34 +12,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(null, value, null);
-        if (isEmpty()) {
-            first = newNode;
-            last = newNode;
-            size++;
-            return;
-        }
-        newNode.prev = last;
-        last.next = newNode;
-        last = newNode;
-        size++;
+        linkLast(value);
     }
 
     @Override
     public void add(T value, int index) {
         if (index == size) {
-            add(value);
+            linkLast(value);
             return;
         }
-        checkForIndexOutOfBounds(index);
-        Node<T> newNode = new Node<>(null, value, null);
         if (index == 0) {
-            first.prev = newNode;
-            newNode.next = first;
-            first = newNode;
-            size++;
+            linkFirst(value);
             return;
         }
+        Node<T> newNode = new Node<>(null, value, null);
         Node<T> previous = getNodeByIndex(index - 1);
         Node<T> next = previous.next;
         newNode.prev = previous;
@@ -63,7 +49,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        checkForIndexOutOfBounds(index);
         Node<T> nodeForSet = getNodeByIndex(index);
         T item = nodeForSet.item;
         nodeForSet.item = value;
@@ -126,6 +111,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void linkFirst(T value) {
+        Node<T> newNode = new Node<>(null, value, null);
+        first.prev = newNode;
+        newNode.next = first;
+        first = newNode;
+        size++;
+    }
+
+    private void linkLast(T value) {
+        Node<T> newNode = new Node<>(null, value, null);
+        if (isEmpty()) {
+            first = newNode;
+            last = newNode;
+            size++;
+            return;
+        }
+        newNode.prev = last;
+        last.next = newNode;
+        last = newNode;
+        size++;
     }
 
     private Node<T> getNodeByIndex(int index) {
