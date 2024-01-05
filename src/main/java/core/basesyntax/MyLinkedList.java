@@ -149,7 +149,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private final static class Node<T> {
+    private final class Node<T> {
         private final T value;
         private Node<T> next;
         private Node<T> prev;
