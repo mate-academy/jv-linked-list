@@ -133,6 +133,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.value = value;
             this.prev = prev;
             this.next = next;
+
         }
     }
 }
