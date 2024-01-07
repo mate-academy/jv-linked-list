@@ -68,21 +68,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        boolean elementFound = false;
         Node<T> redundantNode = head;
-        for (int i = 0; i < size; i++) {
-            if (redundantNode.value == null && object != null) {
-                redundantNode = redundantNode.next;
-            } else if ((redundantNode.value == null)
-                    || (redundantNode.value.equals(object))) {
+        while (redundantNode != null) {
+            if (redundantNode.value == object
+                    || redundantNode.value != null && redundantNode.value.equals(object)) {
                 unlink(redundantNode);
-                elementFound = true;
-                break;
-            } else {
-                redundantNode = redundantNode.next;
+                return true;
             }
+            redundantNode = redundantNode.next;
         }
-        return elementFound;
+        return false;
     }
 
     @Override
@@ -97,9 +92,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNode(int index) {
         checkIndex(index);
-        Node<T> finderNode = head;
-        for (int i = 0; i < index; i++) {
-            finderNode = finderNode.next;
+        Node<T> finderNode;
+        if (index <= (double) size / 2) {
+            finderNode = head;
+            for (int i = 0; i < index; i++) {
+                finderNode = finderNode.next;
+            }
+        } else {
+            index++;
+            finderNode = tail;
+            for (int i = size; i > index; i--) {
+                finderNode = finderNode.prev;
+            }
         }
         return finderNode;
     }
