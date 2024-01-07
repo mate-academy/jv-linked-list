@@ -16,29 +16,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         if (index == 0) {
             linkHead(value);
-        } else if (index == size) {
-            linkTail(value);
-        } else {
-            Node<T> currentNode = findNode(index);
-            Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
-            currentNode.prev.next = newNode;
-            currentNode.prev = newNode;
-            size++;
+            return;
         }
-
+        if (index == size) {
+            linkTail(value);
+            return;
+        }
+        Node<T> currentNode = findNode(index);
+        Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
+        currentNode.prev.next = newNode;
+        currentNode.prev = newNode;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         for (T value : list) {
-            linkTail(value);
+            add(value);
         }
     }
 
     @Override
     public T get(int index) {
-        Node<T> finderNode = findNode(index);
-        return finderNode.value;
+        Node<T> currentNode = findNode(index);
+        return currentNode.value;
     }
 
     @Override
@@ -60,26 +61,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        T returnValue = get(index);
-        Node<T> deleteNode = findNode(index);
-        unlink(deleteNode);
-        return returnValue;
+        Node<T> redundantNode = findNode(index);
+        unlink(redundantNode);
+        return redundantNode.value;
     }
 
     @Override
     public boolean remove(T object) {
         boolean elementFound = false;
-        Node<T> deleteNode = head;
+        Node<T> redundantNode = head;
         for (int i = 0; i < size; i++) {
-            if (deleteNode.value == null && object != null) {
-                deleteNode = deleteNode.next;
-            } else if ((deleteNode.value == null)
-                    || (deleteNode.value.equals(object))) {
-                unlink(deleteNode);
+            if (redundantNode.value == null && object != null) {
+                redundantNode = redundantNode.next;
+            } else if ((redundantNode.value == null)
+                    || (redundantNode.value.equals(object))) {
+                unlink(redundantNode);
                 elementFound = true;
                 break;
             } else {
-                deleteNode = deleteNode.next;
+                redundantNode = redundantNode.next;
             }
         }
         return elementFound;
@@ -96,10 +96,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNode(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Exception in thread \"main\" "
-                    + "java.lang.IndexOutOfBoundsException");
-        }
+        checkIndex(index);
         Node<T> finderNode = head;
         for (int i = 0; i < index; i++) {
             finderNode = finderNode.next;
@@ -107,21 +104,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return finderNode;
     }
 
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Bad index");
+        }
+    }
+
     private void unlink(Node<T> node) {
         if (node.prev == null) {
             if (size != 1) {
                 head = node.next;
-                node.next.prev = node.prev;
             }
         } else if (node.next == null) {
             tail = node.prev;
-            node.prev.next = node.next;
         } else {
             node.prev.next = node.next;
             node.next.prev = node.prev;
         }
         size--;
-
     }
 
     private void linkHead(T value) {
