@@ -17,6 +17,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
         }
     }
+
     @Override
     public void add(T value) {
         Node<T> node = new Node<T>(null, value, null);
@@ -102,6 +103,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = current.prev;
         }
     }
+
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size()) {
@@ -109,17 +111,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
         Node<T> current = getNodeAtIndex(index);
-        if (current.prev != null) {
-            current.prev.next = current.next;
-        } else {
-            head = current.next;
-        }
-
-        if (current.next != null) {
-            current.next.prev = current.prev;
-        } else {
-            tail = current.prev;
-        }
+        baseRemove(current);
 
         return current.value;
     }
@@ -134,7 +126,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     return true;
                 }
             } else if (object.equals(current.value)) {
-                // If the object to remove is not null, use equals() to compare
                 baseRemove(current);
                 return true;
             }
@@ -160,9 +151,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeAtIndex(int index) {
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        Node<T> current;
+        if (index < size() / 2) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size() - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
         return current;
     }
