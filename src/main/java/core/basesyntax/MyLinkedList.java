@@ -6,21 +6,45 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    class Node<T> {
-        T value;
-        Node<T> next;
-        Node<T> prev;
+    class Node<A> {
+        private A value;
+        private Node<A> next;
+        private Node<A> prev;
 
-        public Node(Node<T> prev, T value, Node<T> next) {
+        public Node(Node<A> prev, A value, Node<A> next) {
             this.prev = prev;
             this.value = value;
             this.next = next;
+        }
+
+        public A getValue() {
+            return value;
+        }
+
+        public void setValue(A value) {
+            this.value = value;
+        }
+
+        public Node<A> getNext() {
+            return next;
+        }
+
+        public void setNext(Node<A> next) {
+            this.next = next;
+        }
+
+        public Node<A> getPrev() {
+            return prev;
+        }
+
+        public void setPrev(Node<A> prev) {
+            this.prev = prev;
         }
     }
 
     @Override
     public void add(T value) {
-        Node<T> node = new Node<T>(null, value, null);
+        Node<T> node = new Node<>(null, value, null);
         if (head == null) {
             head = node;
         } else {
@@ -137,7 +161,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public int size() {
         Node<T> current = head;
-        int count=0;
+        int count = 0;
         while (current != null) {
             count++;
             current = current.next;
