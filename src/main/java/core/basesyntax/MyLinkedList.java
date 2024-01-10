@@ -114,20 +114,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return oldValue;
     }
 
-    private void baseRemove(Node<T> current) {
-        if (current.prev != null) {
-            current.prev.next = current.next;
-        } else {
-            head = current.next;
-        }
-
-        if (current.next != null) {
-            current.next.prev = current.prev;
-        } else {
-            tail = current.prev;
-        }
-    }
-
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size()) {
@@ -188,5 +174,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return current;
+    }
+
+    private void baseRemove(Node<T> current) {
+        if (current.prev != null) {
+            current.prev.next = current.next;
+        } else {
+            head = current.next;
+        }
+
+        if (current.next != null) {
+            current.next.prev = current.prev;
+        } else {
+            tail = current.prev;
+        }
     }
 }
