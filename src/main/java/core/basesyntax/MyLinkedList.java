@@ -11,9 +11,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public MyLinkedList(T value) {
-        head = new ListNode<>(null, value, null);
-        tail = head;
-        size++;
+        addFirst(value);
     }
 
     @Override
@@ -34,15 +32,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         if (size == 0) {
             addFirst(value);
-            return;
         } else if (index == 0) {
             head = new ListNode<>(null, value, head);
             head.next.prev = head;
             size++;
-            return;
         } else if (index == size) {
             addLast(value);
-            return;
         } else {
             ListNode<T> current = findByIndex(index);
             ListNode<T> newNode = new ListNode<>(current.prev, value, current);
@@ -54,9 +49,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null) {
-            return;
-        }
         for (int i = 0; i < list.size(); i++) {
             this.add(list.get(i));
         }
@@ -90,20 +82,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         ListNode current = head;
         while (current != null) {
             if (current.value == object || current.value != null && current.value.equals(object)) {
-                break;
+                unlink(current);
+                return true;
             }
             current = current.next;
         }
-        if (current == null) {
-            return false;
-        }
-        unlink(current);
-        return true;
+        return false;
     }
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
@@ -151,7 +140,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private ListNode<T> findByIndex(int index) {
-        ListNode current = head;
+        ListNode<T> current;
+        if (index > size() / 2) {
+            current = searchTailToIndex(index);
+        } else {
+            current = searchHeadToIndex(index);
+        }
+        return current;
+    }
+
+    private ListNode<T> searchHeadToIndex(int index) {
+        ListNode<T> current = head;
         int i = 0;
         while (i != index) {
             current = current.next;
@@ -160,12 +159,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private class ListNode<T> {
+    private ListNode<T> searchTailToIndex(int index) {
+        ListNode<T> current = tail;
+        int i = size - 1;
+        while (i != index) {
+            current = current.prev;
+            i--;
+        }
+        return current;
+    }
+
+    private static class ListNode<T> {
         private T value;
         private ListNode next;
         private ListNode prev;
 
-        public ListNode(ListNode<T> prev, T element, ListNode<T> next) {
+        ListNode(ListNode<T> prev, T element, ListNode<T> next) {
             this.value = element;
             this.next = next;
             this.prev = prev;
