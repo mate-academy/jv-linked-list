@@ -15,30 +15,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         Node<T> node = new Node<>(null, value, null);
 
-        Node<T> current = getNodeAtIndexAddition(index);
         if (index == 0) {
-            node.next = head;
-            if (head != null) {
-                head.prev = node;
-            }
-            head = node;
-            if (tail == null) {
-                tail = node;
-            }
+            linkNodeAtHead(node);
         } else if (index == size()) {
-            if (tail == null) {
-                head = node;
-            } else {
-                linkTail(node);
-            }
+            linkTail(node);
         } else {
-            node.next = current;
-            node.prev = current.prev;
-            if (current.prev != null) {
-                current.prev.next = node;
-            }
-            current.prev = node;
-            node.size++;
+            Node<T> current = getNodeAtIndexAddition(index);
+            linkNodeMiddle(node, current);
         }
     }
 
@@ -173,6 +156,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.prev = tail;
         }
         tail = node;
+        node.size++;
+    }
+
+    private void linkNodeAtHead(Node<T> node) {
+        node.next = head;
+        if (head != null) {
+            head.prev = node;
+        }
+        head = node;
+        if (tail == null) {
+            tail = node;
+        }
+    }
+
+    private void linkNodeMiddle(Node<T> node, Node<T> current) {
+        node.next = current;
+        node.prev = current.prev;
+        if (current.prev != null) {
+            current.prev.next = node;
+        }
+        current.prev = node;
         node.size++;
     }
 
