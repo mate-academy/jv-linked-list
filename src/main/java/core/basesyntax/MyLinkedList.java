@@ -5,6 +5,12 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
+    private int size;
+
+    @Override
+    public int size() {
+        return size;
+    }
 
     @Override
     public void add(T value) {
@@ -19,6 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             linkNodeAtHead(node);
         } else if (index == size()) {
             linkTail(node);
+            size++;
         } else {
             Node<T> current = getNodeAtIndexAddition(index);
             linkNodeMiddle(node, current);
@@ -72,20 +79,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return false;
     }
 
-    @Override
-    public int size() {
-        Node<T> current = head;
-        int size = 0;
-        while (current != null) {
-            size++;
-            current = current.next;
-        }
-        return size;
-    }
+
 
     @Override
     public boolean isEmpty() {
-        return this.size() == 0;
+        return this.size == 0;
     }
 
     private Node<T> getNodeAtIndex(int index) {
@@ -144,7 +142,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             tail = current.prev;
         }
-        current.size--;
+        size--;
     }
 
     private void linkHead(T value) {
@@ -156,7 +154,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.prev = tail;
         }
         tail = node;
-        node.size++;
+        size++;
     }
 
     private void linkNodeAtHead(Node<T> node) {
@@ -168,6 +166,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (tail == null) {
             tail = node;
         }
+        size++;
     }
 
     private void linkNodeMiddle(Node<T> node, Node<T> current) {
@@ -177,7 +176,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current.prev.next = node;
         }
         current.prev = node;
-        node.size++;
+        size++;
     }
 
     private void linkTail(Node<T> node) {
@@ -190,7 +189,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private T value;
         private Node<T> next;
         private Node<T> prev;
-        private int size;
 
         public Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
