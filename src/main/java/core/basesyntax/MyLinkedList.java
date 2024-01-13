@@ -24,8 +24,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == 0) {
             linkNodeAtHead(node);
         } else if (index == size()) {
-            linkTail(node);
-            size++;
+            linkHead(value);
         } else {
             Node<T> current = getNodeAtIndexAddition(index);
             linkNodeMiddle(node, current);
@@ -57,7 +56,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Node<T> current = getNodeAtIndex(index);
         baseRemove(current);
-
         return current.value;
     }
 
@@ -78,8 +76,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return false;
     }
-
-
 
     @Override
     public boolean isEmpty() {
@@ -177,12 +173,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         current.prev = node;
         size++;
-    }
-
-    private void linkTail(Node<T> node) {
-        tail.next = node;
-        node.prev = tail;
-        tail = node;
     }
 
     private static class Node<T> {
