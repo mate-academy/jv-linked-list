@@ -14,7 +14,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        linkHead(value);
+        linkTail(value);
     }
 
     @Override
@@ -22,9 +22,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> node = new Node<>(null, value, null);
 
         if (index == 0) {
-            linkNodeAtHead(node);
+            linkHead(node);
         } else if (index == size()) {
-            linkHead(value);
+            linkTail(value);
         } else {
             Node<T> current = getNodeAtIndexAddition(index);
             linkNodeMiddle(node, current);
@@ -141,7 +141,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private void linkHead(T value) {
+    private void linkTail(T value) {
         Node<T> node = new Node<>(null, value, null);
         if (head == null) {
             head = node;
@@ -153,7 +153,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void linkNodeAtHead(Node<T> node) {
+    private void linkHead(Node<T> node) {
         node.next = head;
         if (head != null) {
             head.prev = node;
