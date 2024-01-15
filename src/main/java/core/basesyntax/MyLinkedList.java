@@ -12,7 +12,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> prev;
         private Node<T> next;
 
-        public Node(Node<T> prev, T value, Node<T> next) {
+        Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
             this.next = next;
             this.value = value;
@@ -65,14 +65,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndexOutOfBoundsException(index);
         return findIndexNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         T oldValue;
-        checkIndexOutOfBoundsException(index);
         oldValue = findIndexNode(index).value;
         findIndexNode(index).value = value;
         return oldValue;
@@ -80,53 +78,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        T value;
-        checkIndexOutOfBoundsException(index);
-        if (index == 0) {
-            value = head.value;
-            if (size == 1) {
-                head = null;
-                size--;
-                return value;
-            }
-            head.next.prev = null;
-            head = head.next;
-            size--;
-            return value;
-        } else if (index == size - 1) {
-            value = tail.value;
-            tail.prev.next = null;
-            tail = tail.prev;
-            size--;
-            return value;
-        }
         Node<T> indexNode = findIndexNode(index);
-        indexNode.prev.next = indexNode.next;
-        indexNode.next.prev = indexNode.prev;
-        size--;
+        unlink(indexNode);
         return indexNode.value;
     }
 
     @Override
     public boolean remove(T object) {
-        if ((head.value == object) || (head.value != null && head.value.equals(object))) {
-            if (size == 1) {
-                head = null;
-                size--;
-                return true;
-            }
-            head.next.prev = null;
-            head = head.next;
-            size--;
-            return true;
-        }
         Node<T> objectNode = head;
         for (int i = 0; i < size; i++) {
             if ((objectNode.value == object)
                     || (objectNode.value != null && objectNode.value.equals(object))) {
-                objectNode.prev.next = objectNode.next;
-                objectNode.next.prev = objectNode.prev;
-                size--;
+                unlink(objectNode);
                 return true;
             }
             objectNode = objectNode.next;
@@ -141,13 +104,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size != 0) {
-            return false;
-        }
-        return true;
+        return size == 0;
     }
 
     private Node<T> findIndexNode(int index) {
+        checkIndexOutOfBoundsException(index);
         Node<T> indexNode;
         if (index < size / 2) {
             indexNode = head;
@@ -161,6 +122,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return indexNode;
+    }
+
+    private void unlink(Node node) {
+        if (node.prev == null) {
+            //head
+            if (size == 1) {
+                head = null;
+            } else {
+                node.next.prev = null;
+                head = node.next;
+            }
+        } else if (node.next == null) {
+            //tail
+            node.prev.next = null;
+            tail = node.prev;
+        } else {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        }
+        size--;
     }
 
     private void checkIndexOutOfBoundsException(int index) {
