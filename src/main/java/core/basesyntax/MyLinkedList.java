@@ -55,8 +55,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T value : list) {
+            add(value);
         }
     }
 
@@ -78,27 +78,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removed;
-        if (index == 0) {
-            removed = head.value;
-            head = head.next;
-            if (head != null) {
-                head.prev = null;
-            } else {
-                tail = null;
-            }
-        } else {
-            Node<T> current = getNode(index);
-            removed = current.value;
-            current.prev.next = current.next;
-            if (current.next != null) {
-                current.next.prev = current.prev;
-            } else {
-                tail = current.prev;
-            }
-        }
-        size--;
-        return removed;
+        Node<T> current = getNode(index);
+        unlink(current);
+        return current.value;
     }
 
     @Override
@@ -107,17 +89,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (current != null) {
             if ((object == null && current.value == null)
                     || (object != null && object.equals(current.value))) {
-                if (current.prev != null) {
-                    current.prev.next = current.next;
-                } else {
-                    head = current.next;
-                }
-                if (current.next != null) {
-                    current.next.prev = current.prev;
-                } else {
-                    tail = current.prev;
-                }
-                size--;
+                unlink(current);
                 return true;
             }
             current = current.next;
@@ -137,11 +109,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         checkIndex(index);
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        Node<T> current;
+        if (index < size / 2) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
+
         return current;
+    }
+
+    private void unlink(Node<T> current) {
+        if (current.prev != null) {
+            current.prev.next = current.next;
+        } else {
+            head = current.next;
+        }
+        if (current.next != null) {
+            current.next.prev = current.prev;
+        } else {
+            tail = current.prev;
+        }
+        size--;
     }
 
     private void checkIndex(int index) {
