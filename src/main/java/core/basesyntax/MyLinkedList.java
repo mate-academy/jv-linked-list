@@ -19,63 +19,43 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndex(index, 1);
-        if (head == null) {
-            createNod(null, value, null);
+        if (index == count) {
+            add(value);
             return;
         }
         if (index == 0) {
             createNod(null, value, head);
             return;
         }
-        Node<T> currentNode = head;
-        for (int i = 1; i <= index; i++) {
-            if (currentNode == tail) {
-                createNod(currentNode, value, null);
-                return;
-            }
-            currentNode = currentNode.next;
-        }
+        Node<T> currentNode = searchNode(index);
         createNod(currentNode.prev, value, currentNode);
     }
 
     @Override
     public void addAll(List<T> list) {
         for (T valueInn : list) {
-            if (head == null) {
-                createNod(null, valueInn, null);
-            } else {
-                createNod(tail, valueInn, null);
-            }
+            add(valueInn);
         }
     }
 
     @Override
     public T get(int index) {
         checkIndex(index, 0);
-        if (head == null) {
-            return null;
-        }
         return searchNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index, 0);
-        if (head != null) {
-            Node<T> nodeToChange = searchNode(index);
-            T oldValue = nodeToChange.value;
-            nodeToChange.value = value;
-            return oldValue;
-        }
-        return null;
+        Node<T> nodeToChange = searchNode(index);
+        T oldValue = nodeToChange.value;
+        nodeToChange.value = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index, 0);
-        if (head == null) {
-            return null;
-        }
         Node<T> cutNode = searchNode(index);
         unlink(cutNode);
         return cutNode.value;
@@ -83,21 +63,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (head == null) {
-            return false;
-        }
         Node<T> currentNode = head;
-        while (true) {
+        do {
             if (currentNode.value == object
                     || currentNode.value != null && currentNode.value.equals(object)) {
                 unlink(currentNode);
                 return true;
             }
-            if (currentNode == tail) {
-                return false;
-            }
             currentNode = currentNode.next;
-        }
+        } while (currentNode != tail);
+        return false;
     }
 
     @Override
@@ -132,9 +107,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> searchNode(int index) throws IndexOutOfBoundsException {
-        Node<T> currentNode;
-        if (index < (count / 2)) {
-            currentNode = head;
+        Node<T> currentNode = head;
+        if (index <= count / 2) {
             for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
             }
@@ -150,8 +124,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void unlink(Node<T> cutNode) {
         count--;
         if (head == tail) {
-            head = null;
-            tail = null;
+            head = tail = null;
             return;
         }
         if (cutNode == head) {
@@ -168,7 +141,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         cutNode.next.prev = cutNode.prev;
     }
 
-    static class Node<T> {
+    private static class Node<T> {
         private Node<T> next;
         private T value;
         private Node<T> prev;
