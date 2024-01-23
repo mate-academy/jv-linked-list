@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final int SIZE_BIT_DIVIDER = 1;
+    private static final int SIZE_DIVIDER = 2;
     private static final int SIZE_SHIFTER = 1;
     private static final int ZERO_SIZE = 0;
     private static final int MINUS_ONE = -1;
@@ -63,19 +63,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> current = first; current != null; current = current.next) {
-                if (current.value == null) {
-                    unlinkNode(current);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> current = first; current != null; current = current.next) {
-                if (object.equals(current.value)) {
-                    unlinkNode(current);
-                    return true;
-                }
+        for (Node<T> current = first; current != null; current = current.next) {
+            if (object == null && current.value == null) {
+                unlinkNode(current);
+                return true;
+            } else if (object != null && object.equals(current.value)) {
+                unlinkNode(current);
+                return true;
             }
         }
         return false;
@@ -93,13 +87,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndexElement(int index) {
         if (!isIndexElement(index)) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("The index " + index + " is less than 0 or "
+                    + "more than " + size + ". Try to keep dimension of the ArrayList");
         }
     }
 
     private void checkIndexPosition(int index) {
         if (!isIndexPosition(index)) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("The value with index " + index
+                    + " doesn't exist. It must be equal or more than 0 and less than " + size);
         }
     }
 
@@ -134,7 +130,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void linkPreviousElement(T value, Node<T> targetNode) {
         Node<T> previousNode = targetNode.previous;
-        Node<T> newNode = new Node<>(value,previousNode,targetNode);
+        Node<T> newNode = new Node<>(value, previousNode, targetNode);
         targetNode.previous = newNode;
         if (previousNode == null) {
             first = newNode;
@@ -145,7 +141,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        if (index < (size >> SIZE_BIT_DIVIDER)) {
+        if (index < (size / SIZE_DIVIDER)) {
             Node<T> iterateNodeFromFirst = first;
             for (int i = 0; i < index; i++) {
                 iterateNodeFromFirst = iterateNodeFromFirst.next;
