@@ -5,7 +5,6 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final int SIZE_DIVIDER = 2;
     private static final int SIZE_SHIFTER = 1;
-    private static final int ZERO_SIZE = 0;
     private static final int MINUS_ONE = -1;
     private int size;
     private Node<T> first;
@@ -64,10 +63,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         for (Node<T> current = first; current != null; current = current.next) {
-            if (object == null && current.value == null) {
-                unlinkNode(current);
-                return true;
-            } else if (object != null && object.equals(current.value)) {
+            if (object == null && current.value == null
+                    || object != null && object.equals(current.value)) {
                 unlinkNode(current);
                 return true;
             }
@@ -82,7 +79,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == ZERO_SIZE;
+        return size == 0;
     }
 
     private void checkIndexElement(int index) {
