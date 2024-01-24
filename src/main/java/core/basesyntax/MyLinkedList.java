@@ -10,7 +10,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public MyLinkedList() {
         this.head = null;
         this.tail = null;
-        this.size = 0;
     }
 
     private static class Node<T> {
