@@ -144,9 +144,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        Node<T> current = first;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        Node<T> current = index >= size / 2 ? last : first;
+        if (current == first) {
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        }
+        if (current == last) {
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
         return current;
     }
