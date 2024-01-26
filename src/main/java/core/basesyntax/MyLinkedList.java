@@ -11,6 +11,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         head = null;
         tail = null;
     }
+
     @Override
     public void add(T value) {
         Node<T> tailNode = tail;
@@ -79,7 +80,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> iteratorNode = head;
         for (int i = 0; i < size; i++) {
-            if (iteratorNode.item == object || (iteratorNode.item != null && iteratorNode.item.equals(object))) {
+            if (iteratorNode.item == object
+                    || (iteratorNode.item != null && iteratorNode.item.equals(object))) {
                 unlinkNode(iteratorNode);
                 size--;
                 return true;
@@ -100,9 +102,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        T item;
-        Node<T> prev;
-        Node<T> next;
+        private T item;
+        private Node<T> prev;
+        private Node<T> next;
 
         public Node(T item, Node<T> prev, Node<T> next) {
             this.item = item;
