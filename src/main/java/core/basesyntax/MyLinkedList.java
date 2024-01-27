@@ -7,11 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public MyLinkedList() {
-        head = null;
-        tail = null;
-    }
-
     @Override
     public void add(T value) {
         Node<T> tailNode = tail;
@@ -27,40 +22,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        indexCheckForAddOperation(index);
-        Node<T> foundNode = findNodeByIndex(index);
         if (index == size) {
             add(value);
-        } else {
-            Node<T> previousNode = foundNode.prev;
-            Node<T> nodeToAdd = new Node<>(value, previousNode, foundNode);
-            if (previousNode != null) {
-                foundNode.prev.next = nodeToAdd;
-                foundNode.prev = nodeToAdd;
-            } else {
-                head = nodeToAdd;
-                nodeToAdd.next = foundNode;
-            }
-            size++;
+            return;
         }
+        Node<T> foundNode = findNodeByIndex(index);
+        Node<T> previousNode = foundNode.prev;
+        Node<T> nodeToAdd = new Node<>(value, previousNode, foundNode);
+        if (previousNode != null) {
+            foundNode.prev.next = nodeToAdd;
+            foundNode.prev = nodeToAdd;
+        } else {
+            head = nodeToAdd;
+            nodeToAdd.next = foundNode;
+        }
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T node : list) {
+            add(node);
         }
     }
 
     @Override
     public T get(int index) {
-        indexCheckForGetSetRemoveOperations(index);
         return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        indexCheckForGetSetRemoveOperations(index);
         Node<T> foundNode = findNodeByIndex(index);
         T oldItem = foundNode.item;
         foundNode.item = value;
@@ -69,7 +61,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexCheckForGetSetRemoveOperations(index);
         Node<T> nodeToRemove = findNodeByIndex(index);
         unlinkNode(nodeToRemove);
         size--;
@@ -106,22 +97,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> prev;
         private Node<T> next;
 
-        public Node(T item, Node<T> prev, Node<T> next) {
+        Node(T item, Node<T> prev, Node<T> next) {
             this.item = item;
             this.prev = prev;
             this.next = next;
-        }
-    }
-
-    private void indexCheckForAddOperation(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Invalid index");
-        }
-    }
-
-    private void indexCheckForGetSetRemoveOperations(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index");
         }
     }
 
@@ -146,6 +125,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(
+                    "Index \"" + index + "\" is out of bounds. Current list size = " + size);
+        }
         if (index < size / 2) {
             Node<T> firstNode = head;
             for (int i = 0; i < index; i++) {
