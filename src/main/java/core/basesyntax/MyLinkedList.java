@@ -3,45 +3,172 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+
+    private int size;
+    private Node<T> first;
+    private Node<T> last;
+
+    class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(Node<T> next, T value, Node<T> prev) {
+            this.value = value;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+
     @Override
     public void add(T value) {
+        Node<T> nodeToAdd = new Node<>(null, value, null);
+        if (first == null && last == null) { // when list hasn't first and last
+            first = nodeToAdd;
+            last = nodeToAdd;
+        } else if (first != null && first.next == null) { // when list hasn't last
+            first.next = nodeToAdd;
+            nodeToAdd.prev = first;
+            last = nodeToAdd;
+        } else { // when list has first and last
+            nodeToAdd.prev = last;
+            last.next = nodeToAdd;
+            last = nodeToAdd;
+        }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
+        outOfBoundsCheckToAdd(index);
+        if (index == size) { // to add node to end of the list
+            add(value);
+        } else if (index <= size - 1) { // to add node in list
+            Node<T> nodeToAdd = new Node<>(null, value, null);
+            Node<T> nodeNext = findNodeByIndex(index);
+            Node<T> nodePrev = nodeNext.prev;
+            nodeToAdd.prev = nodeNext.prev;
+            nodeToAdd.next = nodeNext;
+            nodeNext.prev = nodeToAdd;
+            if (first == nodeNext) { // check if node on 0 index
+                first = nodeToAdd;
+            } else {
+                nodePrev.next = nodeToAdd;
+            }
+            size++;
+        }
     }
 
     @Override
     public void addAll(List<T> list) {
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        outOfBoundsCheckToGetSetRemove(index);
+        Node<T> currentNode = findNodeByIndex(index);
+        return currentNode.value;
     }
 
     @Override
     public T set(T value, int index) {
-        return null;
+        outOfBoundsCheckToGetSetRemove(index);
+        Node<T> nodeToSet = findNodeByIndex(index);
+        T oldNodeValue = nodeToSet.value;
+        nodeToSet.value = value;
+        return oldNodeValue;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        outOfBoundsCheckToGetSetRemove(index);
+        Node<T> nodeToRemove = findNodeByIndex(index);
+        T removeValue = nodeToRemove.value;
+        unlink(nodeToRemove);
+        return removeValue;
     }
 
     @Override
     public boolean remove(T object) {
+        Node<T> currentNode = first;
+        int k = 0;
+        while (k != size) {
+            if (currentNode.value == object
+                    || (currentNode.value != null
+                    && currentNode.value.equals(object))) {
+                unlink(currentNode);
+                return true;
+            }
+            currentNode = currentNode.next;
+            k++;
+        }
         return false;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private Node<T> findNodeByIndex(int index) {
+        Node<T> currentNode = first;
+        int k = 0;
+        while (k != index) {
+            currentNode = currentNode.next;
+            k++;
+        }
+        return currentNode;
+    }
+
+    private void outOfBoundsCheckToAdd(int index) {
+        if (index > size || index < 0) {
+            throw new IndexOutOfBoundsException("Index " + index
+                    + " is negative or out of bounds with size: " + size);
+        }
+    }
+
+    private void outOfBoundsCheckToGetSetRemove(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Index " + index
+                    + " is negative or out of bounds with size: " + size);
+        }
+    }
+
+    private void unlink(Node<T> nodeToDelete) {
+        Node<T> prevNode = nodeToDelete.prev;
+        Node<T> nextNode = nodeToDelete.next;
+        if (first == nodeToDelete && last == nodeToDelete) {
+            first = null;
+            last = null;
+        } else if (first == nodeToDelete) {
+            nextNode.prev = null;
+            first = nextNode;
+        } else if (last == nodeToDelete) {
+            prevNode.next = null;
+            last = prevNode;
+        } else {
+            prevNode.next = nextNode;
+            nextNode.prev = prevNode;
+        }
+        size--;
+    }
+
+    @Override
+    public String toString() {
+        Node<T> node = first;
+        String res = "";
+        while (node != null) {
+            res = res + node.value;
+            node = node.next;
+        }
+        return res;
     }
 }
