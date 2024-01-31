@@ -3,12 +3,11 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private int size;
     private Node<T> first;
     private Node<T> last;
 
-    class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node<T> next;
         private Node<T> prev;
@@ -40,21 +39,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        outOfBoundsCheckToAdd(index);
-        if (index == size) { // to add node to end of the list
+        Node<T> nodeToAdd = new Node<>(null, value, null);
+        Node<T> nodeNext = findNodeByIndexToAdd(index);
+        if (index == 0) {
+            if (nodeNext != null) {
+                nodeToAdd.next = nodeNext;
+                nodeNext.prev = nodeToAdd;
+            }
+            first = nodeToAdd;
+            size++;
+        } else if (index == size) {
             add(value);
-        } else if (index <= size - 1) { // to add node in list
-            Node<T> nodeToAdd = new Node<>(null, value, null);
-            Node<T> nodeNext = findNodeByIndex(index);
-            Node<T> nodePrev = nodeNext.prev;
+        } else {
             nodeToAdd.prev = nodeNext.prev;
             nodeToAdd.next = nodeNext;
+            Node<T> nodePrev = nodeNext.prev;
             nodeNext.prev = nodeToAdd;
-            if (first == nodeNext) { // check if node on 0 index
-                first = nodeToAdd;
-            } else {
-                nodePrev.next = nodeToAdd;
-            }
+            nodePrev.next = nodeToAdd;
             size++;
         }
     }
@@ -68,15 +69,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        outOfBoundsCheckToGetSetRemove(index);
-        Node<T> currentNode = findNodeByIndex(index);
+        Node<T> currentNode = findNodeByIndexToGetSetRemove(index);
         return currentNode.value;
     }
 
     @Override
     public T set(T value, int index) {
-        outOfBoundsCheckToGetSetRemove(index);
-        Node<T> nodeToSet = findNodeByIndex(index);
+        Node<T> nodeToSet = findNodeByIndexToGetSetRemove(index);
         T oldNodeValue = nodeToSet.value;
         nodeToSet.value = value;
         return oldNodeValue;
@@ -84,11 +83,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        outOfBoundsCheckToGetSetRemove(index);
-        Node<T> nodeToRemove = findNodeByIndex(index);
-        T removeValue = nodeToRemove.value;
+        Node<T> nodeToRemove = findNodeByIndexToGetSetRemove(index);
         unlink(nodeToRemove);
-        return removeValue;
+        return nodeToRemove.value;
     }
 
     @Override
@@ -126,6 +123,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             k++;
         }
         return currentNode;
+    }
+
+    private Node<T> findNodeByIndexToAdd(int index) {
+        outOfBoundsCheckToAdd(index);
+        return findNodeByIndex(index);
+    }
+
+    private Node<T> findNodeByIndexToGetSetRemove(int index) {
+        outOfBoundsCheckToGetSetRemove(index);
+        return findNodeByIndex(index);
     }
 
     private void outOfBoundsCheckToAdd(int index) {
