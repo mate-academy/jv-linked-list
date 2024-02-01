@@ -114,20 +114,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return res;
     }
 
-    private static class Node<T> {
-        private T value;
-        private Node<T> next;
-        private Node<T> prev;
-
-        public Node(Node<T> next, T value, Node<T> prev) {
-            this.value = value;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
-    //private
-    public Node<T> findNodeByIndex(int index) {
+    private Node<T> findNodeByIndex(int index) {
         Node<T> currentNode;
         int currentNodeIndex;
         if (index == 0) {
@@ -183,5 +170,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             nextNode.prev = prevNode;
         }
         size--;
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(Node<T> next, T value, Node<T> prev) {
+            this.value = value;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
