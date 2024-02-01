@@ -40,7 +40,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (isIndexOutForOtherMethods(index)) {
+        if (isIndexExists(index)) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -51,7 +51,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (isIndexOutForOtherMethods(index)) {
+        if (isIndexExists(index)) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -64,7 +64,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (isIndexOutForOtherMethods(index)) {
+        if (isIndexExists(index)) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -127,7 +127,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        public Node(Node<T> next, T value, Node<T> prev) {
+        public Node(Node<T> prev, T value, Node<T> next) {
             this.next = next;
             this.value = value;
             this.prev = prev;
@@ -138,8 +138,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return index < 0 || index > size;
     }
 
-    private boolean isIndexOutForOtherMethods(int index) {
-        return index < 0 || index >= size;
+    private boolean isIndexExists(int index) {
+        return index > 0 || index < size;
     }
 
     private Node<T> getNodeForSetAndGetMethods(int index) {
