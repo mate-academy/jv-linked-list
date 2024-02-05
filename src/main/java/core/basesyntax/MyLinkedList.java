@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private Node<T> head;
     private int size;
 
@@ -24,7 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             newNode.next = head;
             head = newNode;
         } else {
-            Node<T> current = getNodeForAddAndRemoveMethods(index);
+            Node<T> current = getNode(index);
             newNode.next = current.next;
             current.next = newNode;
         }
@@ -74,7 +73,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size--;
             return removedValue;
         } else {
-            Node<T> current = getNodeForAddAndRemoveMethods(index);
+            Node<T> current = getNode(index);
 
             if (current != null && current.next != null) {
                 T removedValue = current.next.value;
@@ -127,7 +126,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        public Node(Node<T> next, T value, Node<T> prev) {
+         Node(Node<T> prev, T value, Node<T> next) {
             this.next = next;
             this.value = value;
             this.prev = prev;
@@ -150,12 +149,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private Node<T> getNodeForAddAndRemoveMethods(int index) {
+    private Node<T> getNode(int index) {
         Node<T> current = head;
         for (int i = 0; i < index - 1; i++) {
             current = current.next;
         }
         return current;
     }
-
 }
