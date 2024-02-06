@@ -1,7 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -14,16 +14,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (isIndexOutForAddMethod(index)) {
-            throw new IndexOutOfBoundsException();
-        }
+        isIndexOutForAddMethod(index);
 
         Node<T> newNode = new Node<>(null, value, null);
         if (index == 0) {
             newNode.next = head;
             head = newNode;
         } else {
-            Node<T> current = getNode(index);
+            Node<T> current = getNode(index - 1);
             newNode.next = current.next;
             current.next = newNode;
         }
@@ -39,23 +37,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (isIndexOutForOtherMethods(index)) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkIndex(index);
 
-        Node<T> current = getNodeForSetAndGetMethods(index);
+        Node<T> current = getNode(index);
 
         return current.value;
     }
 
     @Override
     public T set(T value, int index) {
-        if (isIndexOutForOtherMethods(index)) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkIndex(index);
 
-        Node<T> current = getNodeForSetAndGetMethods(index);
-
+        Node<T> current = getNode(index);
         T oldValue = current.value;
         current.value = value;
         return oldValue;
@@ -63,50 +56,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (isIndexOutForOtherMethods(index)) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkIndex(index);
 
-        if (index == 0) {
-            T removedValue = head.value;
-            head = head.next;
-            size--;
-            return removedValue;
-        } else {
-            Node<T> current = getNode(index);
-
-            if (current != null && current.next != null) {
-                T removedValue = current.next.value;
-                current.next = current.next.next;
-                size--;
-                return removedValue;
-
-            } else {
-                throw new NoSuchElementException("Element not found");
-            }
-        }
+        return unlink(getNode(index));
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> current = head;
-        Node<T> prev = null;
-
-        while (current != null) {
-            if ((object == null && current.value == null)
-                    || (object != null && object.equals(current.value))) {
-                if (prev == null) {
-                    head = current.next;
-                } else {
-                    prev.next = current.next;
-                }
-                size--;
+        Node<T> node = head;
+        while (node != null) {
+            if (Objects.equals(object, node.value)) {
+                unlink(node);
                 return true;
             }
-            prev = current;
-            current = current.next;
+            node = node.next;
         }
-
         return false;
     }
 
@@ -133,27 +97,48 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private boolean isIndexOutForAddMethod(int index) {
-        return index < 0 || index > size;
-    }
-
-    private boolean isIndexOutForOtherMethods(int index) {
-        return index < 0 || index >= size;
-    }
-
-    private Node<T> getNodeForSetAndGetMethods(int index) {
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+    private void isIndexOutForAddMethod(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException();
         }
-        return current;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
     }
 
     private Node<T> getNode(int index) {
         Node<T> current = head;
-        for (int i = 0; i < index - 1; i++) {
+        while (current.next != null && index > 0) {
             current = current.next;
+            index--;
         }
         return current;
+    }
+
+    private T unlink(Node<T> node) {
+        if (node == null) {
+            return null;
+        }
+
+        Node<T> prev = node.prev;
+        Node<T> next = node.next;
+
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
+        }
+
+        if (next != null) {
+            next.prev = prev;
+        }
+
+        node.prev = null;
+        node.next = null;
+        size--;
+        return node.value;
     }
 }
