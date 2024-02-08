@@ -9,12 +9,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> addedNode = new Node<>(null, value, null);
+        Node<T> addedNode = new Node<>(tail, value, null);
 
         if (isEmpty()) {
             head = addedNode;
         } else {
-            addedNode.prev = tail;
             tail.next = addedNode;
         }
 
@@ -33,8 +32,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = new Node<>(null, value, head);
             head.next.prev = head;
         } else {
-            isInBounds(index);
-            Node<T> nodeAtIndex = iterateToNode(index);
+            Node<T> nodeAtIndex = getNode(index);
             Node<T> newNode = new Node<>(nodeAtIndex.prev, value, nodeAtIndex);
             nodeAtIndex.prev.next = newNode;
             nodeAtIndex.prev = newNode;
@@ -52,16 +50,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        isInBounds(index);
-        Node<T> currentNode = iterateToNode(index);
+        Node<T> currentNode = getNode(index);
 
         return currentNode != null ? currentNode.item : null;
     }
 
     @Override
     public T set(T value, int index) {
-        isInBounds(index);
-        Node<T> currentNode = iterateToNode(index);
+        Node<T> currentNode = getNode(index);
         T itemToReturn = currentNode.item;
         currentNode.item = value;
         return itemToReturn;
@@ -69,8 +65,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        isInBounds(index);
-        Node<T> nodeToRemove = iterateToNode(index);
+        Node<T> nodeToRemove = getNode(index);
         unlink(nodeToRemove);
         return nodeToRemove.item;
     }
@@ -101,14 +96,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void isInBounds(int index) {
+    private Node<T> getNode(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index out of bounds.");
         }
-    }
 
-    private Node<T> iterateToNode(int index) {
-        if (index == 0 && size > 0) {
+        if (index == 0) {
             return head;
         } else if (index == size - 1) {
             return tail;
