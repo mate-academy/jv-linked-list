@@ -21,18 +21,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        isPositionIndexBigger(index);
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index is bigger than size");
+        }
         if (size == 0) {
             add(value);
             return;
         }
-        if (index == 0 && size != 0) {
+        if (index == 0) {
             addAtFirstPosition(value);
+            return;
         } else if (index == size) {
-            addOnLastPositionWithIndex(value);
-        } else {
-            addInsideByIndex(index, value);
+            addOnLastPosition(value);
+            return;
         }
+        addByIndex(index, value);
     }
 
     @Override
@@ -44,35 +47,33 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        isPositionIndexBiggerOrEqualsSize(index);
-        return cycle(index).value;
+        return getElementOnIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        isPositionIndexBiggerOrEqualsSize(index);
-        T oldValue = cycle(index).value;
-        cycle(index).value = value;
+        T oldValue = getElementOnIndex(index).value;
+        getElementOnIndex(index).value = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        final Node<T> current = cycle(index);
+        final Node<T> current = getElementOnIndex(index);
         if (size == 1) {
             head = null;
             tail = null;
             size--;
             return null;
         }
-        Node<T> tempPrevious = cycle(index).previous;
-        Node<T> tempNext = cycle(index).next;
-        if (cycle(index).previous == null) {
+        Node<T> tempPrevious = getElementOnIndex(index).previous;
+        Node<T> tempNext = getElementOnIndex(index).next;
+        if (getElementOnIndex(index).previous == null) {
             tempNext.previous = null;
             head = tempNext;
             size--;
             return current.value;
-        } else if (cycle(index).next == null) {
+        } else if (getElementOnIndex(index).next == null) {
             tempPrevious.next = null;
             tail = tempPrevious;
             size--;
@@ -124,25 +125,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node<T> cycle(int index) {
-        isPositionIndexBiggerOrEqualsSize(index);
-        Node<T> current = head;
-        int i = 0;
-        while (i != index) {
-            current = current.next;
-            i++;
+    private Node<T> getElementOnIndex(int index) {
+        checkIndex(index);
+        if (index <= size / 2) {
+            Node<T> current = head;
+            int i = 0;
+            while (i != index) {
+                current = current.next;
+                i++;
+            }
+            return current;
+        } else {
+            Node<T> current = tail;
+            int i = size - 1;
+            while (i != index) {
+                current = current.previous;
+                i--;
+            }
+            return current;
         }
-        return current;
     }
 
-    private void isPositionIndexBiggerOrEqualsSize(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is bigger than size");
-        }
-    }
-
-    private void isPositionIndexBigger(int index) {
-        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index is bigger than size");
         }
     }
@@ -178,7 +183,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void addOnLastPositionWithIndex(T value) {
+    private void addOnLastPosition(T value) {
         final Node<T> node = new Node<>();
         node.next = null;
         node.previous = tail;
@@ -188,8 +193,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void addInsideByIndex(int index, T value) {
-        Node<T> current = cycle(index);
+    private void addByIndex(int index, T value) {
+        Node<T> current = getElementOnIndex(index);
         final Node<T> node = new Node<>();
         node.previous = current.previous;
         current.previous.next = node;
