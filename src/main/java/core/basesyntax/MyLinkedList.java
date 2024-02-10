@@ -21,17 +21,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexForAdd(index);
         if (index == size()) {
             add(value);
+            return;
+        }
+        checkIndex(index);
+        Node<T> newNode = createNewNode(value);
+        if (index == 0) {
+            addFirst(newNode);
         } else {
-            Node<T> newNode = createNewNode(value);
-            if (index == 0) {
-                addFirst(newNode);
-            } else {
-                Node<T> current = getNodeAtIndex(index - ONE);
-                insertAfter(current, newNode);
-            }
+            Node<T> current = getNodeAtIndex(index - ONE);
+            insertAfter(current, newNode);
         }
     }
 
@@ -62,16 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> current = getNodeAtIndex(index);
-        if (current.prev != null) {
-            current.prev.next = current.next;
-        } else {
-            head = current.next;
-        }
-        if (current.next != null) {
-            current.next.prev = current.prev;
-        } else {
-            tail = current.prev;
-        }
+        removeNode(current);
         return current.value;
     }
 
@@ -152,11 +143,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeAtIndex(int index) {
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        checkIndex(index);
+        if (index <= size() / 2) {
+            Node<T> current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+            return current;
+        } else {
+            Node<T> current = tail;
+            for (int i = size() - 1; i > index; i--) {
+                current = current.prev;
+            }
+            return current;
         }
-        return current;
     }
 
     private class Node<T> {
