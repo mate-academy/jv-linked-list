@@ -25,20 +25,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkIfIndexOutOfBounds(index);
-        Node<T> newNode = new Node<>(null, value, null);
-        if (index == 0) {
-            newNode.next = head;
-            head.prev = newNode;
+        Node<T> next = getNode(index);
+        Node<T> prev = next.prev;
+        Node<T> newNode = new Node<>(prev, value, next);
+        if (prev == null) {
             head = newNode;
-            size++;
-            return;
+        } else {
+            prev.next = newNode;
         }
-        Node<T> currentNode = getNode(index);
-        newNode.next = currentNode;
-        newNode.prev = currentNode.prev;
-        currentNode.prev = newNode;
-        currentNode.prev.prev.next = newNode;
+        next.prev = newNode;
         size++;
     }
 
@@ -51,14 +46,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIfIndexOutOfBounds(index);
         Node<T> currentNode = getNode(index);
         return currentNode.value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIfIndexOutOfBounds(index);
         Node<T> currentNode = getNode(index);
         T oldValue = currentNode.value;
         currentNode.value = value;
@@ -67,7 +60,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        return unlink(getNode(index), index);
+        return unlink(getNode(index));
     }
 
     @Override
@@ -94,30 +87,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size() == 0;
     }
 
-    public T unlink(Node node, int index) {
-        checkIfIndexOutOfBounds(index);
-        Node<T> currentNode;
-        if (index == 0) {
-            currentNode = head;
-            head = currentNode.next;
-            size--;
-            return currentNode.value;
+    public T unlink(Node node) {
+        T value = (T) node.value;
+        Node<T> prev = node.prev;
+        Node<T> next = node.next;
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
+            node.prev = null;
         }
-        if (index == size - 1) {
-            currentNode = tail;
-            tail = currentNode.prev;
-            tail.next = null;
-            currentNode.prev = null;
-            size--;
-            return currentNode.value;
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.prev = prev;
+            node.next = null;
         }
-        currentNode = getNode(index);
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
-        node.prev = null;
-        node.next = null;
+        node.value = null;
         size--;
-        return currentNode.value;
+        return value;
     }
 
     private void checkIfIndexOutOfBounds(int index) {
@@ -130,9 +118,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        Node<T> node = head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
+        checkIfIndexOutOfBounds(index);
+        if (index < size / 2) {
+            Node<T> node = head;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+            return node;
+        }
+        Node<T> node = tail;
+        for (int i = size - 1; i > index; i--) {
+            node = node.prev;
         }
         return node;
     }
