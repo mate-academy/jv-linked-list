@@ -59,14 +59,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkBound(index);
         Node<T> current = findByIndex(index);
         return current.item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkBound(index);
         Node<T> current = findByIndex(index);
         T oldValue = current.item;
         current.item = value;
@@ -75,7 +73,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkBound(index);
         Node<T> current = findByIndex(index);
         return unlink(current);
     }
@@ -138,13 +135,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findByIndex(int index) {
         Node<T> current;
+        checkBound(index);
+        if (index == size) {
+            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
+        }
         if (index > size() / 2) {
             current = searchTailToIndex(index);
         } else {
             current = searchHeadToIndex(index);
-        }
-        if (current == null) {
-            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
         }
         return current;
     }
