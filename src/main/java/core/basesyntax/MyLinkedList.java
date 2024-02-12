@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -19,12 +18,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value) {
         if (head == null) {
             addFirst(value);
-        } else {
-            tail.next = new Node<>(tail, value, null);
-            tail = tail.next;
-            size++;
+            return;
         }
-
+        tail.next = new Node<>(tail, value, null);
+        tail = tail.next;
+        size++;
     }
 
     @Override
@@ -86,7 +84,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if (Objects.equals(current.item, object)) {
+            if ((current.item == null && object == null)
+                    || (current.item != null && current.item.equals(object))) {
                 unlink(current);
                 return true;
             }
@@ -144,6 +143,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             current = searchHeadToIndex(index);
         }
+        if (current == null) {
+            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
+        }
         return current;
     }
 
@@ -163,9 +165,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (current != null && i != index) {
             current = current.prev;
             i--;
-        }
-        if (current == null) {
-            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
         }
         return current;
     }
