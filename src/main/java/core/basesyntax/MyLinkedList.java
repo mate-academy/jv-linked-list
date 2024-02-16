@@ -9,22 +9,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        if (head == null) {
-            addFirst(value);
-        } else {
-            addLast(value);
-        }
+        addLast(value);
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
-        if (size == 0) {
+        if (index == 0) {
             addFirst(value);
-        } else if (index == 0) {
-            head = new Node(value, head, null);
-            head.next.prev = head;
-            size++;
         } else if (index == size) {
             addLast(value);
         } else {
@@ -45,13 +36,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         return getNodeByIndex(index).element;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node current = getNodeByIndex(index);
         T oldElment = current.element;
         current.element = value;
@@ -60,7 +49,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node current = getNodeByIndex(index);
         return unlink(current);
     }
@@ -90,25 +78,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addFirst(T value) {
-        head = tail = new Node(value, null, null);
+        Node first = new Node(value, head, null);
+        if (size == 0) {
+            tail = head = first;
+        } else {
+            head = first;
+            head.next.prev = first;
+        }
         size++;
     }
 
     private void addLast(T value) {
-        tail = new Node(value, null, tail);
-        tail.prev.next = tail;
-        size++;
-    }
-
-    public void checkIndex(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index " + index + " does not exist");
+        if (size == 0) {
+            Node last = new Node(value, null, null);
+            head = tail = last;
+        } else {
+            Node last = new Node(value, null, tail);
+            tail.next = last;
+            tail = last;
         }
+        size++;
     }
 
     private Node getNodeByIndex(int index) {
         Node current;
-        if (index == size) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index " + index + " does not exist");
         }
         if (index < size / 2) {
