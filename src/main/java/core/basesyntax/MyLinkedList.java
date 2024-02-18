@@ -29,7 +29,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             linkLast(value);
         } else {
-            linkBefore(value, node(index));
+            linkBefore(value, getNode(index));
         }
     }
 
@@ -42,15 +42,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkPositionIndex(index);
-        Node<T> currentNode = node(index);
+        Node<T> currentNode = getNode(index);
         return currentNode.item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkPositionIndex(index);
-        Node<T> node = node(index);
+        Node<T> node = getNode(index);
         T oldValue = node.item;
         node.item = value;
         return oldValue;
@@ -59,7 +57,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkPositionIndex(index);
-        Node<T> removedNode = node(index);
+        Node<T> removedNode = getNode(index);
         unlink(removedNode);
         return removedNode.item;
     }
@@ -115,7 +113,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private Node<T> node(int index) {
+    private Node<T> getNode(int index) {
         checkPositionIndex(index);
         Node<T> targetNode;
         if (index < size / 2) {
