@@ -51,7 +51,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return (T) search(index).value;
+        return search(index).value;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Node<T> removedNode = search(index);
         unlink(removedNode);
-        return (T) removedNode.value;
+        return removedNode.value;
     }
 
     @Override
@@ -102,19 +102,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void validateIndex(int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("Invalid index");
-        }
-    }
-
-    private void validateGetIndex(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Invalid index");
         }
     }
 
     private Node<T> search(int index) {
-        validateGetIndex(index);
+        validateIndex(index);
         if ((size / 2) > index) {
             Node<T> currentNode = head;
             for (int i = 0; i < index; i++) {
