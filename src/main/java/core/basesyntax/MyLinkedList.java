@@ -20,7 +20,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             addLast(value);
         } else {
             Node<T> current = getNodeByIndex(index);
-            Node<T> newNode = new Node<T>(value, current, current.prev);
+            Node<T> newNode = new Node<T>(current.prev, value, current);
             current.prev.next = newNode;
             current.prev = newNode;
             size++;
@@ -77,7 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addFirst(T value) {
-        Node<T> first = new Node<T>(value, head, null);
+        Node<T> first = new Node<T>(null, value, head);
         if (head == null) {
             tail = head = first;
         } else {
@@ -88,11 +88,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addLast(T value) {
+        Node<T> last = new Node<T>(tail, value, null);
         if (size == 0) {
-            Node<T> last = new Node<T>(value, null, null);
             head = tail = last;
         } else {
-            Node<T> last = new Node<T>(value, null, tail);
             tail.next = last;
             tail = last;
         }
@@ -143,10 +142,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        private Node(T element, Node<T> next, Node<T> prev) {
-            this.element = element;
+        private Node(Node<T> prev, T element, Node<T> next) {
             this.next = next;
             this.prev = prev;
+            this.element = element;
+
         }
     }
 }
