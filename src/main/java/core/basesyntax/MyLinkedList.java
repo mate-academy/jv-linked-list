@@ -56,7 +56,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkPositionIndex(index);
         Node<T> removedNode = getNode(index);
         unlink(removedNode);
         return removedNode.item;
@@ -64,13 +63,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (isEmpty()) {
-            return false;
-        }
         Node<T> current = first;
         while (current != null) {
-            if ((object == null && current.item == null)
-                    || (object != null && object.equals(current.item))) {
+            if (object == current.item || object != null && object.equals(current.item)) {
                 unlink(current);
                 return true;
             }
@@ -138,9 +133,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> node) {
-        if (node == null) {
-            throw new IndexOutOfBoundsException("Node cannot be null");
-        }
         Node<T> prev = node.prev;
         Node<T> next = node.next;
         if (prev == null) {
