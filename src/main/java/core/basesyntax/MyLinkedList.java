@@ -22,21 +22,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (head == null) {
-            head = new Node<T>(null, value, null);
+            Node<T> newNode = new Node<T>(null, value, null);
+            head = newNode;
             tail = head;
         } else {
-            Node<T> lastNode = lastNode();
-            new Node<T>(lastNode, value, null);
-            tail = lastNode.next;
+            Node<T> newNode = new Node<T>(tail, value, null);
+            newNode.prev.next = newNode;
+            tail = newNode;
         }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
         if (checkIndex(index)) {
             Node<T> currentNode = searchElement(index);
-            new Node<T>(currentNode.prev, value, currentNode);
+            Node<T> newNode = new Node<T>(currentNode.prev, value, currentNode);
+            newNode.prev.next = newNode;
+            currentNode.prev = newNode;
         }
+        size++;
     }
 
     @Override
@@ -70,8 +75,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> delNode = null;
         if (checkIndex(index)) {
             delNode = searchElement(index);
-            delNode.prev = delNode.next;
-            delNode.next = delNode.prev;
+            unlink((T) delNode);
         }
         return delNode.item;
     }
@@ -87,17 +91,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        Node<T> currentNode = head;
-        while (currentNode != null) {
-            size++;
-            currentNode = currentNode.next;
-        }
         return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return size() > 0;
+        return size() == 0;
+    }
+
+    public void unlink(T object) {
+        Node<T> currentNode = null;
+        currentNode = (Node<T>) object;
+        currentNode.prev.next = currentNode.next;
+        currentNode.next.prev = currentNode.prev;
     }
 
     public Node<T> searchNode(T object) {
@@ -112,12 +118,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public Node<T> searchElement(int index) {
+        int count = 0;
         Node<T> currentNode = head;
         while (currentNode != null) {
-            if (index == size) {
+            if (index == count) {
                 break;
             }
-            size++;
+            count++;
             currentNode = currentNode.next;
         }
         return currentNode;
@@ -129,7 +136,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (currentNode.next == null) {
                 break;
             }
-            currentNode = currentNode.next;
         }
         return currentNode;
     }
