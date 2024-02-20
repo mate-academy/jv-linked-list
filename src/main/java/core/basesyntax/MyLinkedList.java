@@ -1,47 +1,154 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private Node<T> head;
+    private Node<T> tail;
+    private int size;
+
+    public MyLinkedList() {
+        head = null;
+        tail = null;
+    }
+
     @Override
     public void add(T value) {
+        Node<T> newNode = new Node<>(head, value, tail);
+        if (head == null) {
+            head = newNode;
+        } else {
+            Node<T> current = head;
+            while (current.next != null) {
+                current = current.next;
+            }
+            current.next = newNode;
+        }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Invalid index: " + index
+                    + " Invalid size: " + size);
+        }
+        Node<T> newNode = new Node<>(head, value, tail);
+        if (index == 0) {
+            newNode.next = head;
+            head = newNode;
+        } else {
+            Node<T> current = head;
+            for (int i = 0; i < index - 1; i++) {
+                current = current.next;
+            }
+            newNode.next = current.next;
+            current.next = newNode;
+        }
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkIdexBounds(index);
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+
+        return current.value;
     }
 
     @Override
     public T set(T value, int index) {
-        return null;
+        checkIdexBounds(index);
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        T oldValue = current.value;
+        current.value = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIdexBounds(index);
+        if (index == 0) {
+            Node<T> removedNode = head;
+            unlink(head);
+            size--;
+            return removedNode.value;
+        }
+        Node<T> current = head;
+        for (int i = 0; i < index - 1; i++) {
+            current = current.next;
+        }
+        Node<T> removedNode = current.next;
+        unlink(current.next);
+        size--;
+        return removedNode.value;
     }
 
     @Override
     public boolean remove(T object) {
+        Node<T> current = head;
+        while (current != null) {
+            if (Objects.equals(current.value, object)) {
+                unlink(current);
+                size--;
+                return true;
+            }
+            current = current.next;
+        }
         return false;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return head == null;
+    }
+
+    private void checkIdexBounds(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Invalid index: " + index);
+        }
+    }
+
+    private void unlink(Node<T> node) {
+        if (node == head) {
+            head = head.next;
+        } else {
+            node.prev = head;
+            while (node.prev.next != node) {
+                node.prev = node.prev.next;
+            }
+            node.prev.next = node.next;
+        }
+    }
+
+    public static class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.value = value;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
