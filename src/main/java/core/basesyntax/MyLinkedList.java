@@ -7,27 +7,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size;
 
-    public MyLinkedList() {
-        first = null;
-        last = null;
-        size = 0;
+    private static class Node<T> {
+        private T data;
+        private Node<T> prev;
+        private Node<T> next;
+
+        Node(T data, Node<T> prev, Node<T> next) {
+            this.data = data;
+            this.prev = prev;
+            this.next = next;
+        }
     }
 
     @Override
     public void add(T value) {
         addLast(value);
-    }
-
-    private void addLast(T value) {
-        Node<T> newNode = new Node<>(value);
-        if (isEmpty()) {
-            first = newNode;
-        } else {
-            last.next = newNode;
-            newNode.prev = last;
-        }
-        last = newNode;
-        size++;
     }
 
     @Override
@@ -38,25 +32,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             addLast(value);
         } else {
-            Node<T> newNode = new Node<>(value);
-            Node<T> current = getNode(index);
-            Node<T> prev = current.prev;
-            newNode.next = current;
-            newNode.prev = prev;
-            current.prev = newNode;
-            if (prev == null) {
-                first = newNode;
+            Node<T> nodeAtIndex = getNode(index);
+            Node<T> newNode = new Node<>(value, nodeAtIndex.prev, nodeAtIndex);
+            if (nodeAtIndex.prev != null) {
+                nodeAtIndex.prev.next = newNode;
             } else {
-                prev.next = newNode;
+                first = newNode;
             }
+            nodeAtIndex.prev = newNode;
             size++;
-        }
-    }
-
-    @Override
-    public void addAll(List<T> list) {
-        for (T value : list) {
-            addLast(value);
         }
     }
 
@@ -77,46 +61,52 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public T set(T value, int index) {
-        Node<T> current = getNode(index);
-        T oldValue = current.data;
-        current.data = value;
-        return oldValue;
-    }
-
-    @Override
     public T remove(int index) {
-        Node<T> removedNode = getNode(index);
-        T removedValue = removedNode.data;
-        removeNode(removedNode);
-        return removedValue;
-    }
-
-    private void removeNode(Node<T> node) {
-        if (node.prev != null) {
-            node.prev.next = node.next;
-        } else {
-            first = node.next;
+        Node<T> nodeToRemove = getNode(index);
+        if (nodeToRemove.prev != null) {
+            nodeToRemove.prev.next = nodeToRemove.next;
         }
-        if (node.next != null) {
-            node.next.prev = node.prev;
-        } else {
-            last = node.prev;
+        if (nodeToRemove.next != null) {
+            nodeToRemove.next.prev = nodeToRemove.prev;
+        }
+        if (nodeToRemove == first) {
+            first = nodeToRemove.next;
+        }
+        if (nodeToRemove == last) {
+            last = nodeToRemove.prev;
         }
         size--;
+        return nodeToRemove.data;
     }
 
     @Override
-    public boolean remove(T object) {
+    public boolean remove(T value) {
         Node<T> current = first;
         while (current != null) {
-            if (object == null ? current.data == null : object.equals(current.data)) {
-                removeNode(current);
+            if (value == null ? current.data == null : value.equals(current.data)) {
+                if (current.prev != null) {
+                    current.prev.next = current.next;
+                } else {
+                    first = current.next;
+                }
+                if (current.next != null) {
+                    current.next.prev = current.prev;
+                } else {
+                    last = current.prev;
+                }
+                size--;
                 return true;
             }
             current = current.next;
         }
         return false;
+    }
+
+    @Override
+    public void addAll(List<T> elements) {
+        for (T element : elements) {
+            addLast(element);
+        }
     }
 
     @Override
@@ -129,15 +119,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private static class Node<T> {
-        T data;
-        Node<T> prev;
-        Node<T> next;
+    @Override
+    public T set(T value, int index) {
+        Node<T> node = getNode(index);
+        T oldValue = node.data;
+        node.data = value;
+        return oldValue;
+    }
 
-        Node(T data) {
-            this.data = data;
-            this.prev = null;
-            this.next = null;
+    private void addLast(T value) {
+        Node<T> newNode = new Node<>(value, last, null);
+        if (last == null) {
+            first = newNode;
+        } else {
+            last.next = newNode;
         }
+        last = newNode;
+        if (first == null) {
+            first = last;
+        }
+        size++;
     }
 }
