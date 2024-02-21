@@ -3,18 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private class Node<T> {
-        private T value;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(T value) {
-            this.value = value;
-            this.prev = null;
-            this.next = null;
-        }
-    }
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -53,37 +41,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             size++;
         }
-    }
-
-    private void checkInvalidIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", size: " + size());
-        }
-    }
-
-    private Node<T> getNode(int index) {
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
-        return current;
-    }
-
-    private Node<T> getNode(T object) {
-        Node<T> current = head;
-        for (int i = 0; i < size; i++) {
-            if (current.value == null && object != null
-                    || current.value != null && object == null) {
-                current = current.next;
-            } else {
-                if (current.value == null && object == null || current.value.equals(object)) {
-                    return current;
-                }
-                current = current.next;
-            }
-
-        }
-        throw new RuntimeException(object + " didn't found.");
     }
 
     @Override
@@ -182,6 +139,49 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = node;
             tail = node;
             size++;
+        }
+    }
+
+    private void checkInvalidIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", size: " + size());
+        }
+    }
+
+    private Node<T> getNode(int index) {
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        return current;
+    }
+
+    private Node<T> getNode(T object) {
+        Node<T> current = head;
+        for (int i = 0; i < size; i++) {
+            if (current.value == null && object != null
+                    || current.value != null && object == null) {
+                current = current.next;
+            } else {
+                if (current.value == null && object == null || current.value.equals(object)) {
+                    return current;
+                }
+                current = current.next;
+            }
+
+        }
+        throw new RuntimeException(object + " didn't found.");
+    }
+
+    private class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(T value) {
+            this.value = value;
+            this.prev = null;
+            this.next = null;
         }
     }
 }
