@@ -35,8 +35,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        Node<T> currentNode = null;
         if (checkIndex(index)) {
-            Node<T> currentNode = searchElement(index);
+            if (index == 0) {
+                currentNode = new Node<>(null, value, head);
+                head.prev = currentNode;
+                head = currentNode;
+                size++;
+                return;
+            } else if (index == (size - 1)) {
+                currentNode = new Node<>(tail.prev, value, tail);
+                tail.prev.next = currentNode;
+                tail.prev = currentNode;
+                size++;
+                return;
+            }
+            currentNode = searchElement(index);
             Node<T> newNode = new Node<T>(currentNode.prev, value, currentNode);
             newNode.prev.next = newNode;
             currentNode.prev = newNode;
@@ -74,9 +88,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Node<T> delNode = null;
         if (checkIndex(index)) {
-            delNode = searchElement(index);
-            unlink((T) delNode);
+            if (index == 0) {
+                unlinkFirst();
+            } else if (index == (size - 1)) {
+                unlinkLast();
+            } else {
+                delNode = searchElement(index);
+                unlink(delNode);
+            }
         }
+        size--;
         return delNode.item;
     }
 
@@ -84,6 +105,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> currentNode = null;
         currentNode = searchNode(object);
+        if (currentNode.equals(head)) {
+            unlinkFirst();
+        } else if (currentNode.equals(tail)) {
+            unlinkLast();
+        }
         currentNode.prev = currentNode.next;
         currentNode.next = currentNode.prev;
         return true;
@@ -99,17 +125,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size() == 0;
     }
 
-    public void unlink(T object) {
-        Node<T> currentNode = null;
-        currentNode = (Node<T>) object;
+    public void unlink(Node<T> object) {
+        Node<T> currentNode = object;
         currentNode.prev.next = currentNode.next;
         currentNode.next.prev = currentNode.prev;
+    }
+
+    public T unlinkFirst() {
+        Node<T> delNode = null;
+        delNode.item = head.item;
+        head = head.next;
+        head.prev = null;
+        size--;
+        return delNode.item;
+    }
+
+    public T unlinkLast() {
+        Node<T> delNode = null;
+        delNode.item = tail.item;
+        tail = tail.prev;
+        tail.next = null;
+        size--;
+        return delNode.item;
     }
 
     public Node<T> searchNode(T object) {
         Node<T> currentNode = head;
         while (currentNode != null) {
-            if (currentNode.equals(object)) {
+            if (currentNode.item.equals(object)) {
                 break;
             }
             currentNode = currentNode.next;
@@ -141,7 +184,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public boolean checkIndex(int index) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index > (size - 1)) {
             throw new IndexOutOfBoundsException("Index: "
                     + index
                     + " don`t exist");
