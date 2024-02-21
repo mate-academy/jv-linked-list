@@ -21,11 +21,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        if (isEmpty()) {
-            add(value);
-            return;
-        }
-        if (index == size) {
+        if (isEmpty() || index == size) {
             add(value);
         } else {
             linkBeforeNode(value, findNode(index));
@@ -34,8 +30,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T element: list) {
+            add(element);
         }
     }
 
@@ -62,11 +58,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        for (Node<T> current = head; current != null; current = current.next) {
+        Node<T> current = head;
+        while (current != null) {
             if (object == current.value || object != null && object.equals(current.value)) {
                 unlinkNode(current);
                 return true;
             }
+            current = current.next;
         }
         return false;
     }
