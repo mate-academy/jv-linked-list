@@ -21,12 +21,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexSizeMore(index);
         if (index == size) {
             add(value);
-        } else {
-            addIfListFilled(value, index);
+            return;
         }
+        checkIndex(index);
+        addByIndex(value, index);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void addIfListFilled(T value, int index) {
+    private void addByIndex(T value, int index) {
         Node<T> addedNode = new Node<T>(value);
         if (index == 0) {
             addedNode.next = head;
@@ -126,12 +126,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", size: " + size());
-        }
-    }
-
-    private void checkIndexSizeMore(int index) {
-        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", size: " + size());
         }
     }
@@ -157,31 +151,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(T object) {
-        Node<T> current;
-        int index = 0;
-        if (index <= size / 2) {
-            current = head;
-            while (index <= size / 2) {
-                if ((current.value == null && object != null)
-                        || (current.value != null && !current.value.equals(object))) {
-                    current = current.next;
-                } else {
+        Node<T> current = head;
+        if (object == null) {
+            while (current != null) {
+                if (current.value == null) {
                     return current;
                 }
-                index++;
+                current = current.next;
             }
         }
-        if (index > size / 2) {
-            current = tail;
-            index = size - 1;
-            while (index >= size / 2) {
-                if ((current.value == null && object != null)
-                        || (current.value != null && !current.value.equals(object))) {
-                    current = current.prev;
-                } else {
-                    return current;
-                }
-                index--;
+        while (current != null) {
+            if (current.value == null) {
+                current = current.next;
+            } else if (current.value.equals(object)) {
+                return current;
+            } else {
+                current = current.next;
             }
         }
         throw new RuntimeException(object + " not found.");
