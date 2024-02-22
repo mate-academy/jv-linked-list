@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -10,15 +9,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(head, value, tail);
+        Node<T> newNode = new Node<>(null, value, null);
         if (head == null) {
             head = newNode;
+            tail = newNode;
         } else {
-            Node<T> current = head;
-            while (current.next != null) {
-                current = current.next;
-            }
-            current.next = newNode;
+            tail.next = newNode;
+            tail.next.prev = tail;
+            tail = tail.next;
         }
         size++;
     }
@@ -26,10 +24,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        Node<T> newNode = new Node<>(head, value, tail);
+        Node<T> newNode = new Node<>(null, value, null);
         if (index == 0) {
             newNode.next = head;
             head = newNode;
+            if (tail == null) {
+                tail = newNode;
+            }
         } else {
             Node<T> current = head;
             for (int i = 0; i < index - 1; i++) {
@@ -94,7 +95,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if (Objects.equals(current.value, object)) {
+            if (current.value == null && object == null) {
+                unlink(current);
+                size--;
+                return true;
+            } else if (current.value != null && current.value.equals(object)) {
                 unlink(current);
                 size--;
                 return true;
