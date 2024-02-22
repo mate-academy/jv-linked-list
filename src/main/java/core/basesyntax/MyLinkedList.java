@@ -15,7 +15,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> tempNode = new Node<>(value);
+        Node<T> tempNode = new Node<>(null, value, null);
         if (isEmpty()) {
             addNodeToHead(tempNode);
         } else {
@@ -26,13 +26,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index, size + 1);
-        Node<T> tempNode = new Node<>(value);
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
+        }
+        Node<T> tempNode = new Node<>(null, value, null);
         if (index == 0) {
             addNodeToHead(tempNode);
         } else {
             Node<T> currentNode = findNodeByIndex(index - 1);
-            addNodeAfter(currentNode, tempNode);
+            tempNode.next = currentNode.next;
+            tempNode.prev = currentNode;
+            currentNode.next = tempNode;
+            if (tempNode.next != null) {
+                tempNode.next.prev = tempNode;
+            }
             if (index == size) {
                 addNodeToTail(tempNode);
             }
@@ -49,13 +56,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, size);
+        checkIndex(index);
         return findNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index, size);
+        checkIndex(index);
         Node<T> currentNode = findNodeByIndex(index);
         T oldValue = currentNode.value;
         currentNode.value = value;
@@ -64,7 +71,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index, size);
+        checkIndex(index);
         if (isEmpty()) {
             throw new NoSuchElementException("Cannot remove from an empty list");
         }
@@ -110,7 +117,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkIndex(int index, int size) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index out of bounds: " + index);
         }
@@ -118,16 +125,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNodeByIndex(int index) {
         Node<T> current;
-        if (index >= size / 2) {
-            current = tail;
-            for (int i = size - 1; i > index; i--) {
-                current = current.prev;
-            }
-        } else {
-            current = head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
+        current = (index >= size / 2) ? tail : head;
+        int iterations = (index >= size / 2) ? size - index - 1 : index;
+        for (int i = 0; i < iterations; i++) {
+            current = (index >= size / 2) ? current.prev : current.next;
         }
         return current;
     }
@@ -145,15 +146,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         node.prev = null;
         node.next = null;
-    }
-
-    private void addNodeAfter(Node<T> currentNode, Node<T> newNode) {
-        newNode.next = currentNode.next;
-        newNode.prev = currentNode;
-        currentNode.next = newNode;
-        if (newNode.next != null) {
-            newNode.next.prev = newNode;
-        }
     }
 
     private void addNodeToTail(Node<T> newNode) {
@@ -182,10 +174,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> prev;
         private Node<T> next;
 
-        public Node(T value) {
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
             this.value = value;
-            this.prev = null;
-            this.next = null;
+            this.next = next;
         }
     }
 }
