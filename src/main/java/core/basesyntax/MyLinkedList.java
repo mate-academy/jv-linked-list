@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -16,9 +17,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value) {
         Node<T> tempNode = new Node<>(value);
         if (isEmpty()) {
-            head = tail = tempNode;
+            addNodeToHead(tempNode);
         } else {
-            addLast(tempNode);
+            addNodeToTail(tempNode);
         }
         size++;
     }
@@ -27,22 +28,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         checkIndex(index, size + 1);
         Node<T> tempNode = new Node<>(value);
-        if (isEmpty()) {
-            head = tail = tempNode;
-        } else if (index == 0) {
-            tempNode.next = head;
-            head.prev = tempNode;
-            head = tempNode;
+        if (index == 0) {
+            addNodeToHead(tempNode);
         } else {
             Node<T> currentNode = findNodeByIndex(index - 1);
-            tempNode.next = currentNode.next;
-            tempNode.prev = currentNode;
-            currentNode.next = tempNode;
-            if (tempNode.next != null) {
-                tempNode.next.prev = tempNode;
-            }
+            addNodeAfter(currentNode, tempNode);
             if (index == size) {
-                tail = tempNode;
+                addNodeToTail(tempNode);
             }
         }
         size++;
@@ -73,6 +65,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index, size);
+        if (isEmpty()) {
+            throw new NoSuchElementException("Cannot remove from an empty list");
+        }
         T removedValue;
         if (index == 0) {
             removedValue = head.value;
@@ -85,13 +80,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             Node<T> currentNode = findNodeByIndex(index);
             removedValue = currentNode.value;
-            currentNode.prev.next = currentNode.next;
-            if (currentNode.next != null) {
-                currentNode.next.prev = currentNode.prev;
-            }
-            if (index == size - 1) {
-                tail = currentNode.prev;
-            }
+            unlink(currentNode);
         }
         size--;
         return removedValue;
@@ -102,7 +91,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
         for (int i = 0; i < size; i++) {
             if (object == null ? current.value == null : object.equals(current.value)) {
-                remove(i);
+                unlink(current);
+                size--;
                 return true;
             }
             current = current.next;
@@ -143,14 +133,48 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> node) {
-
+        if (node.prev == null) {
+            head = node.next;
+        } else {
+            node.prev.next = node.next;
+        }
+        if (node.next == null) {
+            tail = node.prev;
+        } else {
+            node.next.prev = node.prev;
+        }
+        node.prev = null;
+        node.next = null;
     }
 
-    private void addLast(Node<T> node) {
-        Node<T> currentNode = tail;
-        currentNode.next = node;
-        node.prev = currentNode;
-        tail = node;
+    private void addNodeAfter(Node<T> currentNode, Node<T> newNode) {
+        newNode.next = currentNode.next;
+        newNode.prev = currentNode;
+        currentNode.next = newNode;
+        if (newNode.next != null) {
+            newNode.next.prev = newNode;
+        }
+    }
+
+    private void addNodeToTail(Node<T> newNode) {
+        if (isEmpty()) {
+            head = tail = newNode;
+        } else {
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
+        }
+    }
+
+    private void addNodeToHead(Node<T> newNode) {
+        newNode.next = head;
+        if (head != null) {
+            head.prev = newNode;
+        }
+        head = newNode;
+        if (tail == null) {
+            tail = newNode;
+        }
     }
 
     static class Node<T> {
