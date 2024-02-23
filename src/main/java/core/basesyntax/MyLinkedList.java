@@ -8,18 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size = 0;
 
-    private class Node<T> {
-        private Node<T> previous;
-        private T value;
-        private Node<T> next;
-
-        public Node(Node<T> previous, T value, Node<T> next) {
-            this.previous = previous;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
         if (createHeadOrTailIfNeed(value)) {
@@ -78,7 +66,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 unlink(currentNode);
                 return true;
             }
-            currentNode = hasNext(currentNode);
+            currentNode = currentNode.next;
         }
         return false;
     }
@@ -103,20 +91,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < (distanceFromEnd >= index ? index : distanceFromEnd
                 - TAIL_ITERATION_CORRECTION); i++) {
             if (distanceFromEnd >= index) {
-                nodeFromHead = hasNext(nodeFromHead);
+                nodeFromHead = nodeFromHead.next;
             } else {
-                nodeFromTail = hasPrevious(nodeFromTail);
+                nodeFromTail = nodeFromTail.previous;
             }
         }
         return distanceFromEnd >= index ? nodeFromHead : nodeFromTail;
-    }
-
-    private Node<T> hasPrevious(Node<T> node) {
-        return node.previous != null ? node.previous : null;
-    }
-
-    private Node<T> hasNext(Node<T> node) {
-        return node.next != null ? node.next : null;
     }
 
     private void checkIndex(int index, boolean forAdd) {
@@ -216,5 +196,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return true;
         }
         return createTailIfDoesNotExist(value);
+    }
+
+    private class Node<T> {
+        private Node<T> previous;
+        private T value;
+        private Node<T> next;
+
+        public Node(Node<T> previous, T value, Node<T> next) {
+            this.previous = previous;
+            this.value = value;
+            this.next = next;
+        }
     }
 }
