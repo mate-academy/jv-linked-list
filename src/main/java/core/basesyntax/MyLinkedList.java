@@ -10,7 +10,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(null, value, null);
-        if (head == null) {
+        if (isEmpty()) {
             head = newNode;
         } else {
             tail.next = newNode;
@@ -60,17 +60,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> removeNode = getNode(index);
-        size--;
-        if (removeNode == head) {
-            head = removeNode.next;
-        } else {
-            removeNode.prev.next = removeNode.next;
-        }
-        if (removeNode == tail) {
-            tail = removeNode.prev;
-        } else {
-            removeNode.next.prev = removeNode.prev;
-        }
+        unlink(removeNode);
         return removeNode.item;
     }
 
@@ -79,17 +69,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode = head;
         while (currentNode != null) {
             if (object == currentNode.item || (object != null && object.equals(currentNode.item))) {
-                if (currentNode == head) {
-                    head = currentNode.next;
-                } else {
-                    currentNode.prev.next = currentNode.next;
-                }
-                if (currentNode == tail) {
-                    tail = currentNode.prev;
-                } else {
-                    currentNode.next.prev = currentNode.prev;
-                }
-                size--;
+                unlink(currentNode);
                 return true;
             }
             currentNode = currentNode.next;
@@ -122,6 +102,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             currentNode = isFirstHalf ? currentNode.next : currentNode.prev;
         }
         return currentNode;
+    }
+
+    private void unlink(Node<T> unlinkedNode) {
+        if (unlinkedNode == head) {
+            head = unlinkedNode.next;
+        } else {
+            unlinkedNode.prev.next = unlinkedNode.next;
+        }
+        if (unlinkedNode == tail) {
+            tail = unlinkedNode.prev;
+        } else {
+            unlinkedNode.next.prev = unlinkedNode.prev;
+        }
+        size--;
     }
 
     private static class Node<T> {
