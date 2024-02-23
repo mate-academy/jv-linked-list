@@ -26,9 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
-        }
+        checkIndex(index, size + 1);
         Node<T> tempNode = new Node<>(null, value, null);
         if (index == 0) {
             addNodeToHead(tempNode);
@@ -56,13 +54,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        checkIndex(index,size);
         return findNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
+        checkIndex(index, size);
         Node<T> currentNode = findNodeByIndex(index);
         T oldValue = currentNode.value;
         currentNode.value = value;
@@ -71,10 +69,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        if (isEmpty()) {
-            throw new NoSuchElementException("Cannot remove from an empty list");
-        }
+        checkIndex(index, size);
         T removedValue;
         if (index == 0) {
             removedValue = head.value;
@@ -117,9 +112,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
+    private void checkIndex(int index, int size) {
+        try {
+            if (index < 0 || index >= size) {
+                throw new IndexOutOfBoundsException(index + " index is incorrect for size " + size);
+            }
+        } catch (IndexOutOfBoundsException e) {
+            IndexOutOfBoundsException eNew =  new IndexOutOfBoundsException("Error while checking index: " + e.getMessage());
+            e.initCause(eNew);
+            throw eNew;
         }
     }
 
