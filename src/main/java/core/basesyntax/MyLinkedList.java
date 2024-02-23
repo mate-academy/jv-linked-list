@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -118,9 +117,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 throw new IndexOutOfBoundsException(index + " index is incorrect for size " + size);
             }
         } catch (IndexOutOfBoundsException e) {
-            IndexOutOfBoundsException eNew =  new IndexOutOfBoundsException("Error while checking index: " + e.getMessage());
-            e.initCause(eNew);
-            throw eNew;
+            IndexOutOfBoundsException originalException = new IndexOutOfBoundsException("Error "
+                    + "while checking index: " + e.getMessage());
+            e.initCause(originalException);
+            throw originalException;
         }
     }
 
