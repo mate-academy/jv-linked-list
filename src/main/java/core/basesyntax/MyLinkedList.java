@@ -9,13 +9,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(null, value, null);
+        Node<T> newNode = new Node<>(tail, value, null);
         if (head == null) {
             head = newNode;
             tail = newNode;
         } else {
             tail.next = newNode;
-            tail.next.prev = tail;
             tail = tail.next;
         }
         size++;
@@ -24,7 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        Node<T> newNode = new Node<>(null, value, null);
+        Node<T> newNode = new Node<>(head, value, tail);
         if (index == 0) {
             newNode.next = head;
             head = newNode;
@@ -32,12 +31,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 tail = newNode;
             }
         } else {
-            Node<T> current = head;
-            for (int i = 0; i < index - 1; i++) {
-                current = current.next;
-            }
-            newNode.next = current.next;
-            current.next = newNode;
+            Node<T> node = getByIndex(index);
+            newNode.next = node.next;
+            node.next = newNode;
         }
         size++;
     }
@@ -81,12 +77,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size--;
             return removedNode.value;
         }
-        Node<T> current = head;
-        for (int i = 0; i < index - 1; i++) {
-            current = current.next;
-        }
-        Node<T> removedNode = current.next;
-        unlink(current.next);
+        Node<T> node = getByIndex(index);
+        Node<T> removedNode = node.next;
+        unlink(node.next);
         size--;
         return removedNode.value;
     }
@@ -141,6 +134,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             node.prev.next = node.next;
         }
+    }
+
+    private Node<T> getByIndex(int index) {
+        Node<T> current = head;
+        for (int i = 0; i < index - 1; i++) {
+            current = current.next;
+        }
+        return current;
     }
 
     private static class Node<T> {
