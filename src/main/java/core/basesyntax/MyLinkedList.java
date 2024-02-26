@@ -12,13 +12,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0) {
             head = new Node(null, value, null);
             tail = head;
-            size++;
         } else if (size > 0) {
             Node lastNode = tail;
             tail = new Node(lastNode, value, null);
             lastNode.next = tail;
-            size++;
         }
+        size++;
     }
 
     @Override
