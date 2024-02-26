@@ -90,9 +90,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (currentNode.equals(tail)) {
             unlinkLast();
             return true;
+        } else {
+            currentNode.prev.next = currentNode.next;
+            currentNode.next.prev = currentNode.prev;
         }
-        currentNode.prev.next = currentNode.next;
-        currentNode.next.prev = currentNode.prev;
         size--;
         return true;
     }
@@ -169,31 +170,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> searchNodeByIndex(int index) {
-        if (checkIndex(index)) {
-            Node<T> currentNode = head;
-            for (int i = 0; i < index; i++) {
-                currentNode = currentNode.next;
-            }
-            return currentNode;
+        checkIndex(index);
+        Node<T> currentNode = head;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
         }
-        return null;
+        return currentNode;
     }
 
-    private boolean checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: "
                     + index
-                    + " don`t exist");
+                    + " don`t exist, size = "
+                    + size);
         }
-        return true;
     }
 
-    static class Node<T> {
+    private static class Node<T> {
         private T item;
         private Node<T> next;
         private Node<T> prev;
 
-        public Node(Node<T> prev, T item, Node<T> next) {
+        private Node(Node<T> prev, T item, Node<T> next) {
             this.item = item;
             this.next = next;
             this.prev = prev;
