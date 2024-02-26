@@ -3,6 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final int INDEX = 1;
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -31,7 +32,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 tail = newNode;
             }
         } else {
-            Node<T> node = getByIndex(index);
+            Node<T> node = getByIndex(index - INDEX);
             newNode.next = node.next;
             node.next = newNode;
         }
@@ -48,23 +49,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndexBounds(index);
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
-
-        return current.value;
+        Node<T> node = getByIndex(index);
+        return node.value;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndexBounds(index);
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
-        T oldValue = current.value;
-        current.value = value;
+        Node<T> node = getByIndex(index);
+        T oldValue = node.value;
+        node.value = value;
         return oldValue;
     }
 
@@ -77,7 +71,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size--;
             return removedNode.value;
         }
-        Node<T> node = getByIndex(index);
+        Node<T> node = getByIndex(index - INDEX);
         Node<T> removedNode = node.next;
         unlink(node.next);
         size--;
@@ -138,7 +132,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getByIndex(int index) {
         Node<T> current = head;
-        for (int i = 0; i < index - 1; i++) {
+        for (int i = 0; i < index; i++) {
             current = current.next;
         }
         return current;
