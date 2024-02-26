@@ -90,6 +90,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(Node<T> prev, T element, Node<T> next) {
+            this.value = element;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+
     private boolean isIndexExist(int index) {
         if (index >= 0 && index < size) {
             return true;
@@ -166,18 +178,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.next = null;
             node.prev = null;
             size--;
-        }
-    }
-
-    private static class Node<T> {
-        private T value;
-        private Node<T> next;
-        private Node<T> prev;
-
-        public Node(Node<T> prev, T element, Node<T> next) {
-            this.value = element;
-            this.next = next;
-            this.prev = prev;
         }
     }
 }
