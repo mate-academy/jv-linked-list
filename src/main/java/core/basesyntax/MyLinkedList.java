@@ -110,17 +110,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        Node<T> tempNode = head;
+        Node<T> currentNode = head;
         if (index < (size / 2)) {
             for (int i = 0; i < index; i++) {
-                tempNode = tempNode.next;
+                currentNode = currentNode.next;
             }
         } else {
             for (int i = index; i > 0; i--) {
-                tempNode = tempNode.next;
+                currentNode = currentNode.next;
             }
         }
-        return tempNode;
+        return currentNode;
     }
 
     private boolean areValuesEqual(T value, T otherValue) {
