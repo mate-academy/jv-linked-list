@@ -3,6 +3,8 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final int SETTING = 0;
+    private static final int NOT_SETTING = 1;
     private int size = 0;
     private transient Node<T> first;
     private transient Node<T> last;
@@ -27,9 +29,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (value == null) {
-            throw new NullPointerException("Cannot add null value to the list");
-        }
+        checkPositionIndex(index, NOT_SETTING);
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("the index is invalid");
         }
@@ -49,13 +49,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkPositionIndex(index);
+        checkPositionIndex(index, SETTING);
         return node(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkPositionIndex(index);
+        checkPositionIndex(index, SETTING);
         Node<T> node = node(index);
         T oldValue = node.item;
         node.item = value;
@@ -64,7 +64,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkPositionIndex(index);
+        checkPositionIndex(index, SETTING);
         Node<T> removedNode = node(index);
         if (index == 0) {
             first = first.next;
@@ -141,9 +141,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void checkPositionIndex(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new IndexOutOfBoundsException("the index is invalid");
+    private void checkPositionIndex(int index, int expressionToCheck) {
+        if (expressionToCheck == NOT_SETTING) {
+            if (!isPositionIndex(index)) {
+                throw new IndexOutOfBoundsException(createIndexOutOfBoundMessage(index));
+            }
+        } else {
+            if (!isPositionIndexToSet(index)) {
+                throw new IndexOutOfBoundsException(createIndexOutOfBoundMessage(index));
+            }
         }
     }
 
@@ -183,4 +189,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         pred.next = next;
         next.prev = pred;
     }
+
+    private String createIndexOutOfBoundMessage(int index) {
+        return "Index: " + index + ", Size: " + size;
+    }
+
+    private boolean isPositionIndex(int index) {
+        return index >= 0 && index <= size;
+    }
+
+    private boolean isPositionIndexToSet(int index) {
+        return index >= 0 && index < size;
+    }
+
 }
