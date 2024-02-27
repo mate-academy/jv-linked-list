@@ -36,7 +36,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail.prev = newNode;
         } else {
             currentNode = searchNodeByIndex(index);
-            Node<T> newNode = new Node<T>(currentNode.prev, value, currentNode);
+            Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
             newNode.prev.next = newNode;
             currentNode.prev = newNode;
         }
@@ -44,9 +44,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+    public void addAll(List<T> lists) {
+        for (T list : lists) {
+            add(list);
         }
     }
 
@@ -58,7 +58,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         Node<T> currentNode;
-        T e = null;
+        T e;
         currentNode = searchNodeByIndex(index);
         e = currentNode.item;
         currentNode.item = value;
@@ -67,7 +67,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        T deleteElement = null;
+        T deleteElement;
         checkIndex(index);
         if (index == 0) {
             deleteElement = unlinkFirst();
@@ -109,7 +109,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addFirst(T value) {
-        Node<T> newNode = new Node<T>(null, value, null);
+        Node<T> newNode = new Node<>(null, value, null);
         head = newNode;
         tail = head;
     }
@@ -121,21 +121,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void insertAfter(T value) {
-        Node<T> newNode = new Node<T>(tail, value, null);
+        Node<T> newNode = new Node<>(tail, value, null);
         tail.next = newNode;
         tail = newNode;
     }
 
     private T unlink(Node<T> object) {
-        Node<T> currentNode = object;
-        currentNode.prev.next = currentNode.next;
-        currentNode.next.prev = currentNode.prev;
+        object.prev.next = object.next;
+        object.next.prev = object.prev;
         size--;
-        return currentNode.item;
+        return object.item;
     }
 
     private T unlinkFirst() {
-        T deleteElement = null;
+        T deleteElement;
         if (size == 1) {
             deleteElement = head.item;
             tail = null;
@@ -150,7 +149,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T unlinkLast() {
-        T deleteElement = null;
+        T deleteElement;
         deleteElement = tail.item;
         tail = tail.prev;
         tail.next = null;
