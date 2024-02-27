@@ -39,11 +39,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (isIndexExist(index)) {
-            Node node = findNodeByIndex(index);
-            return (T) node.value;
-        }
-        return null;
+        isIndexExist(index);
+        Node node = findNodeByIndex(index);
+        return (T) node.value;
     }
 
     @Override
@@ -57,12 +55,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (isIndexExist(index)) {
-            T value = (T) findNodeByIndex(index).value;
-            unlink(findNodeByIndex(index));
-            return value;
-        }
-        return null;
+        isIndexExist(index);
+        T value = (T) findNodeByIndex(index).value;
+        unlink(findNodeByIndex(index));
+        return value;
     }
 
     @Override
@@ -101,24 +97,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private boolean isIndexExist(int index) {
-        if (index >= 0 && index < size) {
-            return true;
+    private void isIndexExist(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
         }
-        throw new IndexOutOfBoundsException();
+        return;
     }
 
     private void addByIndex(T value, int index) {
-        if (isIndexExist(index)) {
-            Node node = findNodeByIndex(index);
-            if (index == 0) {
-                head = new Node(node.prev, value, node);
-                return;
-            }
-            Node previousNod = node.prev;
-            node.prev = new Node(node.prev, value, node);
-            previousNod.next = node.prev;
+        isIndexExist(index);
+        Node node = findNodeByIndex(index);
+        if (index == 0) {
+            head = new Node(node.prev, value, node);
+            return;
         }
+        Node previousNod = node.prev;
+        node.prev = new Node(node.prev, value, node);
+        previousNod.next = node.prev;
+
     }
 
     private Node findNodeByIndex(int index) {
@@ -154,6 +150,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void unlink(Node node) {
         if (head == tail) {
             size--;
+            head = null;
+            tail = null;
             return;
         } else if (node == head) {
             Node nextNode = node.next;
