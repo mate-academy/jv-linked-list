@@ -118,16 +118,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(T object) {
-        Node<T> node = null;
         Node<T> current = null;
         for (int i = 0; i < size; i++) {
             current = i == 0 ? head : current.next;
             if (current.value == object || current.value != null && current.value.equals(object)) {
-                node = current;
-                break;
+                return current;
             }
         }
-        return node;
+        return null;
     }
 
     private void insertNode(Node<T> prevNode, T value, Node<T> nextNode) {
