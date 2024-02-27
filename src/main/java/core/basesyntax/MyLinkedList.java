@@ -5,6 +5,7 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final int SETTING = 0;
     private static final int NOT_SETTING = 1;
+    private static final String INDEX_ERR_MSG = "Index: %d, Size: %d";
     private int size;
     private Node<T> first;
     private Node<T> last;
@@ -91,19 +92,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkPositionIndex(int index, int expressionToCheck) {
-        if (expressionToCheck == NOT_SETTING) {
-            if (!isPositionIndex(index)) {
-                throw new IndexOutOfBoundsException(createIndexOutOfBoundMessage(index));
-            }
-        } else {
-            if (!isPositionIndexToSet(index)) {
-                throw new IndexOutOfBoundsException(createIndexOutOfBoundMessage(index));
-            }
+        boolean isValidIndex = (expressionToCheck == NOT_SETTING) ? isPositionIndex(index) : isPositionIndexToSet(index);
+        if (!isValidIndex) {
+            throw new IndexOutOfBoundsException(String.format(INDEX_ERR_MSG, index, size));
         }
-    }
-
-    private String createIndexOutOfBoundMessage(int index) {
-        return "Index: " + index + ", Size: " + size;
     }
 
     private boolean isPositionIndex(int index) {
@@ -113,6 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private boolean isPositionIndexToSet(int index) {
         return index >= 0 && index < size;
     }
+
 
     private void linkBefore(T value, Node<T> nextNode) {
         final Node<T> previousNode = nextNode.previous;
