@@ -63,19 +63,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> currentNode = first; currentNode != null; currentNode = currentNode.next) {
-                if (currentNode.item == null) {
-                    unlink(currentNode);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> currentNode = first; currentNode != null; currentNode = currentNode.next) {
-                if (object.equals(currentNode.item)) {
-                    unlink(currentNode);
-                    return true;
-                }
+        for (Node<T> currentNode = first; currentNode != null; currentNode = currentNode.next) {
+            if ((object == null && currentNode.item == null)
+                    || (object != null && object.equals(currentNode.item))) {
+                unlink(currentNode);
+                return true;
             }
         }
         return false;
@@ -106,7 +98,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private boolean isPositionIndexToSet(int index) {
         return index >= 0 && index < size;
     }
-    
+
     private void linkBefore(T value, Node<T> nextNode) {
         final Node<T> previousNode = nextNode.previous;
         final Node<T> newNode = new Node<>(previousNode, value, nextNode);
