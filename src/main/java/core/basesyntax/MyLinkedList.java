@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    public static final String EMPTY_LIST_MESSAGE = "List is empty";
+    public static final String INVALID_INDEX_MESSAGE = "Invalid index: ";
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -23,9 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Invalid index: " + index);
-        }
+        validateAddIndex(index);
 
         if (index == size) {
             add(value);
@@ -92,12 +92,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index: " + index);
-        }
+        validateIndex(index);
 
         if (head == null) {
-            throw new NoSuchElementException("List is empty");
+            throw new NoSuchElementException(EMPTY_LIST_MESSAGE);
         }
 
         Node<T> node;
@@ -118,7 +116,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> findNodeByValue(T item) {
         Node<T> node = head;
         while (node != null) {
-            if ((item == null && node.value == null) || (item != null && item.equals(node.value))) {
+            if (item == node.value || item != null && item.equals(node.value)) {
                 return node;
             }
             node = node.next;
@@ -148,6 +146,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
         size--;
+    }
+
+    private void validateAddIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException(INVALID_INDEX_MESSAGE + index);
+        }
+    }
+
+    private void validateIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(INVALID_INDEX_MESSAGE + index);
+        }
     }
 
     private static class Node<E> {
