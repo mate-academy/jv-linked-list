@@ -28,7 +28,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            linkBefore(value, findNodeIndex(index));
+            linkBefore(value, findNodeByIndex(index));
         }
     }
 
@@ -42,13 +42,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkPositionIndex(index, SETTING);
-        return findNodeIndex(index).item;
+        return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         checkPositionIndex(index, SETTING);
-        Node<T> node = findNodeIndex(index);
+        Node<T> node = findNodeByIndex(index);
         T oldValue = node.item;
         node.item = value;
         return oldValue;
@@ -57,7 +57,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkPositionIndex(index, SETTING);
-        return unlink(findNodeIndex(index));
+        return unlink(findNodeByIndex(index));
     }
 
     @Override
@@ -126,7 +126,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private Node<T> findNodeIndex(int index) {
+    private Node<T> findNodeByIndex(int index) {
         Node<T> item;
         if (index < size / 2) {
             item = first;
