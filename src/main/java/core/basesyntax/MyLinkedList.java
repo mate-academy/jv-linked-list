@@ -30,9 +30,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkPositionIndex(index, NOT_SETTING);
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("the index is invalid");
-        }
         if (index == size) {
             linkLast(value);
         } else {
