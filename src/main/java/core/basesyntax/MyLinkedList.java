@@ -92,7 +92,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkPositionIndex(int index, int expressionToCheck) {
-        boolean isValidIndex = (expressionToCheck == NOT_SETTING) ? isPositionIndex(index) : isPositionIndexToSet(index);
+        boolean isValidIndex = (expressionToCheck == NOT_SETTING)
+                ? isPositionIndex(index) : isPositionIndexToSet(index);
         if (!isValidIndex) {
             throw new IndexOutOfBoundsException(String.format(INDEX_ERR_MSG, index, size));
         }
@@ -105,8 +106,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private boolean isPositionIndexToSet(int index) {
         return index >= 0 && index < size;
     }
-
-
+    
     private void linkBefore(T value, Node<T> nextNode) {
         final Node<T> previousNode = nextNode.previous;
         final Node<T> newNode = new Node<>(previousNode, value, nextNode);
