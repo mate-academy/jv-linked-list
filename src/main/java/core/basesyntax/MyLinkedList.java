@@ -90,8 +90,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkPositionIndex(int index, int exspressionToCheck) {
-        if (exspressionToCheck == NOT_SETTING) {
+    private void checkPositionIndex(int index, int expressionToCheck) {
+        if (expressionToCheck == NOT_SETTING) {
             if (!isPositionIndex(index)) {
                 throw new IndexOutOfBoundsException(createIndexOutOfBoundMessage(index));
             }
