@@ -6,7 +6,7 @@ import java.util.Objects;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String INDEX = "Index: ";
     private static final String SIZE = ", Size: ";
-    private static final int NON_NEGATIVE_INDEX = 0;
+    private static final int ZERO = 0;
     private static final int ONE = 1;
     private static final int DIVORCE_NUMBER = 2;
 
@@ -29,14 +29,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
+        if (index < ZERO || index > size) {
             throw new IndexOutOfBoundsException(INDEX + index + SIZE + size);
         }
         if (size == index) {
             add(value);
         } else {
             Node<T> adding = new Node<>(value);
-            if (index == NON_NEGATIVE_INDEX) {
+            if (index == ZERO) {
                 adding.next = head;
                 head.prev = adding;
                 head = adding;
@@ -60,17 +60,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < NON_NEGATIVE_INDEX || index >= size) {
-            throw new IndexOutOfBoundsException(INDEX + index + SIZE + size);
-        }
+        checkIndex(index);
         return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index < NON_NEGATIVE_INDEX || index >= size) {
-            throw new IndexOutOfBoundsException(INDEX + index + SIZE + size);
-        }
+        checkIndex(index);
         Node<T> item = getNode(index);
         T oldDate = item.value;
         item.value = value;
@@ -79,9 +75,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < NON_NEGATIVE_INDEX || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkIndex(index);
         Node<T> current = getNode(index);
         unlink(current);
         return current.value;
@@ -107,13 +101,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == NON_NEGATIVE_INDEX;
+        return size == ZERO;
     }
 
     private Node<T> getNode(int index) {
-        if (index < NON_NEGATIVE_INDEX || index > size) {
-            throw new IndexOutOfBoundsException(INDEX + index + SIZE + size);
-        }
+        checkIndex(index);
         Node<T> current;
         if (index < size / DIVORCE_NUMBER) {
             current = head;
@@ -141,6 +133,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             unlinkedNode.next.prev = unlinkedNode.prev;
         }
         size--;
+    }
+
+    private void checkIndex(int index) {
+        if (index < ZERO || index >= size) {
+            throw new IndexOutOfBoundsException(INDEX + index + SIZE + size);
+        }
     }
 
     private static class Node<T> {
