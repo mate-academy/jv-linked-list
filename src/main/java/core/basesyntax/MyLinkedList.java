@@ -55,7 +55,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        return null;
+        validateIndex(index);
+        Node<T> nodeToRemove = getNodeByIndex(index);
+        unlink(nodeToRemove);
+        size--;
+        T returnValue = nodeToRemove.item;
+        nodeToRemove.item = null;
+        return returnValue;
     }
 
     @Override
