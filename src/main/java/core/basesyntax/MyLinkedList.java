@@ -9,23 +9,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        if (!addedWithBaseOrTaleInitialization(value)) {
-            linkLast(new Node<>(value));
-        }
+        linkLast(value);
     }
 
     @Override
     public void add(T value, int index) {
-        if (!addedWithBaseOrTaleInitialization(value, index)) {
-            if (index == size) {
-                linkLast(new Node<>(value));
-            } else if (index == 0) {
-                linkFirst(new Node<>(value));
-            } else {
-                indexValidation(index);
-                linkAtMiddle(new Node<>(value), index);
-            }
+        if (index == 0) {
+            linkFirst(value);
+            return;
         }
+        if (index == size) {
+            linkLast(value);
+            return;
+        }
+        indexValidation(index);
+        linkAtMiddle(value, index);
+
     }
 
     @Override
@@ -89,67 +88,63 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private T removeLast() {
         Node<T> nodeToRemove = endNode;
         unlink(endNode);
+        size--;
         return nodeToRemove.data;
     }
 
     private T removeFirst() {
         Node<T> nodeToRemove = startNode;
         unlink(startNode);
+        size--;
         return nodeToRemove.data;
     }
 
     private void unlink(Node<T> node) {
-        if (node.previous == null) {
-            startNode = startNode.next;
-            size--;
-        } else {
-            endNode = endNode.previous;
-            size--;
+        if (node == startNode) {
+            if (startNode.next != null) {
+                startNode = node.next;
+            }
+            return;
         }
+        if (node == endNode) {
+            endNode = node.previous;
+            endNode.next = null;
+            return;
+        }
+        node.previous.next = node.next;
+        node.next.previous = node.previous;
     }
 
     private T removeByIndex(int index) {
         Node<T> node = findByIndex(index);
-        if (size == 2) {
-            if (index == 1) {
-                startNode.next = null;
-                endNode = null;
-            } else if (index == 0) {
-                startNode = endNode;
-                endNode = null;
-                startNode.next = null;
-            }
-        } else if (size == 1) {
-            node = startNode;
-            startNode = null;
-        } else {
-            node.previous.next = node.next;
-            node.next.previous = node.previous;
-        }
+        unlink(node);
         size--;
         return node.data;
     }
 
-    private void linkLast(Node<T> node) {
-        node.previous = endNode;
-        endNode.next = node;
-        endNode = node;
+    private void linkLast(T value) {
+        if (size == 0) {
+            startNode = new Node<>(value, endNode, null);
+        } else if (size == 1) {
+            endNode = new Node<>(value, null, startNode);
+        } else {
+            endNode = new Node<>(value, null, endNode);
+        }
         size++;
     }
 
-    private void linkFirst(Node<T> node) {
-        startNode.previous = node;
-        node.next = startNode;
-        startNode = node;
+    private void linkFirst(T value) {
+        if (size == 0) {
+            startNode = new Node<>(value, endNode, null);
+        } else {
+            startNode = new Node<>(value, startNode, null);
+        }
         size++;
     }
 
-    private void linkAtMiddle(Node<T> newNode, int index) {
+    private void linkAtMiddle(T value, int index) {
         Node<T> existingNode = findByIndex(index);
-        newNode.previous = existingNode.previous;
-        existingNode.previous.next = newNode;
-        newNode.next = existingNode;
-        existingNode.previous = newNode;
+        new Node<>(value,existingNode, existingNode.previous);
         size++;
     }
 
@@ -185,18 +180,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return x;
     }
 
-    private void initializeStartNode(Node<T> node) {
-        startNode = node;
-        size++;
-    }
-
-    private void initializeEndNode(Node<T> node) {
-        endNode = node;
-        startNode.next = endNode;
-        endNode.previous = startNode;
-        size++;
-    }
-
     private void indexValidation(int index) {
         if (index < size && index >= 0) {
             return;
@@ -204,35 +187,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         throw new IndexOutOfBoundsException("Index " + index + " out of bounds.");
     }
 
-    private boolean addedWithBaseOrTaleInitialization(T value, int index) {
-        if (size == 0 && index == 0) {
-            initializeStartNode(new Node<>(value));
-            return true;
-        } else if (size == 1 && index == 1) {
-            initializeEndNode(new Node<>(value));
-            return true;
-        }
-        return false;
-    }
-
-    private boolean addedWithBaseOrTaleInitialization(T value) {
-        if (size == 0) {
-            initializeStartNode(new Node<>(value));
-            return true;
-        } else if (size == 1) {
-            initializeEndNode(new Node<>(value));
-            return true;
-        }
-        return false;
-    }
-
     private static class Node<T> {
         private T data;
         private Node<T> previous;
         private Node<T> next;
 
-        private Node(T data) {
+        private Node(T data, Node<T> next, Node<T> previous) {
             this.data = data;
+            this.next = next;
+            if (next != null) {
+                this.next.previous = this;
+            }
+            this.previous = previous;
+            if (previous != null) {
+                this.previous.next = this;
+            }
         }
     }
 }
