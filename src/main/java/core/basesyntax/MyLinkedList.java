@@ -3,6 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final String EXCEPTION_MESSAGE = "Provided index is out of valid range";
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -47,6 +48,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private Node<T> getNode(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
+        }
+        Node<T> resultNode = null;
+        if (index < size / 2) {
+            resultNode = head;
+            for (int i = 0; i < index; i++) {
+               resultNode = resultNode.next;
+            }
+        } else {
+            resultNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                resultNode = resultNode.prev;
+            }
+        }
+        return  resultNode;
     }
 
     private static class Node<T> {
