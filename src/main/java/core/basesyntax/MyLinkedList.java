@@ -31,7 +31,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return null;
+        return getNodeByIndex(index).item;
     }
 
     @Override
@@ -81,7 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> getNode(int index) {
+    private Node<T> getNodeByIndex(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
         }
