@@ -4,28 +4,27 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final double HALF = 0.5;
-    private static final int ONE = 1;
-    private static final String EXCEPTION_MESSAGE = "Bad index: %d for size: %d";
+    private static final String INVALID_INDEX_MESSAGE = "Bad index: %d for size: %d";
     private int size;
     private Node<T> head;
     private Node<T> tail;
 
     @Override
     public void add(T value) {
-        Node<T> current = new Node<>(value, null, null);
+        Node<T> newNode = new Node<>(value, null, null);
         if (isEmpty()) {
-            head = current;
+            head = newNode;
         } else {
-            tail.next = current;
-            current.prev = tail;
+            tail.next = newNode;
+            newNode.prev = tail;
         }
-        tail = current;
+        tail = newNode;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        validateIndexNotInclusive(index);
+        validateIndexOnAdd(index);
         if (index == size) {
             add(value);
             return;
@@ -34,7 +33,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (linkToHead(index, current)) {
             return;
         }
-        linkNewNode(index, current);
+        linkByIndex(index, current);
     }
 
     @Override
@@ -46,14 +45,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        validateIndexInclusive(index);
+        validateIndex(index);
         Node<T> current = findNodeByIndex(index);
         return current.value;
     }
 
     @Override
     public T set(T value, int index) {
-        validateIndexInclusive(index);
+        validateIndex(index);
         Node<T> current = findNodeByIndex(index);
         T result = current.value;
         current.value = value;
@@ -62,7 +61,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        validateIndexInclusive(index);
+        validateIndex(index);
         Node<T> current = findNodeByIndex(index);
         if (index == 0) {
             head = current.next;
@@ -101,22 +100,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void validateIndexInclusive(int index) {
+    private void validateIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(String
-                    .format(EXCEPTION_MESSAGE, index, size));
+            throw new IndexOutOfBoundsException(String.format(INVALID_INDEX_MESSAGE, index, size));
         }
     }
 
-    private void validateIndexNotInclusive(int index) {
+    private void validateIndexOnAdd(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(String
-                    .format(EXCEPTION_MESSAGE, index, size));
+            throw new IndexOutOfBoundsException(String.format(INVALID_INDEX_MESSAGE, index, size));
         }
     }
 
-    private void linkNewNode(int index, Node<T> newNode) {
-        Node<T> currentNode = findNodeByIndex(index - ONE);
+    private void linkByIndex(int index, Node<T> newNode) {
+        Node<T> currentNode = findNodeByIndex(index - 1);
         Node<T> nextNode = currentNode.next;
         newNode.next = nextNode;
         if (nextNode != null) {
@@ -155,15 +152,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> findNodeByIndex(int index) {
         Node<T> currentNode;
         if (size - index > size * HALF) {
-            currentNode = head;
-            for (int i = 0; i < index; i++) {
-                currentNode = currentNode.next;
-            }
+            currentNode = findFromHead(index);
         } else {
-            currentNode = tail;
-            for (int i = 0; i < size - index - ONE; i++) {
-                currentNode = currentNode.prev;
-            }
+            currentNode = findFromTail(index);
+        }
+        return currentNode;
+    }
+
+    private Node<T> findFromTail(int index) {
+        Node<T> currentNode;
+        currentNode = tail;
+        for (int i = 0; i < size - index - 1; i++) {
+            currentNode = currentNode.prev;
+        }
+        return currentNode;
+    }
+
+    private Node<T> findFromHead(int index) {
+        Node<T> currentNode;
+        currentNode = head;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
         }
         return currentNode;
     }
@@ -173,7 +182,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> prev;
         private T value;
 
-        Node(T value, Node next, Node prev) {
+        private Node(T value, Node next, Node prev) {
             this.value = value;
             this.next = next;
             this.prev = prev;
