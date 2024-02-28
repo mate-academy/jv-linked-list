@@ -41,12 +41,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 
     private static class Node<T> {
