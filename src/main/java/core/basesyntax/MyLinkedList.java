@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    public static final String EMPTY_LIST_MESSAGE = "List is empty";
-    public static final String INVALID_INDEX_MESSAGE = "Invalid index: ";
+    private static final String EMPTY_LIST_MESSAGE = "List is empty";
+    private static final String INVALID_INDEX_MESSAGE = "Invalid index: %s";
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -25,7 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        validateAddIndex(index);
+        validateIndexOnAdd(index);
 
         if (index == size) {
             add(value);
@@ -33,10 +33,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> nodeAtIndex = findNodeByIndex(index);
             Node<T> node = new Node<>(nodeAtIndex.prev, value, nodeAtIndex);
 
-            if (nodeAtIndex.prev != null) {
-                nodeAtIndex.prev.next = node;
-            } else {
+            if (index == 0) {
                 head = node;
+            } else {
+                nodeAtIndex.prev.next = node;
             }
             nodeAtIndex.prev = node;
             size++;
@@ -98,28 +98,35 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new NoSuchElementException(EMPTY_LIST_MESSAGE);
         }
 
-        Node<T> node;
         if (index <= size / 2) {
-            node = head;
-            for (int i = 0; i < index; i++) {
-                node = node.next;
-            }
-        } else {
-            node = tail;
-            for (int i = size - 1; i > index; i--) {
-                node = node.prev;
-            }
+            return findFromHead(index);
+        }
+        return findFromTail(index);
+    }
+
+    private Node<T> findFromHead(int index) {
+        Node<T> node = head;
+        for (int i = 0; i < index; i++) {
+            node = node.next;
+        }
+        return node;
+    }
+
+    private Node<T> findFromTail(int index) {
+        Node<T> node = tail;
+        for (int i = size - 1; i > index; i--) {
+            node = node.prev;
         }
         return node;
     }
 
     private Node<T> findNodeByValue(T item) {
-        Node<T> node = head;
-        while (node != null) {
-            if (item == node.value || item != null && item.equals(node.value)) {
-                return node;
+        Node<T> currentNode = head;
+        while (currentNode != null) {
+            if (item == currentNode.value || item != null && item.equals(currentNode.value)) {
+                return currentNode;
             }
-            node = node.next;
+            currentNode = currentNode.next;
         }
         return null;
     }
@@ -144,28 +151,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             next.prev = prev;
             node.next = null;
         }
-
         size--;
     }
 
-    private void validateAddIndex(int index) {
+    private void validateIndexOnAdd(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(INVALID_INDEX_MESSAGE + index);
+            throw new IndexOutOfBoundsException(String.format(INVALID_INDEX_MESSAGE, index));
         }
     }
 
     private void validateIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(INVALID_INDEX_MESSAGE + index);
+            throw new IndexOutOfBoundsException(String.format(INVALID_INDEX_MESSAGE, index));
         }
     }
 
-    private static class Node<E> {
-        private E value;
-        private Node<E> next;
-        private Node<E> prev;
+    private static class Node<V> {
+        private V value;
+        private Node<V> next;
+        private Node<V> prev;
 
-        Node(Node<E> prev, E value, Node<E> next) {
+        private Node(Node<V> prev, V value, Node<V> next) {
             this.next = next;
             this.value = value;
             this.prev = prev;
