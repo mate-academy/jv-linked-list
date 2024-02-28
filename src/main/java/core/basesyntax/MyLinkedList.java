@@ -10,7 +10,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<T>(null, value, null);
+        Node<T> newNode = new Node<>(null, value, null);
         if (head == null) {
             addToHead(newNode);
         } else {
@@ -142,7 +142,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
         }
-        Node<T> resultNode = null;
+        Node<T> resultNode;
         if (index < size / 2) {
             resultNode = head;
             for (int i = 0; i < index; i++) {
