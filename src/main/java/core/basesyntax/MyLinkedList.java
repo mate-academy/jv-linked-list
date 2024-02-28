@@ -1,8 +1,14 @@
 package core.basesyntax;
 
+import org.w3c.dom.Node;
+
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+
+    private static class Node{
+
+    }
     @Override
     public void add(T value) {
     }
@@ -43,5 +49,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return false;
+    }
+    public void unlink(Node node) {
+
     }
 }
