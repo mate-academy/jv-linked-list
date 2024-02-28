@@ -16,7 +16,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkPositionIndex(index, NOT_SETTING);
+        checkIndex(index);
         if (index == size) {
             linkLast(value);
         } else {
@@ -33,13 +33,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkPositionIndex(index, SETTING);
+        checkIndexOnSet(index);
         return node(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkPositionIndex(index, SETTING);
+        checkIndexOnSet(index);
         Node<T> node = node(index);
         T oldValue = node.item;
         node.item = value;
@@ -48,25 +48,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkPositionIndex(index, SETTING);
+        checkIndexOnSet(index);
         return unlink(node(index));
     }
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> currentNode = first; currentNode != null; currentNode = currentNode.next) {
-                if (currentNode.item == null) {
-                    unlink(currentNode);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> currentNode = first; currentNode != null; currentNode = currentNode.next) {
-                if (object.equals(currentNode.item)) {
-                    unlink(currentNode);
-                    return true;
-                }
+        for (Node<T> currentNode = first; currentNode != null; currentNode = currentNode.next) {
+            if ((object == null && currentNode.item == null)
+                    || (object != null && object.equals(currentNode.item))) {
+                unlink(currentNode);
+                return true;
             }
         }
         return false;
@@ -79,9 +71,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        if (first == null && last == null) {
-            return true;
-        }
         return size == 0;
     }
 
@@ -110,18 +99,51 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void checkPositionIndex(int index, int expressionToCheck) {
-        if (expressionToCheck == NOT_SETTING) {
-            if (!isPositionIndex(index)) {
-                throw new IndexOutOfBoundsException("the index " + index
-                        + "is invalid, current size of the Linkedlist is " + size);
-            }
-        } else {
-            if (!isPositionIndexToSet(index)) {
-                throw new IndexOutOfBoundsException("the index " + index
-                        + "is invalid, current size of the Linkedlist is " + size);
-            }
+    private void checkIndex(int index) {
+        if (!(index >= 0 && index <= size)) {
+            throw new IndexOutOfBoundsException("the index " + index
+                    + "is invalid, current size of the Linkedlist is " + size);
         }
+    }
+
+    private void checkIndexOnSet(int index) {
+        if (!(index >= 0 && index < size)) {
+            throw new IndexOutOfBoundsException("the index " + index
+                    + "is invalid, current size of the Linkedlist is " + size);
+        }
+    }
+
+    private void linkBefore(T value, Node<T> node) {
+        if (node != null) {
+            final Node<T> prev = node.prev;
+            final Node<T> newNode = new Node<>(prev, value, node);
+            node.prev = newNode;
+            if (prev == null) {
+                first = newNode;
+            } else {
+                prev.next = newNode;
+            }
+            size++;
+        }
+    }
+
+    private T unlink(Node<T> node) {
+        Node<T> prev = node.prev;
+        Node<T> next = node.next;
+        if (prev == null) {
+            first = next;
+        } else {
+            prev.next = next;
+        }
+        if (next == null) {
+            last = prev;
+        } else {
+            next.prev = prev;
+        }
+        T removedItem = node.item;
+        node.item = null;
+        size--;
+        return removedItem;
     }
 
     private Node<T> node(int index) {
@@ -139,46 +161,4 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return current;
         }
     }
-
-    private void linkBefore(T value, Node<T> node) {
-        if (node != null) {
-            final Node<T> pred = node.prev;
-            final Node<T> newNode = new Node<>(pred, value, node);
-            node.prev = newNode;
-            if (pred == null) {
-                first = newNode;
-            } else {
-                pred.next = newNode;
-            }
-            size++;
-        }
-    }
-
-    private T unlink(Node<T> node) {
-        Node<T> pred = node.prev;
-        Node<T> next = node.next;
-        if (pred == null) {
-            first = next;
-        } else {
-            pred.next = next;
-        }
-        if (next == null) {
-            last = pred;
-        } else {
-            next.prev = pred;
-        }
-        T removedItem = node.item;
-        node.item = null;
-        size--;
-        return removedItem;
-    }
-
-    private boolean isPositionIndex(int index) {
-        return index >= 0 && index <= size;
-    }
-
-    private boolean isPositionIndexToSet(int index) {
-        return index >= 0 && index < size;
-    }
-
 }
