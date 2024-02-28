@@ -3,6 +3,8 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final String INDEX_OUT_OF_BOUNDS_EXCEPTION
+            = "Invalid index: ";
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -23,7 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+            throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_EXCEPTION + index);
         }
         if (index == size) {
             add(value);
@@ -135,7 +137,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     public void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+            throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_EXCEPTION + index);
         }
     }
 
