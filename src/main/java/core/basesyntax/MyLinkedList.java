@@ -185,12 +185,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return x;
     }
 
-    private void initializeBase(Node<T> node) {
+    private void initializeStartNode(Node<T> node) {
         startNode = node;
         size++;
     }
 
-    private void initializeTale(Node<T> node) {
+    private void initializeEndNode(Node<T> node) {
         endNode = node;
         startNode.next = endNode;
         endNode.previous = startNode;
@@ -201,15 +201,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < size && index >= 0) {
             return;
         }
-        throw new IndexOutOfBoundsException();
+        throw new IndexOutOfBoundsException("Index " + index + " out of bounds.");
     }
 
     private boolean addedWithBaseOrTaleInitialization(T value, int index) {
         if (size == 0 && index == 0) {
-            initializeBase(new Node<>(value));
+            initializeStartNode(new Node<>(value));
             return true;
         } else if (size == 1 && index == 1) {
-            initializeTale(new Node<>(value));
+            initializeEndNode(new Node<>(value));
             return true;
         }
         return false;
@@ -217,16 +217,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private boolean addedWithBaseOrTaleInitialization(T value) {
         if (size == 0) {
-            initializeBase(new Node<>(value));
+            initializeStartNode(new Node<>(value));
             return true;
         } else if (size == 1) {
-            initializeTale(new Node<>(value));
+            initializeEndNode(new Node<>(value));
             return true;
         }
         return false;
     }
 
-    private class Node<T> {
+    private static class Node<T> {
         private T data;
         private Node<T> previous;
         private Node<T> next;
