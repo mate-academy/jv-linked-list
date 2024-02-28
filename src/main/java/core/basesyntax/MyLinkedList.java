@@ -25,7 +25,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size >= 0 && index == size) {
             add(value);
         } else {
-            addByIndex(value, index);
+            isIndexExist(index);
+            Node currentNode = findNodeByIndex(index);
+            if (index == 0) {
+                head = new Node(currentNode.prev, value, currentNode);
+                size++;
+                return;
+            }
+            Node previousNod = currentNode.prev;
+            currentNode.prev = new Node(currentNode.prev, value, currentNode);
+            previousNod.next = currentNode.prev;
             size++;
         }
     }
@@ -100,19 +109,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
-    }
-
-    private void addByIndex(T value, int index) {
-        isIndexExist(index);
-        Node currentNode = findNodeByIndex(index);
-        if (index == 0) {
-            head = new Node(currentNode.prev, value, currentNode);
-            return;
-        }
-        Node previousNod = currentNode.prev;
-        currentNode.prev = new Node(currentNode.prev, value, currentNode);
-        previousNod.next = currentNode.prev;
-
     }
 
     private boolean needToRemove(T object, Node node) {
