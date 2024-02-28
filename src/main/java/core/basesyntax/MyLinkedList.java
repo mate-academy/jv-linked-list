@@ -74,11 +74,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return false;
     }
 
-    private boolean needToRemove(T object, Node node) {
-        return (object == null && node.value == null)
-                || (node.value != null && node.value.equals(object));
-    }
-
     @Override
     public int size() {
         return size;
@@ -90,17 +85,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
+
         private T value;
         private Node<T> next;
         private Node<T> prev;
-
         private Node(Node<T> prev, T element, Node<T> next) {
             this.value = element;
             this.next = next;
             this.prev = prev;
         }
-    }
 
+    }
     private void isIndexExist(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
@@ -109,15 +104,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void addByIndex(T value, int index) {
         isIndexExist(index);
-        Node node = findNodeByIndex(index);
+        Node currentNode = findNodeByIndex(index);
         if (index == 0) {
-            head = new Node(node.prev, value, node);
+            head = new Node(currentNode.prev, value, currentNode);
             return;
         }
-        Node previousNod = node.prev;
-        node.prev = new Node(node.prev, value, node);
-        previousNod.next = node.prev;
+        Node previousNod = currentNode.prev;
+        currentNode.prev = new Node(currentNode.prev, value, currentNode);
+        previousNod.next = currentNode.prev;
 
+    }
+
+    private boolean needToRemove(T object, Node node) {
+        return (object == null && node.value == null)
+                || (node.value != null && node.value.equals(object));
     }
 
     private Node findNodeByIndex(int index) {
@@ -135,19 +135,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node findFromHead(int index) {
-        Node fromNode = head;
+        Node currentNode = head;
         for (int i = 0; i != index; i++) {
-            fromNode = fromNode.next;
+            currentNode = currentNode.next;
         }
-        return fromNode;
+        return currentNode;
     }
 
     private Node findFromTail(int index) {
-        Node fromNode = tail;
+        Node currentNode = tail;
         for (int i = size - 1; i != index; i--) {
-            fromNode = fromNode.prev;
+            currentNode = currentNode.prev;
         }
-        return fromNode;
+        return currentNode;
     }
 
     private void unlink(Node node) {
