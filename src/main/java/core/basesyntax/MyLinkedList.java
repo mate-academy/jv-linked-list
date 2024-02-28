@@ -50,6 +50,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private void unlink(Node<T> nodeToUnlink) {
+        if (nodeToUnlink.equals(this.head)) {
+            head = nodeToUnlink.next;
+        }
+        if (nodeToUnlink.equals(this.tail)) {
+            tail = nodeToUnlink.prev;
+        }
+        nodeToUnlink.prev = null;
+        nodeToUnlink.next = null;
+    }
+
     private Node<T> getNode(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
@@ -70,8 +81,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        Node<T> prev;
-        Node<T> next;
+        private Node<T> prev;
+        private Node<T> next;
         T item;
 
         public  Node (Node<T> previousNode, T item, Node<T> nextNode) {
