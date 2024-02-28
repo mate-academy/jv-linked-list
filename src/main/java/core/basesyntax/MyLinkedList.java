@@ -62,12 +62,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void unlink(Node<T> nodeToUnlink) {
         if (nodeToUnlink.equals(this.head)) {
             head = nodeToUnlink.next;
+            nodeToUnlink.next = null;
         }
         if (nodeToUnlink.equals(this.tail)) {
             tail = nodeToUnlink.prev;
+            nodeToUnlink.prev = null;
+        } else {
+            nodeToUnlink.prev.next = nodeToUnlink.next;
+            nodeToUnlink.next.prev = nodeToUnlink.prev;
         }
-        nodeToUnlink.prev = null;
-        nodeToUnlink.next = null;
     }
 
     private void addToHead(Node<T> node) {
