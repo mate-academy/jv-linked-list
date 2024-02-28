@@ -85,17 +85,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-
         private T value;
         private Node<T> next;
         private Node<T> prev;
+
         private Node(Node<T> prev, T element, Node<T> next) {
             this.value = element;
             this.next = next;
             this.prev = prev;
         }
-
     }
+
     private void isIndexExist(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
