@@ -5,11 +5,10 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
-    private int size;
     private Node<T> node;
+    private int size;
 
     public MyLinkedList() {
-
     }
 
     @Override
@@ -43,7 +42,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (T nodes : list) {
             add(nodes);
         }
-//        tail = size;
     }
 
     @Override
@@ -88,9 +86,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> prev;
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
         Node(Node<T> prev, T element, Node<T> next) {
             this.item = element;
@@ -103,27 +101,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         node = head;
         final Node<T> newNode = new Node<>(null, next, node);
         head = newNode;
-        if (node == null)
+        if (node == null) {
             tail = newNode;
-        else
+        } else {
             node.prev = newNode;
-        size++;
-        //       modCount++;
+        }
     }
 
-    /**
-     * Links e as last element.
-     */
-    void tail(T next) {
+    private void tail(T next) {
         node = tail;
         final Node<T> newNode = new Node<>(node, next, null);
         tail = newNode;
-        if (node == null)
+        if (node == null) {
             head = newNode;
-        else
+        } else {
             node.next = newNode;
-        size++;
-        //      modCount++;
+        }
     }
 
     private T unlink(Node<T> node) {
