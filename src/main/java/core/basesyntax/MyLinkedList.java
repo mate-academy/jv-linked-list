@@ -91,12 +91,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> nodeToUnlink) {
-        if (nodeToUnlink.equals(this.head)) {
-            head = nodeToUnlink.next;
+        if (nodeToUnlink.equals(head)) {
+            head = head.next;
             nodeToUnlink.next = null;
-        }
-        if (nodeToUnlink.equals(this.tail)) {
-            tail = nodeToUnlink.prev;
+        } else if (nodeToUnlink.equals(tail)) {
+            tail = tail.prev;
             nodeToUnlink.prev = null;
         } else {
             nodeToUnlink.prev.next = nodeToUnlink.next;
