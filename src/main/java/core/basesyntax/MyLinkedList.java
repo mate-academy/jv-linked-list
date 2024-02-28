@@ -47,7 +47,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        return null;
+        Node<T> returnNode = getNodeByIndex(index);
+        T returnValue = returnNode.item;
+        returnNode.item = value;
+        return returnValue;
     }
 
     @Override
@@ -141,7 +144,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static class Node<T> {
         private Node<T> prev;
         private Node<T> next;
-        T item;
+        private T item;
 
         public Node(Node<T> previousNode, T item, Node<T> nextNode) {
             this.prev = previousNode;
