@@ -23,7 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        validateIndex(index);
+        validateIndexExclude(index);
         Node<T> newNode = new Node<>(null, value, null);
         if (index == 0) {
             addToHead(newNode);
@@ -55,7 +55,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        validateIndex(index);
+        validateIndexExclude(index);
         Node<T> nodeToRemove = getNodeByIndex(index);
         unlink(nodeToRemove);
         T returnValue = nodeToRemove.item;
@@ -89,17 +89,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> nodeToUnlink) {
-        if (nodeToUnlink.equals(head)) {
-            head = head.next;
-            nodeToUnlink.next = null;
-        } else if (nodeToUnlink.equals(tail)) {
-            tail = tail.prev;
-            nodeToUnlink.prev = null;
-        } else {
-            nodeToUnlink.prev.next = nodeToUnlink.next;
-            nodeToUnlink.next.prev = nodeToUnlink.prev;
+        if (nodeToUnlink.equals(head) && !nodeToUnlink.equals(tail)) {
+            unlinkHead(nodeToUnlink);
+        } else if (nodeToUnlink.equals(tail) && !nodeToUnlink.equals(head)) {
+            unlinkTail(nodeToUnlink);
+        } else if (nodeToUnlink.equals(head) && nodeToUnlink.equals(tail)) {
+            unlinkSingleHeadTail();
+        }
+        else {
+            unlinkFromMiddle(nodeToUnlink);
         }
         size--;
+    }
+
+    private void unlinkSingleHeadTail() {
+        head = null;
+        tail = null;
+    }
+
+    private void unlinkFromMiddle(Node<T> nodeToUnlink) {
+        nodeToUnlink.prev.next = nodeToUnlink.next;
+        nodeToUnlink.next.prev = nodeToUnlink.prev;
+    }
+
+    private void unlinkHead(Node<T> nodeToUnlink) {
+        head = head.next;
+        nodeToUnlink.next = null;
+    }
+
+    private void unlinkTail(Node<T> nodeToUnlink) {
+        tail = tail.prev;
+        nodeToUnlink.prev = null;
     }
 
     private void addToHead(Node<T> node) {
@@ -127,21 +147,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void throwException() {
-        throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
-    }
-
-    private void validateIndex(int index) {
+    private void validateIndexExclude(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
         }
     }
 
-    private Node<T> getNodeByIndex(int index) {
-        if (index >= size || index < 0) {
-            throwException();
+    private void validateIndexInclude(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
         }
-        Node<T> resultNode;
+    }
+
+    private Node<T> getNodeByIndex(int index) {
+        validateIndexInclude(index);
         if (index < size / 2) {
             return findFromHeadByIndex(index);
         }
