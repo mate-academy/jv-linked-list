@@ -3,8 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final String indexOutOfBoundMessage = "Index is out of bound, ";
-    private static final String listCurrentSizeMessage = " List current size is, ";
+    private static final String indexOutOfBoundMessage = "Index is out of bound %d, Size %d";
 
     private Node<T> head;
     private Node<T> tail;
@@ -18,10 +17,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(indexOutOfBoundMessage
-                    + index
-                    + listCurrentSizeMessage
-                    + size);
+            throw new IndexOutOfBoundsException(indexOutOfBoundMessage);
         }
         if (index == size) {
             tail(value);
@@ -133,10 +129,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(indexOutOfBoundMessage
-                    + index
-                    + listCurrentSizeMessage
-                    + size);
+            throw new IndexOutOfBoundsException(indexOutOfBoundMessage);
         }
         Node<T> current;
         if (index < (size >> 1)) {
