@@ -93,7 +93,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Unacceptable out of bound index" + index + "!");
+            throw new IndexOutOfBoundsException("Unacceptable out of bound index" + index + "!"
+                    + "Current linked list size: " + size);
         }
     }
 
