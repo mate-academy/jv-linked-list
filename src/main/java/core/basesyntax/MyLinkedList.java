@@ -25,7 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkPositionIndex(index, NOT_SETTING);
+        checkIndexForAdd(index);
         if (index == size) {
             add(value);
         } else {
@@ -42,13 +42,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkPositionIndex(index, SETTING);
+        checkIndexSizeInclusive(index);
         return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkPositionIndex(index, SETTING);
+        checkIndexSizeInclusive(index);
         Node<T> node = findNodeByIndex(index);
         T oldValue = node.item;
         node.item = value;
@@ -57,7 +57,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkPositionIndex(index, SETTING);
+        checkIndexSizeInclusive(index);
         return unlink(findNodeByIndex(index));
     }
 
@@ -83,20 +83,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkPositionIndex(int index, int expressionToCheck) {
-        boolean isValidIndex = (expressionToCheck == NOT_SETTING)
-                ? isPositionIndex(index) : isPositionIndexToSet(index);
-        if (!isValidIndex) {
-            throw new IndexOutOfBoundsException(String.format(INDEX_ERR_MSG, index, size));
+    private void checkIndexForAdd(int index) {
+        if (index >= 0 && index <= size) {
+            return;
         }
+        throw new IndexOutOfBoundsException(String.format(INDEX_ERR_MSG, index, size));
     }
 
-    private boolean isPositionIndex(int index) {
-        return index >= 0 && index <= size;
-    }
-
-    private boolean isPositionIndexToSet(int index) {
-        return index >= 0 && index < size;
+    private void checkIndexSizeInclusive(int index) {
+        if (index >= 0 && index < size) {
+            return;
+        }
+        throw new IndexOutOfBoundsException(String.format(INDEX_ERR_MSG, index, size));
     }
 
     private void linkBefore(T value, Node<T> nextNode) {
