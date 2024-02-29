@@ -105,12 +105,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         checkIndex(index);
-        boolean isFirstHalf = size / 2 >= index;
-        Node<T> currentNode = isFirstHalf ? head : tail;
-        int iteration = isFirstHalf ? index : size - index - 1;
+        return size / 2 >= index
+                ? findFromHead(index)
+                : findFromTail(index);
+    }
 
-        for (int i = 0; i < iteration; i++) {
-            currentNode = isFirstHalf ? currentNode.next : currentNode.prev;
+    private Node<T> findFromHead(int index) {
+        Node<T> currentNode = head;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
+        }
+
+        return currentNode;
+    }
+
+    private Node<T> findFromTail(int index) {
+        Node<T> currentNode = tail;
+        for (int i = 0; i < size - index - 1; i++) {
+            currentNode = currentNode.prev;
         }
 
         return currentNode;
