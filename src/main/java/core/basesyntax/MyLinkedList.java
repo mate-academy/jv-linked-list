@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String ERROR_MESSAGE_TEMPLATE = "Index: %d, Size: %d";
@@ -91,8 +90,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void linkLast(T value) {
-        final Node<T> temp = last;
-        final Node<T> newNode = new Node<>(temp, value, null);
+        Node<T> temp = last;
+        Node<T> newNode = new Node<>(temp, value, null);
         last = newNode;
         if (temp == null) {
             first = newNode;
@@ -115,10 +114,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        Objects.checkIndex(index, size + 1);
+        checkIndex(index);
+        return size / 2 <= index ? getNodeByIndexFromHead(index) : getNodeByIndexFromTail(index);
+    }
+
+    private Node<T> getNodeByIndexFromHead(int index) {
         Node<T> currentNode = first;
         for (int i = 0; i < index; i++) {
             currentNode = currentNode.next;
+        }
+        return currentNode;
+    }
+
+    private Node<T> getNodeByIndexFromTail(int index) {
+        Node<T> currentNode = last;
+        for (int i = size - 1; i > index; i--) {
+            currentNode = currentNode.prev;
         }
         return currentNode;
     }
