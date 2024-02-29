@@ -143,6 +143,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         boolean isInFirstHalf = size / 2 >= index;
         Node<T> currentNode = isInFirstHalf ? head : tail;
         int countOfIterations = isInFirstHalf ? index : size - index - 1;
+
         for (int i = 0; i < countOfIterations; i++) {
             currentNode = isInFirstHalf ? currentNode.next : currentNode.prev;
         }
