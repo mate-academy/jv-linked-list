@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node head;
     private Node tail;
 
@@ -25,7 +25,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size >= 0 && index == size) {
             add(value);
         } else {
-            isIndexExist(index);
             Node currentNode = findNodeByIndex(index);
             if (index == 0) {
                 head = new Node(currentNode.prev, value, currentNode);
@@ -48,14 +47,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        isIndexExist(index);
         Node node = findNodeByIndex(index);
         return (T) node.value;
     }
 
     @Override
     public T set(T value, int index) {
-        isIndexExist(index);
         Node node = findNodeByIndex(index);
         T oldValue = (T) node.value;
         node.value = value;
@@ -64,7 +61,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        isIndexExist(index);
         T value = (T) findNodeByIndex(index).value;
         unlink(findNodeByIndex(index));
         return value;
@@ -117,12 +113,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node findNodeByIndex(int index) {
-        if (index == 0) {
-            return head;
-        }
-        if (index == size) {
-            return tail;
-        }
+        isIndexExist(index);
         if (size / 2 > index) {
             return findFromHead(index);
         } else {
@@ -148,33 +139,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void unlink(Node node) {
         if (head == tail) {
-            size--;
             head = null;
             tail = null;
-            return;
         } else if (node == head) {
             Node nextNode = node.next;
             nextNode.prev = null;
             node.next = null;
             head = nextNode;
-            size--;
-            return;
         } else if (node == tail) {
             Node previousNode = node.prev;
             previousNode.next = null;
             node.prev = null;
             tail = previousNode;
-            size--;
-            return;
         } else {
-            Node preciousNode = node.prev;
+            Node previousNode = node.prev;
             Node nextNode = node.next;
-            preciousNode.next = nextNode;
-            nextNode.prev = preciousNode;
+            previousNode.next = nextNode;
+            nextNode.prev = previousNode;
             node.next = null;
             node.prev = null;
-            size--;
         }
+        size--;
+
     }
 }
 
