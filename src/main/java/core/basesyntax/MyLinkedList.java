@@ -95,8 +95,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             unlinkTail(nodeToUnlink);
         } else if (nodeToUnlink.equals(head) && nodeToUnlink.equals(tail)) {
             unlinkSingleHeadTail();
-        }
-        else {
+        } else {
             unlinkFromMiddle(nodeToUnlink);
         }
         size--;
@@ -180,7 +179,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = size - 1; i > index; i--) {
             resultNode = resultNode.prev;
         }
-        return  resultNode;
+        return resultNode;
     }
 
     private static class Node<T> {
