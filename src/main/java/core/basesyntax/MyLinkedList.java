@@ -5,17 +5,6 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String INDEX_OUT_OF_BOUNDS_MESSAGE
             = "The index value is outside the list";
-
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(T item) {
-            this.item = item;
-        }
-    }
-
     private Node<T> first;
     private Node<T> last;
     private int size = 0;
@@ -36,9 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE);
-        }
+        checkIndexAdd(index);
         if (index == size) {
             add(value);
             return;
@@ -75,14 +62,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        assertIndex(index);
+        checkIndex(index);
         Node<T> currentNode = findNodeByIndex(index);
         return currentNode.item;
     }
 
     @Override
     public T set(T value, int index) {
-        assertIndex(index);
+        checkIndex(index);
         Node<T> currentNode = findNodeByIndex(index);
         T oldValue = currentNode.item;
         currentNode.item = value;
@@ -91,23 +78,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        assertIndex(index);
-        Node<T> removedNode = findNodeByIndex(index);
-        T removedValue = removedNode.item;
-        if (removedNode == first && first.next == null) {
-            first = null;
-        } else if (removedNode == first) {
-            first.next.prev = null;
-            first = first.next;
-        } else if (removedNode == last) {
-            removedNode.prev.next = null;
-            removedNode.prev = last;
-        } else {
-            removedNode.next.prev = removedNode.prev;
-            removedNode.prev.next = removedNode.next;
-        }
-        size--;
-        return removedValue;
+        checkIndex(index);
+        Node<T> nodeToRemove = findNodeByIndex(index);
+        unlink(nodeToRemove);
+        return nodeToRemove.item;
     }
 
     @Override
@@ -116,7 +90,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < size; i++) {
             if (object == objectToRemove.item
                     || (object != null && object.equals(objectToRemove.item))) {
-                remove(i);
+                unlink(objectToRemove);
                 return true;
             }
             objectToRemove = objectToRemove.next;
@@ -134,7 +108,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void assertIndex(int index) {
+    private void unlink(Node<T> nodeToRemove) {
+        if (nodeToRemove == first && first.next == null) {
+            first = null;
+        } else if (nodeToRemove == first) {
+            first.next.prev = null;
+            first = first.next;
+        } else if (nodeToRemove == last) {
+            nodeToRemove.prev.next = null;
+            nodeToRemove.prev = last;
+        } else {
+            nodeToRemove.next.prev = nodeToRemove.prev;
+            nodeToRemove.prev.next = nodeToRemove.next;
+        }
+        size--;
+    }
+
+    private void checkIndexAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayIndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE);
+        }
+    }
+
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE);
         }
@@ -146,5 +142,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             currentNode = currentNode.next;
         }
         return currentNode;
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(T item) {
+            this.item = item;
+        }
     }
 }
