@@ -14,6 +14,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = newNode;
         } else {
             tail.next = newNode;
+            newNode.prev = tail;
         }
         tail = newNode;
         size++;
@@ -34,17 +35,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             addByIndex(newNode, index);
         }
         size++;
-    }
-
-    private void addToHead(Node<T> newNode) {
-        newNode.next = head;
-        head = newNode;
-    }
-
-    private void addByIndex(Node<T> newNode, int index) {
-        Node<T> prevNode = getNode(index - 1);
-        newNode.next = prevNode.next;
-        prevNode.next = newNode;
     }
 
     @Override
@@ -72,23 +62,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         validateIndex(index);
-
-        Node<T> removedNode;
-        if (index == 0) {
-            removedNode = head;
-            head = head.next;
-            if (head == null) {
-                tail = null;
-            }
-        } else {
-            Node<T> prevNode = getNode(index - 1);
-            removedNode = prevNode.next;
-            prevNode.next = removedNode.next;
-            if (prevNode.next == null) {
-                tail = prevNode;
-            }
-        }
-        size--;
+        Node<T> removedNode = getNode(index);
+        unlink(removedNode);
         return removedNode.element;
     }
 
@@ -99,16 +74,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
         Node<T> current = head;
-        Node<T> prev = null;
-
         while (current != null) {
             if ((object == null && current.element == null)
                     || (object != null && object.equals(current.element))) {
                 unlink(current);
-                size--;
                 return true;
             }
-            prev = current;
             current = current.next;
         }
 
@@ -127,9 +98,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         validateIndex(index);
-        Node<T> current = head;
-        for (int i = 0; i < index; ++i) {
-            current = current.next;
+        Node<T> current;
+        if (index < size / 2) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
         return current;
     }
@@ -140,43 +119,48 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private void addToHead(Node<T> newNode) {
+        newNode.next = head;
+        if (head != null) {
+            head.prev = newNode;
+        }
+        head = newNode;
+        if (tail == null) {
+            tail = newNode;
+        }
+    }
+
+    private void addByIndex(Node<T> newNode, int index) {
+        Node<T> prevNode = getNode(index - 1);
+        newNode.next = prevNode.next;
+        prevNode.next.prev = newNode;
+        prevNode.next = newNode;
+        newNode.prev = prevNode;
+    }
+
     private void unlink(Node<T> node) {
-        Node<T> prev = findPreviousNode(node);
-
-        if (prev == null) {
+        if (node.prev == null) {
             head = node.next;
-            if (head == null) {
-                tail = null;
-            }
         } else {
-            prev.next = node.next;
-            if (prev.next == null) {
-                tail = prev;
-            }
+            node.prev.next = node.next;
         }
+
+        if (node.next == null) {
+            tail = node.prev;
+        } else {
+            node.next.prev = node.prev;
+        }
+
+        size--;
     }
 
-    private Node<T> findPreviousNode(Node<T> targetNode) {
-        Node<T> current = head;
-        Node<T> prev = null;
-
-        while (current != null) {
-            if (current == targetNode) {
-                return prev;
-            }
-            prev = current;
-            current = current.next;
-        }
-        return null;
-    }
-
-    private class Node<T> {
+    private static class Node<T> {
         private T element;
         private Node<T> next;
+        private Node<T> prev;
 
         public Node(T element) {
             this.element = element;
-            this.next = null;
         }
     }
 }
