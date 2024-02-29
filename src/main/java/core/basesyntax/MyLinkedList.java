@@ -3,7 +3,10 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final String indexOutOfBoundMessage = "Index is out of bound %d, Size %d";
+    private static final String indexOutOfBoundNode = "While looking for Node"
+            + "Index is out of bound %d, Size %d";
+    private static final String indexOutOfBoundAdd = "While adding item"
+            + "we got Index is out of bound %d, Size %d";
 
     private Node<T> head;
     private Node<T> tail;
@@ -16,9 +19,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(indexOutOfBoundMessage);
-        }
+        checkIndexForAdd(index);
         if (index == size) {
             tail(value);
         } else {
@@ -128,9 +129,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(indexOutOfBoundMessage);
-        }
+        checkIndexForGetNode(index);
         Node<T> current;
         if (index < (size >> 1)) {
             current = head;
@@ -144,5 +143,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return current;
+    }
+
+    private void checkIndexForGetNode(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(indexOutOfBoundNode);
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException(indexOutOfBoundAdd);
+        }
     }
 }
