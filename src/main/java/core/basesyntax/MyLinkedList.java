@@ -3,8 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final int SETTING = 0;
-    private static final int NOT_SETTING = 1;
     private static final String INDEX_ERR_MSG = "Index: %d, Size: %d";
     private int size;
     private Node<T> first;
