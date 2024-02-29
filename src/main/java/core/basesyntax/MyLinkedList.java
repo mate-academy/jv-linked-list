@@ -29,18 +29,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         if (index == size) {
             add(value);
-        } else {
-            Node<T> nodeAtIndex = findNodeByIndex(index);
-            Node<T> node = new Node<>(nodeAtIndex.prev, value, nodeAtIndex);
-
-            if (index == 0) {
-                head = node;
-            } else {
-                nodeAtIndex.prev.next = node;
-            }
-            nodeAtIndex.prev = node;
-            size++;
+            return;
         }
+
+        Node<T> nodeAtIndex = findNodeByIndex(index);
+        Node<T> node = new Node<>(nodeAtIndex.prev, value, nodeAtIndex);
+
+        if (index == 0) {
+            head = node;
+        } else {
+            nodeAtIndex.prev.next = node;
+        }
+        nodeAtIndex.prev = node;
+        size++;
     }
 
     @Override
