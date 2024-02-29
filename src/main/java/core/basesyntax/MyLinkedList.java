@@ -103,7 +103,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size / 2 > index) {
             return findFromHead(index);
         } else {
-            return findFromTale(index);
+            return findFromTail(index);
         }
     }
 
@@ -115,7 +115,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    private Node<T> findFromTale(int index) {
+    private Node<T> findFromTail(int index) {
         Node<T> node = tail;
         for (int i = size - 1; i > index; i--) {
             node = node.prev;
