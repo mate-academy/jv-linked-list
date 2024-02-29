@@ -133,7 +133,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void validateIndex(int index) {
         if (index < 0 || index > size) {
-            throwException();
+            throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
         }
     }
 
@@ -143,17 +143,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         Node<T> resultNode;
         if (index < size / 2) {
-            resultNode = head;
-            for (int i = 0; i < index; i++) {
-                resultNode = resultNode.next;
-            }
-        } else {
-            resultNode = tail;
-            for (int i = size - 1; i > index; i--) {
-                resultNode = resultNode.prev;
-            }
+            return findFromHeadByIndex(index);
+        }
+        return findFromTailByIndex(index);
+    }
+
+    private Node<T> findFromHeadByIndex(int index) {
+        Node<T> resultNode = head;
+        for (int i = 0; i < index; i++) {
+            resultNode = resultNode.next;
         }
         return resultNode;
+    }
+
+    private Node<T> findFromTailByIndex(int index) {
+        Node<T> resultNode = tail;
+        for (int i = size - 1; i > index; i--) {
+            resultNode = resultNode.prev;
+        }
+        return  resultNode;
     }
 
     private static class Node<T> {
