@@ -3,27 +3,10 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final int NOT_FOUND = -1;
-    private static final int ONE = 1;
-    private static final int HALF = 2;
+    private static final int NOT_FOUND_INDEX = -1;
     private Node<T> head;
     private Node<T> tail;
     private int size;
-
-    public MyLinkedList() {
-        head = tail = null;
-        size = 0;
-    }
-
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        public Node(Node<T> prev, T item, Node<T> next) {
-            this.item = item;
-        }
-    }
 
     @Override
     public void add(T value) {
@@ -45,17 +28,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (isValidIndex(index)) {
-            Node<T> newNode = new Node<>(null, value, null);
-            if (index == 0) {
-                addToBegin(newNode);
-                size++;
-            } else if (index == size) {
-                add(value);
-            } else {
-                addToMiddle(newNode, index);
-                size++;
-            }
+        checkIndex(index, false);
+        Node<T> newNode = new Node<>(null, value, null);
+        if (index == 0) {
+            addToBegin(newNode);
+            size++;
+        } else if (index == size) {
+            add(value);
+        } else {
+            addToMiddle(newNode, index);
+            size++;
         }
     }
 
@@ -71,12 +53,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = null;
         if (index >= 0 && index < size) {
             if (firstHalf(index)) {
-                int indexFirstHalf = index + ONE;
+                int indexFirstHalf = index + 1;
                 newNode = head;
                 newNode = firstHalfFindNode(newNode, indexFirstHalf);
             } else {
                 newNode = tail;
-                int indexFromEnd = size - index - ONE;
+                int indexFromEnd = size - index - 1;
                 newNode = secondHalfFindNode(newNode, indexFromEnd);
             }
             return newNode.item;
@@ -101,7 +83,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> node = getNode(index);
-        if (index == NOT_FOUND) {
+        if (index == NOT_FOUND_INDEX) {
             throw new IndexOutOfBoundsException("Index out of bounds");
         }
         if (head == tail) {
@@ -116,7 +98,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             nextNode.prev = null;
             head = nextNode;
             size--;
-        } else if (index == size - ONE) {
+        } else if (index == size - 1) {
             Node<T> prevNode = node.prev;
             prevNode.next = null;
             tail = prevNode;
@@ -134,8 +116,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        int index = getNode(object);
-        if (index != NOT_FOUND) {
+        int index = getNodeIndex(object);
+        if (index != NOT_FOUND_INDEX) {
             remove(index);
             return true;
         }
@@ -152,16 +134,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private boolean isValidIndex(int index) {
-        if (index >= 0 && index <= size) {
-            return true;
-        } else {
+    private void checkIndex(int index, boolean setOrRemove) {
+        if (setOrRemove) {
+            if (index < 0 || index >= size) {
+                throw new IndexOutOfBoundsException("Index out of bounds");
+            }
+        } else if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index out of bounds");
         }
+
     }
 
     private Node<T> firstHalfFindNode(Node<T> current, int index) {
-        for (int i = 0; i < index - ONE; i++) {
+        for (int i = 0; i < index - 1; i++) {
             current = current.next;
         }
         return current;
@@ -184,7 +169,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addToMiddle(Node<T> newNode, int index) {
-        int half = size / HALF;
         Node<T> current;
         if (firstHalf(index)) {
             current = head;
@@ -203,28 +187,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean firstHalf(int index) {
-        return index <= size / HALF;
+        return index <= size / 2;
     }
 
     private Node<T> getNode(int index) {
-        if (index >= 0 && index < size) {
-            Node<T> newNode;
-            if (firstHalf(index)) {
-                int indexFirstHalf = index + ONE;
-                newNode = head;
-                newNode = firstHalfFindNode(newNode, indexFirstHalf);
-            } else {
-                newNode = tail;
-                int indexFromEnd = size - index - ONE;
-                newNode = secondHalfFindNode(newNode, indexFromEnd);
-            }
-            return newNode;
+        checkIndex(index, true);
+        Node<T> newNode;
+        if (firstHalf(index)) {
+            int indexFirstHalf = index + 1;
+            newNode = head;
+            newNode = firstHalfFindNode(newNode, indexFirstHalf);
         } else {
-            throw new IndexOutOfBoundsException("Index out of bounds");
+            newNode = tail;
+            int indexFromEnd = size - index - 1;
+            newNode = secondHalfFindNode(newNode, indexFromEnd);
         }
+        return newNode;
     }
 
-    private int getNode(T value) {
+    private int getNodeIndex(T value) {
         Node<T> currentNode = head;
         int count = 0;
         while (currentNode != null) {
@@ -235,6 +216,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             count++;
             currentNode = currentNode.next;
         }
-        return NOT_FOUND;
+        return NOT_FOUND_INDEX;
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(Node<T> prev, T item, Node<T> next) {
+            this.prev = prev;
+            this.next = next;
+            this.item = item;
+        }
     }
 }
