@@ -34,6 +34,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             currentNode.prev.next = newNode;
         }
+        currentNode.prev = newNode;
         size++;
     }
 
@@ -104,16 +105,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         checkIndex(index);
-        Node<T> currentNode = head;
-        if (index < (size / 2)) {
-            for (int i = 0; i < index; i++) {
-                currentNode = currentNode.next;
-            }
-        } else {
-            for (int i = index; i > 0; i--) {
-                currentNode = currentNode.next;
-            }
+        boolean isFirstHalf = size / 2 >= index;
+        Node<T> currentNode = isFirstHalf ? head : tail;
+        int iteration = isFirstHalf ? index : size - index - 1;
+
+        for (int i = 0; i < iteration; i++) {
+            currentNode = isFirstHalf ? currentNode.next : currentNode.prev;
         }
+
         return currentNode;
     }
 
