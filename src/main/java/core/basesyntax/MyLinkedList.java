@@ -58,7 +58,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         validateIndex(index);
         Node<T> nodeToRemove = getNodeByIndex(index);
         unlink(nodeToRemove);
-        size--;
         T returnValue = nodeToRemove.item;
         nodeToRemove.item = null;
         return returnValue;
@@ -72,7 +71,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     || (object != null && object.equals(current.item))) {
                 unlink(current);
                 current.item = null;
-                size--;
                 return true;
             }
             current = current.next;
@@ -101,6 +99,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             nodeToUnlink.prev.next = nodeToUnlink.next;
             nodeToUnlink.next.prev = nodeToUnlink.prev;
         }
+        size--;
     }
 
     private void addToHead(Node<T> node) {
@@ -140,7 +139,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeByIndex(int index) {
         if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE);
+            throwException();
         }
         Node<T> resultNode;
         if (index < size / 2) {
