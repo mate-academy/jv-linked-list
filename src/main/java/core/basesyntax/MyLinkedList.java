@@ -19,7 +19,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         size++;
     }
-
+//coment for push
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
