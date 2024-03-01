@@ -20,7 +20,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    //it cant be worse
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
