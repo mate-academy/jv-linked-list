@@ -37,8 +37,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T element : list) {
+            add(element);
         }
     }
 
@@ -94,8 +94,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        boolean elementFound = false;
-        return getNodeByValue(object);
+        return removeNodeByValue(object);
     }
 
     @Override
@@ -124,7 +123,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private boolean getNodeByValue(T value) {
+    private boolean removeNodeByValue(T value) {
         Node<T> current = head;
         for (int i = 0; i < size; i++) {
             if (areValuesEqual(value, current)) {
@@ -143,13 +142,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndexInBound(int index) {
         if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("No such index exist");
+            throw new IndexOutOfBoundsException(
+                    "No such index exist:" + index + " in size:" + size);
         }
     }
 
     private void checkSetIndexInBound(int index) {
         if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("No such index exist");
+            throw new IndexOutOfBoundsException(
+                    "No such index exist:" + index + " in size:" + size);
         }
     }
 
