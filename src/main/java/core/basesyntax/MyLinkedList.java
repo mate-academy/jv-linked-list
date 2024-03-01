@@ -26,7 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> requiredNode = getNode(index);
         Node<T> newNode = new Node<>(requiredNode.prev, value, requiredNode);
         requiredNode.prev.next = newNode;
-        requiredNode.next = newNode.next.next;
+        requiredNode.prev = newNode;
         size++;
     }
 
@@ -39,15 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-        Node<T> currentNode = head;
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                return currentNode.item;
-            }
-            currentNode = currentNode.next;
-        }
-        return null;
+        return getNode(index).item;
     }
 
     @Override
@@ -143,7 +135,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         boolean isInFirstHalf = size / 2 >= index;
         Node<T> currentNode = isInFirstHalf ? head : tail;
         int countOfIterations = isInFirstHalf ? index : size - index - 1;
-
         for (int i = 0; i < countOfIterations; i++) {
             currentNode = isInFirstHalf ? currentNode.next : currentNode.prev;
         }
