@@ -3,35 +3,38 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final String indexOutOfBoundNode = "While looking for Node"
-            + "Index is out of bound %d, Size %d";
-    private static final String indexOutOfBoundAdd = "While adding item"
-            + "we got Index is out of bound %d, Size %d";
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
 
     @Override
     public void add(T value) {
-        add(value, size);
+        Node<T> tailLink = tail;
+        Node<T> newNode = new Node<>(tailLink, value, null);
+        tail = newNode;
+        if (tailLink == null) {
+            head = newNode;
+        } else {
+            tailLink.next = newNode;
+        }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
         if (index == size) {
-            tail(value);
+            add(value);
+            return;
+        }
+        Node<T> next = getNode(index);
+        Node<T> prev = next.prev;
+        Node<T> newNode = new Node<>(prev, value, next);
+        next.prev = newNode;
+        if (prev == null) {
+            head = newNode;
         } else {
-            Node<T> next = getNode(index);
-            Node<T> prev = next.prev;
-            Node<T> newNode = new Node<>(prev, value, next);
-            next.prev = newNode;
-            if (prev == null) {
-                head = newNode;
-            } else {
-                prev.next = newNode;
-            }
+            prev.next = newNode;
         }
         size++;
     }
@@ -96,17 +99,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void tail(T next) {
-        Node<T> tailLink = tail;
-        final Node<T> newNode = new Node<>(tailLink, next, null);
-        tail = newNode;
-        if (tailLink == null) {
-            head = newNode;
-        } else {
-            tailLink.next = newNode;
-        }
-    }
-
     private T unlink(Node<T> node) {
         Node<T> prev = node.prev;
         Node<T> next = node.next;
@@ -147,13 +139,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndexForGetNode(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(indexOutOfBoundNode);
+            throw new IndexOutOfBoundsException("While looking for Node. Index is out of bound "
+                    + index
+                    + ", Size "
+                    + size);
         }
     }
 
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(indexOutOfBoundAdd);
+            throw new IndexOutOfBoundsException("While adding item. Index is out of bound "
+                    + index
+                    + ", Size "
+                    + size);
         }
     }
 }
