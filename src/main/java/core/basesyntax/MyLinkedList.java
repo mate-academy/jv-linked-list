@@ -94,7 +94,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        return removeNodeByValue(object);
+        return removeByValue(object);
     }
 
     @Override
@@ -123,7 +123,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private boolean removeNodeByValue(T value) {
+    private boolean removeByValue(T value) {
         Node<T> current = head;
         for (int i = 0; i < size; i++) {
             if (areValuesEqual(value, current)) {
