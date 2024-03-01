@@ -61,22 +61,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        T value = (T) findNodeByIndex(index).value;
-        unlink(findNodeByIndex(index));
+        Node node = findNodeByIndex(index);
+        T value = (T) node.value;
+        unlink(node);
         return value;
     }
 
     @Override
-    public boolean remove(T object) {
-        Node node = head;
+    public boolean remove(T valueToRemove) {
+        Node current = head;
         for (int i = 0; i < size; i++) {
-            if (needToRemove(object, node)) {
-                unlink(node);
+            if (areValuesEqual(valueToRemove, (T) current.value)) {
+                unlink(current);
                 return true;
             }
-            node = node.next;
+            current = current.next;
         }
         return false;
+    }
+
+    private boolean isaBoolean(T object, Node node) {
+        return (object == null && node.value == null)
+                || (node.value != null && node.value.equals(object));
     }
 
     @Override
@@ -90,30 +96,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
+
         private T value;
         private Node<T> next;
         private Node<T> prev;
-
         private Node(Node<T> prev, T element, Node<T> next) {
             this.value = element;
             this.next = next;
             this.prev = prev;
         }
+
+    }
+    private boolean areValuesEqual(T value1, T value2) {
+        return (value1 == null && value2 == null)
+                || (value1 != null && value1.equals(value2));
     }
 
-    private void isIndexExist(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
     }
 
-    private boolean needToRemove(T object, Node node) {
-        return (object == null && node.value == null)
-                || (node.value != null && node.value.equals(object));
-    }
-
     private Node findNodeByIndex(int index) {
-        isIndexExist(index);
+        checkIndex(index);
         if (size / 2 > index) {
             return findFromHead(index);
         } else {
