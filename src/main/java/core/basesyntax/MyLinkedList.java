@@ -1,11 +1,9 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final String INDEX = "Index: ";
-    private static final String SIZE = ", Size: ";
+    private static final String ERR_MESSAGE = "Invalid values. Index: [%s] Size: [%s]";
     private static final int ZERO = 0;
     private static final int ONE = 1;
     private static final int DIVORCE_NUMBER = 2;
@@ -16,7 +14,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(value,null,tail);
         if (isEmpty()) {
             head = newNode;
         } else {
@@ -30,12 +28,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < ZERO || index > size) {
-            throw new IndexOutOfBoundsException(INDEX + index + SIZE + size);
+            throw new IndexOutOfBoundsException(String.format(ERR_MESSAGE, index, size));
         }
         if (size == index) {
             add(value);
         } else {
-            Node<T> adding = new Node<>(value);
+            Node<T> adding = new Node<>(value,null,tail);
             if (index == ZERO) {
                 adding.next = head;
                 head.prev = adding;
@@ -85,7 +83,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> currentNode = head;
         while (currentNode != null) {
-            if (Objects.equals(object, currentNode.value)) {
+            if (object == null && currentNode.value == null
+                    || object != null && object.equals(currentNode.value)) {
                 unlink(currentNode);
                 return true;
             }
@@ -137,7 +136,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < ZERO || index >= size) {
-            throw new IndexOutOfBoundsException(INDEX + index + SIZE + size);
+            throw new IndexOutOfBoundsException(String.format(ERR_MESSAGE, index, size));
         }
     }
 
@@ -146,8 +145,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        public Node(T value) {
+        public Node(T value, Node<T> next, Node<T> prev) {
             this.value = value;
+            this.next = next;
+            this.prev = prev;
         }
     }
 }
