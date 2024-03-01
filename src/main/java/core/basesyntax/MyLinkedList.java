@@ -5,6 +5,7 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String INDEX_OUT_OF_BOUNDS_EXCEPTION
             = "Invalid index: ";
+    private static final String SIZE = ", Size: ";
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -25,7 +26,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_EXCEPTION + index);
+            throw new IndexOutOfBoundsException(
+                    INDEX_OUT_OF_BOUNDS_EXCEPTION + index + SIZE + size);
         }
         if (index == size) {
             add(value);
@@ -120,24 +122,35 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(int index) {
         checkIndex(index);
-        Node<T> current;
         if (index < size / 2) {
-            current = head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
+            return getFromHead(index);
         } else {
-            current = tail;
-            for (int i = size - 1; i > index; i--) {
-                current = current.prev;
-            }
+            return getFromTail(index);
+        }
+    }
+
+    private Node<T> getFromHead(int index) {
+        checkIndex(index);
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        return current;
+    }
+
+    private Node<T> getFromTail(int index) {
+        checkIndex(index);
+        Node<T> current = tail;
+        for (int i = size - 1; i > index; i--) {
+            current = current.prev;
         }
         return current;
     }
 
     public void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_EXCEPTION + index);
+            throw new IndexOutOfBoundsException(
+                    INDEX_OUT_OF_BOUNDS_EXCEPTION + index + SIZE + size);
         }
     }
 
