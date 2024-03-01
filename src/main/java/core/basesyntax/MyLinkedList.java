@@ -100,6 +100,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private T value;
         private Node<T> next;
         private Node<T> prev;
+
         private Node(Node<T> prev, T element, Node<T> next) {
             this.value = element;
             this.next = next;
@@ -107,6 +108,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
     }
+
     private boolean areValuesEqual(T value1, T value2) {
         return (value1 == null && value2 == null)
                 || (value1 != null && value1.equals(value2));
