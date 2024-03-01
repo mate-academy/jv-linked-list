@@ -4,10 +4,10 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String INDEX_OUT_OF_BOUNDS_MESSAGE
-            = "The index value is outside the list";
+            = "The index value %d is outside the list size %d";
     private Node<T> first;
     private Node<T> last;
-    private int size = 0;
+    private int size;
 
     @Override
     public void add(T value) {
@@ -50,7 +50,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             currentNode.prev = newNode;
             size++;
         }
-
     }
 
     @Override
@@ -126,22 +125,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndexAdd(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE);
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format(INDEX_OUT_OF_BOUNDS_MESSAGE, index, size));
         }
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE);
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format(INDEX_OUT_OF_BOUNDS_MESSAGE, index, size));
         }
     }
 
     private Node<T> findNodeByIndex(int index) {
-        Node<T> currentNode = first;
+        Node<T> foundNode = first;
         for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
+            foundNode = foundNode.next;
         }
-        return currentNode;
+        return foundNode;
     }
 
     private static class Node<T> {
