@@ -61,9 +61,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node node = findNodeByIndex(index);
-        T value = (T) node.value;
-        unlink(node);
+        Node nodeToRemove = findNodeByIndex(index);
+        T value = (T) nodeToRemove.value;
+        unlink(nodeToRemove);
         return value;
     }
 
