@@ -7,18 +7,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String INDEX_FOR_EXCEPTION = "Index: ";
     private static final String SIZE_FOR_EXCEPTION = ", Size: ";
     private static final int NUMBER_TO_SUBTRACT = 1;
+    private static final int ZERO = 0;
     private int size;
     private Node<T> head;
     private Node<T> tail;
-
-    private static class Node<T> {
-        private T value;
-        private Node<T> next;
-
-        Node(T value) {
-            this.value = value;
-        }
-    }
 
     @Override
     public void add(T value) {
@@ -27,26 +19,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(INDEX_FOR_EXCEPTION + index + SIZE_FOR_EXCEPTION + size);
+        if (index < ZERO || index > size) {
+            throw new IndexOutOfBoundsException(INDEX_FOR_EXCEPTION
+                    + index + SIZE_FOR_EXCEPTION + size);
         }
         Node<T> newNode = new Node<>(value);
-        if (index == 0) {
-            addFirst(newNode);
-        } else if (index == size) {
-            addLast(newNode);
-        } else {
-            Node<T> previousNode = getNode(index - NUMBER_TO_SUBTRACT);
-            newNode.next = previousNode.next;
-            previousNode.next = newNode;
-            size++;
-        }
+        addNode(newNode, index);
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T value : list) {
+            add(value);
         }
     }
 
@@ -69,6 +53,83 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         validateIndexForGet(index);
+        Node<T> removedNode = unlinkByIndex(index);
+        return removedNode.value;
+    }
+
+    @Override
+    public boolean remove(T value) {
+        Node<T> current = head;
+        Node<T> previous = null;
+        while (current != null) {
+            if ((value == null && current.value == null)
+                    || (value != null && value.equals(current.value))) {
+                unlinkByValue(previous, current);
+                size--;
+                return true;
+            }
+            previous = current;
+            current = current.next;
+        }
+        return false;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == ZERO;
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> next;
+
+        Node(T value) {
+            this.value = value;
+        }
+    }
+
+    private void addNode(Node<T> newNode, int index) {
+        if (index == ZERO) {
+            newNode.next = head;
+            head = newNode;
+            if (tail == null) {
+                tail = newNode;
+            }
+        } else if (index == size) {
+            if (tail == null) {
+                head = newNode;
+            } else {
+                tail.next = newNode;
+            }
+            tail = newNode;
+        } else {
+            Node<T> previousNode = getNode(index - NUMBER_TO_SUBTRACT);
+            newNode.next = previousNode.next;
+            previousNode.next = newNode;
+        }
+        size++;
+    }
+
+    private void unlinkByValue(Node<T> previous, Node<T> current) {
+        if (previous == null) {
+            head = current.next;
+            if (head == null) {
+                tail = null;
+            }
+        } else {
+            previous.next = current.next;
+            if (current.next == null) {
+                tail = previous;
+            }
+        }
+    }
+
+    private Node<T> unlinkByIndex(int index) {
         Node<T> removedNode;
         if (index == 0) {
             removedNode = head;
@@ -85,79 +146,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         size--;
-        return removedNode.value;
-    }
-
-    @Override
-    public boolean remove(T value) {
-        Node<T> current = head;
-        Node<T> previous = null;
-        while (current != null) {
-            if ((value == null && current.value == null)
-                    || (value != null && value.equals(current.value))) {
-                unlink(previous, current);
-                size--;
-                return true;
-            }
-            previous = current;
-            current = current.next;
-        }
-        return false;
-    }
-
-    private void unlink(Node<T> previous, Node<T> current) {
-        if (previous == null) {
-            head = current.next;
-            if (head == null) {
-                tail = null;
-            }
-        } else {
-            previous.next = current.next;
-            if (current.next == null) {
-                tail = previous;
-            }
-        }
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    private void addFirst(Node<T> newNode) {
-        newNode.next = head;
-        head = newNode;
-        if (tail == null) {
-            tail = newNode;
-        }
-        size++;
-    }
-
-    private void addLast(Node<T> newNode) {
-        if (tail == null) {
-            head = newNode;
-        } else {
-            tail.next = newNode;
-        }
-        tail = newNode;
-        size++;
+        return removedNode;
     }
 
     private Node<T> getNode(int index) {
         Node<T> current = head;
-        for (int i = 0; i < index; i++) {
+        validateIndexForGet(index);
+        for (int i = ZERO; i < index; i++) {
             current = current.next;
         }
         return current;
     }
 
     private void validateIndexForGet(int index) {
-        if (index < 0 || index >= size) {
+        if (index < ZERO || index >= size) {
             throw new IndexOutOfBoundsException(INDEX_FOR_EXCEPTION
                     + index + SIZE_FOR_EXCEPTION + size);
         }
