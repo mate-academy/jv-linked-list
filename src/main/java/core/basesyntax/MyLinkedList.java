@@ -27,7 +27,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        validateIndexForAdd(index);
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException(INDEX_FOR_EXCEPTION + index + SIZE_FOR_EXCEPTION + size);
+        }
         Node<T> newNode = new Node<>(value);
         if (index == 0) {
             addFirst(newNode);
@@ -152,13 +154,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current = current.next;
         }
         return current;
-    }
-
-    private void validateIndexForAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(INDEX_FOR_EXCEPTION
-                    + index + SIZE_FOR_EXCEPTION + size);
-        }
     }
 
     private void validateIndexForGet(int index) {
