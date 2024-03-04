@@ -116,20 +116,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    public void unlink(Node node) {
-
-        if (node.prev == null) {
-            head = node;
-        } else {
-            node.prev.next = node.next;
-        }
-        if (node.next == null) {
-            tail = node;
-        } else {
-            node.next.prev = node.prev;
-        }
-    }
-
     private void checkIndex(int index) {
         if (index >= size) {
             throw new IndexOutOfBoundsException("Specified index is invalid: "
