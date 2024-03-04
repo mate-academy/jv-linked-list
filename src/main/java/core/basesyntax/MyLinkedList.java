@@ -4,9 +4,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private static final String INFORMATION_FOR_EXCEPTION = "that index is out of bound";
     private Node<T> head;
     private Node<T> tail;
-    private static final String INFORMATION_FOR_EXCEPTION = "that index is out of bound";
     private int size;
 
     @Override
@@ -16,7 +16,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-       indexValidation(index);
+        indexValidation(index);
         if (index == 0) {
             linkFirst(value);
         } else if (index == size) {
@@ -78,11 +78,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean isEmpty() {
         return size == 0;
     }
+
     private void indexValidation(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException(INFORMATION_FOR_EXCEPTION + index);
         }
     }
+
     private void addLast(T value) {
         Node<T> newNode = newNode(value,null,tail);
         if (tail != null) {
