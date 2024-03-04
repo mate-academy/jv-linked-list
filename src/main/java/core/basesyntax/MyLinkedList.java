@@ -7,12 +7,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    static class Node<T> {
+    private static class Node<T> {
         private Node<T> prev;
         private T item;
         private Node<T> next;
 
-        public Node(Node<T> prev, T item, Node<T> next) {
+        Node(Node<T> prev, T item, Node<T> next) {
             this.prev = prev;
             this.item = item;
             this.next = next;
@@ -37,7 +37,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        checkIndex(index);
         Node<T> findNode = find(index);
         Node<T> newNode;
         if (findNode.equals(head)) {
@@ -61,14 +60,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         Node<T> findNode = find(index);
         return findNode.item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> findNode = find(index);
         T deletedValue = findNode.item;
         findNode.item = value;
@@ -77,7 +74,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> findNode = find(index);
         if (findNode.equals(head) && findNode.equals(tail)) {
             head = tail = null;
@@ -119,12 +115,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Specified index is invalid");
+        if (index >= size) {
+            throw new IndexOutOfBoundsException("Specified index is invalid: "
+                    + index + " >= " + size);
+        } else {
+            if (index < 0) {
+                throw new IndexOutOfBoundsException("Specified index is invalid: "
+                        + index + " < 0");
+            }
         }
     }
 
     private Node<T> find(int index) {
+        checkIndex(index);
         Node<T> findNode = head;
         if (index <= size / 2) {
             for (int i = 0; i < index; i++) {
