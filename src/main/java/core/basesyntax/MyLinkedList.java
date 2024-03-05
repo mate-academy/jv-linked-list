@@ -38,17 +38,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         Node<T> findNode = find(index);
-        Node<T> newNode;
-        if (findNode.equals(head)) {
-            newNode = new Node<>(null, value, head);
-            head.prev = newNode;
-            head = newNode;
-        } else {
-            newNode = new Node<>(findNode.prev, value, findNode);
-            newNode.next = findNode;
-            newNode.prev = findNode.prev;
+        Node<T> newNode = new Node<>(findNode.prev, value, findNode);
+        if (findNode.prev != null) {
             findNode.prev.next = newNode;
-            findNode.prev = newNode;
+        }
+        findNode.prev = newNode;
+        if (findNode.equals(head)) {
+            head = newNode;
         }
         size++;
     }
@@ -69,9 +65,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         Node<T> findNode = find(index);
-        T deletedValue = findNode.item;
+        T oldValue = findNode.item;
         findNode.item = value;
-        return deletedValue;
+        return oldValue;
     }
 
     @Override
@@ -87,10 +83,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             findNode.next.prev = findNode.prev;
             findNode.prev.next = findNode.next;
         }
-        T deletedValue = findNode.item;
+        T oldValue = findNode.item;
         findNode.item = null;
         size--;
-        return deletedValue;
+        return oldValue;
     }
 
     @Override
