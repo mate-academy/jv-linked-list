@@ -117,11 +117,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index >= size) {
             throw new IndexOutOfBoundsException("Specified index is invalid: "
                     + index + " >= " + size);
-        } else {
-            if (index < 0) {
+        } else if (index < 0) {
                 throw new IndexOutOfBoundsException("Specified index is invalid: "
                         + index + " < 0");
-            }
         }
     }
 
