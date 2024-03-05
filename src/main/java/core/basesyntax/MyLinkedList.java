@@ -11,14 +11,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node(T data) {
             this.data = data;
         }
-
-        public T getData() {
-            return data;
-        }
-
-        public void setData(T data) {
-            this.data = data;
-        }
     }
 
     private Node<T> first;
@@ -61,21 +53,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return getNode(index).getData();
+        return getNode(index).data;
     }
 
     @Override
     public T set(T value, int index) {
         Node<T> node = getNode(index);
-        T oldValue = node.getData();
-        node.setData(value);
+        T oldValue = node.data;
+        node.data = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
         Node<T> node = getNode(index);
-        T removedValue = node.getData();
+        T removedValue = node.data;
         removeNode(node);
         return removedValue;
     }
@@ -119,9 +111,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
-        Node<T> current = first;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+
+        Node<T> current;
+        if (index < size / 2) {
+            current = first;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = last;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
         return current;
     }
