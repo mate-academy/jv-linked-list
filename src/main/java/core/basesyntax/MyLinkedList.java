@@ -4,18 +4,6 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
-    private static class Node<T> {
-        private Node<T> prev;
-        private T item;
-        private Node<T> next;
-
-        Node(Node<T> prev, T item, Node<T> next) {
-            this.prev = prev;
-            this.item = item;
-            this.next = next;
-        }
-    }
-
     private int size;
     private Node<T> head;
     private Node<T> tail;
@@ -74,16 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> findNode = find(index);
-        if (findNode.equals(head) && findNode.equals(tail)) {
-            head = tail = null;
-        } else if (findNode.equals(head)) {
-            head = head.next;
-        } else if (findNode.equals(tail)) {
-            tail = tail.prev;
-        } else {
-            findNode.next.prev = findNode.prev;
-            findNode.prev.next = findNode.next;
-        }
+        unlink(findNode);
         T oldValue = findNode.item;
         findNode.item = null;
         size--;
@@ -114,12 +93,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndex(int index) {
-        if (index >= size) {
+        if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Specified index is invalid: "
                     + index + " >= " + size);
-        } else if (index < 0) {
-            throw new IndexOutOfBoundsException("Specified index is invalid: "
-                    + index + " < 0");
         }
     }
 
@@ -137,5 +113,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return findNode;
+    }
+
+    private void unlink(Node<T> node) {
+        Node<T> prevNode = node.prev;
+        Node<T> nextNode = node.next;
+
+        if (prevNode == null) {
+            head = nextNode;
+        } else {
+            prevNode.next = nextNode;
+        }
+
+        if (nextNode == null) {
+            tail = prevNode;
+        } else {
+            nextNode.prev = prevNode;
+        }
+    }
+
+    private static class Node<T> {
+        private Node<T> prev;
+        private T item;
+        private Node<T> next;
+
+        Node(Node<T> prev, T item, Node<T> next) {
+            this.prev = prev;
+            this.item = item;
+            this.next = next;
+        }
     }
 }
