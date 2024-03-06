@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -56,12 +55,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        try {
-            unlinkNode(findFirstNodeByValue(object));
-            return true;
-        } catch (NoSuchElementException ex) {
-            return false;
+        Node<T> currenNode = head;
+        while (currenNode != null) {
+            if (currenNode.nodeValue == object
+                    || (currenNode.nodeValue != null && currenNode.nodeValue.equals(object))) {
+                unlinkNode(currenNode);
+                return true;
+            }
+            currenNode = currenNode.nextNode;
         }
+        return false;
     }
 
     @Override
@@ -172,23 +175,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
-    private Node<T> findFirstNodeByValue(T value) {
-        Node<T> currenNode = head;
-        while (currenNode != null) {
-            if (currenNode.nodeValue == value
-                    || (currenNode.nodeValue != null && currenNode.nodeValue.equals(value))) {
-                return currenNode;
-            }
-            currenNode = currenNode.nextNode;
-        }
-        throw new NoSuchElementException("No such element in list");
-    }
-
     private String getBoundariesMessage(int index) {
         return "Index: " + index + ", Size:" + size;
     }
 
-    private class Node<T> {
+    private static class Node<T> {
         private Node<T> lastNode;
         private T nodeValue;
         private Node<T> nextNode;
