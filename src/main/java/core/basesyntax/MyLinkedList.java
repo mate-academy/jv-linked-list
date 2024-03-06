@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> head;
     private Node<T> tail;
 
@@ -14,9 +14,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Invalid index " + index);
-        }
+        checkIndex(index);
         Node<T> newNode = new Node<>(null, value, null);
         if (isEmpty()) {
             head = newNode;
@@ -43,15 +41,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void addAll(List<T> list) {
         if (list != null && !list.isEmpty()) {
             for (T element : list) {
-                Node<T> newNode = new Node<>(tail, element, null);
-                if (tail != null) {
-                    tail.next = newNode;
-                }
-                tail = newNode;
-                if (size == 0) {
-                    head = newNode;
-                }
-                size++;
+                add(element);
             }
         }
     }
@@ -76,7 +66,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndexElement(index);
         Node<T> removed = getNodeByIndex(index);
-        removeItem(removed);
+        unlink(removed);
         return removed.item;
     }
 
@@ -86,7 +76,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (current != null) {
             if ((object == null && current.item == null) || (object != null
                     && object.equals(current.item))) {
-                removeItem(current);
+                unlink(current);
                 return true;
             }
             current = current.next;
@@ -96,7 +86,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
@@ -135,7 +125,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void removeItem(Node<T> node) {
+    private void checkIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Invalid index " + index);
+    }
+
+    }
+
+    private void unlink(Node<T> node) {
         if (node == head) {
             head = node.next;
         } else {
