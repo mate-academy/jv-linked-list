@@ -146,7 +146,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         final Node<T> next = x.next;
         final Node<T> prev = x.prev;
 
-                if (prev == null) {
+        if (prev == null) {
             head = next;
         } else {
             prev.next = next;
