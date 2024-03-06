@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -9,9 +8,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
 
     private class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> prev;
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
         Node(Node<T> prev, T element, Node<T> next) {
             this.item = element;
@@ -25,10 +24,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         final Node<T> l = tail;
         final Node<T> newNode = new Node<>(l, value, null);
         tail = newNode;
-        if (l == null)
+        if (l == null) {
             head = newNode;
-        else
+        } else {
             l.next = newNode;
+        }
         size++;
     }
 
@@ -36,17 +36,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         checkPositionIndex(index);
 
-        if (index == size)
+        if (index == size) {
             add(value);
-        else {
+        } else {
             final Node<T> succ = node(index);
             final Node<T> pred = succ.prev;
             final Node<T> newNode = new Node<>(pred, value, succ);
             succ.prev = newNode;
-            if (pred == null)
+            if (pred == null) {
                 head = newNode;
-            else
+            } else {
                 pred.next = newNode;
+            }
             size++;
         }
     }
@@ -109,29 +110,33 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private String outOfBoundsMsg(int index) {
-        return "Index: "+index+", Size: "+size;
+        return "Index: " + index + ", Size: " + size;
     }
 
     private void checkElementIndex(int index) {
-        if (!isElementIndex(index))
+        if (!isElementIndex(index)) {
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+        }
     }
 
     private void checkPositionIndex(int index) {
-        if (!isPositionIndex(index))
+        if (!isPositionIndex(index)) {
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+        }
     }
 
     Node<T> node(int index) {
         if (index < (size >> 1)) {
             Node<T> x = head;
-            for (int i = 0; i < index; i++)
+            for (int i = 0; i < index; i++) {
                 x = x.next;
+            }
             return x;
         } else {
             Node<T> x = tail;
-            for (int i = size - 1; i > index; i--)
+            for (int i = size - 1; i > index; i--) {
                 x = x.prev;
+            }
             return x;
         }
     }
