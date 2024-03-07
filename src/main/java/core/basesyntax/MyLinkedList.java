@@ -11,7 +11,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(null, value, first);
         if (first == null) {
             first = newNode;
             last = newNode;
@@ -26,14 +26,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndexAdd(index);
-        if (index == size) {
+        if (size == 0) {
             add(value);
             return;
         }
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(last, value, null);
+        if (index == size) {
+            last.next = newNode;
+            last = newNode;
+            size++;
+            return;
+        }
         if (index == 0) {
-            first.prev = newNode;
-            newNode.next = first;
+            newNode = new Node<>(null, value, first);
             first = newNode;
             size++;
             return;
@@ -41,15 +46,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode = findNodeByIndex(index);
         if (currentNode.next == null) {
             T lastItem = currentNode.item;
-            currentNode.item = value;
-            add(lastItem);
+            currentNode = new Node<>(last.prev, value, last);
+            last = new Node<>(currentNode, lastItem, null);
+            size++;
         } else {
+            newNode = new Node<>(currentNode.prev, value, currentNode);
             currentNode.prev.next = newNode;
-            newNode.next = currentNode;
-            newNode.prev = currentNode.prev;
-            currentNode.prev = newNode;
             size++;
         }
+
     }
 
     @Override
@@ -150,8 +155,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        Node(T item) {
+        public Node(Node<T> prev, T item, Node<T> next) {
             this.item = item;
+            this.next = next;
+            this.prev = prev;
         }
     }
 }
