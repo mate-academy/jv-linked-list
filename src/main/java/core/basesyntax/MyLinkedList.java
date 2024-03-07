@@ -103,6 +103,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void removeAtIndex(int index, Node<T> removedNode) {
+        unlink(removedNode);
+
         if (index == 0) {
             head = removedNode.next;
         } else {
