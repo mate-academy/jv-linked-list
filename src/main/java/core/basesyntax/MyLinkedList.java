@@ -1,28 +1,11 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
     private int size;
-
-    public MyLinkedList() {
-        this.size = 0;
-    }
-
-    public static class Node<T> {
-        private T value;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
 
     @Override
     public void add(T value) {
@@ -74,9 +57,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (index > size - 1 || index < 0) {
-            throw new IndexOutOfBoundsException("Impossible to set value");
-        }
+        checkIndexOutOfBounds(index);
         Node<T> node = findNodeByIndex(index);
         T oldValue = node.value;
         node.value = value;
@@ -85,11 +66,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index > size - 1 || index < 0) {
-            throw new IndexOutOfBoundsException(
-                    "Impossible to remove element on the pointed index"
-            );
-        }
+        checkIndexOutOfBounds(index);
         Node<T> removingNode;
         if (index == 0 && size == 1) {
             removingNode = head;
@@ -130,7 +107,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> searchingNode = head;
         for (int i = 0; i < size; i++) {
             T value = searchingNode.value;
-            if (Objects.equals(value, object)) {
+            if ((value == null && object == null) || (value != null && value.equals(object))) {
                 removingNodeValue = searchingNode.value;
                 isNullRemoved = searchingNode.value == null;
                 remove(i);
@@ -152,11 +129,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size() == 0;
     }
 
-    @Override
-    public String toString() {
-        return "MyLinkedList{"
-                + "head=" + head.value + ", tail=" + tail.value
-                + ", size=" + size + '}';
+    private static class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
     }
 
     private void addFirstElement(T value) {
@@ -207,5 +189,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void unlink(Node<T> node) {
         node.next = null;
         node.prev = null;
+    }
+
+    private void checkIndexOutOfBounds(int index) {
+        if (index > size - 1 || index < 0) {
+            throw new IndexOutOfBoundsException(
+                    "Impossible to remove element on the pointed index"
+            );
+        }
     }
 }
