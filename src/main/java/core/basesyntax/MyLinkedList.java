@@ -1,9 +1,9 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    public static final String EXCEPTION_MESSAGE = "Invalid index: ";
     private Node head;
     private Node tail;
     private int size;
@@ -23,24 +23,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("");
-        }
-
         if (index == size) {
             add(value);
-        } else {
-            Node<T> nodeAtIndex = findNodeByIndex(index);
-            Node<T> currentNode = new Node<>(nodeAtIndex.prev, value, nodeAtIndex);
-
-            if (nodeAtIndex.prev != null) {
-                nodeAtIndex.prev.next = currentNode;
-            } else {
-                head = currentNode;
-            }
-            nodeAtIndex.prev = currentNode;
-            size++;
+            return;
         }
+
+        Node<T> nodeAtIndex = findNodeByIndex(index);
+        Node<T> currentNode = new Node<>(nodeAtIndex.prev, value, nodeAtIndex);
+
+        if (nodeAtIndex.prev != null) {
+            nodeAtIndex.prev.next = currentNode;
+        } else {
+            head = currentNode;
+        }
+        nodeAtIndex.prev = currentNode;
+        size++;
     }
 
     @Override
@@ -93,7 +90,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> findNodeByValue(T item) {
         Node<T> node = head;
         while (node != null) {
-            if ((item == null && node.value == null) || (item != null && item.equals(node.value))) {
+            if ((item == node.value) || (item != null && item.equals(node.value))) {
                 return node;
             }
             node = node.next;
@@ -103,11 +100,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNodeByIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("");
-        }
-
-        if (head == null) {
-            throw new NoSuchElementException("");
+            throw new IndexOutOfBoundsException(EXCEPTION_MESSAGE + index);
         }
 
         Node<T> node;
