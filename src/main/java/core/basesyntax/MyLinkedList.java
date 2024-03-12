@@ -3,13 +3,15 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    Node<T> head;
-    Node<T> tail;
+    private Node<T> head;
+    private Node<T> tail;
     private int size;
+
     private static class Node<T> {
-        T item;
-        Node<T> prev;
-        Node<T> next;
+        private T item;
+        private Node<T> prev;
+        private Node<T> next;
+
         public Node(Node<T> prev, T item, Node<T> next) {
             this.prev = prev;
             this.item = item;
@@ -33,7 +35,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException("this index doesn't exists in linked list: " + index);
+            throw new IndexOutOfBoundsException(
+                    "this index doesn't exists in linked list: " + index);
         }
         if (size == index) {
             add(value);
@@ -51,7 +54,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             } else {
                 nextNode.prev = newNode;
             }
-            size ++;
+            size++;
         }
     }
 
@@ -81,7 +84,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> nodeOnIndex = node(index);
-        T removedValue = nodeOnIndex.item;
+        final T removedValue = nodeOnIndex.item;
         Node<T> prevNode = nodeOnIndex.prev;
         Node<T> nextNode = nodeOnIndex.next;
         if (prevNode == null) {
@@ -128,11 +131,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("this index doesn't exists in linked list: " + index);
+            throw new IndexOutOfBoundsException(
+                    "this index doesn't exists in linked list: " + index);
         }
     }
 
-    private Node<T> node (int index) {
+    private Node<T> node(int index) {
         Node<T> x;
         if (index < (size >> 1)) {
             x = head;
