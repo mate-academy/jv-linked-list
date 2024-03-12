@@ -3,16 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static class Node<T> {
-        private Node<T> next;
-        private Node<T> prev;
-        private T data;
-
-        Node(T data) {
-            this.data = data;
-        }
-    }
-
     private Node<T> first;
     private Node<T> last;
     private int size;
@@ -139,6 +129,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             last = node.prev;
         }
         size--;
+    }
+
+    private static class Node<T> {
+        private Node<T> next;
+        private Node<T> prev;
+        private T data;
+
+        Node(T data) {
+            this.data = data;
+        }
     }
 }
 
