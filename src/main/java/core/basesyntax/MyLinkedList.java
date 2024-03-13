@@ -7,27 +7,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private T item;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T item, Node<T> next) {
-            this.prev = prev;
-            this.item = item;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
-        final Node<T> l = tail;
-        final Node<T> newNode = new Node<>(l, value, null);
+        final Node<T> firstnode = tail;
+        final Node<T> newNode = new Node<>(firstnode, value, null);
         tail = newNode;
-        if (l == null) {
+        if (firstnode == null) {
             head = newNode;
         } else {
-            l.next = newNode;
+            firstnode.next = newNode;
         }
         size++;
     }
@@ -42,7 +30,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
         } else {
             Node<T> nextNode = node(index);
-            Node<T> previousNode = (index == 0) ? null : nextNode.prev;
+            Node<T> previousNode = nextNode.prev;
             Node<T> newNode = new Node<>(previousNode, value, nextNode);
             if (previousNode == null) {
                 head = newNode;
@@ -60,20 +48,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T elements : list) {
+            add(elements);
         }
     }
 
     @Override
     public T get(int index) {
-        checkIndex(index);
         return node(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> nodeOnIndex = node(index);
         T oldvalue = nodeOnIndex.item;
         nodeOnIndex.item = value;
@@ -82,25 +68,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> nodeOnIndex = node(index);
-        final T removedValue = nodeOnIndex.item;
-        Node<T> prevNode = nodeOnIndex.prev;
-        Node<T> nextNode = nodeOnIndex.next;
-        if (prevNode == null) {
-            head = nextNode;
-        } else {
-            prevNode.next = nextNode;
-            nodeOnIndex.prev = null;
-        }
-        if (nextNode == null) {
-            tail = prevNode;
-        } else {
-            nextNode.prev = prevNode;
-            nodeOnIndex.next = null;
-        }
-        nodeOnIndex.item = null;
-        size--;
+        T removedValue = nodeOnIndex.item;
+        unlinkNode(nodeOnIndex);
         return removedValue;
     }
 
@@ -137,6 +107,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> node(int index) {
+        checkIndex(index);
         Node<T> x;
         if (index < (size >> 1)) {
             x = head;
@@ -151,4 +122,36 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return x;
     }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T item, Node<T> next) {
+            this.prev = prev;
+            this.item = item;
+            this.next = next;
+        }
+    }
+
+    private void unlinkNode(Node<T> nodeOnIndex) {
+        Node<T> prevNode = nodeOnIndex.prev;
+        Node<T> nextNode = nodeOnIndex.next;
+        if (prevNode == null) {
+            head = nextNode;
+        } else {
+            prevNode.next = nextNode;
+            nodeOnIndex.prev = null;
+        }
+        if (nextNode == null) {
+            tail = prevNode;
+        } else {
+            nextNode.prev = prevNode;
+            nodeOnIndex.next = null;
+        }
+        nodeOnIndex.item = null;
+        size--;
+    }
+
 }
