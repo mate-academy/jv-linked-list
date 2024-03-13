@@ -132,15 +132,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index, String action) {
         if ((index < 0 || index > size) && action.equals("add")) {
-            throw new IndexOutOfBoundsException("Index " + index +
-                    " doesn't exist. Size is equal " + size);
+            throw new IndexOutOfBoundsException("Index " + index
+                    + " doesn't exist. Size is equal " + size);
         } else if ((index < 0
                 || index >= size)
-            && (action.equals("remove")
+                && (action.equals("remove")
                 || action.equals("get")
                 || action.equals("set"))) {
-            throw new IndexOutOfBoundsException("Index " + index +
-                    " doesn't exist. Size is equal " + size);
+            throw new IndexOutOfBoundsException("Index " + index
+                    + " doesn't exist. Size is equal " + size);
         }
     }
 
