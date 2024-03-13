@@ -9,23 +9,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        final Node<T> lastnode = tail;
-        final Node<T> newNode = new Node<>(lastnode, value, null);
+        final Node<T> oldTail = tail;
+        final Node<T> newNode = new Node<>(oldTail, value, null);
         tail = newNode;
-        if (lastnode == null) {
+        if (oldTail == null) {
             head = newNode;
         } else {
-            lastnode.next = newNode;
+            oldTail.next = newNode;
         }
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException(
-                    "this index doesn't exists in linked list: " + index);
-        }
         if (size == index) {
             add(value);
         } else {
@@ -48,8 +44,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T elements : list) {
-            add(elements);
+        for (T element : list) {
+            add(element);
         }
     }
 
@@ -80,7 +76,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         int i = 0;
         while (temp != null) {
             if (temp.item == null ? object == null : temp.item.equals(object)) {
-                remove(i);
+                unlinkNode(temp);
                 return true;
             }
             temp = temp.next;
@@ -108,19 +104,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> node(int index) {
         checkIndex(index);
-        Node<T> x;
+        Node<T> current;
         if (index < (size >> 1)) {
-            x = head;
+            current = head;
             for (int i = 0; i < index; i++) {
-                x = x.next;
+                current = current.next;
             }
         } else {
-            x = tail;
+            current = tail;
             for (int i = size - 1; i > index; i--) {
-                x = x.prev;
+                current = current.prev;
             }
         }
-        return x;
+        return current;
     }
 
     private static class Node<T> {
