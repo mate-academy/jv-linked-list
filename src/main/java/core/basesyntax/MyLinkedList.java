@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -70,9 +69,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> nodeToRemove = head;
         while (nodeToRemove != null) {
-            if (Objects.equals(object, nodeToRemove.value)) {
+            if (objectsEqual(object, nodeToRemove.value)) {
                 unlink(nodeToRemove);
-                nodeToRemove.value = null;
                 return true;
             }
             nodeToRemove = nodeToRemove.next;
@@ -96,13 +94,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node = node.prev;
         }
         return node;
-    }
-
-    private void validateIndexForAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(String.format("Index out of bounds:"
-                    + " %d at size %d", index, size));
-        }
     }
 
     private Node<T> getNode(int index) {
@@ -135,11 +126,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
+    private void validateIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException(String.format("Index out of bounds:"
+                    + " %d at size %d", index, size));
+        }
+    }
+
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(String.format("Index out of bounds:"
                     + " %d at size %d", index, size));
         }
+    }
+
+    private boolean objectsEqual(T obj1, T obj2) {
+        return (obj1 == null && obj2 == null) || (obj1 != null && obj1.equals(obj2));
     }
 
     private static class Node<T> {
