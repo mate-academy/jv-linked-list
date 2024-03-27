@@ -4,29 +4,30 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node head;
+    private Node tail;
 
     private class Node {
         private T data;
         private Node prev;
         private Node next;
 
-        public Node(T data) {
+        public Node(Node prev, T data, Node next) {
+            this.prev = prev;
             this.data = data;
+            this.next = next;
         }
     }
 
     @Override
     public void add(T value) {
-        Node newNode = new Node(value);
+        Node newNode = new Node(null, value, null);
         if (head == null) {
             head = newNode;
+            tail = newNode;
         } else {
-            Node current = head;
-            while (current.next != null) {
-                current = current.next;
-            }
-            current.next = newNode;
-            newNode.prev = current;
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
         }
     }
 
@@ -35,30 +36,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0) {
             throw new IndexOutOfBoundsException("Index cannot be negative: " + index);
         }
-        Node newNode = new Node(value);
         if (index == 0) {
-            newNode.next = head;
-            if (head != null) {
-                head.prev = newNode;
-            }
-            head = newNode;
+            addFirst(value);
+        } else if (index == size()) {
+            addLast(value);
         } else {
-            Node current = head;
-            for (int i = 0; i < index - 1; i++) {
-                if (current == null) {
-                    throw new IndexOutOfBoundsException("Index out of bounds: " + index);
-                }
-                current = current.next;
-            }
-            if (current == null) {
-                throw new IndexOutOfBoundsException("Index out of bounds: " + index);
-            }
-            newNode.next = current.next;
-            if (current.next != null) {
-                current.next.prev = newNode;
-            }
-            current.next = newNode;
-            newNode.prev = current;
+            Node newNode = new Node(null, value, null);
+            Node current = getNodeByIndex(index);
+            newNode.next = current;
+            newNode.prev = current.prev;
+            current.prev.next = newNode;
+            current.prev = newNode;
         }
     }
 
@@ -71,49 +59,64 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Node current = getNodeByIndex(index);
-        return current.data;
+        return getNodeByIndex(index).data;
     }
 
     @Override
     public T set(T value, int index) {
-        Node current = getNodeByIndex(index);
-        T removedData = current.data;
-        current.data = value;
-        return removedData;
+        Node node = getNodeByIndex(index);
+        T oldValue = node.data;
+        node.data = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size()) {
-            throw new IndexOutOfBoundsException("Index is out of bounds: " + index);
-        }
-        if (head == null) {
-            throw new RuntimeException("Cannot remove from an empty list");
-        }
-        Node current = getNodeByIndex(index);
-        if (current == head) {
-            head = current.next;
+        Node nodeToRemove = getNodeByIndex(index);
+        if (nodeToRemove == head && nodeToRemove == tail) {
+            head = null;
+            tail = null;
+        } else if (nodeToRemove == head) {
+            head = head.next;
+            head.prev = null;
+        } else if (nodeToRemove == tail) {
+            tail = tail.prev;
+            tail.next = null;
         } else {
-            unlink(current);
+            nodeToRemove.prev.next = nodeToRemove.next;
+            nodeToRemove.next.prev = nodeToRemove.prev;
         }
-        return current.data;
+        return nodeToRemove.data;
     }
 
     @Override
     public boolean remove(T object) {
         Node current = head;
         while (current != null) {
-            if (object == null && current.data == null) {
-                unlink(current);
-                return true;
-            } else if (object != null && object.equals(current.data)) {
-                unlink(current);
+            if (object == null ? current.data == null : object.equals(current.data)) {
+                removeNode(current);
                 return true;
             }
             current = current.next;
         }
         return false;
+    }
+
+    private void removeNode(Node node) {
+        if (node == head) {
+            head = head.next;
+            if (head != null) {
+                head.prev = null;
+            } else {
+                tail = null;
+            }
+        } else if (node == tail) {
+            tail = tail.prev;
+            tail.next = null;
+        } else {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        }
     }
 
     @Override
@@ -134,29 +137,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node getNodeByIndex(int index) {
         if (index < 0 || index >= size()) {
-            throw new IndexOutOfBoundsException("Index cannot be negative: " + index);
+            throw new IndexOutOfBoundsException("Index is out of bounds: " + index);
         }
         Node current = head;
         for (int i = 0; i < index; i++) {
-            if (current == null) {
-                throw new IndexOutOfBoundsException("Index out of bounds: " + index);
-            }
             current = current.next;
-        }
-        if (current == null) {
-            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
         }
         return current;
     }
 
-    private void unlink(Node node) {
-        if (node.prev != null) {
-            node.prev.next = node.next;
+    private void addFirst(T value) {
+        Node newNode = new Node(null, value, head);
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
         } else {
-            head = node.next;
+            head.prev = newNode;
+            head = newNode;
         }
-        if (node.next != null) {
-            node.next.prev = node.prev;
+    }
+
+    private void addLast(T value) {
+        Node newNode = new Node(tail, value, null);
+        if (tail == null) {
+            tail = newNode;
+            head = newNode;
+        } else {
+            tail.next = newNode;
+            tail = newNode;
         }
     }
 }
