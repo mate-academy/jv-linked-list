@@ -11,6 +11,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static class Node<T> {
         private T element;
         private Node<T> next;
+        private Node<T> previous;
 
         public Node(T element) {
             this.element = element;
@@ -24,6 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = last = newNode;
         } else {
             last.next = newNode;
+            newNode.previous = last;
             last = newNode;
         }
         size++;
@@ -37,14 +39,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = last = newNode;
         } else if (index == 0) {
             newNode.next = first;
+            first.previous = newNode;
             first = newNode;
         } else if (index == size) {
             last.next = newNode;
+            newNode.previous = last;
             last = newNode;
         } else {
             Node<T> prev = getNodeByIndex(index - 1);
             newNode.next = prev.next;
+            newNode.previous = prev;
             prev.next = newNode;
+            newNode.next.previous = newNode;
         }
         size++;
     }
@@ -80,13 +86,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = first.next;
             if (first == null) {
                 last = null;
+            } else {
+                first.previous = null;
             }
         } else {
             Node<T> prev = getNodeByIndex(index - 1);
             removedElement = prev.next.element;
             prev.next = prev.next.next;
-            if (index == size - 1) {
+            if (prev.next == null) {
                 last = prev;
+            } else {
+                prev.next.previous = prev;
             }
         }
         size--;
@@ -102,6 +112,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = first.next;
             if (first == null) {
                 last = null;
+            } else {
+                first.previous = null;
             }
             size--;
             return true;
@@ -114,6 +126,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (current.next == last) {
                 last = current;
             }
+            current.next.previous = current;
             current.next = current.next.next;
             size--;
             return true;
