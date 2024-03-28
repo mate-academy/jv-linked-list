@@ -21,7 +21,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        validateIndexForAdd(index);
         if (index == size) {
             add(value);
             return;
@@ -67,13 +66,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> nodeToRemove = head;
-        while (nodeToRemove != null) {
-            if (objectsEqual(object, nodeToRemove.value)) {
-                unlink(nodeToRemove);
+        Node<T> node = head;
+        while (node != null) {
+            if (objectsEqual(object, node.value)) {
+                unlink(node);
                 return true;
             }
-            nodeToRemove = nodeToRemove.next;
+            node = node.next;
         }
         return false;
     }
@@ -110,9 +109,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> node) {
-        if (node == null) {
-            return;
-        }
         Node<T> prev = node.prev;
         Node<T> next = node.next;
         head = (prev == null) ? next : head;
@@ -126,13 +122,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private void validateIndexForAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(String.format("Index out of bounds:"
-                    + " %d at size %d", index, size));
-        }
-    }
-
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(String.format("Index out of bounds:"
@@ -141,7 +130,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean objectsEqual(T obj1, T obj2) {
-        return (obj1 == null && obj2 == null) || (obj1 != null && obj1.equals(obj2));
+        return obj1 == obj2 || obj1 != null && obj1.equals(obj2);
     }
 
     private static class Node<T> {
