@@ -126,7 +126,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return currentNode;
     }
-    class Node<T> {
+
+    static class Node<T> {
         private Node<T> prev;
         private T value;
         private Node<T> next;
