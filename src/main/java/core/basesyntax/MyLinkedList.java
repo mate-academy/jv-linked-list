@@ -69,7 +69,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Node<T> currentNode = gettNodeByIndex(index);
         if (currentNode == null) {
-            throw new IndexOutOfBoundsException("Index is out of bound");
+            head = currentNode.next;
         }
         unlink(currentNode);
 
