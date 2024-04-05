@@ -3,11 +3,11 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size; // Corrected: removed static keyword
+    private int size;
     private Node<T> head;
     private Node<T> tail;
 
-    class Node<T> {
+    private static class Node<T> {
         private T item;
         private Node<T> prev;
         private Node<T> next;
@@ -24,7 +24,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> node = new Node<>(null, value, null);
         if (head == null) {
             head = node;
-            tail = node; // Corrected: tail should be set when the first node is added
+            tail = node;
         } else {
             tail.next = node;
             node.prev = tail;
