@@ -9,8 +9,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     public MyLinkedList() {
         tail = null;
-        size = 0;
         head = null;
+        size = 0;
     }
 
     @Override
