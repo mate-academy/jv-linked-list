@@ -14,25 +14,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        findIndexForAdd(index);
+        validateIndexForAdd(index);
         Node<T> newNode = new Node<>(null, null, value);
         if (isEmpty()) {
-            head = newNode;
-            tail = newNode;
+            linkHead(newNode);
         } else if (index == 0) {
-            newNode.next = head;
-            head.previous = newNode;
-            head = newNode;
+            insertAtHead(newNode);
         } else if (index == size) {
-            tail.next = newNode;
-            newNode.previous = tail;
-            tail = newNode;
+            linkTail(newNode);
         } else {
             Node<T> current = getNode(index);
-            newNode.next = current;
-            newNode.previous = current.previous;
-            current.previous.next = newNode;
-            current.previous = newNode;
+            insertAmong(newNode, current);
         }
         size++;
     }
@@ -50,13 +42,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (node != null) {
             return node.value;
         } else {
-            return null;
+            throw new IndexOutOfBoundsException("Index is not found! " + index);
         }
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> newNode = getNode(index);
         T previousValue = newNode.value;
         newNode.value = value;
@@ -65,7 +56,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> removeNode = getNode(index);
         unlink(removeNode);
         return removeNode.value;
@@ -100,9 +90,41 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void findIndexForAdd(int index) {
+    private void validateIndexForAdd(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index not found!" + index);
+        }
+    }
+
+    private void linkHead(Node<T> newNode) {
+        head = newNode;
+        tail = newNode;
+    }
+
+    private void insertAtHead(Node<T> newNode) {
+        newNode.next = head;
+        head.previous = newNode;
+        head = newNode;
+    }
+
+    private void linkTail(Node<T> newNode) {
+        if (isEmpty()) {
+            head = newNode;
+        } else {
+            tail.next = newNode;
+            newNode.previous = tail;
+        }
+        tail = newNode;
+    }
+
+    private void insertAmong(Node<T> newNode, Node<T> current) {
+        newNode.next = current;
+        if (current != null) {
+            newNode.previous = current.previous;
+            if (current.previous != null) {
+                current.previous.next = newNode;
+            }
+            current.previous = newNode;
         }
     }
 
