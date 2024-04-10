@@ -94,8 +94,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current = current.next;
             count++;
         }
+        T oldValue = current.item;
         if (index == 0) {
-            Node<T> newNode = new Node<>(null, value, head);
+            Node<T> newNode = new Node<>(null, value, head.next);
             if (head != null) {
                 head.prev = newNode;
             }
@@ -107,9 +108,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             Node<T> newNode = new Node<>(current.prev, value, current.next);
             current.prev.next = newNode;
-            current.prev = newNode;
+            current.next.prev = newNode;
         }
-        return value;
+        return oldValue;
     }
 
     @Override
