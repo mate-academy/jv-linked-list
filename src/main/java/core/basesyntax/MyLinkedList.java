@@ -1,15 +1,15 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
+
     class Node<E> {
-        E item;
-        Node<E> next;
-        Node<E> prev;
+        private E item;
+        private Node<E> next;
+        private Node<E> prev;
 
         public Node(Node<E> prev, E element, Node<E> next) {
             this.item = element;
@@ -131,8 +131,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current.prev.next = current.next;
             if (current.next != null) {
                 current.next.prev = current.prev;
-            }
-            else {
+            } else {
                 tail = current.prev;
             }
         }
@@ -169,8 +168,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.prev.next = node.next;
             if (node.next != null) {
                 node.next.prev = node.prev;
-            }
-            else {
+            } else {
                 tail = node.prev;
             }
         }
