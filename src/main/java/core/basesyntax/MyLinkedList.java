@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final String NO_SUCH_ELEMENT_MESSAGE = "No such element found";
@@ -138,7 +137,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private static <T> void checkIsNodeEqualsNull(Node<T> node) {
         if (node == null) {
-            throw new NoSuchElementException(NO_SUCH_ELEMENT_MESSAGE);
+            throw new ArrayIndexOutOfBoundsException(NO_SUCH_ELEMENT_MESSAGE);
         }
     }
 
