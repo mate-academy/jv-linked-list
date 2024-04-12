@@ -1,4 +1,5 @@
 package core.basesyntax;
+
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -135,13 +136,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private void removeNode (Node<T> node) {
+    private void removeNode(Node<T> node) {
         if (size == 1) {
             head = tail = null;
-        } else if (node == head){
+        } else if (node == head) {
             node.next.prev = null;
             head = node.next;
-        } else if (node == tail){
+        } else if (node == tail) {
             node.next.prev = null;
         } else {
             node.next.prev = node.prev;
@@ -149,7 +150,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private static class Node <T> {
+    private static class Node<T> {
         private T data;
         private Node<T> next;
         private Node<T> prev;
