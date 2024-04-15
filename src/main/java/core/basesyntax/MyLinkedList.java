@@ -7,20 +7,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private T value;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
     public MyLinkedList() {
-        head = tail = null;
+        head = null;
+        tail = null;
         size = 0;
     }
 
@@ -87,11 +76,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        for (Node<T> x = head; x != null; x = x.next) {
-            if (object == x.value
+        for (Node<T> element = head; element != null; element = element.next) {
+            if (object == element.value
                     || (object != null
-                    && object.equals(x.value))) {
-                unlink(x);
+                    && object.equals(element.value))) {
+                unlink(element);
                 return true;
             }
         }
@@ -109,19 +98,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> node(int index) {
-        Node<T> x;
+        Node<T> element;
         if (index < (size >> 1)) {
-            x = head;
+            element = head;
             for (int i = 0; i < index; i++) {
-                x = x.next;
+                element = element.next;
             }
         } else {
-            x = tail;
+            element = tail;
             for (int i = size - 1; i > index; i--) {
-                x = x.prev;
+                element = element.prev;
             }
         }
-        return x;
+        return element;
     }
 
     private T unlink(Node<T> node) {
@@ -156,6 +145,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException(
                     "Access operation out of bounds. Index: "
                             + index + ", Size: " + size);
+        }
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
         }
     }
 }
