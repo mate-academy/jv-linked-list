@@ -17,12 +17,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(tail, value, null);
         if (tail == null) {
             head = newNode;
-            tail = newNode;
         } else {
             tail.next = newNode;
             newNode.prev = tail;
-            tail = newNode;
         }
+        tail = newNode;
         size++;
     }
 
@@ -64,7 +63,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
         Node<T> current = getNode(index);
         T oldData = current.data;
         current.data = value;
@@ -73,18 +71,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         Node<T> current = getNode(index);
-        if (current.prev == null) {
-            head = current.next;
-        } else {
-            current.prev.next = current.next;
-        }
-        if (current.next == null) {
-            tail = current.prev;
-        } else {
-            current.next.prev = current.prev;
-        }
+        removeNode(current);
         size--;
         return current.data;
     }
@@ -143,7 +131,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.next.prev = null;
             head = node.next;
         } else if (node == tail) {
-            node.next.prev = null;
+            node.prev.next = null;
+            tail = node.prev;
         } else {
             node.next.prev = node.prev;
             node.prev.next = node.next;
