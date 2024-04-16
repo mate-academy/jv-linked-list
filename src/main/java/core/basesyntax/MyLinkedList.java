@@ -27,9 +27,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            Node<T> exIndexNode = findNodeByIndex(index);
-            Node<T> prevNode = exIndexNode.prev;
-            Node<T> newNode = new Node<>(prevNode, value, exIndexNode);
+            Node<T> currentNode = findNodeByIndex(index);
+            Node<T> prevNode = currentNode.prev;
+            Node<T> newNode = new Node<>(prevNode, value, currentNode);
 
             if (prevNode != null) {
                 prevNode.next = newNode;
@@ -37,10 +37,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 first = newNode;
             }
 
-            exIndexNode.prev = newNode;
+            currentNode.prev = newNode;
 
             if (index == size - 1) {
-                last = exIndexNode;
+                last = currentNode;
             }
             ++size;
         }
@@ -166,7 +166,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public static class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node prev;
         private Node next;
@@ -174,36 +174,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         public Node(Node prev, T value, Node next) {
             this.prev = prev;
             this.value = value;
-            this.next = next;
-        }
-
-        /*Message for Mentor
-        I would like not to use private modifies, setters and getters
-        But auto compiler from Mate Academy says
-        Variable 'value' must be private and have accessor methods.
-         */
-
-        public T getValue() {
-            return value;
-        }
-
-        public void setValue(T value) {
-            this.value = value;
-        }
-
-        public Node getPrev() {
-            return prev;
-        }
-
-        public void setPrev(Node prev) {
-            this.prev = prev;
-        }
-
-        public Node getNext() {
-            return next;
-        }
-
-        public void setNext(Node next) {
             this.next = next;
         }
     }
