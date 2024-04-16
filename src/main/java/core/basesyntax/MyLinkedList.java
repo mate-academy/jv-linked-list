@@ -26,16 +26,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index out of bounds");
         }
         if (index == size) {
-            Node<T> newNode = new Node<>(tail, value, null);
-            tail = (tail != null) ? tail.next = newNode : newNode;
-            head = (head == null) ? newNode : head;
-            size++;
+            add(value);
             return;
         }
         Node<T> current = getNode(index);
-        if (current == null) {
-            throw new IndexOutOfBoundsException("Index out of bounds");
-        }
         Node<T> newNode = new Node<>(current.prev, value, current);
         current.prev = (current.prev != null) ? current.prev.next
                 = newNode : (head = newNode);
@@ -76,7 +70,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
         while (current != null) {
             if ((object != null && object.equals(current.item))
-                    || (object == null && current.item == null)) {
+                    || (object == current.item)) {
                 unlink(current);
                 return true;
             }
@@ -98,9 +92,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNode(int index) {
         checkIndex(index);
 
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        Node<T> current = (index < size / 2) ? head : tail;
+        int steps = (index < size / 2) ? index : size - 1 - index;
+        for (int i = 0; i < steps; i++) {
+            current = (index < size / 2) ? current.next : current.prev;
         }
         return current;
     }
