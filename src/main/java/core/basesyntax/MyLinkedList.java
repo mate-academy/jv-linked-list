@@ -92,12 +92,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNode(int index) {
         checkIndex(index);
 
-        Node<T> current = (index < size / 2) ? head : tail;
-        int steps = (index < size / 2) ? index : size - 1 - index;
+        boolean isIndexLessThanHalf = isIndexLessThanHalf(index);
+        Node<T> current = isIndexLessThanHalf ? head : tail;
+        int steps = isIndexLessThanHalf ? index : size - 1 - index;
         for (int i = 0; i < steps; i++) {
-            current = (index < size / 2) ? current.next : current.prev;
+            current = isIndexLessThanHalf ? current.next : current.prev;
         }
         return current;
+    }
+
+    private boolean isIndexLessThanHalf(int index) {
+        return (index < size / 2);
     }
 
     private void unlink(Node<T> node) {
