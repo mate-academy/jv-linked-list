@@ -7,21 +7,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public MyLinkedList() {
-        head = null;
-        tail = null;
-        size = 0;
-    }
-
     @Override
     public void add(T value) {
-        final Node<T> oldTail = tail;
-        Node<T> newNode = new Node<>(oldTail, value, null);
-        tail = newNode;
-        if (oldTail == null) {
-            head = newNode;
+        Node<T> node = new Node<>(null, value, null);
+        if (head == null) {
+            head = tail = node;
         } else {
-            oldTail.next = newNode;
+            tail.next = node;
+            node.prev = tail;
+            tail = node;
         }
         size++;
     }
@@ -29,11 +23,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkPositionIndexForAdd(index);
-
         if (index == size) {
             add(value);
         } else {
-            Node<T> successor = node(index);
+            Node<T> successor = findNodeByIndex(index);
             Node<T> predecessor = successor.prev;
             Node<T> newNode = new Node<>(predecessor, value, successor);
             successor.prev = newNode;
@@ -56,13 +49,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkPositionIndexForAccess(index);
-        return node(index).value;
+        return findNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkPositionIndexForAccess(index);
-        Node<T> current = node(index);
+        Node<T> current = findNodeByIndex(index);
         T oldValue = current.value;
         current.value = value;
         return oldValue;
@@ -71,7 +64,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkPositionIndexForAccess(index);
-        return unlink(node(index));
+        return unlink(findNodeByIndex(index));
     }
 
     @Override
@@ -97,7 +90,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node<T> node(int index) {
+    private Node<T> findNodeByIndex(int index) {
         Node<T> element;
         if (index < (size >> 1)) {
             element = head;
