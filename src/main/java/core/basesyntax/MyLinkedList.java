@@ -4,7 +4,6 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
-    private Node<T> node;
     private Node<T> head;
     private Node<T> tail;
 
@@ -27,7 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (head == null) {
                 addHeadNode(value);
             } else {
-                node = new Node<>(null, value, head);
+                Node<T> node = new Node<>(null, value, head);
                 head.prev = node;
                 head = node;
             }
@@ -123,31 +122,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addHeadNode(T value) {
-        node = new Node<>(null, value, null);
+        Node<T> node = new Node<>(null, value, null);
         head = node;
         tail = node;
     }
 
     private void addNextNode(T value) {
+        Node<T> node = new Node<>(null, value, null);
         if (head.equals(tail)) {
-            node = new Node<>(node.prev, value, node.next);
-            node.next = null;
             node.prev = head;
             head.next = node;
             head.prev = null;
-            tail = node;
         } else {
-            node = new Node<>(node.prev, value, node.next);
             node.prev = tail;
             tail.next = node;
-            node.next = null;
-            tail = node;
         }
+        tail = node;
     }
 
     private void addNodeInside(int index, T value) {
         Node<T> nextNode = getNodeOnIndex(index);
-        node = new Node<>(nextNode.prev, value, nextNode);
+        Node<T> node = new Node<>(nextNode.prev, value, nextNode);
         nextNode.prev = node;
         node.prev.next = node;
         size++;
