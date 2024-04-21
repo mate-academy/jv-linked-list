@@ -97,8 +97,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         private Node(T data) {
             this.data = data;
-            this.prev = null;
-            this.next = null;
         }
     }
 
