@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -26,8 +25,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Invalid index");
         }
+
+        Node<T> newNode = new Node<>(value);
         if (index == 0) {
-            Node<T> newNode = new Node<>(value);
             if (isEmpty()) {
                 head = newNode;
                 tail = newNode;
@@ -41,7 +41,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
         } else {
             Node<T> current = findNodeByIndex(index);
-            Node<T> newNode = new Node<>(value);
             newNode.prev = current.prev;
             newNode.next = current;
             current.prev.next = newNode;
@@ -85,7 +84,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if (Objects.equals(current.data, object)) {
+            if (object == current.data || object != null && object.equals(current.data)) {
                 unlink(current);
                 return true;
             }
@@ -120,18 +119,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    private void unlink(Node<T> current) {
-        if (current == head) {
+    private void unlink(Node<T> node) {
+        if (node.equals(head)) {
             head = head.next;
-            if (head != null) {
-                head.prev = null;
-            }
-        } else if (current == tail) {
-            tail = tail.prev;
-            tail.next = null;
         } else {
-            current.prev.next = current.next;
-            current.next.prev = current.prev;
+            node.prev.next = node.next;
+        }
+        if (node.equals(tail)) {
+            tail = tail.prev;
+        } else {
+            node.next.prev = node.prev;
         }
         size--;
     }
