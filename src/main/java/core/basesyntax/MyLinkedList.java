@@ -3,12 +3,12 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    public Node first;
-    int size;
+    private Node first;
+    private int size;
 
     private class Node<T> {
-        T element;
-        Node<T> next;
+        private T element;
+        private Node<T> next;
 
         public Node(T element) {
             this.element = element;
@@ -18,6 +18,32 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.element = element;
             this.next = next;
         }
+
+        public T getElement() {
+            return element;
+        }
+
+        public void setElement(T element) {
+            this.element = element;
+        }
+
+        public Node getNext() {
+            return next;
+        }
+
+        public void setNext(Node next) {
+            this.next = next;
+        }
+    }
+
+    public void setFirst (Node first) {
+        this.first = first;
+    }
+    public Node getFirst() {
+        return first;
+    }
+    public int getSize() {
+        return size; //size cannot be set, because it would not represent the actual size then.
     }
 
     @Override
