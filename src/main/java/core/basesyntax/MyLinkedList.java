@@ -36,12 +36,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public void setFirst (Node first) {
+    public void setFirst(Node first) {
         this.first = first;
     }
+
     public Node getFirst() {
         return first;
     }
+
     public int getSize() {
         return size; //size cannot be set, because it would not represent the actual size then.
     }
