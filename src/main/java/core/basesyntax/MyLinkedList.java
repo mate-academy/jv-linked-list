@@ -3,190 +3,111 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node first;
+    private Node<T> head;
+    private Node<T> tail;
     private int size;
 
-    private class Node<T> {
-        private T element;
+    private static class Node<T> {
+        private T item;
+        private Node<T> prev;
         private Node<T> next;
 
-        public Node(T element) {
-            this.element = element;
-        }
-
-        public Node(T element, Node next) {
-            this.element = element;
+        public Node(Node<T> prev, T item, Node<T> next) {
+            this.prev = prev;
+            this.item = item;
             this.next = next;
         }
-
-        public T getElement() {
-            return element;
-        }
-
-        public void setElement(T element) {
-            this.element = element;
-        }
-
-        public Node getNext() {
-            return next;
-        }
-
-        public void setNext(Node next) {
-            this.next = next;
-        }
-    }
-
-    public void setFirst(Node first) {
-        this.first = first;
-    }
-
-    public Node getFirst() {
-        return first;
-    }
-
-    public int getSize() {
-        return size; //size cannot be set, because it would not represent the actual size then.
     }
 
     @Override
     public void add(T value) {
-        if (first == null) {
-            first = new Node(value);
-            size = 1;
-            return;
+        Node<T> node = new Node<>(null, value, null);
+        if (head == null) {
+            head = tail = node;
+        } else {
+            tail.next = node;
+            node.prev = tail;
+            tail = node;
         }
-        Node current = first;
-        while (current.next != null) {
-            current = current.next;
-        }
-        current.next = new Node(value);
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIfIndexFits(index);
-        if (index == 0) {
-            addFirst(value);
+        validateAdditionIndex(index);
+        Node<T> newNode = new Node<>(null, value, null);
+        if (head == null) {
+            head = tail = newNode;
+        } else if (index == 0) {
+            newNode.next = head;
+            newNode.next.prev = newNode;
+            head = newNode;
+        } else if (index == size) {
+            add(value);
             return;
+        } else {
+            Node<T> previousToNew = findNodeByIndex(index - 1);
+            newNode.next = previousToNew.next;
+            newNode.prev = previousToNew;
+            previousToNew.next = newNode;
+            newNode.next.prev = newNode;
         }
-        Node current = first;
-        int counter = 0;
-        while (counter < index - 1) {
-            if (current.next == null) {
-                throw new IndexOutOfBoundsException();
-            }
-            current = current.next;
-            ++counter;
-        }
-        current.next = new Node(value, current.next);
-        size++;
-    }
-
-    public void addFirst(T value) {
-        if (first == null) {
-            first = new Node(value);
-            size++;
-            return;
-        }
-        first = new Node(value, first);
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        Node current = first;
-        while (current.next != null) {
-            current = current.next;
+        for (T element : list) {
+            add(element);
         }
-        for (int i = 0; i < list.size() - 1; ++i) {
-            current.next = new Node(list.get(i));
-            current = current.next;
-            size++;
-        }
-        size++;
     }
 
     @Override
     public T get(int index) {
-        checkIfIndexFits(index);
-        Node<T> current = first;
-        int i = 0;
-        do {
-            if (i == index) {
-                return (T) current.element;
-            }
-            current = current.next;
-            i++;
-        } while (index < size);
-        throw new IndexOutOfBoundsException();
+        validateIndex(index);
+        return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIfIndexFits(index);
-        Node current = first;
-        int counter = 0;
-        while (counter < index) {
-            if (current.next == null) {
-                throw new IndexOutOfBoundsException();
-            }
-            current = current.next;
-            ++counter;
-        }
-        T old = (T) current.element;
-        current.element = value;
+        validateIndex(index);
+        Node<T> needed = findNodeByIndex(index);
+        T old = needed.item;
+        needed.item = value;
         return old;
     }
 
     @Override
     public T remove(int index) {
-        checkIfIndexFits(index);
-        if (index == 0 && first != null) {
-            T value = (T) first.element;
-            first = first.next;
-            size--;
-            return value;
+        validateIndex(index);
+        Node<T> removed = findNodeByIndex(index);
+        if (removed == head) {
+            head = head.next;
+        } else if (removed == tail) {
+            tail = tail.prev;
+        } else {
+            removed.prev.next = removed.next;
+            removed.next.prev = removed.prev;
         }
-
-        Node<T> previous = first;
-        int counter = 0;
-        while (counter < index - 1) {
-            previous = previous.next;
-            if (previous == null || previous.next == null) {
-                throw new IndexOutOfBoundsException();
-            }
-            counter++;
-        }
-
-        T value = (T) previous.next.element;
-        previous.next = previous.next.next;
         size--;
-        return value;
+        return removed.item;
     }
 
     @Override
     public boolean remove(T object) {
-        if (first == null) {
+        Node<T> removed = findNodeByElement(object);
+        if (removed == null) {
             return false;
+        } else if (removed == head) {
+            head = head.next;
+        } else if (removed == tail) {
+            tail = tail.prev;
+        } else {
+            removed.prev.next = removed.next;
+            removed.next.prev = removed.prev;
         }
-
-        if (areEqual(first.element, object)) {
-            first = first.next;
-            size--;
-            return true;
-        }
-
-        Node<T> previous = first;
-        while (previous.next != null) {
-            if (areEqual(previous.next.element, object)) {
-                previous.next = previous.next.next;
-                size--;
-                return true;
-            }
-            previous = previous.next;
-        }
-        return false;
+        size--;
+        return true;
     }
 
     @Override
@@ -196,12 +117,46 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return first == null;
+        return size == 0;
     }
 
-    private void checkIfIndexFits(int index) {
+    private Node<T> findNodeByIndex(int index) {
+        validateIndex(index);
+        Node<T> current = head;
+        if (index == 0) {
+            return current;
+        } else if (index == size - 1) {
+            return tail;
+        } else {
+            int counter = 0;
+            while (counter < index) {
+                current = current.next;
+                counter++;
+            }
+        }
+        return current;
+    }
+
+    private Node<T> findNodeByElement(T element) {
+        Node<T> current = head;
+        while (!areEqual(element, current.item) && current.next != null)
+            current = current.next;
+        if (areEqual(current.item, element))
+            return current;
+        return null;
+    }
+
+    private void validateIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Can't reach element with index "
+                    + index + " in a list with size of " + size + " .");
+        }
+    }
+
+    private void validateAdditionIndex(int index) {
         if (index < 0 || index > size + 1) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Can't add element to position "
+                    + index + " in a list with size of " + size + " .");
         }
     }
 
