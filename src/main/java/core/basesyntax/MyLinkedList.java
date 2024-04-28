@@ -65,7 +65,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
+        checkIfIndexFits(index);
         if (index == 0) {
             addFirst(value);
             return;
@@ -109,7 +109,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        checkIfIndexFits(index);
         Node<T> current = first;
         int i = 0;
         do {
@@ -124,7 +124,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index);
+        checkIfIndexFits(index);
         Node current = first;
         int counter = 0;
         while (counter < index) {
@@ -141,7 +141,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
+        checkIfIndexFits(index);
         if (index == 0 && first != null) {
             T value = (T) first.element;
             first = first.next;
@@ -199,7 +199,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return first == null;
     }
 
-    private void checkIndex(int index) {
+    private void checkIfIndexFits(int index) {
         if (index < 0 || index > size + 1) {
             throw new IndexOutOfBoundsException();
         }
