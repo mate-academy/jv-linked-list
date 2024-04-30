@@ -62,7 +62,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode = findNodeByIndex(index);
         T oldValue = currentNode.item;
         currentNode.item = value;
-
         return oldValue;
     }
 
@@ -70,7 +69,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         Node<T> currentNode = findNodeByIndex(index);
         unlink(currentNode);
-
         return currentNode.item;
     }
 
@@ -100,7 +98,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < index; i++) {
             currentNode = currentNode.next;
         }
-
         return currentNode;
     }
 
