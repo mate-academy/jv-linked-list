@@ -26,8 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        indexCheckForAdd(index);
-        Node<T> indexNode = findNodeByIndex(index);
+        Node<T> indexNode = findNodeByIndex(index, true);
         if (indexNode == null) {
             add(value);
             return;
@@ -54,14 +53,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexCheck(index);
-        return findNodeByIndex(index).item;
+        return findNodeByIndex(index, false).item;
     }
 
     @Override
     public T set(T value, int index) {
-        indexCheck(index);
-        Node<T> indexNode = findNodeByIndex(index);
+        Node<T> indexNode = findNodeByIndex(index, false);
         T oldValue = indexNode.item;
         indexNode.item = value;
         return oldValue;
@@ -69,8 +66,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexCheck(index);
-        Node<T> removedElement = findNodeByIndex(index);
+        Node<T> removedElement = findNodeByIndex(index, false);
         unlink(removedElement);
         return removedElement.item;
     }
@@ -80,9 +76,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         int index = findIndexByValue(object);
         if (index == -1) {
             return false;
-        } else {
-            unlink(findNodeByIndex(index));
         }
+        unlink(findNodeByIndex(index, false));
         return true;
     }
 
@@ -96,12 +91,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node<T> findNodeByIndex(int index) {
-        Node node = head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
+    private Node<T> findNodeByIndex(int index, boolean add) {
+        if (add) {
+            indexCheckForAdd(index);
+        } else {
+            indexCheck(index);
+        }
+        if (size / 2 <= index) {
+            Node node = head;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+            return node;
+        }
+        Node node = tail;
+        for (int i = size - 1; i > index; i--) {
+            node = node.prev;
         }
         return node;
+
     }
 
     private int findIndexByValue(T value) {
