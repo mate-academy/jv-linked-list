@@ -64,45 +64,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkExistingIndex(index);
-        Node<T> node = node(index);
-        Node<T> before = node.prev;
-        Node<T> after = node.next;
-
-        if (before == null) {
-            first = after;
-        } else {
-            before.next = after;
-        }
-
-        if (after == null) {
-            last = before;
-        } else {
-            after.prev = before;
-        }
-
-        size--;
-
-        return node.item;
+        return unlink(node(index));
     }
 
     @Override
     public boolean remove(T object) {
-        int index = 0;
         if (object == null) {
             for (Node<T> node = first; node != null; node = node.next) {
                 if (node.item == null) {
-                    remove(index);
+                    unlink(node);
                     return true;
                 }
-                index++;
             }
         } else {
             for (Node<T> node = first; node != null; node = node.next) {
                 if (object.equals(node.item)) {
-                    remove(index);
+                    unlink(node);
                     return true;
                 }
-                index++;
             }
         }
         return false;
@@ -128,6 +107,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (idx < 0 || idx > size) {
             throw new IndexOutOfBoundsException();
         }
+    }
+
+    private T unlink(Node<T> node) {
+        Node<T> before = node.prev;
+        Node<T> after = node.next;
+
+        if (before == null) {
+            first = after;
+        } else {
+            before.next = after;
+        }
+
+        if (after == null) {
+            last = before;
+        } else {
+            after.prev = before;
+        }
+
+        size--;
+
+        return node.item;
     }
 
     private Node<T> node(int idx) {
