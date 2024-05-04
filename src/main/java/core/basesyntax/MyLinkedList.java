@@ -3,8 +3,8 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node head;
-    private Node tail;
+    private Node<T> head;
+    private Node<T> tail;
     private int size;
 
     @Override
@@ -13,11 +13,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = new Node<>(null, value, null);
             tail = head;
         } else if (size == 1) {
-            Node newNode = new Node(head, value, null);
+            Node<T> newNode = new Node<>(head, value, null);
             head.next = newNode;
             tail = newNode;
         } else {
-            Node newNode = new Node(tail, value, null);
+            Node<T> newNode = new Node<>(tail, value, null);
             tail.next = newNode;
             tail = newNode;
         }
@@ -26,19 +26,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Node<T> indexNode = findNodeByIndex(index, true);
-        if (indexNode == null) {
+        if (index == size) {
             add(value);
             return;
         }
+        Node<T> indexNode = findNodeByIndex(index);
         if (index == 0) {
-            Node newNode = new Node(null, value, head);
+            Node<T> newNode = new Node<>(null, value, head);
             head.prev = newNode;
             head = newNode;
             size++;
             return;
         }
-        Node newNode = new Node(indexNode.prev, value, indexNode);
+        Node<T> newNode = new Node<>(indexNode.prev, value, indexNode);
         indexNode.prev.next = newNode;
         indexNode.prev = newNode;
         size++;
@@ -53,12 +53,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return findNodeByIndex(index, false).item;
+        return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        Node<T> indexNode = findNodeByIndex(index, false);
+        Node<T> indexNode = findNodeByIndex(index);
         T oldValue = indexNode.item;
         indexNode.item = value;
         return oldValue;
@@ -66,7 +66,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node<T> removedElement = findNodeByIndex(index, false);
+        Node<T> removedElement = findNodeByIndex(index);
         unlink(removedElement);
         return removedElement.item;
     }
@@ -77,7 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == -1) {
             return false;
         }
-        unlink(findNodeByIndex(index, false));
+        unlink(findNodeByIndex(index));
         return true;
     }
 
@@ -91,25 +91,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node<T> findNodeByIndex(int index, boolean add) {
-        if (add) {
-            indexCheckForAdd(index);
-        } else {
-            indexCheck(index);
-        }
+    private Node<T> findNodeByIndex(int index) {
+        indexCheck(index);
         if (size / 2 <= index) {
-            Node node = head;
+            Node<T> node = head;
             for (int i = 0; i < index; i++) {
                 node = node.next;
             }
             return node;
         }
-        Node node = tail;
+        Node<T> node = tail;
         for (int i = size - 1; i > index; i--) {
             node = node.prev;
         }
         return node;
-
     }
 
     private int findIndexByValue(T value) {
@@ -139,13 +134,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void indexCheck(int index) {
         if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Index " + index
-                    + " is out of bounds for length " + size);
-        }
-    }
-
-    private void indexCheckForAdd(int index) {
-        if (index > size || index < 0) {
             throw new IndexOutOfBoundsException("Index " + index
                     + " is out of bounds for length " + size);
         }
