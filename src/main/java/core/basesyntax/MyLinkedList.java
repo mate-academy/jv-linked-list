@@ -7,9 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node tail;
     private int size;
 
-    public MyLinkedList() {
-    }
-
     @Override
     public void add(T value) {
         if (size == 0) {
@@ -30,7 +27,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         indexCheckForAdd(index);
-        Node indexNode = indexOf(index);
+        Node<T> indexNode = findNodeByIndex(index);
         if (indexNode == null) {
             add(value);
             return;
@@ -50,56 +47,43 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T element : list) {
+            add(element);
         }
     }
 
     @Override
     public T get(int index) {
         indexCheck(index);
-        try {
-            return (T) indexOf(index).item;
-        } catch (NullPointerException e) {
-            return null;
-        }
+        return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         indexCheck(index);
-        Node indexNode = indexOf(index);
-        Object answer = indexNode.item;
+        Node<T> indexNode = findNodeByIndex(index);
+        T oldValue = indexNode.item;
         indexNode.item = value;
-        return (T) answer;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
         indexCheck(index);
-        Node removedElement = indexOf(index);
+        Node<T> removedElement = findNodeByIndex(index);
         unlink(removedElement);
-        size--;
-        return (T) removedElement.item;
+        return removedElement.item;
     }
 
     @Override
     public boolean remove(T object) {
-        Node loopNode = head;
-        int index = 0;
-        for (int i = 0; i < size; i++) {
-            if (loopNode.item == null && object == null) {
-                remove(index);
-                return true;
-            }
-            if (loopNode.item != null && loopNode.item.equals(object)) {
-                remove(index);
-                return true;
-            }
-            loopNode = loopNode.next;
-            index++;
+        int index = findIndexByValue(object);
+        if (index == -1) {
+            return false;
+        } else {
+            unlink(findNodeByIndex(index));
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -112,7 +96,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node indexOf(int index) {
+    private Node<T> findNodeByIndex(int index) {
         Node node = head;
         for (int i = 0; i < index; i++) {
             node = node.next;
@@ -120,23 +104,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    private void unlink(Node node) {
-        if (size == 1) {
-            node.item = null;
-            return;
+    private int findIndexByValue(T value) {
+        Node<T> node = head;
+        for (int i = 0; i < size; i++) {
+            if (value == node.item || value != null && value.equals(node.item)) {
+                return i;
+            }
+            node = node.next;
         }
-        if (node == head) {
-            node.next.prev = null;
-            head = node.next;
-            return;
+        return -1;
+    }
+
+    private void unlink(Node<T> node) {
+        if (node.equals(head)) {
+            head = head.next;
+        } else {
+            node.prev.next = node.next;
         }
-        if (node == tail) {
-            node.prev.next = null;
-            tail = node.prev;
-            return;
+        if (node.equals(tail)) {
+            tail = tail.prev;
+        } else {
+            node.next.prev = node.prev;
         }
-        node.next.prev = node.prev;
-        node.prev.next = node.next;
+        size--;
     }
 
     private void indexCheck(int index) {
