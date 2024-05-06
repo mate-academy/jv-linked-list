@@ -106,7 +106,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findByIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Object on selected index is null!");
+            throw new IndexOutOfBoundsException("Index out of bounds!");
         }
         Node<T> currentNode = this.head;
         if (index == 0) {
