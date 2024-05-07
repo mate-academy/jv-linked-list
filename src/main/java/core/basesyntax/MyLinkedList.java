@@ -10,15 +10,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
+        Node<T> node = new Node<>(value, null, null);
         if (first == null) {
-            first = new Node<>(value, null, null);
-            last = first;
-            size++;
-            return;
+            first = last = node;
+        } else {
+            last.next = node;
+            node.prev = last;
+            last = node;
         }
-
-        last.next = new Node<>(value, last, null);
-        last = last.next;
         size++;
     }
 
@@ -29,7 +28,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         checkIndex(index);
-
         Node<T> newNode = new Node<>(value,null, null);
         Node<T> indexNode = findByIndex(index);
         newNode.next = indexNode;
@@ -79,20 +77,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (first == null) {
             return false;
         }
-
         Node<T> nodeToRemove = first;
         while (!((nodeToRemove.item == object)
                 || (nodeToRemove.item != null && nodeToRemove.item.equals(object)))) {
             nodeToRemove = nodeToRemove.next;
-
             if (nodeToRemove == null) {
                 return false;
             }
         }
-
         unlink(nodeToRemove);
         size--;
-
         return nodeToRemove.prev == null && nodeToRemove.next == null;
     }
 
@@ -151,12 +145,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         node.prev = null;
     }
 
-    static class Node<E> {
-        private E item;
-        private Node<E> prev;
-        private Node<E> next;
+    static class Node<T> {
+        private T item;
+        private Node<T> prev;
+        private Node<T> next;
 
-        public Node(E item, Node<E> prev, Node<E> next) {
+        public Node(T item, Node<T> prev, Node<T> next) {
             this.item = item;
             this.prev = prev;
             this.next = next;
