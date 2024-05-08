@@ -28,16 +28,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head.prev = newNode;
             head = newNode;
             size++;
-        } else {
-            if (index < size / 2) {
-                Node addedNode = getByIndexForwards(index);
-                link(addedNode, value);
-                size++;
-            } else if (index >= size / 2) {
-                Node addedNode = getByIndexBackwards(index);
-                link(addedNode, value);
-                size++;
-            }
+        } else if (index < size / 2) {
+            Node addedNode = getByIndexForwards(index);
+            link(addedNode, value);
+            size++;
+        } else if (index >= size / 2) {
+            Node addedNode = getByIndexBackwards(index);
+            link(addedNode, value);
+            size++;
         }
     }
 
@@ -100,7 +98,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         int counter = 0;
         while (counter >= 0 && counter < size) {
             if (object != null && object.equals(currentNode.value)
-                    || object == null && currentNode.value == null) {
+                    || object == currentNode.value) {
                 unlink(currentNode);
                 size--;
                 return true;
@@ -151,7 +149,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getByIndexBackwards(int index) {
         Node currentNode = tail;
-        int counter = size - 1;
+        int nodesLength = size - 1;
+        int counter = nodesLength;
         while (counter >= size / 2) {
             if (counter == index) {
                 return currentNode;
