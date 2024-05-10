@@ -10,20 +10,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        if (size == 0) {
-            Node<T> newNode = new Node<>(null, value, null);
-            head = newNode;
-            tail = newNode;
-            size++;
-            return;
-        }
-        Node<T> newNode = new Node<>(tail, value, null);
-        if (tail != null) {
-            tail.next = newNode;
+        Node<T> node = new Node<>(null, value, null);
+        if (head == null) {
+            head = tail = node;
         } else {
-            head = newNode;
+            tail.next = node;
+            node.prev = tail;
+            tail = node;
         }
-        tail = newNode;
         size++;
     }
 
@@ -35,6 +29,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         Node<T> newNode = new Node<>(null, value, null);
+        if (head == null) {
+            head = tail = newNode;
+        }
         if (index == 0) {
             head.prev = newNode;
             newNode.next = head;
@@ -58,53 +55,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " out of bounds: 0 - " + size);
-        }
+        indexValidation(index);
         return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " out of bounds: 0 - " + size);
-        } else {
-            T removedObject = findNodeByIndex(index).item;
-            findNodeByIndex(index).item = value;
-            return removedObject;
-        }
+        indexValidation(index);
+        Node<T> necessaryNode = findNodeByIndex(index);
+        T removedObject = necessaryNode.item;
+        necessaryNode.item = value;
+        return removedObject;
     }
 
     @Override
     public T remove(int index) {
-        verifyIndex(index);
-        if (index == size) {
-            throw new IndexOutOfBoundsException();
-        }
-        T value = findNodeByIndex(index).item;
-        Node<T> lookUpNode = findNodeByIndex(index);
-        if (index == 0) {
-            if (size == 1) {
-                lookUpNode.item = null;
-                size--;
-                return value;
-            }
-            lookUpNode.next.prev = null;
-            head = lookUpNode.next;
-            size--;
-            return value;
-        }
-        if (index == size - 1) {
-            lookUpNode.prev.next = null;
-            tail = lookUpNode.prev;
-            size--;
-            return value;
-        } else {
-            lookUpNode.prev.next = lookUpNode.next;
-            lookUpNode.next.prev = lookUpNode.prev;
-            size--;
-            return value;
-        }
+        indexValidation(index);
+        Node<T> current = findNodeByIndex(index);
+        unlink(current);
+        return current.item;
     }
 
     @Override
@@ -134,6 +103,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private void indexValidation(int index) {
+        if (index >= size) {
+            throw new IndexOutOfBoundsException("Index " + index + " out of bounds: 0 - " + size);
+        }
+    }
+
+    private void unlink(Node<T> node) {
+        if (node.equals(head)) {
+            head = head.next;
+        } else {
+            node.prev.next = node.next;
+        }
+        if (node.equals(tail)) {
+            tail = tail.prev;
+        } else {
+            node.next.prev = node.prev;
+        }
+        size--;
+    }
+
     private Node<T> findNodeByIndex(int index) {
         verifyIndex(index);
         Node<T> lookUpNode = head;
@@ -141,17 +130,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             lookUpNode = lookUpNode.next;
         }
         return lookUpNode;
-    }
-
-    private Node<T> findNodeByItem(T lookUpItem) {
-        Node<T> lookUpNode = head;
-        for (int i = 0; i < size; i++) {
-            if (lookUpNode.item == lookUpItem) {
-                return lookUpNode;
-            }
-            lookUpNode = lookUpNode.next;
-        }
-        return null;
     }
 
     private int findNodeIndexByItem(T lookUpItem) {
