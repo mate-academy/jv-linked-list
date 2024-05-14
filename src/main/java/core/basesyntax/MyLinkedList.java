@@ -10,7 +10,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (isEmpty()) {
-            equalHeadAndTail(value);
+            addFirstToEmptyList(value);
         } else {
             tail.next = new Node<>(value, tail, null);
             tail = tail.next;
@@ -25,13 +25,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     + size + " " + index);
         }
         if (isEmpty()) {
-            equalHeadAndTail(value);
+            addFirstToEmptyList(value);
         } else if (index == size) {
             add(value);
         } else if (index == 0) {
             addToTheFirst(value);
         } else {
-            Node<T> currentWithThisIndex = search(index);
+            Node<T> currentWithThisIndex = findNodeByIndex(index);
             Node<T> newNode = new Node<>(value,
                     currentWithThisIndex.prev, currentWithThisIndex);
             currentWithThisIndex.prev.next = newNode;
@@ -50,13 +50,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return search(index).item;
+        return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> node = search(index);
+        Node<T> node = findNodeByIndex(index);
         T oldValue = node.item;
         node.item = value;
         return oldValue;
@@ -65,7 +65,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> removedNode = search(index);
+        Node<T> removedNode = findNodeByIndex(index);
         final T removedItem = removedNode.item;
         unlink(removedNode);
         return removedItem;
@@ -102,7 +102,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> search(int index) {
+    private Node<T> findNodeByIndex(int index) {
         Node<T> node;
         if ((size - 1) / 2 > index) {
             node = tail;
@@ -120,7 +120,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    private void equalHeadAndTail(T value) {
+    private void addFirstToEmptyList(T value) {
         head = new Node<>(value, null, null);
         tail = head;
         size++;
@@ -133,27 +133,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlink(Node<T> node) {
-        if (node == head) {
+        if (node.equals(head)) {
             head = head.next;
-            if (head != null) {
-                head.prev = null;
-            } else {
-                tail = null;
-            }
-        } else if (node == tail) {
-            tail = tail.prev;
-            if (tail != null) {
-                tail.next = null;
-            } else {
-                head = null;
-            }
         } else {
-            if (node.prev != null) {
-                node.prev.next = node.next;
-            }
-            if (node.next != null) {
-                node.next.prev = node.prev;
-            }
+            node.prev.next = node.next;
+        }
+        if (node.equals(tail)) {
+            tail = tail.prev;
+        } else {
+            node.next.prev = node.prev;
         }
         size--;
     }
