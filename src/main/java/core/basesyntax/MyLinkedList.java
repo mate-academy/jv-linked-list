@@ -3,8 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final int FIRST = 0;
-    private static final int EMPTY = 0;
     private int size;
     private Node<T> head;
     private Node<T> tail;
@@ -16,12 +14,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        checkBoundsIndexForAdd(index);
         if (index == size) {
             linkLast(value);
             return;
         }
-        checkBoundsIndex(index);
-        if (index == FIRST) {
+        if (index == 0) {
             linkFirst(value);
             return;
         }
@@ -73,24 +71,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == EMPTY;
+        return size == 0;
     }
 
     private Node<T> getNode(T value) {
-        for (Node<T> node = head; node != null; node = node.next) {
+        Node<T> node = head;
+        while (node != null) {
             if (value != null && value.equals(node.value)) {
                 return node;
             }
             if (value == null && node.value == value) {
                 return node;
             }
+            node = node.next;
         }
+
         return null;
     }
 
     private Node<T> getNode(int index) {
         if (!isInMiddle(index)) {
-            return ((index == FIRST) ? head : tail);
+            return ((index == 0) ? head : tail);
         }
         Node<T> node = head;
         for (int i = 0; i < index; i++) {
@@ -151,14 +152,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkBoundsIndex(int index) {
-        if (index < FIRST || index >= size) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index '" + index
+                    + "' is out of the bounds. Size is " + size);
+        }
+    }
+
+    private void checkBoundsIndexForAdd(int index) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index '" + index
                     + "' is out of the bounds. Size is " + size);
         }
     }
 
     private boolean isInMiddle(int index) {
-        return index > FIRST && index < size;
+        return index > 0 && index < size;
     }
 
     private static class Node<T> {
