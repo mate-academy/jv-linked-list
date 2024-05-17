@@ -36,13 +36,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkBoundsIndex(index);
-        return getNode(index).value;
+        return findNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkBoundsIndex(index);
-        Node<T> node = getNode(index);
+        Node<T> node = findNodeByIndex(index);
         T oldValue = node.value;
         node.value = value;
         return oldValue;
@@ -51,12 +51,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkBoundsIndex(index);
-        return unlink(getNode(index));
+        return unlink(findNodeByIndex(index));
     }
 
     @Override
     public boolean remove(T value) {
-        Node<T> node = getNode(value);
+        Node<T> node = findNodeByValue(value);
         if (node != null) {
             unlink(node);
             return true;
@@ -74,7 +74,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node<T> getNode(T value) {
+    private Node<T> findNodeByValue(T value) {
         Node<T> node = head;
         while (node != null) {
             if (value != null && value.equals(node.value)) {
@@ -89,7 +89,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
-    private Node<T> getNode(int index) {
+    private Node<T> findNodeByIndex(int index) {
         if (!isInMiddle(index)) {
             return ((index == 0) ? head : tail);
         }
@@ -101,31 +101,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void linkFirst(T value) {
-        final Node<T> first = head;
-        final Node<T> newNode = new Node<>(null, value, first);
+        Node<T> newNode = new Node<>(null, value, null);
+        newNode.next = head;
+        newNode.next.prev = newNode;
         head = newNode;
         size++;
-        if (first == null) {
-            tail = newNode;
-            return;
-        }
-        first.prev = newNode;
     }
 
     private void linkLast(T value) {
-        Node<T> last = tail;
-        Node<T> newNode = new Node<>(last, value, null);
-        tail = newNode;
-        size++;
-        if (last == null) {
-            head = newNode;
-            return;
+        Node<T> node = new Node<>(null, value, null);
+        if (head == null) {
+            head = tail = node;
+        } else {
+            tail.next = node;
+            node.prev = tail;
+            tail = node;
         }
-        last.next = newNode;
+        size++;
     }
 
     private void linkMiddle(T value, int index) {
-        Node<T> oldNode = getNode(index);
+        Node<T> oldNode = findNodeByIndex(index);
         oldNode.prev.next = new Node<>(oldNode.prev, value, oldNode);
         size++;
     }
