@@ -276,6 +276,7 @@ public class MyLinkedListTest {
         myLinkedList.add(THIRD_ITEM);
         Assert.assertEquals(3, myLinkedList.size());
         myLinkedList.remove(3);
+
     }
 
     @Test
