@@ -7,10 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node last;
     private int size;
 
-    public MyLinkedList() {
-        this.size = 0;
-    }
-
     @Override
     public void add(T value) {
         Node<T> addNode;
@@ -50,16 +46,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 oldFirst.prev = newNode;
             }
         } else {
-            Node<T> currentNode = first;
-            for (int i = 0; i < index; i++) {
-                currentNode = currentNode.next;
-            }
+            Node<T> currentNode = findNodeByIndex(index);
             Node<T> prevNode = currentNode.prev;
             Node<T> newNode = new Node<>(prevNode, value, currentNode);
             prevNode.next = newNode;
             currentNode.prev = newNode;
         }
-
         size++;
     }
 
@@ -78,14 +70,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index: " + index);
-        }
-        Node<T> current = first;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
-        return current.value;
+        indexValidation(index);
+        Node<T> currentNode = findNodeByIndex(index);
+        return currentNode.value;
     }
 
     @Override
@@ -93,13 +80,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (value == null) {
             throw new IllegalArgumentException("Cannot set the value because it is null");
         }
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index: " + index);
-        }
-        Node<T> currentNode = first;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
+        indexValidation(index);
+        Node<T> currentNode = findNodeByIndex(index);
         T oldValue = currentNode.value;
         currentNode.value = value;
         return oldValue;
@@ -107,13 +89,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index: " + index);
-        }
-        Node<T> currentNode = first;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
+        indexValidation(index);
+        Node<T> currentNode = findNodeByIndex(index);
         T oldValue = currentNode.value;
         unlink(currentNode);
         return oldValue;
@@ -152,18 +129,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size() == 0;
     }
 
-    private static class Node<T> {
-        private T value;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.value = value;
-            this.prev = prev;
-            this.next = next;
-        }
-    }
-
     private void unlink(Node<T> node) {
         Node<T> prev = node.prev;
         Node<T> next = node.next;
@@ -183,5 +148,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         node.value = null;
         size--;
+    }
+
+    private void indexValidation(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Invalid index: " + index);
+        }
+    }
+
+    private Node<T> findNodeByIndex(int index) {
+        Node<T> currentNode = first;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
+        }
+        return currentNode;
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.value = value;
+            this.prev = prev;
+            this.next = next;
+        }
     }
 }
