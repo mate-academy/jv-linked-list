@@ -7,22 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public MyLinkedList() {
-        size = 0;
-    }
-
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node<T> prev, T item, Node<T> next) {
-            this.item = item;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     @Override
     public void add(T value) {
         tail = new Node<T>(tail, value, null);
@@ -74,7 +58,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         if (size == 0) {
-            throw new IndexOutOfBoundsException("Elements by index do not exist");
+            throw new IndexOutOfBoundsException("There is no such index in the list, " + index);
         }
         Node<T> removeNode;
         removeNode = getNode(index);
@@ -121,9 +105,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    public void checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Elements by index do not exist");
+            throw new IndexOutOfBoundsException("There is no such index in the list, " + index);
         }
     }
 
@@ -141,5 +125,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return currentNode;
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T item, Node<T> next) {
+            this.item = item;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
