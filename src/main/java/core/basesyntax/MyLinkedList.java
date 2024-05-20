@@ -26,16 +26,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Invalid index: " + index);
         }
-
         if (index == size) {
-            Node<T> oldLast = last;
-            Node<T> newNode = new Node<>(oldLast, value, null);
-            last = newNode;
-            if (oldLast == null) {
-                first = newNode;
-            } else {
-                oldLast.next = newNode;
-            }
+            add(value);
+            return;
         } else if (index == 0) {
             Node<T> oldFirst = first;
             Node<T> newNode = new Node<>(null, value, oldFirst);
@@ -57,12 +50,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null) {
-            throw new RuntimeException("Can't add list because it is null");
-        }
-        if (list.size() == 0) {
-            return;
-        }
         for (T value : list) {
             add(value);
         }
@@ -70,17 +57,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexValidation(index);
-        Node<T> currentNode = findNodeByIndex(index);
-        return currentNode.value;
+        return findNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        if (value == null) {
-            throw new IllegalArgumentException("Cannot set the value because it is null");
-        }
-        indexValidation(index);
         Node<T> currentNode = findNodeByIndex(index);
         T oldValue = currentNode.value;
         currentNode.value = value;
@@ -89,7 +70,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexValidation(index);
         Node<T> currentNode = findNodeByIndex(index);
         T oldValue = currentNode.value;
         unlink(currentNode);
@@ -99,22 +79,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> currentNode = first;
-        if (object == null) {
-            while (currentNode != null) {
-                if (currentNode.value == null) {
-                    unlink(currentNode);
-                    return true;
-                }
-                currentNode = currentNode.next;
+        while (currentNode != null) {
+            if (currentNode.value == null && object == null || object != null
+                    && object.equals(currentNode.value)) {
+                unlink(currentNode);
+                return true;
             }
-        } else {
-            while (currentNode != null) {
-                if (object.equals(currentNode.value)) {
-                    unlink(currentNode);
-                    return true;
-                }
-                currentNode = currentNode.next;
-            }
+            currentNode = currentNode.next;
         }
         return false;
     }
@@ -152,11 +123,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void indexValidation(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index: " + index);
+            throw new IndexOutOfBoundsException("Invalid index: " + index
+                + ", and size = " + size());
         }
     }
 
     private Node<T> findNodeByIndex(int index) {
+        indexValidation(index);
         Node<T> currentNode = first;
         for (int i = 0; i < index; i++) {
             currentNode = currentNode.next;
@@ -169,7 +142,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> prev;
         private Node<T> next;
 
-        public Node(Node<T> prev, T value, Node<T> next) {
+        private Node(Node<T> prev, T value, Node<T> next) {
             this.value = value;
             this.prev = prev;
             this.next = next;
