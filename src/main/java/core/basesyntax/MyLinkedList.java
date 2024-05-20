@@ -23,7 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        verifyIndex(index);
+        verifyIndexForAdd(index);
         if (index == size) {
             add(value);
             return;
@@ -55,13 +55,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexValidation(index);
         return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        indexValidation(index);
         Node<T> necessaryNode = findNodeByIndex(index);
         T removedObject = necessaryNode.item;
         necessaryNode.item = value;
@@ -70,7 +68,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        indexValidation(index);
         Node<T> current = findNodeByIndex(index);
         unlink(current);
         return current.item;
@@ -81,10 +78,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         int index = findNodeIndexByItem(object);
         if (index < 0) {
             return false;
-        } else {
-            remove(index);
-            return true;
         }
+        remove(index);
+        return true;
     }
 
     @Override
@@ -97,14 +93,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void verifyIndex(int index) {
+    private void verifyIndexForAdd(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index " + index + " out of bounds: 0 - " + size);
         }
     }
 
-    private void indexValidation(int index) {
-        if (index >= size) {
+    private void verifyIndex(int index) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index " + index + " out of bounds: 0 - " + size);
         }
     }
@@ -125,9 +121,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNodeByIndex(int index) {
         verifyIndex(index);
-        Node<T> lookUpNode = head;
-        for (int i = 0; i < index; i++) {
-            lookUpNode = lookUpNode.next;
+        Node<T> lookUpNode;
+        if (index < (size >> 1)) {
+            lookUpNode = head;
+            for (int i = 0; i < index; i++) {
+                lookUpNode = lookUpNode.next;
+            }
+        } else {
+            lookUpNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                lookUpNode = lookUpNode.prev;
+            }
         }
         return lookUpNode;
     }
