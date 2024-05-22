@@ -3,9 +3,9 @@
 #### Don't begin class or method implementation with an empty line. 
 Remove all redundant empty lines, be careful :)
 #### Don't use class Objects.
-#### Make `Node` an inner class.
-The purpose of inner classes is to group classes that belong together, which makes your code more readable and maintainable.
-#### When creating a new `Node`, pass all the fields to the `Node` constructor.
+#### Make `Node<T>` an inner class.
+The purpose of inner classes is to group classes that belong together, which makes your code more readable and maintainable. Inner class should be at the end of the class.
+#### When creating a new `Node<T>`, pass all the fields to the `Node` constructor.
 #### Don't use getters and setters in class Node
 We have access to private fields of the inner class, so using getters or setters is redundant.
 #### Private methods and classes should be after public ones in your class.
@@ -33,6 +33,7 @@ Do not use abstract words like `string` or `array` as variable names. Do not use
 #### Don't create repeating code.
 If the logic of your code repeats - move it to a separate private method. 
 Remember about [DRY and KISS](https://dzone.com/articles/software-design-principles-dry-and-kiss) principles.
+In this context, consider creating the `findNodeByIndex` method to avoid code duplication. Also, think about creating the `checkIndex` method to verify the index is valid.
 #### Don't create redundant variables.
 Redundant variables are confusing and make your code less clean and much more difficult to read. Not to mention they occupy stack memory.
 #### Don't forget about access modifiers.
