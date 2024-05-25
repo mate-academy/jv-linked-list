@@ -109,13 +109,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("incorrect index");
+            throw new IndexOutOfBoundsException("Index " + index
+                    + " is not correct. LinkedList size - " + size);
         }
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("incorrect index");
+            throw new IndexOutOfBoundsException("Index " + index
+                    + " is not correct. LinkedList size - " + size);
         }
     }
 
@@ -152,9 +154,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = null;
             tail = null;
         } else if (currentNode == head) {
-            if (currentNode.next != null) {
-                currentNode.next.prev = null;
-            }
+            currentNode.next.prev = null;
             head = currentNode.next;
         } else if (currentNode == tail) {
             currentNode.prev.next = null;
@@ -179,7 +179,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
-    private class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node<T> prev;
         private Node<T> next;
