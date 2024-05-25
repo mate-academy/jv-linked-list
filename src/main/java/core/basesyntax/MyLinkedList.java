@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final int NUMBER_ONE = 1;
     private int size;
     private Node<T> head;
     private Node<T> tail;
@@ -39,7 +38,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        checkIndexForGet(index);
         Node<T> currentNode = getNodeByIndex(index);
         T oldValue = currentNode.value;
         currentNode.value = value;
@@ -110,19 +108,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndexForAdd(int index) {
-        if (index < 0 || (size == 0 ? index > 0 : index > size)) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("incorrect index");
         }
     }
 
-    private void checkIndexForGet(int index) {
-        if (index < 0 || (size == 0 ? index > 0 : index >= size)) {
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("incorrect index");
         }
     }
 
     private Node<T> getNodeByIndex(int index) {
-        checkIndexForGet(index);
+        checkIndex(index);
         Node<T> currentNode = null;
         if (index <= size / 2) {
             int count = 0;
@@ -134,7 +132,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 currentNode = currentNode.next;
             }
         } else {
-            int count = size - NUMBER_ONE;
+            int count = size - 1;
             currentNode = tail;
             while (count != index) {
                 if (index == count--) {
