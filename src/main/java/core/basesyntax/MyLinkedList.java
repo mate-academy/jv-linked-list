@@ -71,8 +71,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         T value = (T) removedNode.value;
         if (isHead(index) && isTail(index)) {
             head = tail = null;
-        }
-        else if (isHead(index)) {
+        } else if (isHead(index)) {
             Node newHead = head.next;
             head = newHead;
         } else if (isTail(index)) {
@@ -144,9 +143,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        T value;
-        Node prev;
-        Node next;
+        private T value;
+        private Node prev;
+        private Node next;
 
         public Node() {
         }
