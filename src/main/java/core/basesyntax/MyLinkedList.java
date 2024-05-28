@@ -7,30 +7,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private Node<T> prev;
-        private T value;
-        private Node<T> next;
-
-        private Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
-        if (isEmpty()) {
-            addToStart(value);
+        Node<T> node = new Node<>(null, value, null);
+        if (head == null) {
+            head = tail = node;
         } else {
-            addToEnd(value);
+            tail.next = node;
+            node.prev = tail;
+            tail = node;
         }
         size++;
     }
 
     @Override
     public void add(T value, int index) {
+        checkIndexForAddMethod(index);
         if (index == 0) {
             addToStart(value);
         } else if (index == size) {
@@ -101,6 +93,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return object == currentValue || currentValue != null && currentValue.equals(object);
     }
 
+    private void checkIndexForAddMethod(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("There is no such index in the list, " + index);
+        }
+    }
+
     private Node<T> findNodeByIndex(int index) {
         indexValidation(index);
         Node<T> currentNode;
@@ -161,5 +159,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             next.prev = prev;
         }
         size--;
+    }
+
+    private static class Node<T> {
+        private Node<T> prev;
+        private T value;
+        private Node<T> next;
+
+        private Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
     }
 }
