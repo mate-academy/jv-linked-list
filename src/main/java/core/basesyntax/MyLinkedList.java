@@ -115,11 +115,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node getNode(int index) {
-        Node current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        if (index < size / 2) {
+            return forwardGet(index);
         }
-        return current;
+        int times = size - index - 1;
+        return backGet(times);
+    }
+
+    private Node backGet(int times) {
+        Node result = tail;
+        for (int i = 0; i < times; i++) {
+            result = result.prev;
+        }
+        return result;
+    }
+
+    private Node forwardGet(int index) {
+        Node result = head;
+        for (int i = 0; i < index; i++) {
+            result = result.next;
+        }
+        return result;
     }
 
     private void checkExistedIndex(int index) {
@@ -146,9 +162,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private T value;
         private Node prev;
         private Node next;
-
-        public Node() {
-        }
 
         public Node(T value) {
             this.value = value;
