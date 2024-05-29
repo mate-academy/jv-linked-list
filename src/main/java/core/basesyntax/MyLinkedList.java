@@ -72,7 +72,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> removedNode = findNodeByIndex(index);
         T value = removedNode.value;
         unlink(removedNode);
-        return  value;
+        return value;
     }
 
     @Override
