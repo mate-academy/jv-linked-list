@@ -98,13 +98,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNodeByIndex(int index) {
         if (index < size / 2) {
-            return forwardGet(index);
+            return findNodeForward(index);
         }
         int times = size - index - 1;
-        return backGet(times);
+        return findNodeBack(times);
     }
 
-    private Node<T> backGet(int times) {
+    private Node<T> findNodeBack(int times) {
         Node result = tail;
         for (int i = 0; i < times; i++) {
             result = result.prev;
@@ -112,7 +112,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return result;
     }
 
-    private Node<T> forwardGet(int index) {
+    private Node<T> findNodeForward(int index) {
         Node result = head;
         for (int i = 0; i < index; i++) {
             result = result.next;
