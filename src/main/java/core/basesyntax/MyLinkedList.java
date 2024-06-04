@@ -9,33 +9,43 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        final Node<T> oldTail = tail;
-        Node<T> node = new Node<>(oldTail, value, null);
-        tail = node;
-        if (oldTail == null) {
-            head = node;
+        Node<T> node = new Node<>(null, value, null);
+        if (head == null) {
+            head = tail = node;
         } else {
-            oldTail.setNext(node);
+            tail.next = node;
+            node.prev = tail;
+            tail = node;
         }
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkPositionIndex(index);
-        if (index == size) {
+        checkIndexForAddMethod(index);
+        Node<T> newNode = new Node<>(null, value, null);
+        if (head == null) {
+            head = tail = newNode;
+        } else if (index == 0) {
+            newNode.next = head;
+            newNode.next.prev = newNode;
+            head = newNode;
+        } else if (index == size) {
             add(value);
+            return;
         } else {
-            Node<T> current = findNodeByIndex(index);
-            Node<T> previous = current.getPrev();
-            Node<T> newNode = new Node<>(previous, value, current);
-            current.setPrev(newNode);
-            if (previous == null) {
-                head = newNode;
-            } else {
-                previous.setNext(newNode);
-            }
-            size++;
+            Node<T> previousToNew = findNodeByIndex(index - 1);
+            newNode.next = previousToNew.next;
+            newNode.prev = previousToNew;
+            previousToNew.next = newNode;
+            newNode.next.prev = newNode;
+        }
+        size++;
+    }
+
+    private void checkIndexForAddMethod(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
         }
     }
 
@@ -57,7 +67,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkElementIndex(index);
         Node<T> node = findNodeByIndex(index);
         T oldValue = node.getItem();
-        node.setItem(value);
+        node.item = value;
         return oldValue;
     }
 
@@ -89,23 +99,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkElementIndex(int index) {
-        if (!isElementIndex(index)) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index out of bounds: " + index);
         }
     }
 
     private void checkPositionIndex(int index) {
-        if (!isPositionIndex(index)) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index out of bounds: " + index);
         }
-    }
-
-    private boolean isElementIndex(int index) {
-        return index >= 0 && index < size;
-    }
-
-    private boolean isPositionIndex(int index) {
-        return index >= 0 && index <= size;
     }
 
     private Node<T> findNodeByIndex(int index) {
