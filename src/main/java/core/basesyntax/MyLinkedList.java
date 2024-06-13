@@ -21,7 +21,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkPositionIndex(index);
+        validatePositionIndex(index);
         if (index == size) {
             add(value);
         } else {
@@ -47,13 +47,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkElementIndex(index);
+        validateElementIndex(index);
         return getNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkElementIndex(index);
+        validateElementIndex(index);
         Node<T> targetNode = getNodeByIndex(index);
         T oldValue = targetNode.value;
         targetNode.value = value;
@@ -62,7 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkElementIndex(index);
+        validateElementIndex(index);
         return unlink(getNodeByIndex(index));
     }
 
@@ -96,13 +96,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkElementIndex(int index) {
+    private void validateElementIndex(int index) {
         if (!isElementIndex(index)) {
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
         }
     }
 
-    private void checkPositionIndex(int index) {
+    private void validatePositionIndex(int index) {
         if (!isPositionIndex(index)) {
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
         }
@@ -160,7 +160,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return element;
     }
 
-    private static class Node<T> {
+    private class Node<T> {
         private T value;
         private Node<T> next;
         private Node<T> prev;
