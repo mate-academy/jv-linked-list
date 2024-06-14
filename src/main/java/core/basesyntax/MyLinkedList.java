@@ -9,33 +9,39 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value, null, tail);
-        if (tail != null) {
-            tail.next = newNode;
+        Node<T> node = new Node<>(value, null, tail);
+        if (head == null) {
+            head = tail = node;
         } else {
-            head = newNode;
+            tail.next = node;
+            node.prev = tail;
+            tail = node;
         }
-        tail = newNode;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
         validatePositionIndex(index);
-        if (index == size) {
+        if (head == null) {
+            Node<T> node = new Node<>(value, null, null);
+            head = tail = node;
+        } else if (index == 0) {
+            Node<T> newNode = new Node<>(value, head, null);
+            head = newNode;
+        } else if (index == size) {
             add(value);
+            return;
         } else {
             Node<T> successor = getNodeByIndex(index);
             Node<T> predecessor = successor.prev;
             Node<T> newNode = new Node<>(value, successor, predecessor);
             successor.prev = newNode;
-            if (predecessor == null) {
-                head = newNode;
-            } else {
+            if (predecessor != null) {
                 predecessor.next = newNode;
             }
-            size++;
         }
+        size++;
     }
 
     @Override
@@ -97,27 +103,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void validateElementIndex(int index) {
-        if (!isElementIndex(index)) {
-            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
 
     private void validatePositionIndex(int index) {
-        if (!isPositionIndex(index)) {
-            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
-    }
-
-    private boolean isElementIndex(int index) {
-        return index >= 0 && index < size;
-    }
-
-    private boolean isPositionIndex(int index) {
-        return index >= 0 && index <= size;
-    }
-
-    private String outOfBoundsMsg(int index) {
-        return "Index: " + index + ", Size: " + size;
     }
 
     private Node<T> getNodeByIndex(int index) {
