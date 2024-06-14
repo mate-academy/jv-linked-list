@@ -29,9 +29,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == 0) {
             Node<T> newNode = new Node<>(value, head, null);
             head = newNode;
-        } else if (index == size) {
-            add(value);
-            return;
         } else {
             Node<T> successor = getNodeByIndex(index);
             Node<T> predecessor = successor.prev;
@@ -40,6 +37,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (predecessor != null) {
                 predecessor.next = newNode;
             }
+        }
+        if (index == size) {
+            add(value);
+            return;
         }
         size++;
     }
@@ -73,20 +74,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> x = head; x != null; x = x.next) {
-                if (x.value == null) {
-                    unlink(x);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> x = head; x != null; x = x.next) {
-                if (object.equals(x.value)) {
-                    unlink(x);
-                    return true;
-                }
+    public boolean remove(Object object) {
+        for (Node<T> x = head; x != null; x = x.next) {
+            if ((object == null && x.value == null) || (object != null && object.equals(x.value))) {
+                unlink(x);
+                return true;
             }
         }
         return false;
