@@ -9,23 +9,42 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
+        Node<T> newNode = new Node<>(value);
         if (head == null) {
-            Node<T> newNode = new Node<>(value);
             head = newNode;
-            tail = newNode;
         } else {
-            Node<T> newNode = new Node<>(value);
             tail.next = newNode;
             newNode.prev = tail;
-            tail = newNode;
         }
+        tail = newNode;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
+        checkingIndex(index);
         if (index == 0) {
+            Node<T> newNode = new Node<>(value);
+            if (head == null) {
+                head = newNode;
+                tail = newNode;
+            } else {
+                newNode.next = head;
+                head.prev = newNode;
+                head = newNode;
+            }
+        } else if (index == size) {
             add(value);
+        } else {
+            Node<T> newNode = new Node<>(value);
+            Node<T> currentNode = head;
+            for (int i = 0; i < index - 1; i++) {
+                currentNode = currentNode.next;
+            }
+            newNode.next = currentNode.next;
+            newNode.prev = currentNode;
+            currentNode.next.prev = newNode;
+            currentNode.prev = newNode;
         }
     }
 
@@ -35,16 +54,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
+        checkingIndex(index);
         return null;
     }
 
     @Override
     public T set(T value, int index) {
+        checkingIndex(index);
         return null;
     }
 
     @Override
     public T remove(int index) {
+        checkingIndex(index);
         return null;
     }
 
@@ -61,6 +83,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkingIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("invalid index " + index);
+        }
     }
 
     private static class Node<T> {
