@@ -60,8 +60,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             } else {
                 tail = node.prev;
             }
-            size--;
         }
+        size--;
     }
 
     @Override
