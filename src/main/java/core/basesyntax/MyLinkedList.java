@@ -80,16 +80,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         Node<T> newNode = new Node<>(value, null, null);
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size + "Index Less than 0 or Index more than size");
+        }
         if (head == null) {
-
+          head = tail = newNode;
         } else if (index == 0) {
             newNode.next = head;
+            head.prev = newNode;
+            head = newNode;
         } else if (index == size) {
             add(value);
             return;
         } else {
             Node<T> previousToNew = findNodeByIndex(index - 1);
-            return;
+            newNode.next = previousToNew.next;
+            newNode.prev = previousToNew;
+            previousToNew.next.prev = newNode;
+            previousToNew.next = newNode;
         }
         size++;
     }
