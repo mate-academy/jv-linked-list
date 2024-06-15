@@ -74,7 +74,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     + "Index Less than 0 or Index more than size");
         }
         if (head == null) {
-          head = tail = newNode;
+            head = tail = newNode;
         } else if (index == 0) {
             newNode.next = head;
             head.prev = newNode;
