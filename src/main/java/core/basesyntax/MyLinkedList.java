@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-        class Node<T> {
+    class Node<T> {
         private T item;
 
         private Node<T> next;
@@ -106,7 +106,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> currentNode = head;
         while (currentNode != null) {
-            if ((object == null && currentNode.item == null) || (object != null && object.equals(currentNode.item))) {
+            if ((object == null && currentNode.item == null) || (object != null
+                && object.equals(currentNode.item))) {
                 unlink(currentNode);
                 return true;
             }
@@ -124,11 +125,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean isEmpty() {
         return size == 0;
     }
+
     private Node<T> findNodeByIndex(int index) {
         Node<T> current;
         if (index < size / 2) {
             current = head;
-        for (int i = 0; i < index; i++) {
+    for (int i = 0; i < index; i++) {
                 current = current.next;
         }
     } else {
