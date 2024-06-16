@@ -9,9 +9,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
+        Node<T> node = new Node<>(null, value, null);
         if (head == null) {
-            head = new Node<>(null, value, null);
-            tail = head;
+            head = tail = node;
             size++;
         } else {
             Node<T> newNode = new Node<>(tail, value, null);
@@ -23,19 +23,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        checkIndexByAdd(index);
         if (index == size) {
             add(value);
             return;
         }
-        Node<T> getNode = getNode(index);
-        Node<T> getNodePrev = getNode.prev;
-        Node<T> newNode = new Node<>(getNodePrev, value, getNode);
-        if (getNodePrev == null) {
+        if (index == 0) {
+            Node<T> newNode = new Node<>(null, value, head);
+            head.prev = newNode;
             head = newNode;
         } else {
-            getNodePrev.next = newNode;
+            Node<T> currentNode = getNodeByIndex(index);
+            Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
+            if (currentNode.prev != null) {
+                currentNode.prev.next = newNode;
+            }
+            currentNode.prev = newNode;
         }
-        getNode.prev = newNode;
         size++;
     }
 
@@ -48,12 +52,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return getNode(index).item;
+        checkIndex(index);
+        return getNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        Node<T> nodeToReplace = getNode(index);
+        Node<T> nodeToReplace = getNodeByIndex(index);
         T lastNodeValue = nodeToReplace.item;
         nodeToReplace.item = value;
         return lastNodeValue;
@@ -61,7 +66,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node<T> nodeToRemove = getNode(index);
+        checkIndex(index);
+        Node<T> nodeToRemove = getNodeByIndex(index);
         removeNode(nodeToRemove);
         return nodeToRemove.item;
     }
@@ -86,11 +92,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return head == null;
+        return size == 0;
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Invalid index" + index);
+        }
+    }
+
+    private void checkIndexByAdd(int index) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Invalid index" + index);
         }
     }
@@ -111,7 +123,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private Node<T> getNode(int index) {
+    private Node<T> getNodeByIndex(int index) {
         checkIndex(index);
         Node<T> node;
         if (index < size * 0.5) {
