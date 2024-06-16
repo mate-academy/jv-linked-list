@@ -107,7 +107,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentNode = head;
         while (currentNode != null) {
             if ((object == null && currentNode.item == null) || (object != null
-                && object.equals(currentNode.item))) {
+                    && object.equals(currentNode.item))) {
                 unlink(currentNode);
                 return true;
             }
@@ -130,16 +130,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current;
         if (index < size / 2) {
             current = head;
-    for (int i = 0; i < index; i++) {
+                for (int i = 0; i < index; i++) {
                 current = current.next;
         }
-    } else {
+        } else {
             current = tail;
-            for (int i = size - 1; i > index ; i--) {
+            for (int i = size - 1; i > index; i--) {
                 current = current.prev;
             }
         }
-      return current;
+        return current;
     }
 
     private void unlink(Node<T> node) {
