@@ -5,9 +5,7 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     class Node<T> {
         private T item;
-
         private Node<T> next;
-
         private Node<T> prev;
 
         public Node(T item, Node<T> next, Node<T> prev) {
@@ -36,20 +34,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Node<T> newNode = new Node<>(value, null, null);
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size
                     + "Index Less than 0 or Index more than size");
         }
+        if (index == size) {
+            add(value);
+            return;
+        }
+        Node<T> newNode = new Node<>(value, null, null);
         if (head == null) {
             head = tail = newNode;
         } else if (index == 0) {
             newNode.next = head;
             head.prev = newNode;
             head = newNode;
-        } else if (index == size) {
-            add(value);
-            return;
         } else {
             Node<T> previousToNew = findNodeByIndex(index - 1);
             newNode.next = previousToNew.next;
@@ -82,13 +81,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
-        T list = current.item;
+        Node<T> current = findNodeByIndex(index);
+        T first = current.item;
         current.item = value;
-        return list;
+        return first;
     }
 
     @Override
@@ -106,7 +102,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> currentNode = head;
         while (currentNode != null) {
-            if ((object == null && currentNode.item == null) || (object != null
+            if (currentNode.item == object || (object != null
                     && object.equals(currentNode.item))) {
                 unlink(currentNode);
                 return true;
