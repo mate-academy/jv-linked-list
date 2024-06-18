@@ -131,12 +131,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         size--;
     }
+
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size
-                    + "Index Less than 0 or Index more than size or index have the same value as a size");
+                    + "Index Less than 0 or Index more than size or index " +
+                    "have the same value as a size");
         }
     }
+
     class Node<T> {
         private T item;
         private Node<T> next;
