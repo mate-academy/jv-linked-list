@@ -64,20 +64,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("invalid index " + index);
         }
-        Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
+        Node<T> currentNode = findNodeByIndex(index);
         return currentNode.value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkingIndex(index);
-        Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
+        checkIndex(index);
+        Node<T> currentNode = findNodeByIndex(index);
         T oldValue = currentNode.value;
         currentNode.value = value;
         return oldValue;
@@ -85,11 +79,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkingIndex(index);
-        Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
+        checkIndex(index);
+        Node<T> currentNode = findNodeByIndex(index);
         T oldValue = currentNode.value;
         unlink(currentNode);
         size--;
@@ -120,7 +111,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkingIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("invalid index " + index);
         }
@@ -144,7 +135,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private static class Node<T> {
+    private Node<T> findNodeByIndex(int index) {
+        Node<T> currentNode = head;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
+        }
+        return currentNode;
+    }
+
+    private class Node<T> {
         private T value;
         private Node<T> next;
         private Node<T> prev;
