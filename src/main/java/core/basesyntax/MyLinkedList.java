@@ -22,18 +22,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkIndexForAdd(index);
         if (index == size) {
             add(value);
             return;
         }
-        Node<T> currentNode = head;
-        for (int i = 0;i < index;i++) {
-            currentNode = currentNode.next;
-        }
-        Node<T> newNode = new Node<>(value,currentNode,currentNode.prev);
+        Node<T> currentNode = findNodeByIndex(index);
+        Node<T> newNode = new Node<>(value, currentNode, currentNode.prev);
         if (currentNode.prev == null) {
             head = newNode;
         } else {
@@ -52,9 +47,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException();
-        }
         checkIndex(index);
         return findNodeByIndex(index).value;
     }

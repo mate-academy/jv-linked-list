@@ -21,3 +21,6 @@ public interface MyLinkedListInterface<T> {
 
     boolean isEmpty();
 }
+
+
+
