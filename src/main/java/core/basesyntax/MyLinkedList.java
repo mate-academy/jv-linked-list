@@ -13,36 +13,55 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        boolean isFirst = false;
-        Node node = null;
-        if (!isFirst) {
-            node = new Node(null, value, null);
-            this.head = node;
-            this.tail = node;
+        Node<T> node = new Node<>(null, value, null);
+        if (head == null) {
+            head = node;
+            tail = head;
+            size++;
+        } else {
+            node = new Node<>(tail, value, null);
+            node.prev.next = node;
+            tail = node;
+            size++;
         }
     }
 
     @Override
     public void add(T value, int index) {
+        checkIndexRange(index);
+        if (index < size / 2) {
 
+        } else {
+
+        }
     }
 
     @Override
     public void addAll(List<T> list) {
+
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndexRange(index);
+        T foundElement;
+        if (index < size / 2) {
+            foundElement = searchFromHead(index);
+        } else {
+            foundElement = searchFromTail(index);
+        }
+        return foundElement;
     }
 
     @Override
     public T set(T value, int index) {
+        checkIndexRange(index);
         return null;
     }
 
     @Override
     public T remove(int index) {
+        checkIndexRange(index);
         return null;
     }
 
@@ -61,10 +80,48 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private void checkIndexRange(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: "
+                                                        + index
+                                                        + " out of bounds "
+                                                        + "for size "
+                                                        + size);
+        }
+    }
+
+    private T searchFromHead(int index) {
+        T foundElementByIndexFromHead;
+        if (index == 0) {
+            return head.element;
+        } else {
+            Node<T> currentNode = head;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+            foundElementByIndexFromHead = currentNode.element;
+        }
+        return foundElementByIndexFromHead;
+    }
+
+    private T searchFromTail(int index) {
+        T foundElementByIndexFromTail;
+        if (index == size - 1) {
+            return tail.element;
+        } else {
+            Node<T> currentNode = tail;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.prev;
+            }
+            foundElementByIndexFromTail = currentNode.element;
+        }
+        return foundElementByIndexFromTail;
+    }
+
     private class Node<E> {
-        E element;
-        Node<E> prev;
-        Node<E> next;
+        private E element;
+        private Node<E> prev;
+        private Node<E> next;
 
         Node(Node<E> prev, E element, Node<E> next) {
             this.element = element;
