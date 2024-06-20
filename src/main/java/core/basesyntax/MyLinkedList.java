@@ -3,19 +3,19 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node<T> first;
-    private Node<T> last;
+    private Node<T> head;
+    private Node<T> tail;
     private int size;
 
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(null, value, null);
-        if (first == null) {
+        if (head == null) {
             addFirstNode(newNode);
         } else {
-            last.next = newNode;
-            newNode.prev = last;
-            last = newNode;
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
         }
         size++;
     }
@@ -25,20 +25,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         ensureIndexWithinBounds(index);
         Node<T> newNode = new Node<>(null, value, null);
         if (index == 0) {
-            if (first == null) {
+            if (head == null) {
                 addFirstNode(newNode);
             } else {
-                newNode.next = first;
-                first.prev = newNode;
-                first = newNode;
+                newNode.next = head;
+                head.prev = newNode;
+                head = newNode;
             }
         } else if (index == size) {
-            if (last == null) {
+            if (tail == null) {
                 addFirstNode(newNode);
             } else {
-                newNode.prev = last;
-                last.next = newNode;
-                last = newNode;
+                newNode.prev = tail;
+                tail.next = newNode;
+                tail = newNode;
             }
         } else {
             Node<T> nodeAtIndex = findNodeByIndex(index);
@@ -68,7 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         ensureIndexWithinSize(index);
-        Node<T> current = first;
+        Node<T> current = head;
         for (int i = 0; i < size; i++) {
             if (i == index) {
                 T result = current.item;
@@ -85,28 +85,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         ensureIndexWithinSize(index);
         Node<T> toRemove;
         if (index == 0) {
-            toRemove = first;
-            first = first.next;
-            if (first != null) {
-                first.prev = null;
-            } else {
-                last = null;
-            }
+            toRemove = head;
+            unlink(head);
         } else if (index == size - 1) {
-            toRemove = last;
-            last = last.prev;
-            if (last != null) {
-                last.next = null;
-            } else {
-                first = null;
-            }
+            toRemove = tail;
+            unlink(tail);
         } else {
-            Node<T> current = first;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
-            toRemove = current;
-            unlink(current);
+            toRemove = findNodeByIndex(index);
+            unlink(findNodeByIndex(index));
         }
 
         size--;
@@ -115,10 +101,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (first == null) {
+        if (head == null) {
             return false;
         }
-        Node<T> current = first;
+        Node<T> current = head;
         while (current != null) {
             if ((object == null && current.item == null)
                     || (object != null && object.equals(current.item))) {
@@ -149,30 +135,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void ensureIndexWithinSize(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("There is no such index in the list, "
+                    + index);
         }
     }
 
     private void addFirstNode(Node<T> node) {
-        first = node;
-        last = node;
+        head = node;
+        tail = node;
     }
 
     private void unlink(Node<T> node) {
         if (node.prev != null) {
             node.prev.next = node.next;
         } else {
-            first = node.next;
+            head = node.next;
         }
         if (node.next != null) {
             node.next.prev = node.prev;
         } else {
-            last = node.prev;
+            tail = node.prev;
         }
     }
 
     private Node<T> findNodeByIndex(int index) {
-        Node<T> current = first;
+        Node<T> current = head;
         for (int i = 0; i < index; i++) {
             current = current.next;
         }
