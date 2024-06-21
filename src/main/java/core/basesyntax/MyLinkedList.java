@@ -91,29 +91,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T searchFromHead(int index) {
-        T foundElementByIndexFromHead;
+        T foundElementByIndexFromHead = null;
         if (index == 0) {
             return head.element;
         } else {
             Node<T> currentNode = head;
             for (int i = 0; i < index; i++) {
-                currentNode = currentNode.next;
+                foundElementByIndexFromHead = currentNode.element;
             }
-            foundElementByIndexFromHead = currentNode.element;
         }
         return foundElementByIndexFromHead;
     }
 
     private T searchFromTail(int index) {
-        T foundElementByIndexFromTail;
+        T foundElementByIndexFromTail = null;
         if (index == size - 1) {
             return tail.element;
         } else {
             Node<T> currentNode = tail;
             for (int i = 0; i < index; i++) {
-                currentNode = currentNode.prev;
+                foundElementByIndexFromTail = currentNode.element;
             }
-            foundElementByIndexFromTail = currentNode.element;
         }
         return foundElementByIndexFromTail;
     }
