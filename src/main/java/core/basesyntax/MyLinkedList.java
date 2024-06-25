@@ -30,11 +30,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         checkIndexRangeInAdd(index);
         if (head == null) {
-            head = new Node<>(null, value, null);
-            tail = head;
+            add(value);
+        } else {
+            Node<T> newNode = new Node<>(tail, value, null);
+            Node<T> currentNode = head;
+            for (int i = 0; i < index - 1; i++) {
+                currentNode = currentNode.next;
+            }
+            newNode.next = currentNode.next;
+            currentNode.next = newNode;
+            tail = newNode;
             size++;
         }
-
     }
 
     @Override
