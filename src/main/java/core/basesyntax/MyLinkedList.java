@@ -34,17 +34,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = head;
             size++;
         }
-        Node<T> currentNode;
-        currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
 
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < list.size() - 1; i++) {
             add(list.get(i));
         }
     }
@@ -58,8 +53,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndexRange(index);
-        Node<T> foundNodeByIndex = searchNodeByIndex(index);
-        T oldElement = foundNodeByIndex.element;
+        final Node<T> foundNodeByIndex = searchNodeByIndex(index);
+        final T oldElement = foundNodeByIndex.element;
         foundNodeByIndex.element = value;
         return oldElement;
     }
@@ -67,7 +62,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndexRange(index);
-        return null;
+        final Node<T> foundNodeByIndex = searchNodeByIndex(index);
+        foundNodeByIndex.prev.next = foundNodeByIndex.next;
+        foundNodeByIndex.next.prev = foundNodeByIndex.prev;
+        size--;
+        final T removedElement = foundNodeByIndex.element;
+        return removedElement;
     }
 
     @Override
@@ -88,20 +88,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void checkIndexRange(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: "
-                                                        + index
-                                                        + " out of bounds "
-                                                        + "for size "
-                                                        + size);
+                    + index
+                    + " out of bounds "
+                    + "for size "
+                    + size);
         }
     }
 
     private void checkIndexRangeInAdd(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index: "
-                                                        + index
-                                                        + " out of bounds "
-                                                        + "for size "
-                                                        + size);
+                    + index
+                    + " out of bounds "
+                    + "for size "
+                    + size);
         }
     }
 
@@ -114,7 +114,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return foundNodeByIndexFromHead;
         } else {
             Node<T> foundNodeByIndexFromTail = tail;
-            for (int i = size - 1; i > index ; i--) {
+            for (int i = size - 1; i > index; i--) {
                 foundNodeByIndexFromTail = foundNodeByIndexFromTail.prev;
             }
             return foundNodeByIndexFromTail;
@@ -126,7 +126,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<E> prev;
         private Node<E> next;
 
-        Node(Node<E> prev, E element, Node<E> next) {
+        private Node(Node<E> prev, E element, Node<E> next) {
             this.element = element;
             this.next = next;
             this.prev = prev;
