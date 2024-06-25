@@ -29,7 +29,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndexRangeInAdd(index);
-        if (index == 0) {
+        if (head == null) {
             head = new Node<>(null, value, null);
             tail = head;
             size++;
@@ -52,19 +52,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndexRange(index);
-        T foundElement;
-        if (index < size / 2) {
-            foundElement = searchFromHead(index);
-        } else {
-            foundElement = searchFromTail(index);
-        }
-        return foundElement;
+        return searchNodeByIndex(index).element;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndexRange(index);
-        return null;
+        Node<T> foundNodeByIndex = searchNodeByIndex(index);
+        T oldElement = foundNodeByIndex.element;
+        foundNodeByIndex.element = value;
+        return oldElement;
     }
 
     @Override
@@ -108,30 +105,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private T searchFromHead(int index) {
-        T foundElementByIndexFromHead = null;
-        if (index == 0) {
-            return head.element;
-        } else {
-            Node<T> currentNode = head;
+    private Node<T> searchNodeByIndex(int index) {
+        if (index < size / 2) {
+            Node<T> foundNodeByIndexFromHead = head;
             for (int i = 0; i < index; i++) {
-                foundElementByIndexFromHead = currentNode.element;
+                foundNodeByIndexFromHead = foundNodeByIndexFromHead.next;
             }
-        }
-        return foundElementByIndexFromHead;
-    }
-
-    private T searchFromTail(int index) {
-        T foundElementByIndexFromTail = null;
-        if (index == size - 1) {
-            return tail.element;
+            return foundNodeByIndexFromHead;
         } else {
-            Node<T> currentNode = tail;
-            for (int i = 0; i < index; i++) {
-                foundElementByIndexFromTail = currentNode.element;
+            Node<T> foundNodeByIndexFromTail = tail;
+            for (int i = size - 1; i > index ; i--) {
+                foundNodeByIndexFromTail = foundNodeByIndexFromTail.prev;
             }
+            return foundNodeByIndexFromTail;
         }
-        return foundElementByIndexFromTail;
     }
 
     private class Node<E> {
