@@ -28,17 +28,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexRange(index);
-        if (index < size / 2) {
-
-        } else {
-
+        checkIndexRangeInAdd(index);
+        if (index == 0) {
+            head = new Node<>(null, value, null);
+            tail = head;
+            size++;
         }
+        Node<T> currentNode;
+        currentNode = head;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
+        }
+
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
@@ -82,6 +90,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndexRange(int index) {
         if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: "
+                                                        + index
+                                                        + " out of bounds "
+                                                        + "for size "
+                                                        + size);
+        }
+    }
+
+    private void checkIndexRangeInAdd(int index) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index: "
                                                         + index
                                                         + " out of bounds "
