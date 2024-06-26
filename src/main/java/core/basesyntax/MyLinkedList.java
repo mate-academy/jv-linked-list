@@ -30,17 +30,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         checkIndexRangeInAdd(index);
         if (head == null) {
-            add(value);
-        } else {
-            Node<T> newNode = new Node<>(tail, value, null);
-            Node<T> currentNode = head;
-            for (int i = 0; i < index - 1; i++) {
-                currentNode = currentNode.next;
-            }
-            newNode.next = currentNode.next;
-            currentNode.next = newNode;
-            tail = newNode;
+            head = new Node<>(null, value, null);
+            tail = head;
             size++;
+        }
+        Node<T> currentNode;
+        currentNode = head;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
         }
 
     }
@@ -70,21 +67,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndexRange(index);
-        T removedElement;
-        if (index == 0) {
-            removedElement = head.element;
-            head = head.next;
-            size--;
-            return removedElement;
-        } else {
-            Node<T> currentNode = head;
-            for (int i = 0; i < index - 1; i++) {
-                currentNode = currentNode.next;
-            }
-            currentNode.next = currentNode.next.next;
-            size--;
-            return currentNode.element;
-        }
+        return null;
     }
 
     @Override
@@ -131,7 +114,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return foundNodeByIndexFromHead;
         } else {
             Node<T> foundNodeByIndexFromTail = tail;
-            for (int i = size - 1; i > index; i--) {
+            for (int i = size - 1; i > index ; i--) {
                 foundNodeByIndexFromTail = foundNodeByIndexFromTail.prev;
             }
             return foundNodeByIndexFromTail;
@@ -143,7 +126,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<E> prev;
         private Node<E> next;
 
-        private Node(Node<E> prev, E element, Node<E> next) {
+        Node(Node<E> prev, E element, Node<E> next) {
             this.element = element;
             this.next = next;
             this.prev = prev;
