@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -29,17 +30,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndexRangeInAdd(index);
-        if (head == null) {
-            head = new Node<>(null, value, null);
-            tail = head;
+        if (size == index) {
+            add(value);
+        } else {
+            Node<T> node = searchNodeByIndex(index);
+            Node<T> newNode = new Node<>(node.prev, value, node);
+            if (node.prev == null) {
+                head = newNode;
+            } else {
+                node.prev.next = newNode;
+            }
+            node.prev = newNode;
             size++;
         }
-        Node<T> currentNode;
-        currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
-
     }
 
     @Override
@@ -67,7 +70,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndexRange(index);
-        return null;
+        T removedElement;
+        if (index == 0) {
+            removedElement = head.element;
+            head = head.next;
+            size--;
+            return removedElement;
+        } else {
+            Node<T> currentNode = head;
+            for (int i = 0; i < index - 1; i++) {
+                currentNode = currentNode.next;
+            }
+            currentNode.next = currentNode.next.next;
+            size--;
+            return currentNode.element;
+        }
     }
 
     @Override
@@ -114,7 +131,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return foundNodeByIndexFromHead;
         } else {
             Node<T> foundNodeByIndexFromTail = tail;
-            for (int i = size - 1; i > index ; i--) {
+            for (int i = size - 1; i > index; i--) {
                 foundNodeByIndexFromTail = foundNodeByIndexFromTail.prev;
             }
             return foundNodeByIndexFromTail;
@@ -126,7 +143,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<E> prev;
         private Node<E> next;
 
-        Node(Node<E> prev, E element, Node<E> next) {
+        private Node(Node<E> prev, E element, Node<E> next) {
             this.element = element;
             this.next = next;
             this.prev = prev;
