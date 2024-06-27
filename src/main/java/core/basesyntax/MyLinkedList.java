@@ -28,7 +28,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         if (index == 0 && isEmpty()) {
             add(value);
-            return;
         } else if (index == 0) {
             Node<T> newNode = new Node<>(null, value, head);
             head.prev = newNode;
