@@ -12,10 +12,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(tail, value, null);
         if (tail == null) {
             head = tail = newNode;
-        } else {
-            tail.next = newNode;
-            tail = newNode;
         }
+        tail.next = newNode;
+        tail = newNode;
         size++;
     }
 
@@ -69,7 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if (current.value == object || (object != null && object.equals(current.value))) {
+            if (current.value == object || object != null && object.equals(current.value)) {
                 unlink(current);
                 return true;
             }
