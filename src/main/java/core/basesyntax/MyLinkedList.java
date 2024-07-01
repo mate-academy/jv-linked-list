@@ -11,11 +11,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value) {
         Node<T> oldTail = tail;
         Node<T> newNode = new Node<>(tail, value, null);
-        tail = newNode;
-        if (oldTail == null) {
-            head = newNode;
+        if (head == null) {
+            head = tail = newNode;
         } else {
-            oldTail.next = newNode;
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
         }
         size++;
     }
@@ -70,17 +71,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        for (Node<T> node = head; node != null; node = node.next) {
-            if (object == null && node.item == null) {
-                unlink(node);
-                return true;
-            }
-            if (node.item != null && node.item.equals(object)) {
-                unlink(node);
-                return true;
-            }
+        int index = findIndexByValue(object);
+        if (index == -1) {
+            return false;
+        } else {
+            unlink(findNodeByIndex(index));
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -91,6 +88,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    public int findIndexByValue(T value) {
+        Node<T> currentNode = head;
+        for (int i = 0; i < size; i++) {
+            if (currentNode.item == null && value == null) {
+                return i;
+            }
+            if (currentNode.item != null && currentNode.item.equals(value)) {
+                return i;
+            }
+            currentNode = currentNode.next;
+        }
+        return -1;
     }
 
     private void checkIndex(int index) {
@@ -145,7 +156,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return nodeItem;
     }
 
-    private class Node<T> {
+    private static class Node<T> {
         private T item;
         private Node<T> next;
         private Node<T> prev;
