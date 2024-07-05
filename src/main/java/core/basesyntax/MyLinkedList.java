@@ -47,9 +47,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
+        if (list == null || list.isEmpty()) {
+            return;
+        }
         for (T t : list) {
             Node<T> newNode = new Node<>(tail, t, null);
-            tail.next = newNode;
+            if (tail == null) {
+                head = newNode;
+            } else {
+                tail.next = newNode;
+            }
             tail = newNode;
             size++;
         }
@@ -139,7 +146,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return element;
     }
 
-    private static class Node<T> {
+    private class Node<T> {
         private T value;
         private Node<T> prev;
         private Node<T> next;
