@@ -31,16 +31,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (tail == null) {
                 tail = newNode;
             }
+        } else if (index == size) {
+            Node<T> newNode = new Node<>(tail, value, null);
+            if (tail != null) {
+                tail.next = newNode;
+            }
+            tail = newNode;
         } else {
-            Node<T> node = getNodeByIndex(index - 1);
-            Node<T> newNode = new Node<>(node, value, node.next);
-            if (node.next != null) {
-                node.next.prev = newNode;
+            Node<T> node = getNodeByIndex(index);
+            Node<T> newNode = new Node<>(node.prev, value, node);
+            if (node.prev != null) {
+                node.prev.next = newNode;
             }
-            node.next = newNode;
-            if (newNode.next == null) {
-                tail = newNode;
-            }
+            node.prev = newNode;
         }
         size++;
     }
