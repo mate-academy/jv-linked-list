@@ -3,13 +3,13 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node head;
-    private Node tail;
+    private Node<T> head;
+    private Node<T> tail;
     private int size;
 
     @Override
     public void add(T value) {
-        Node newNode = new Node(tail, value, null);
+        Node<T> newNode = new Node(tail, value, null);
         if (tail == null) {
             head = newNode;
         } else {
@@ -27,8 +27,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            Node current = getNodeAtIndex(index);
-            Node newNode = new Node(current.prev, value, current);
+            Node<T> current = getNodeAtIndex(index);
+            Node<T> newNode = new Node(current.prev, value, current);
             if (current.prev == null) {
                 head = newNode;
             } else {
@@ -53,7 +53,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        Node current = getNodeAtIndex(index);
+        Node<T> current = getNodeAtIndex(index);
         T oldValue = current.item;
         current.item = value;
         return oldValue;
@@ -61,7 +61,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node nodeToRemove = getNodeAtIndex(index);
+        Node<T> nodeToRemove = getNodeAtIndex(index);
         T removedItem = nodeToRemove.item;
         unlink(nodeToRemove);
         return removedItem;
@@ -69,7 +69,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node current = head;
+        Node<T> current = head;
         while (current != null) {
             if ((object == null && current.item == null)
                     || (object != null && object.equals(current.item))) {
@@ -91,11 +91,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node getNodeAtIndex(int index) {
+    private Node<T> getNodeAtIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
-        Node current;
+        Node<T> current;
         if (index < size / 2) {
             current = head;
             for (int i = 0; i < index; i++) {
@@ -110,7 +110,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private void unlink(Node node) {
+    private void unlink(Node<T> node) {
         if (node.prev != null) {
             node.prev.next = node.next;
         } else {
@@ -124,12 +124,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private class Node {
+    private static class Node<T> {
         private T item;
-        private Node next;
-        private Node prev;
+        private Node<T> next;
+        private Node<T> prev;
 
-        Node(Node prev, T item, Node next) {
+        Node(Node<T> prev, T item, Node<T> next) {
             this.prev = prev;
             this.item = item;
             this.next = next;
