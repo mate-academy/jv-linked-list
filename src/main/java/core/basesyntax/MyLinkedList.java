@@ -9,9 +9,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
 
     public MyLinkedList() {
-        first = null;
-        last = null;
-        size = 0;
     }
 
     @Override
@@ -29,7 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndexToAddByIndex(index);
-        if (index >= size) {
+        if (index == size) {
             add(value);
         } else {
             Node<T> current = getNodeByIndex(index);
@@ -73,7 +70,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> node = searchNodeByItem(object);
+        Node<T> node = findNodeByItem(object);
         if (node != null) {
             unlink(node);
             return true;
@@ -142,7 +139,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return removedElement;
     }
 
-    private Node<T> searchNodeByItem(T item) {
+    private Node<T> findNodeByItem(T item) {
         Node<T> current = first;
         while (current != null) {
             if (item == null && current.item == null
@@ -154,7 +151,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
-    private static class Node<T> {
+    private class Node<T> {
         private T item;
         private Node<T> prev;
         private Node<T> next;
