@@ -3,13 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final int EMPTY_SIZE = 0;
     private Node<T> first;
     private Node<T> last;
     private int size;
-
-    public MyLinkedList() {
-    }
 
     @Override
     public void add(T value) {
@@ -85,7 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == EMPTY_SIZE;
+        return size == 0;
     }
 
     private void checkIndex(int index) {
@@ -151,7 +147,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
-    private class Node<T> {
+    private static class Node<T> {
         private T item;
         private Node<T> prev;
         private Node<T> next;
