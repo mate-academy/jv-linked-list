@@ -7,7 +7,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    class Node<T> {
+    private static class Node<T> {
         private T element;
         private Node<T> prev;
         private Node<T> next;
@@ -66,27 +66,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         validateIndex(index);
-        Node<T> currentNode = head;
-        int counter = 0;
-        while (currentNode != null && counter != index) {
-            currentNode = currentNode.next;
-            counter++;
-        }
+        Node<T> currentNode = findNodeByIndex(index);;
         return currentNode.element;
     }
 
     @Override
     public T set(T value, int index) {
         validateIndex(index);
-        Node<T> currentNode = head;
-        int counter = 0;
-        while (currentNode != null && counter != index) {
-            currentNode = currentNode.next;
-            counter++;
-        }
-        T prevElement = currentNode.element;
-        currentNode.element = value;
-        return prevElement;
+        Node<T> necessaryNode = findNodeByIndex(index);
+        T oldValue = necessaryNode.element;
+        necessaryNode.element = value;
+        return oldValue;
     }
 
     @Override
@@ -138,8 +128,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private Node<T> findNodeByIndex(int index) {
+        Node<T> currentNode = head;
+        int counter = 0;
+        while (currentNode != null && counter != index) {
+            currentNode = currentNode.next;
+            counter++;
+        }
+        return currentNode;
+    }
+
     private Node<T> getNode(int index) {
-        validateIndex(index);
         Node<T> current;
         if (index < size / 2) {
             current = head;
