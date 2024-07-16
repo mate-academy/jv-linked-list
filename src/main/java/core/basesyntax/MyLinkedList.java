@@ -82,25 +82,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         validateIndex(index);
-        Node<T> deletedNode = getNode(index);
-        T deletedValue = deletedNode.element;
-
-        if (index == 0) {
-            if (size == 1) {
-                isEmpty();
-            } else {
-                head.next.prev = null;
-                head = head.next;
-            }
-        } else if (index == size - 1) {
-            tail.prev.next = deletedNode.next;
-            tail = tail.prev;
-        } else {
-            unlink(deletedNode);
-        }
-
+        Node<T> current = findNodeByIndex(index);
+        unlink(current);
         size--;
-        return deletedValue;
+        return current.element;
     }
 
     @Override
