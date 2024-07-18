@@ -3,8 +3,8 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node<T> head = null;
-    private Node<T> tail = null;
+    private Node<T> head;
+    private Node<T> tail;
     private int size;
 
     @Override
@@ -25,7 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            Node<T> current = getNode(index);
+            Node<T> current = findNodeByIndex(index);
             Node<T> newNode = new Node<>(current.prev, value, current);
             if (current.prev == null) {
                 head = newNode;
@@ -47,13 +47,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return getNode(index).element;
+        return findNodeByIndex(index).element;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> node = getNode(index);
+        Node<T> node = findNodeByIndex(index);
         T oldValue = node.element;
         node.element = value;
         return oldValue;
@@ -62,7 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> node = getNode(index);
+        Node<T> node = findNodeByIndex(index);
         T removedValue = node.element;
         unlink(node);
         return removedValue;
@@ -93,7 +93,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node<T> getNode(int index) {
+    private Node<T> findNodeByIndex(int index) {
         checkIndex(index);
         Node<T> current;
         if (index < (size / 2)) {
@@ -143,7 +143,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private class Node<E> {
+    private static class Node<T> {
         private T element;
         private Node<T> next;
         private Node<T> prev;
