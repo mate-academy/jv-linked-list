@@ -94,7 +94,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
-        checkIndex(index);
         Node<T> current;
         if (index < (size / 2)) {
             current = head;
