@@ -35,11 +35,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 tail = newNode;
             }
         } else if (index == size) {
-            Node<T> newNode = new Node<>(tail, value, null);
-            if (tail != null) {
-                tail.next = newNode;
-            }
-            tail = newNode;
+            add(value);
+            return;
         } else {
             Node<T> currentNode = getNodeByIndex(index);
             Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
@@ -81,22 +78,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> x = head; x != null; x = x.next) {
-                if (x.value == null) {
-                    unlink(x);
-                    return true;
-                }
-            }
+        int index = findIndexByValue(object);
+        if (index == -1) {
+            return false;
         } else {
-            for (Node<T> x = head; x != null; x = x.next) {
-                if (object.equals(x.value)) {
-                    unlink(x);
-                    return true;
-                }
-            }
+            unlink(getNodeByIndex(index));
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -107,18 +95,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private static class Node<T> {
-        private T value;
-        private Node<T> next;
-        private Node<T> prev;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.value = value;
-            this.next = next;
-            this.prev = prev;
-        }
     }
 
     private Node<T> getNodeByIndex(int index) {
@@ -165,5 +141,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         node.value = null;
         size--;
         return value;
+    }
+
+    private int findIndexByValue(T object) {
+        int index = 0;
+        if (object == null) {
+            for (Node<T> x = head; x != null; x = x.next) {
+                if (x.value == null) {
+                    return index;
+                }
+                index++;
+            }
+        } else {
+            for (Node<T> x = head; x != null; x = x.next) {
+                if (object.equals(x.value)) {
+                    return index;
+                }
+                index++;
+            }
+        }
+        return -1;
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.value = value;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
