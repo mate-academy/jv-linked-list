@@ -1,4 +1,3 @@
-
 package core.basesyntax;
 
 import java.util.List;
@@ -7,22 +6,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
     private int size;
-
-    private class Node<E> {
-        private E item;
-        private Node<E> next;
-        private Node<E> prev;
-
-        Node(Node<E> prev, E element, Node<E> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-
-        Node(E element) {
-            this.item = element;
-        }
-    }
 
     @Override
     public void add(T value) {
@@ -111,7 +94,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if (current.item == null && object == null || (current.item != null
+            if (current.item == object || (current.item != null
                     && current.item.equals(object))) {
                 if (current == head) {
                     head = head.next;
@@ -149,6 +132,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private class Node<E> {
+        private E item;
+        private Node<E> next;
+        private Node<E> prev;
+
+        Node(Node<E> prev, E element, Node<E> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
+
+        Node(E element) {
+            this.item = element;
+        }
+    }
     private Node<T> getNode(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
