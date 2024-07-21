@@ -147,6 +147,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.item = element;
         }
     }
+
     private Node<T> getNode(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
