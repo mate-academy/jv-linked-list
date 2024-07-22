@@ -73,7 +73,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        return removeObject(findNodeByIndex(index));
+        return unlink(findNodeByIndex(index));
     }
 
     @Override
@@ -82,7 +82,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (current != null) {
             if ((object == null && current.item == null)
                     || (object != null && object.equals(current.item))) {
-                removeObject(current);
+                unlink(current);
                 return true;
             }
             current = current.next;
@@ -107,26 +107,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        Node<T> current;
+        if (index < size / 2) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
         return current;
     }
 
-    private T removeObject(Node<T> removingNode) {
-        if (removingNode.prev != null) {
-            removingNode.prev.next = removingNode.next;
+    private T unlink(Node<T> node) {
+        if (node.prev != null) {
+            node.prev.next = node.next;
         } else {
-            head = removingNode.next;
+            head = node.next;
         }
-        if (removingNode.next != null) {
-            removingNode.next.prev = removingNode.prev;
+        if (node.next != null) {
+            node.next.prev = node.prev;
         } else {
-            tail = removingNode.prev;
+            tail = node.prev;
         }
         size--;
-        return removingNode.item;
+        return node.item;
     }
 
     private static class Node<T> {
