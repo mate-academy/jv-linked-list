@@ -144,21 +144,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private int findIndexByValue(T object) {
-        int index = 0;
-        if (object == null) {
-            for (Node<T> x = head; x != null; x = x.next) {
-                if (x.value == null) {
-                    return index;
-                }
-                index++;
+        Node<T> node = head;
+        for (int i = 0; i < size; i++) {
+            if (object == node.value || (object != null && object.equals(node.value))) {
+                return i;
             }
-        } else {
-            for (Node<T> x = head; x != null; x = x.next) {
-                if (object.equals(x.value)) {
-                    return index;
-                }
-                index++;
-            }
+            node = node.next;
         }
         return -1;
     }
