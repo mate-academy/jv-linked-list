@@ -3,18 +3,18 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private int size;
     private Node<T> head;
     private Node<T> tail;
 
     @Override
     public void add(T value) {
-        Node<T> element = new Node<>(tail,value,null);
+        Node<T> element = new Node<>(null, value, null);
         if (head == null) {
             head = tail = element;
         } else {
             tail.next = element;
+            element.prev = tail;
             tail = element;
         }
         size++;
@@ -22,6 +22,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        Node<T> element;
+        if (index == 0) {
+            element = new Node<>(null, value, head);
+            head.prev = element;
+            head = element;
+            size++;
+        }
+        if (index == size) {
+            add(value);
+        }
+        element = head;
     }
 
     @Override
@@ -30,6 +41,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
+        if (index >= 0 && index < size) {
+            Node<T> current = head;
+            int counter = 0;
+            while (current != null) {
+                if (counter == index) {
+                    return current.value;
+                }
+                counter ++;
+                current = current.next;
+            }
+        }
         return null;
     }
 
@@ -55,7 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0;
+        return head == null;
     }
 
     @Override
