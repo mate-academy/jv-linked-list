@@ -94,6 +94,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return sb.toString();
     }
 
+    private void checkIndex(int index) {
+        if (!(index >= 0 && index < size)) {
+            throw new LinkedListIndexOutOfBoundsException("Index: "
+                    + index
+                    + " is out of bounds. "
+                    + "Size: "
+                    + size);
+        }
+    }
+
+    private void checkIndexForAddition(int index) {
+        if (!(index >= 0 && index <= size)) {
+            throw new LinkedListIndexOutOfBoundsException("Index: "
+                    + index
+                    + " is out of bounds. "
+                    + "Size: "
+                    + size);
+        }
+    }
+
     private static class Node<E> {
         E value;
         Node<E> prev;
