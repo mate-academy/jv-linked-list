@@ -92,7 +92,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
-        if (index < (size >> 1)) {
+        if (index < (size / 2)) {
             Node<T> findNode = head;
             for (int i = 0; i < index; i++) {
                 findNode = findNode.next;
@@ -108,21 +108,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private int findIndexByValue(T value) {
-        int index = 0;
-        if (value == null) {
-            for (Node<T> node = head; node != null; node = node.next) {
-                if (node.item == null) {
-                    return index;
-                }
-                index++;
+        Node<T> node = head;
+        for (int i = 0; i < size; i++) {
+            if (value == node.item || value != null && value.equals(node.item)) {
+                return i;
             }
-        } else {
-            for (Node<T> node = head; node != null; node = node.next) {
-                if (value.equals(node.item)) {
-                    return index;
-                }
-                index++;
-            }
+            node = node.next;
         }
         return -1;
     }
@@ -149,7 +140,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndex(int index) {
-        if (!(index >= 0 && index < size)) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("There is no " + index + " index in LinkedList");
         }
     }
