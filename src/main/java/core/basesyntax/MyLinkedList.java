@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
@@ -84,7 +83,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> removedElement = head;
         for (int i = 0; i < size; i++) {
-            if (removedElement.value == object || object != null && object.equals(removedElement.value)) {
+            if (removedElement.value == object
+                    || object != null
+                    && object.equals(removedElement.value)) {
                 remove(i);
                 return true;
             }
@@ -154,9 +155,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<E> {
-        E value;
-        Node<E> prev;
-        Node<E> next;
+        private E value;
+        private Node<E> prev;
+        private Node<E> next;
 
         public Node(Node<E> prev, E value, Node<E> next) {
             this.prev = prev;

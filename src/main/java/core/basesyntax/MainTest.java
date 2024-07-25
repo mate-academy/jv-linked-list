@@ -20,7 +20,5 @@ public class MainTest {
         list.remove(Integer.valueOf(0));
         System.out.println(list);
         System.out.println(list.size());
-
-
     }
 }
