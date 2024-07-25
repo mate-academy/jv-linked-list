@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
@@ -22,51 +23,73 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Node<T> element;
-        if (index == 0) {
-            element = new Node<>(null, value, head);
-            head.prev = element;
-            head = element;
-            size++;
-        }
+        checkIndexForAddition(index);
         if (index == size) {
             add(value);
+            return;
         }
-        element = head;
+        Node<T> current = (index < size / 2) ? getNodeFromHead(index) : getNodeFromTail(index);
+        Node<T> newElement = new Node<>(current.prev, value, current);
+        if (current.prev != null) {
+            current.prev.next = newElement;
+        } else {
+            head = newElement;
+        }
+        current.prev = newElement;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
+        for (T t : list) {
+            add(t);
+        }
     }
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index < size) {
-            Node<T> current = head;
-            int counter = 0;
-            while (current != null) {
-                if (counter == index) {
-                    return current.value;
-                }
-                counter ++;
-                current = current.next;
-            }
-        }
-        return null;
+        checkIndex(index);
+        Node<T> current = (index < size / 2) ? getNodeFromHead(index) : getNodeFromTail(index);
+        return current.value;
     }
 
     @Override
     public T set(T value, int index) {
-        return null;
+        checkIndex(index);
+        Node<T> current = (index < size / 2) ? getNodeFromHead(index) : getNodeFromTail(index);
+        T oldValue = current.value;
+        current.value = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIndex(index);
+        Node<T> current = (index < index / 2) ? getNodeFromHead(index) : getNodeFromTail(index);
+        if (current.prev != null) {
+            current.prev.next = current.next;
+        } else {
+            head = current.next;
+        }
+        if (current.next != null) {
+            current.next.prev = current.prev;
+        } else {
+            tail = current.prev;
+        }
+        size--;
+        return current.value;
     }
 
     @Override
     public boolean remove(T object) {
+        Node<T> removedElement = head;
+        for (int i = 0; i < size; i++) {
+            if (removedElement.value == object || object != null && object.equals(removedElement.value)) {
+                remove(i);
+                return true;
+            }
+            removedElement = removedElement.next;
+        }
         return false;
     }
 
@@ -83,33 +106,49 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        sb.append("[");
         Node<T> current = head;
         while (current != null) {
             sb.append(current.value);
             if (current.next != null) {
-                sb.append(" <-> ");
+                sb.append(", ");
             }
             current = current.next;
         }
+        sb.append("]");
         return sb.toString();
+    }
+
+    private Node<T> getNodeFromHead(int index) {
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        return current;
+    }
+
+    private Node<T> getNodeFromTail(int index) {
+        Node<T> current = tail;
+        for (int i = size - 1; i > index; i--) {
+            current = current.prev;
+        }
+        return current;
     }
 
     private void checkIndex(int index) {
         if (!(index >= 0 && index < size)) {
-            throw new LinkedListIndexOutOfBoundsException("Index: "
+            throw new IndexOutOfBoundsException("Index: "
                     + index
                     + " is out of bounds. "
-                    + "Size: "
                     + size);
         }
     }
 
     private void checkIndexForAddition(int index) {
         if (!(index >= 0 && index <= size)) {
-            throw new LinkedListIndexOutOfBoundsException("Index: "
+            throw new IndexOutOfBoundsException("Index: "
                     + index
                     + " is out of bounds. "
-                    + "Size: "
                     + size);
         }
     }
