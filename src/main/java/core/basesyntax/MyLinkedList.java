@@ -101,8 +101,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return sb.toString();
     }
 
-    private boolean isEqual (T firstValue, T secondValue) {
-        return firstValue == secondValue || firstValue!= null && firstValue.equals(secondValue);
+    private boolean isEqual(T firstValue, T secondValue) {
+        return firstValue == secondValue || firstValue != null && firstValue.equals(secondValue);
     }
 
     private void updatePreviousLink(Node<T> current, Node<T> element) {
@@ -114,7 +114,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         current.prev = element;
     }
 
-    private void unlinkNode(Node<T> current){
+    private void unlinkNode(Node<T> current) {
         if (current.prev != null) {
             current.prev.next = current.next;
         } else {
