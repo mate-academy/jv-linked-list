@@ -25,9 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new IndexOutOfBoundsException(INVALID_INDEX_ERROR_MESSAGE);
-        }
+        indexValidationAddMethod(index);
         if (isEmpty()) {
             addFirstNode(value);
         } else if (index == size) {
@@ -48,17 +46,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException(INVALID_INDEX_ERROR_MESSAGE);
-        }
+        indexValidation(index);
         return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException(INVALID_INDEX_ERROR_MESSAGE);
-        }
+        indexValidation(index);
         T pastValue = getNode(index).value;
         getNode(index).value = value;
         return pastValue;
@@ -66,9 +60,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException(INVALID_INDEX_ERROR_MESSAGE);
-        }
+        indexValidation(index);
         Node<T> node = getNode(index);
         unlink(node);
         --size;
@@ -170,6 +162,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.prev = prev;
             this.value = value;
             this.next = next;
+        }
+    }
+
+    private void indexValidationAddMethod(int index) {
+        if (index > size || index < 0) {
+            throw new IndexOutOfBoundsException(INVALID_INDEX_ERROR_MESSAGE);
+        }
+    }
+
+    private void indexValidation(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException(INVALID_INDEX_ERROR_MESSAGE);
         }
     }
 }
