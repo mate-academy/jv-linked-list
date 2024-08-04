@@ -1,23 +1,10 @@
 package core.basesyntax;
-
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
     private int size;
-
-    private static class Node<T> {
-        private T data;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(T data, Node<T> next, Node<T> prev) {
-            this.data = data;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
 
     @Override
     public void add(T value) {
@@ -149,5 +136,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         node.data = null;
         size--;
         return element;
+    }
+
+    private static class Node<T> {
+        private T data;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(T data, Node<T> next, Node<T> prev) {
+            this.data = data;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
