@@ -31,8 +31,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == size) {
             addLastNode(value);
         } else {
-            Node<T> destNode = getNode(index);
-            link(destNode, value);
+            link(getNode(index), value);
         }
         ++size;
     }
@@ -153,18 +152,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private static class Node<T> {
-        private Node<T> prev;
-        private T value;
-        private Node<T> next;
-
-        private Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
     private void indexValidationAddMethod(int index) {
         if (index > size || index < 0) {
             throw new IndexOutOfBoundsException(INVALID_INDEX_ERROR_MESSAGE);
@@ -174,6 +161,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void indexValidation(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException(INVALID_INDEX_ERROR_MESSAGE);
+        }
+    }
+
+    private static class Node<T> {
+        private Node<T> prev;
+        private T value;
+        private Node<T> next;
+
+        private Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
         }
     }
 }
