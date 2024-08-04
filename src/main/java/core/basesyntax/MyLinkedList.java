@@ -38,8 +38,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T element : list) {
+            add(element);
         }
     }
 
@@ -85,10 +85,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return tail == null;
+        return size == 0;
     }
 
-    private Node<T> findNodeFromHead(int index) {
+    private Node<T> getNode(int index) {
+        if (index > size / 2) {
+            int currentIndex = size - 1;
+            Node<T> node = tail;
+
+            while (currentIndex-- != index) {
+                node = node.prev;
+            }
+            return node;
+        }
         int currentIndex = 0;
         Node<T> node = head;
 
@@ -96,20 +105,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node = node.next;
         }
         return node;
-    }
-
-    private Node<T> findNodeFromTail(int index) {
-        int currentIndex = size - 1;
-        Node<T> node = tail;
-
-        while (currentIndex-- != index) {
-            node = node.prev;
-        }
-        return node;
-    }
-
-    private Node<T> getNode(int index) {
-        return (index > size / 2) ? findNodeFromTail(index) : findNodeFromHead(index);
     }
 
     private void link(Node<T> destNode, T value) {
