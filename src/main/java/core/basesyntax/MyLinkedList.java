@@ -139,10 +139,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNodeByElement(T element) {
         Node<T> current = head;
-        while (!areEqual(element, current.item) && current.next != null)
+        while (!areEqual(element, current.item) && current.next != null) {
             current = current.next;
-        if (areEqual(current.item, element))
+        }
+        if (areEqual(current.item, element)) {
             return current;
+        }
         return null;
     }
 
