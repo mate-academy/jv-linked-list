@@ -19,6 +19,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.prev = null;
             this.next = null;
         }
+
+        public Node(T value, Node<T> prev, Node<T> next) {
+            this.value = value;
+            this.prev = prev;
+            this.next = next;
+        }
+
+        @Override
+        public boolean equals(Object object) {
+            if (this == object) return true;
+            if (object == null || getClass() != object.getClass()) return false;
+            Node<?> node = (Node<?>) object;
+            return Objects.equals(value, node.value) && Objects.equals(prev, node.prev) && Objects.equals(next, node.next);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(value, prev, next);
+        }
     }
 
     @Override
@@ -105,6 +124,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         if (index == 0) {
             T value = head.value;
+            //head.prev = null;
             head = head.next;
             size--;
             return value;
@@ -169,5 +189,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return true;
         }
         return false;
+    }
+
+    private void unlink(Node<T> node) {
+        if (node == head) {
+            head = node.next;
+            head.prev = null;
+        }
+        if (node == tail) {
+            tail = node.prev;
+            tail.next = null;
+        }
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
     }
 }
