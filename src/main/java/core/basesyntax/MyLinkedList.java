@@ -160,7 +160,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private class Node<T> {
+    private static class Node<T> {
         private T item;
         private Node<T> next;
         private Node<T> prev;
@@ -172,4 +172,3 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 }
-
