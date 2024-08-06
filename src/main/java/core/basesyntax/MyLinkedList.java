@@ -33,12 +33,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index is out of list");
         }
 
-        Node newNode;
         if (index == size) {
             add(value);
         } else {
             Node current = findNodeByIndex(index);
-            newNode = new Node(value, current.prev, current);
+            Node newNode = new Node(value, current.prev, current);
             if (current.prev != null) {
                 current.prev.next = newNode;
             }
@@ -46,9 +45,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (index == 0) {
                 head = newNode;
             }
+            size++;
         }
-
-        size++;
     }
 
     @Override
@@ -88,7 +86,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private Node findNodeByValue(T value) {
+    private Node getNode(T value) {
         Node current = head;
         while (current != null) {
             if (current.item.equals(value)) {
@@ -124,7 +122,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node current = findNodeByValue(object);
+        Node current = getNode(object);
         if (current == null) {
             return false;
         }
