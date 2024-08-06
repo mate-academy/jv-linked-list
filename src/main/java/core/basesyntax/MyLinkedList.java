@@ -93,6 +93,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
+    private Node<T> getNode(T value) {
+        Node<T> current = head;
+        for (int i = 0; i < size; i++) {
+            if (current.item == value) {
+                break;
+            }
+            current = current.next;
+        }
+        return current;
+    }
+
     @Override
     public T set(T value, int index) {
         if (index >= size && index < EMPTY_LIST) {
@@ -116,6 +127,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current.item;
     }
 
+    @Override
+    public boolean remove(T object) {
+        Node<T> current = getNode(object);
+        unlinkNode(current);
+        size--;
+        return true;
+    }
+
     private void unlinkNode(Node<T> node) {
         node.item = null;
         if (node.prev != null) {
@@ -131,25 +150,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public boolean remove(T object) {
-        Node<T> current = getNode(object);
-        unlinkNode(current);
-        size--;
-        return true;
-    }
-
-    private Node<T> getNode(T value) {
-        Node<T> current = head;
-        for (int i = 0; i < size; i++) {
-            if (current.item == value) {
-                break;
-            }
-            current = current.next;
-        }
-        return current;
-    }
-
-    @Override
     public int size() {
         return size;
     }
@@ -160,9 +160,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> prev;
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
         public Node(T item) {
             this.item = item;
