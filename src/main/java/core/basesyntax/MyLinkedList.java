@@ -6,9 +6,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final int EMPTY_LIST = 0;
 
     private Node<T> head;
-
     private Node<T> tail;
-
     private int size;
 
     public MyLinkedList() {
@@ -32,7 +30,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index >= size && index < EMPTY_LIST) {
+        if (index > size || index < EMPTY_LIST) {
             throw new IndexOutOfBoundsException("Index is out of list");
         }
 
@@ -69,7 +67,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size && index < EMPTY_LIST) {
+        if (index >= size || index < EMPTY_LIST) {
             throw new IndexOutOfBoundsException("Index is out of list");
         }
 
@@ -95,18 +93,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNode(T value) {
         Node<T> current = head;
-        for (int i = 0; i < size; i++) {
-            if (current.item == value) {
-                break;
+        while (current != null) {
+            if (current.item.equals(value)) {
+                return current;
             }
             current = current.next;
         }
-        return current;
+        return null;
     }
 
     @Override
     public T set(T value, int index) {
-        if (index >= size && index < EMPTY_LIST) {
+        if (index >= size || index < EMPTY_LIST) {
             throw new IndexOutOfBoundsException("Index is out of list");
         }
 
@@ -117,7 +115,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index >= size && index < EMPTY_LIST) {
+        if (index >= size || index < EMPTY_LIST) {
             throw new IndexOutOfBoundsException("Index is out of list");
         }
 
@@ -130,6 +128,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> current = getNode(object);
+        if (current == null) {
+            return false;
+        }
         unlinkNode(current);
         size--;
         return true;
@@ -143,7 +144,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = node.next;
         }
         if (node.next != null) {
-            node.next.next = node.prev;
+            node.next.prev = node.prev;
         } else {
             tail = node.prev;
         }
@@ -159,7 +160,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private static class Node<T> {
+    private class Node<T> {
         private T item;
         private Node<T> next;
         private Node<T> prev;
@@ -171,3 +172,4 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 }
+
