@@ -10,7 +10,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<T>(value, null, null);
+        Node<T> newNode = new Node<>(value, null, null);
         if (size == EMPTY_LIST) {
             head = newNode;
         } else {
@@ -23,25 +23,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        validateIndex(index);
+        validateIndex(index, true);
         if (index == size) {
             add(value);
         } else {
             Node<T> current = findNodeByIndex(index);
-            Node<T> newNode = new Node<T>(value, current.prev, current);
+            Node<T> newNode = new Node<>(value, current.prev, current);
             if (current.prev != null) {
                 current.prev.next = newNode;
-            }
-            current.prev = newNode;
-            if (index == 0) {
+            } else {
                 head = newNode;
             }
+            current.prev = newNode;
             size++;
         }
     }
 
-    private void validateIndex(int index) {
-        if (index > size || index < EMPTY_LIST) {
+    private void validateIndex(int index, boolean allowEnd) {
+        if (index < EMPTY_LIST || index > size || (!allowEnd && index == size)) {
             throw new IndexOutOfBoundsException("Index is out of list");
         }
     }
@@ -58,7 +57,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        validateIndex(index);
+        validateIndex(index, false);
         Node<T> current = findNodeByIndex(index);
         return current.item;
     }
@@ -92,7 +91,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        validateIndex(index);
+        validateIndex(index, false);
         Node<T> current = findNodeByIndex(index);
         current.item = value;
         return current.item;
@@ -100,7 +99,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        validateIndex(index);
+        validateIndex(index, false);
         Node<T> current = findNodeByIndex(index);
         unlinkNode(current);
         size--;
@@ -119,7 +118,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void unlinkNode(Node<T> node) {
-        node.item = null;
         if (node.prev != null) {
             node.prev.next = node.next;
         } else {
@@ -139,7 +137,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0;
+        return size == EMPTY_LIST;
     }
 
     private static class Node<T> {
