@@ -95,8 +95,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T set(T value, int index) {
         validateIndex(index, false);
         Node<T> current = findNodeByIndex(index);
+        T oldValue = current.item;
         current.item = value;
-        return current.item;
+        return oldValue;
     }
 
     @Override
