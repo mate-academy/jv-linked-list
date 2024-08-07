@@ -81,7 +81,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNode(T value) {
         Node<T> current = head;
         while (current != null) {
-            if ((current.item == null && value == null) || (current.item != null && current.item.equals(value))) {
+            if ((current.item == null && value == null) ||
+                    (current.item != null &&
+                            current.item.equals(value))) {
                 return current;
             }
             current = current.next;
