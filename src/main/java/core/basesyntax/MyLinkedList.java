@@ -64,22 +64,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> nodeToRemove = getNode(index);
-        final T removedValue = nodeToRemove.item;
         Node<T> nextNode = nodeToRemove.next;
         Node<T> prevNode = nodeToRemove.prev;
-
-        if (prevNode == null) {
-            first = nextNode;
-        } else {
-            prevNode.next = nextNode;
-        }
-        if (nextNode == null) {
-            last = prevNode;
-        } else {
-            nextNode.prev = prevNode;
-        }
+        checkNode(prevNode, nextNode);
         size--;
-        return removedValue;
+        return nodeToRemove.item;
     }
 
     @Override
@@ -90,17 +79,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     || (object != null && object.equals(current.item))) {
                 Node<T> nextNode = current.next;
                 Node<T> prevNode = current.prev;
-
-                if (prevNode == null) {
-                    first = nextNode;
-                } else {
-                    prevNode.next = nextNode;
-                }
-                if (nextNode == null) {
-                    last = prevNode;
-                } else {
-                    nextNode.prev = prevNode;
-                }
+                checkNode(prevNode, nextNode);
                 size--;
                 return true;
             }
@@ -117,6 +96,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    public void checkNode(Node<T> prevNode, Node<T> nextNode) {
+        if (prevNode == null) {
+            first = nextNode;
+        } else {
+            prevNode.next = nextNode;
+        }
+        if (nextNode == null) {
+            last = prevNode;
+        } else {
+            nextNode.prev = prevNode;
+        }
     }
 
     private Node<T> getNode(int index) {
