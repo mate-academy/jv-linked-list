@@ -3,21 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final int ZERO_SIZE = 0;
-    private static final int HALF_SIZE = 2;
     private Node<T> head;
     private Node<T> tail;
     private int size;
-
-    private static class Node<T> {
-        private T data;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(T data) {
-            this.data = data;
-        }
-    }
 
     @Override
     public void add(T element) {
@@ -34,32 +22,35 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T element, int index) {
-        if (index < ZERO_SIZE || index > size) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index: " + index
                     + ", Size: " + size);
         }
         Node<T> newNode = new Node<>(element);
         if (index == size) {
             add(element);
-        } else if (index == ZERO_SIZE) {
-            newNode.next = head;
-            if (head != null) {
-                head.prev = newNode;
-            }
-            head = newNode;
-            if (size == ZERO_SIZE) {
-                tail = head;
-            }
-            size++;
-        } else {
-            Node<T> current = getNode(index);
-            Node<T> previous = current.prev;
-            previous.next = newNode;
-            newNode.prev = previous;
-            newNode.next = current;
-            current.prev = newNode;
-            size++;
+            return;
         }
+        if (index == 0) {
+            if (head == null) {
+                head = tail = newNode;
+            } else {
+                newNode.next = head;
+                head.prev = newNode;
+                head = newNode;
+            }
+            size++;
+            return;
+        }
+        Node<T> nextNode = getNode(index);
+        Node<T> previousNode = nextNode.prev;
+        newNode.next = nextNode;
+        newNode.prev = previousNode;
+        if (previousNode != null) {
+            previousNode.next = newNode;
+        }
+        nextNode.prev = newNode;
+        size++;
     }
 
     @Override
@@ -69,6 +60,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T element, int index) {
+        checkIndex(index);
         Node<T> node = getNode(index);
         T oldValue = node.data;
         node.data = element;
@@ -141,7 +133,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> getNode(int index) {
         checkIndex(index);
         Node<T> current;
-        if (index < size / HALF_SIZE) {
+        if (index < size / 2) {
             current = head;
             for (int i = 0; i < index; i++) {
                 current = current.next;
@@ -159,6 +151,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index
                     + ", Size: " + size);
+        }
+    }
+
+    static class Node<T> {
+        private T data;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(T data) {
+            this.data = data;
         }
     }
 }
