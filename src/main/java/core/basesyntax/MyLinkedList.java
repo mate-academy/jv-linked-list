@@ -33,7 +33,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         } else {
-            Node<T> previousToNew = findNodeByIndex(index - 1);;
+            Node<T> previousToNew = findNodeByIndex(index - 1);
             newNode.next = previousToNew.next;
             newNode.prev = previousToNew;
             previousToNew.next = newNode;
@@ -150,7 +150,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node<T> prev;
         private Node<T> next;
