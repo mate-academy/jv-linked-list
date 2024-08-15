@@ -9,7 +9,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T element) {
-        Node<T> newNode = new Node<>(element);
+        Node<T> newNode = new Node<>(tail, element, null);
         if (tail == null) {
             head = tail = newNode;
         } else {
@@ -26,30 +26,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index: " + index
                     + ", Size: " + size);
         }
-        Node<T> newNode = new Node<>(element);
         if (index == size) {
             add(element);
             return;
         }
         if (index == 0) {
-            if (head == null) {
-                head = tail = newNode;
-            } else {
-                newNode.next = head;
+            Node<T> newNode = new Node<>(null, element, head);
+            if (head != null) {
                 head.prev = newNode;
-                head = newNode;
+            }
+            head = newNode;
+            if (size == 0) {
+                tail = newNode;
             }
             size++;
             return;
         }
         Node<T> nextNode = getNode(index);
         Node<T> previousNode = nextNode.prev;
-        newNode.next = nextNode;
-        newNode.prev = previousNode;
+        Node<T> newNode = new Node<>(previousNode, element, nextNode);
+        nextNode.prev = newNode;
         if (previousNode != null) {
             previousNode.next = newNode;
         }
-        nextNode.prev = newNode;
         size++;
     }
 
@@ -91,7 +90,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T element) {
         Node<T> current = head;
         while (current != null) {
-            if ((element == null && current.data == null)
+            if (element == current.data
                     || (element != null
                     && element.equals(current.data))) {
 
@@ -154,13 +153,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    static class Node<T> {
+    private static class Node<T> {
         private T data;
         private Node<T> next;
         private Node<T> prev;
 
-        Node(T data) {
+        Node(Node<T> prev, T data, Node<T> next) {
+            this.prev = prev;
             this.data = data;
+            this.next = next;
         }
     }
 }
