@@ -31,20 +31,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Node<T> antecedent = tail;
-        for (int i = 0; i < list.size(); i++) {
-            T value = list.get(i);
-            Node<T> newNode = new Node<>(antecedent, value, null);
-            if (antecedent == null) {
-                head = newNode;
-            } else {
-                antecedent.next = newNode;
-            }
-            antecedent = newNode;
+        for (T value : list) {
+            add(value);
         }
-
-        tail = antecedent;
-        size += list.size();
     }
 
     @Override
