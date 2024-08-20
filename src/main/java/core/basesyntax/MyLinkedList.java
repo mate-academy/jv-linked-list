@@ -7,16 +7,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    public MyLinkedList() {
-    }
-
     @Override
     public void add(T value) {
-        if (isEmpty()) {
-            linkFirst(value);
+        final Node<T> last = tail;
+        final Node<T> newNode = new Node<>(last, value, null);
+        tail = newNode;
+        if (head == null) {
+            head = newNode;
         } else {
-            linkLast(value);
+            last.next = newNode;
         }
+        size++;
     }
 
     @Override
@@ -25,7 +26,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            linkBefore(value, findNode(index));
+            final Node<T> antecedentNode = findNode(index);
+            final Node<T> current = antecedentNode.prev;
+            final Node<T> newNode = new Node<>(current, value, antecedentNode);
+            antecedentNode.prev = newNode;
+            if (current == null) {
+                head = newNode;
+            } else {
+                current.next = newNode;
+            }
+            size++;
         }
     }
 
@@ -101,42 +111,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             return node;
         }
-    }
-
-    private void linkFirst(T element) {
-        final Node<T> first = head;
-        final Node<T> newNode = new Node<>(null, element, first);
-        head = newNode;
-        if (first == null) {
-            tail = newNode;
-        } else {
-            first.prev = newNode;
-        }
-        size++;
-    }
-
-    private void linkLast(T element) {
-        final Node<T> last = tail;
-        final Node<T> newNode = new Node<>(last, element, null);
-        tail = newNode;
-        if (last == null) {
-            head = newNode;
-        } else {
-            last.next = newNode;
-        }
-        size++;
-    }
-
-    private void linkBefore(T element, Node<T> node) {
-        final Node<T> current = node.prev;
-        final Node<T> newNode = new Node<>(current, element, node);
-        node.prev = newNode;
-        if (current == null) {
-            head = newNode;
-        } else {
-            current.next = newNode;
-        }
-        size++;
     }
 
     private T unlink(Node<T> node) {
