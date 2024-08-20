@@ -133,6 +133,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index: " + index + " out of bounds.");
         }
     }
+
     private static class Node<T> {
         private T data;
         private Node<T> next;
