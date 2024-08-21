@@ -240,6 +240,7 @@ public class MyLinkedListTest {
         String actualRemovedSecond = myLinkedList.remove(3);
         String actualRemovedThird = myLinkedList.remove(3);
         String actualRemovedNull = myLinkedList.remove(3);
+
         Assert.assertEquals("Test failed! Expected value after removing should be "
                 + FIRST_ITEM, FIRST_ITEM, actualRemovedFirst);
         Assert.assertEquals("Test failed! Expected value after removing should be "
