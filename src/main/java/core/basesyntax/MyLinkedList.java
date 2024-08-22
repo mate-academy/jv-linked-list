@@ -9,7 +9,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        linkLast(value);
+        final Node<T> lastNode = last;
+        final Node<T> newNode = new Node<>(lastNode, value, null);
+        last = newNode;
+        if (lastNode == null) {
+            first = newNode;
+        } else {
+            lastNode.next = newNode;
+        }
+        size++;
     }
 
     @Override
@@ -27,27 +35,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == size) {
             last.next = newNode;
             last = newNode;
-        } else if (index > 0 && size > index) {
-            Node<T> current = first;
-            int c = 0;
-            while (current != null && c != index) {
-                current = current.next;
-                c++;
-            }
-            current.prev.next = newNode;
-            newNode.prev = current.prev;
-            current.prev = newNode;
-            newNode.next = current;
+        } else {
+            Node<T> previousToNew = getNodeByIndex(index - 1);
+            newNode.next = previousToNew.next;
+            newNode.prev = previousToNew;
+            previousToNew.next = newNode;
+            newNode.next.prev = newNode;
         }
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        Node<T> newNode;
-        for (T t : list) {
-            newNode = new Node<>(t);
-            add(newNode.item);
+        for (T element : list) {
+            add(element);
         }
     }
 
@@ -108,18 +109,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void linkLast(T e) {
-        final Node<T> lastNode = last;
-        final Node<T> newNode = new Node<>(lastNode, e, null);
-        last = newNode;
-        if (lastNode == null) {
-            first = newNode;
-        } else {
-            lastNode.next = newNode;
-        }
-        size++;
-    }
-
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("The index " + index + " is invalid "
@@ -162,30 +151,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         public Node(T value) {
             this.item = value;
-        }
-
-        public T getItem() {
-            return item;
-        }
-
-        public Node<T> getNext() {
-            return next;
-        }
-
-        public Node<T> getPrev() {
-            return prev;
-        }
-
-        public void setItem(T item) {
-            this.item = item;
-        }
-
-        public void setNext(Node<T> next) {
-            this.next = next;
-        }
-
-        public void setPrev(Node<T> prev) {
-            this.prev = prev;
         }
     }
 }
