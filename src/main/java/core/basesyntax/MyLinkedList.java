@@ -9,8 +9,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        final Node<T> lastNode = last;
-        final Node<T> newNode = new Node<>(lastNode, value, null);
+        Node<T> lastNode = last;
+        Node<T> newNode = new Node<>(lastNode, value, null);
         last = newNode;
         if (lastNode == null) {
             first = newNode;
@@ -22,11 +22,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        Node<T> lastNode = last;
+        Node<T> newNode = new Node<>(lastNode, value, null);
         if (index < 0 || size < index) {
             throw new IndexOutOfBoundsException("The index " + index + " is invalid "
                     + "the actual size of array is " + size);
         }
-        Node<T> newNode = new Node<>(value);
         if (first == null) {
             first = last = newNode;
         } else if (index == 0) {
@@ -118,11 +119,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> getNodeByIndex(int index) {
         checkIndex(index);
-        Node<T> current = first;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        Node<T> node = null;
+        if (index == 0 || index < size) {
+            node = first;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+        } else if (index == size) {
+            node = last;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
         }
-        return current;
+        return node;
     }
 
     private int getIndex(T object) {
@@ -147,10 +156,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.item = element;
             this.next = next;
             this.prev = prev;
-        }
-
-        public Node(T value) {
-            this.item = value;
         }
     }
 }
