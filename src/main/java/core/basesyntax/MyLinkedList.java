@@ -5,7 +5,7 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
-    private int size = 0;
+    private int size;
 
     @Override
     public void add(T value) {
@@ -85,7 +85,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if (compare(current.value, object)) {
+            if (compareValues(current.value, object)) {
                 unlink(current);
                 size--;
                 return true;
@@ -135,8 +135,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private boolean compare(T item1, T item2) {
-        return item1 == null ? item2 == null : item1.equals(item2);
+    private boolean compareValues(T firstValue, T secondValue) {
+        return firstValue == null ? secondValue == null : firstValue.equals(secondValue);
     }
 
     private void unlink(Node<T> node) {
