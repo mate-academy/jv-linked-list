@@ -39,9 +39,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndexForAccess(index);
-        Node<T> x = findNodeByIndex(index);
-        T oldValue = x.item;
-        x.item = value;
+        Node<T> findedNode = findNodeByIndex(index);
+        T oldValue = findedNode.item;
+        findedNode.item = value;
         return oldValue;
     }
 
@@ -72,8 +72,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     public int indexOf(T object) {
         int index = 0;
-        for (Node<T> x = first; x != null; x = x.next) {
-            if ((size != 0) && (x.item == object || (x.item != null && x.item.equals(object)))) {
+        for (Node<T> iteratedNode = first; iteratedNode != null; iteratedNode = iteratedNode.next) {
+            if ((size != 0) && (iteratedNode.item == object
+                    || (iteratedNode.item != null && iteratedNode.item.equals(object)))) {
                 return index;
             }
             index++;
@@ -105,13 +106,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void linkLast(T value) {
-        final Node<T> l = last;
-        final Node<T> newNode = new Node<>(l, value, null);
+        final Node<T> lastNode = last;
+        final Node<T> newNode = new Node<>(lastNode, value, null);
         last = newNode;
-        if (l == null) {
+        if (lastNode == null) {
             first = newNode;
         } else {
-            l.next = newNode;
+            lastNode.next = newNode;
         }
         size++;
     }
@@ -130,33 +131,33 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNodeByIndex(int index) {
         if (index < (size / HALF_DIVIDER_INDEX)) {
-            Node<T> x = first;
+            Node<T> needFullNode = first;
             for (int i = 0; i < index; i++) {
-                x = x.next;
+                needFullNode = needFullNode.next;
             }
-            return x;
+            return needFullNode;
         } else {
-            Node<T> x = last;
+            Node<T> needFullNode = last;
             for (int i = size - 1; i > index; i--) {
-                x = x.prev;
+                needFullNode = needFullNode.prev;
             }
-            return x;
+            return needFullNode;
         }
     }
 
     private void checkIndexForAdd(int index) {
-        if (!(index >= 0 && index <= size)) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index is incorrect " + index);
         }
     }
 
     private void checkIndexForAccess(int index) {
-        if (!(index >= 0 && index < size)) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index is incorrect " + index);
         }
     }
 
-    private static class Node<T> {
+    private class Node<T> {
         private T item;
         private Node<T> prev;
         private Node<T> next;
