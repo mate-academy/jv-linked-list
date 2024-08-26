@@ -74,8 +74,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
 
         while (current != null) {
-            if ((object == null && current.value == null)
-                    || (object != null && object.equals(current.value))) {
+            if (object == current.value
+                    || object != null && object.equals(current.value)) {
                 unlink(current);
                 return true;
             }
@@ -96,7 +96,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndex(int index, boolean allowEqualSize) {
-        if (index < 0 || index >= size + (allowEqualSize ? 1 : 0)) {
+        int upperBound = allowEqualSize ? size : size - 1;
+
+        if (index < 0 || index > upperBound) {
             throw new IndexOutOfBoundsException("Invalid index: " + index
                 + ", size: " + size);
         }
