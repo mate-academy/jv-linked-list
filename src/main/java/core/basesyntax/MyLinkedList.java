@@ -28,35 +28,33 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index: " + index + " Size: " + size);
         }
-
         Node<T> newNode = new Node<>(value);
 
         if (index == 0) {
-            newNode.next = head;
-            if (head != null) {
-                head.prev = newNode;
-            }
-            head = newNode;
-            if (size == 0) {
+            if (head == null) {
+                head = newNode;
                 tail = newNode;
+            } else {
+                newNode.next = head;
+                head.prev = newNode;
+                head = newNode;
             }
+
         } else if (index == size) {
             newNode.prev = tail;
             if (tail != null) {
                 tail.next = newNode;
             }
             tail = newNode;
-            if (size == 0) {
-                head = newNode;
-            }
         } else {
-            Node<T> current = findNodeByIndex(index - 1);
-            newNode.next = current.next;
-            newNode.prev = current;
-            if (current.next != null) {
-                current.next.prev = newNode;
+            Node<T> current = findNodeByIndex(index);
+            newNode.next = current;
+            newNode.prev = current.prev;
+
+            if (current.prev != null) {
+                current.prev.next = newNode;
             }
-            current.next = newNode;
+            current.prev = newNode;
         }
         size++;
     }
@@ -75,7 +73,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         Node<T> current = findNodeByIndex(index);
-        return current.value;
+
+        T oldValue = current.value;
+        return oldValue;
     }
 
     @Override
@@ -149,20 +149,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNodeByIndex(int index) {
         checkIndexValid(index);
-
+        Node<T> current;
         if (index < (size / 2)) {
-            Node<T> current = head;
+            current = head;
             for (int i = 0; i < index; i++) {
                 current = current.next;
             }
-            return current;
         } else {
-            Node<T> current = tail;
+            current = tail;
             for (int i = size - 1; i > index; i--) {
                 current = current.prev;
             }
-            return current;
         }
+        return current;
     }
 
     private void unlink(Node<T> node) {
