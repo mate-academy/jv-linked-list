@@ -83,4 +83,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean isEmpty() {
         return size == 0;
     }
+    private static class Node<T> {
 }
