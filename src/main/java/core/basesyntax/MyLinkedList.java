@@ -34,21 +34,43 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndex(index);
+        Node<T> wanted = findNode(index);
+        return wanted.item;
     }
 
     @Override
     public T set(T value, int index) {
-        return null;
+        checkIndex(index);
+        Node<T> wanted = findNode(index);
+        T oldValue = wanted.item;
+        wanted.item = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIndex(index);
+        return unlink(findNode(index));
     }
 
     @Override
     public boolean remove(T object) {
+        if (object == null) {
+            for (Node<T> wanted = first; wanted != null; wanted = wanted.next) {
+                if (wanted.item == null) {
+                    unlink(wanted);
+                    return true;
+                }
+            }
+        } else {
+            for (Node<T> wanted = first; wanted != null; wanted = wanted.next) {
+                if (object.equals(wanted.item)) {
+                    unlink(wanted);
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
