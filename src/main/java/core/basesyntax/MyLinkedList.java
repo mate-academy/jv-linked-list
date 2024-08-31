@@ -163,11 +163,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             return wantedNode;
         } else {
-            Node<T> wanted = last;
+            Node<T> wantedNode = last;
             for (int i = size - 1; i > index; i--) {
-                wanted = wanted.prev;
+                wantedNode = wantedNode.prev;
             }
-            return wanted;
+            return wantedNode;
         }
     }
 
