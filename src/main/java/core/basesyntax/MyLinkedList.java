@@ -12,14 +12,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
+        linkLast(value);
     }
 
     @Override
     public void add(T value, int index) {
+        checkIndexForAdd(index);
+        if (index == size()) {
+            linkLast(value);
+        } else {
+            linkBefore(value, findNode(index));
+        }
     }
 
     @Override
     public void addAll(List<T> list) {
+        for (T value : list) {
+            add(value);
+        }
     }
 
     @Override
