@@ -109,35 +109,35 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void linkBefore(T value, Node<T> after) {
-        final Node<T> before = after.prev;
-        final Node<T> newNode = new Node<>(before, value, after);
-        after.prev = newNode;
-        if (before == null) {
+    private void linkBefore(T value, Node<T> nodeAfter) {
+        final Node<T> nodeBefore = nodeAfter.prev;
+        final Node<T> newNode = new Node<>(nodeBefore, value, nodeAfter);
+        nodeAfter.prev = newNode;
+        if (nodeBefore == null) {
             first = newNode;
         } else {
-            before.next = newNode;
+            nodeBefore.next = newNode;
         }
         size++;
     }
 
-    private T unlink(Node<T> found) {
-        final T element = found.item;
-        final Node<T> next = found.next;
-        final Node<T> prev = found.prev;
+    private T unlink(Node<T> foundNode) {
+        final T element = foundNode.item;
+        final Node<T> next = foundNode.next;
+        final Node<T> prev = foundNode.prev;
         if (prev == null) {
             first = next;
         } else {
             prev.next = next;
-            found.prev = null;
+            foundNode.prev = null;
         }
         if (next == null) {
             last = prev;
         } else {
             next.prev = prev;
-            found.next = null;
+            foundNode.next = null;
         }
-        found.item = null;
+        foundNode.item = null;
         size--;
         return element;
     }
