@@ -104,10 +104,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         final Node<T> initLast = last;
         final Node<T> newNode = new Node<>(initLast, value, null);
         last = newNode;
-        if (initLast == null)
+        if (initLast == null) {
             first = newNode;
-        else
+        } else {
             initLast.next = newNode;
+        }
         size++;
     }
 
@@ -115,10 +116,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         final Node<T> before = after.prev;
         final Node<T> newNode = new Node<>(before, value, after);
         after.prev = newNode;
-        if (before == null)
+        if (before == null) {
             first = newNode;
-        else
+        } else {
             before.next = newNode;
+        }
         size++;
     }
 
@@ -144,8 +146,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndexForAdd(int index) {
-        if (index < 0 || index > size())
+        if (index < 0 || index > size()) {
             throw new IndexOutOfBoundsException("Index is out of size range");
+        }
     }
 
     private void checkIndex(int index) {
@@ -158,21 +161,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> findNode(int index) {
         if (index < (size() / 2)) {
             Node<T> wanted = first;
-            for (int i = 0; i < index; i++)
+            for (int i = 0; i < index; i++) {
                 wanted = wanted.next;
+            }
             return wanted;
         } else {
             Node<T> wanted = last;
-            for (int i = size - 1; i > index; i--)
+            for (int i = size - 1; i > index; i--) {
                 wanted = wanted.prev;
+            }
             return wanted;
         }
     }
 
     private static class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> prev;
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
         Node(Node<T> prev, T element, Node<T> next) {
             this.item = element;
