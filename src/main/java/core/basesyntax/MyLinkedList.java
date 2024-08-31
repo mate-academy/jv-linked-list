@@ -32,16 +32,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        Node<T> wanted = findNode(index);
-        return wanted.item;
+        Node<T> wantedNode = findNode(index);
+        return wantedNode.item;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> wanted = findNode(index);
-        T oldValue = wanted.item;
-        wanted.item = value;
+        Node<T> wantedNode = findNode(index);
+        T oldValue = wantedNode.item;
+        wantedNode.item = value;
         return oldValue;
     }
 
@@ -54,16 +54,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         if (object == null) {
-            for (Node<T> wanted = first; wanted != null; wanted = wanted.next) {
-                if (wanted.item == null) {
-                    unlink(wanted);
+            for (Node<T> wantedNode = first; wantedNode != null; wantedNode = wantedNode.next) {
+                if (wantedNode.item == null) {
+                    unlink(wantedNode);
                     return true;
                 }
             }
         } else {
-            for (Node<T> wanted = first; wanted != null; wanted = wanted.next) {
-                if (object.equals(wanted.item)) {
-                    unlink(wanted);
+            for (Node<T> wantedNode = first; wantedNode != null; wantedNode = wantedNode.next) {
+                if (object.equals(wantedNode.item)) {
+                    unlink(wantedNode);
                     return true;
                 }
             }
@@ -157,11 +157,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNode(int index) {
         if (index < (size() / 2)) {
-            Node<T> wanted = first;
+            Node<T> wantedNode = first;
             for (int i = 0; i < index; i++) {
-                wanted = wanted.next;
+                wantedNode = wantedNode.next;
             }
-            return wanted;
+            return wantedNode;
         } else {
             Node<T> wanted = last;
             for (int i = size - 1; i > index; i--) {
