@@ -15,7 +15,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        indexCheck(index);
+        checkIndexForAddMethod(index);
         if (index == size) {
             linkLast(value);
         } else {
@@ -33,13 +33,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        indexCheck(index);
+        checkIndexForAddMethod(index);
         return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        indexCheck(index);
+        checkIndexForAddMethod(index);
         T oldValue = findNodeByIndex(index).item;
         findNodeByIndex(index).item = value;
         return oldValue;
@@ -55,14 +55,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> loopObject = first;
-        while (loopObject != null) {
-            if (areEquals(object, loopObject.item)) {
-                unlink(loopObject);
+        Node<T> currentNode = first;
+        while (currentNode != null) {
+            if (areEquals(object, currentNode.item)) {
+                unlink(currentNode);
                 size--;
                 return true;
             }
-            loopObject = loopObject.next;
+            currentNode = currentNode.next;
         }
         return false;
     }
@@ -78,7 +78,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
-        indexCheckToFindNodeByIndexMethod(index);
+        checkIndex(index);
         Node<T> newNode = first;
         for (int i = 0; i < index; i++) {
             newNode = newNode.next;
@@ -86,64 +86,64 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return newNode;
     }
 
-    private void indexCheck(int index) {
+    private void checkIndexForAddMethod(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index out of bound: " + index);
         }
     }
 
-    private void indexCheckToFindNodeByIndexMethod(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index out of bound: " + index);
         }
     }
 
-    private void unlink(Node<T> current) {
-        if (current.prev != null) {
-            current.prev.next = current.next;
+    private void unlink(Node<T> currentNode) {
+        if (currentNode.prev != null) {
+            currentNode.prev.next = currentNode.next;
         } else {
-            first = current.next;
+            first = currentNode.next;
         }
 
-        if (current.next != null) {
-            current.next.prev = current.prev;
+        if (currentNode.next != null) {
+            currentNode.next.prev = currentNode.prev;
         } else {
-            last = current.prev;
+            last = currentNode.prev;
         }
     }
 
-    private void linkBefore(T t, Node<T> succ) {
-        if (succ == null) {
+    private void linkBefore(T node, Node<T> nodeNext) {
+        if (nodeNext == null) {
             throw new RuntimeException("Successor node cant not be null");
         }
 
-        Node<T> antec = succ.prev;
-        Node<T> newNode = new Node<>(antec, t, succ);
-        succ.prev = newNode;
-        if (antec == null) {
+        Node<T> nodePrevious = nodeNext.prev;
+        Node<T> newNode = new Node<>(nodePrevious, node, nodeNext);
+        nodeNext.prev = newNode;
+        if (nodePrevious == null) {
             first = newNode;
         } else {
-            antec.next = newNode;
-            newNode.prev = antec;
+            nodePrevious.next = newNode;
+            newNode.prev = nodePrevious;
         }
     }
 
-    private void linkLast(T t) {
-        Node<T> l = last;
-        Node<T> newNode = new Node<>(last, t, null);
+    private void linkLast(T node) {
+        Node<T> lastNode = last;
+        Node<T> newNode = new Node<>(last, node, null);
         last = newNode;
-        if (l == null) {
+        if (lastNode == null) {
             first = newNode;
         } else {
-            l.next = newNode;
+            lastNode.next = newNode;
         }
     }
 
-    private boolean areEquals(T a, T b) {
-        if (a == null) {
-            return b == null;
+    private boolean areEquals(T nodeOne, T nodeTwo) {
+        if (nodeOne == null) {
+            return nodeTwo == null;
         }
-        return a.equals(b);
+        return nodeOne.equals(nodeTwo);
     }
 
     private static class Node<T> {
