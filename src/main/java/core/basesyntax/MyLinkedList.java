@@ -8,18 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private T data;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(T data, Node<T> prev, Node<T> next) {
-            this.data = data;
-            this.prev = prev;
-            this.next = next;
-        }
-    }
-
     @Override
     public void add(T value) {
 
@@ -167,4 +155,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
+
+    private class Node<T> {
+        private T data;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(T data, Node<T> prev, Node<T> next) {
+            this.data = data;
+            this.prev = prev;
+            this.next = next;
+        }
+    }
+
 }
