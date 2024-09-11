@@ -10,12 +10,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(tail, value, null);
-        if (tail == null) {
-            head = newNode;
-        } else {
-            tail.next = newNode;
-        }
+        linkNodes(tail, newNode);
         tail = newNode;
+        if (head == null) {
+            head = newNode;
+        }
         size++;
     }
 
@@ -30,11 +29,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         Node<T> current = getNodeAt(index);
         Node<T> newNode = new Node<>(current.prev, value, current);
-        if (current.prev != null) {
-            current.prev.next = newNode;
-        } else {
-            head = newNode;
-        }
+        linkNodes(current.prev, newNode);
         current.prev = newNode;
         size++;
     }
@@ -65,15 +60,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> nodeToRemove = getNodeAt(index);
-        if (nodeToRemove.prev != null) {
-            nodeToRemove.prev.next = nodeToRemove.next;
-        } else {
-            head = nodeToRemove.next;
-        }
-        if (nodeToRemove.next != null) {
-            nodeToRemove.next.prev = nodeToRemove.prev;
-        } else {
+        linkNodes(nodeToRemove.prev, nodeToRemove.next);
+        if (nodeToRemove == tail) {
             tail = nodeToRemove.prev;
+        }
+        if (nodeToRemove == head) {
+            head = nodeToRemove.next;
         }
         size--;
         return nodeToRemove.value;
@@ -84,15 +76,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
         while (current != null) {
             if (object == null ? current.value == null : object.equals(current.value)) {
-                if (current.prev != null) {
-                    current.prev.next = current.next;
-                } else {
-                    head = current.next;
-                }
-                if (current.next != null) {
-                    current.next.prev = current.prev;
-                } else {
+                linkNodes(current.prev, current.next);
+                if (current == tail) {
                     tail = current.prev;
+                }
+                if (current == head) {
+                    head = current.next;
                 }
                 size--;
                 return true;
