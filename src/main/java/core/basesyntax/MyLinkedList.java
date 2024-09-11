@@ -134,12 +134,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private void linkNodes(Node<T> prevNode, Node<T> nextNode) {
+        if (prevNode != null) {
+            prevNode.next = nextNode;
+        }
+        if (nextNode != null) {
+            nextNode.prev = prevNode;
+        }
+    }
+
     public class Node<T> {
         private T value;
         private Node<T> prev;
         private Node<T> next;
 
-        public Node(Node<T> prev, T value, Node<T> next) {
+        Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
             this.value = value;
             this.next = next;
