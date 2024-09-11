@@ -148,12 +148,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (object != null && object.equals(current.item) || (object == current.item)) {
                 removeNodeByValue(current);
                 return true;
-            } /*else {
-                if (object.equals(current.item)) {
-                    removeNodeByValue(current);
-                    return true;
-                }
-            }*/
+            }
             current = current.next;
         }
         return false;
@@ -199,8 +194,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         MyLinkedList<?> that = (MyLinkedList<?>) o;
         return Objects.equals(head, that.head) && Objects.equals(tail, that.tail);
     }
