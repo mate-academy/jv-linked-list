@@ -68,6 +68,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
+        // Handle null object parameter explicitly
         Node<T> current = head;
         while (current != null) {
             if (object == null ? current.value == null : object.equals(current.value)) {
