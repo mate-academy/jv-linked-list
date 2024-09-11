@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -144,17 +145,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if (object == null) {
-                if (current.item == null) {
-                    removeNodeByValue(current);
-                    return true;
-                }
-            } else {
+            if (object != null && object.equals(current.item) || (object == current.item)) {
+                removeNodeByValue(current);
+                return true;
+            } /*else {
                 if (object.equals(current.item)) {
                     removeNodeByValue(current);
                     return true;
                 }
-            }
+            }*/
             current = current.next;
         }
         return false;
@@ -196,5 +195,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size()) {
             throw new IndexOutOfBoundsException("Index out of bounds: " + index);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MyLinkedList<?> that = (MyLinkedList<?>) o;
+        return Objects.equals(head, that.head) && Objects.equals(tail, that.tail);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 1;
+        Node<T> current = head;
+        while (current != null) {
+            hash = 31 * hash + (current.item == null ? 0 : current.item.hashCode());
+            current = current.next;
+        }
+        return hash;
     }
 }
