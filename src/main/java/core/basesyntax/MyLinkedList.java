@@ -105,6 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeAt(int index) {
+        checkIndex(index);
         if (index < size / 2) {
             Node<T> current = head;
             for (int i = 0; i < index; i++) {
