@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -31,31 +30,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 tail = newNode;
             }
         } else {
-            Node<T> current = head;
-            int count = 1;
-            while (current != null) {
-                if (count == index) {
-                    Node<T> newNode = new Node<>(current, value, current.next);
-                    current.next = newNode;
-                    current.prev = newNode;
-                    if (newNode.next == null) {
-                        tail = newNode;
-                    }
-                    break;
-                } else {
-                    count++;
-                    current = current.next;
-                }
+            Node<T> prevNode = getNodeByIndex(index - 1);
+            Node<T> newNode = new Node<>(prevNode, value, prevNode.next);
+
+            prevNode.next = newNode;
+            if (newNode.next != null) {
+                newNode.next.prev = newNode;
+            } else {
+                tail = newNode;
             }
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (list.isEmpty()) {
-            return;
-        }
-
         for (T item : list) {
             add(item);
         }
@@ -63,11 +51,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
+        Node<T> current = getNodeByIndex(index);
         return current.item;
     }
 
@@ -139,22 +123,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return false;
     }
 
-    private void removeNodeByValue(Node<T> node) {
-        if (node.prev == null) {
-            head = head.next;
-            if (head != null) {
-                head.prev = null;
-            }
-        } else {
-            node.prev.next = node.next;
-            if (node.next != null) {
-                node.next.prev = node.prev;
-            } else {
-                tail = node.prev;
-            }
-        }
-    }
-
     @Override
     public int size() {
         int size = 0;
@@ -177,27 +145,38 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
+    private Node<T> getNodeByIndex(int index) {
+        checkIndex(index);
+
+        Node<T> current;
+        if (index <= size() / 2) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size() - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        MyLinkedList<?> that = (MyLinkedList<?>) o;
-        return Objects.equals(head, that.head) && Objects.equals(tail, that.tail);
+        return current;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 1;
-        Node<T> current = head;
-        while (current != null) {
-            hash = 31 * hash + (current.item == null ? 0 : current.item.hashCode());
-            current = current.next;
+    private void removeNodeByValue(Node<T> node) {
+        if (node.prev == null) {
+            head = head.next;
+            if (head != null) {
+                head.prev = null;
+            }
+        } else {
+            node.prev.next = node.next;
+            if (node.next != null) {
+                node.next.prev = node.prev;
+            } else {
+                tail = node.prev;
+            }
         }
-        return hash;
     }
 
     private static class Node<E> {
