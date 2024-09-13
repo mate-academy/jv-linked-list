@@ -132,12 +132,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        int size = 0;
-        Node<T> current = head;
-        while (current != null) {
-            size++;
-            current = current.next;
-        }
         return size;
     }
 
