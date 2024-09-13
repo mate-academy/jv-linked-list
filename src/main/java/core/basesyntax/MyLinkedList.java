@@ -88,6 +88,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
+        Node<T> toRemove = node(index);
+        unlink(toRemove);
+        return toRemove.value;
         Node<T> current = head;
         int count = 0;
         while (count < index) {
