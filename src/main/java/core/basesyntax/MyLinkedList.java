@@ -58,6 +58,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
+        Node<T> toSet = node(index);
+        T oldValue = toSet.value;
+        toSet.value = value;
+        return oldValue;
         Node<T> current = head;
         int count = 0;
         while (count < index) {
