@@ -5,7 +5,6 @@ import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static final int OFFSET_ONE = 1;
-    private static final int EMPTY_LIST = 0;
     private static final int MIDPOINT_DIVISOR = 2;
     private int size;
     private Node<T> first;
@@ -24,7 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         Node<T> newNode = new Node<>(null, value, null);
-        if (index == EMPTY_LIST) {
+        if (index == 0) {
             newNode.next = first;
             first = newNode;
             size++;
@@ -44,9 +43,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        T[] listToArray = (T[]) list.toArray();
-        for (T values : listToArray) {
-            linkLast(values);
+        for (T value : list) {
+            add(value);
         }
     }
 
@@ -68,22 +66,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkAccessIndex(index);
-        if (index == EMPTY_LIST) {
-            return removeFirst();
-        }
-        if (index == size - OFFSET_ONE) {
-            return removeLast();
-        }
-        Node<T> temp = findNodeByIndex(index);
-        unlink(temp);
-        return temp.item;
+        Node<T> current = findNodeByIndex(index);
+        unlink(current);
+        return current.item;
+
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> temp = first;
         while (temp != null) {
-            if (unlink(temp, object)) {
+            if (Objects.equals(temp.item, object)) {
+                unlink(temp);
                 return true;
             }
             temp = temp.next;
@@ -98,17 +92,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == EMPTY_LIST;
+        return size == 0;
     }
 
     private void linkLast(T value) {
-        Node<T> l = last;
-        Node<T> newNode = new Node<>(l, value, null);
+        Node<T> initialLast = last;
+        Node<T> newNode = new Node<>(initialLast, value, null);
         last = newNode;
-        if (l == null) {
+        if (initialLast == null) {
             first = newNode;
         } else {
-            l.next = newNode;
+            initialLast.next = newNode;
         }
         size++;
     }
@@ -129,67 +123,40 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return temp;
     }
 
-    private T removeFirst() {
-        final T initialItem = first.item;
-        if (first.next == null) {
-            first = null;
-            last = null;
-            size--;
-            return initialItem;
+    private void unlink(Node<T> node) {
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        } else {
+            first = node.next;
         }
-        first = first.next;
-        size--;
-        return initialItem;
-    }
 
-    private T removeLast() {
-        final T initialItem = last.item;
-        last.prev.next = null;
-        last = last.prev;
-        size--;
-        return initialItem;
-    }
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        } else {
+            last = node.prev;
+        }
 
-    private void unlink(Node<T> temp) {
-        temp.next.prev = temp.prev;
-        temp.prev.next = temp.next;
         size--;
-    }
-
-    private boolean unlink(Node<T> temp, T object) {
-        if (object != null && temp.equals(first) && object.equals(first.item)) {
-            removeFirst();
-            return true;
-        }
-        if (object != null && temp.equals(last) && object.equals(last.item)) {
-            removeLast();
-            return true;
-        }
-        if (Objects.equals(temp.item, object)) {
-            unlink(temp);
-            return true;
-        }
-        return false;
     }
 
     private void checkInsertIndex(int index) {
-        if (index > size || index < EMPTY_LIST) {
+        if (index > size || index < 0) {
             throw new IndexOutOfBoundsException("Index out of bounds");
         }
     }
 
     private void checkAccessIndex(int index) {
-        if (index >= size || index < EMPTY_LIST) {
+        if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Index out of bounds");
         }
     }
 
-    private static class Node<E> {
-        private E item;
-        private Node<E> next;
-        private Node<E> prev;
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
-        public Node(Node<E> prev, E item, Node<E> next) {
+        public Node(Node<T> prev, T item, Node<T> next) {
             this.item = item;
             this.next = next;
             this.prev = prev;
