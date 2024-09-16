@@ -111,7 +111,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
 
         Node<T> current;
-        if (index <= size() / 2) {
+        if (index < size / 2) {
             current = head;
             for (int i = 0; i < index; i++) {
                 current = current.next;
