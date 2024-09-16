@@ -54,6 +54,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
+        checkIndex(index);
         Node<T> current = getNodeByIndex(index);
         return current.item;
     }
