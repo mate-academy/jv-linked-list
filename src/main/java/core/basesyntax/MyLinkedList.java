@@ -25,22 +25,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size()) {
             throw new IndexOutOfBoundsException("Index out of bounds: " + index);
         }
+
+        if (index == size()) {
+            add(value);
+            return;
+        }
+
         if (index == 0) {
             Node<T> newNode = new Node<>(null, value, head);
+            if (head != null) {
+                head.prev = newNode;
+            }
             head = newNode;
             if (tail == null) {
-                tail = newNode;
+                tail = head;
             }
-        } else {
-            Node<T> prevNode = getNodeByIndex(index - 1);
-            Node<T> newNode = new Node<>(prevNode, value, prevNode.next);
+            size++;
+            return;
+        }
 
-            prevNode.next = newNode;
-            if (newNode.next != null) {
-                newNode.next.prev = newNode;
-            } else {
-                tail = newNode;
-            }
+        Node<T> prevNode = getNodeByIndex(index - 1);
+        Node<T> newNode = new Node<>(prevNode, value, prevNode.next);
+        prevNode.next = newNode;
+        if (newNode.next != null) {
+            newNode.next.prev = newNode;
         }
         size++;
     }
