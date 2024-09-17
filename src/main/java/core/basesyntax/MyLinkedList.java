@@ -98,8 +98,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = this.head;
 
         while (current != null) {
-            if ((object == null && current.element == null) ||
-                    (object != null && object.equals(current.element))) {
+            if ((object == null && current.element == null)
+                    || (object != null && object.equals(current.element))) {
                 this.removeNode(current);
 
                 return true;
