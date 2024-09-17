@@ -3,18 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static class Node<T> {
-        private T data;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T data, Node<T> next) {
-            this.prev = prev;
-            this.data = data;
-            this.next = next;
-        }
-    }
-
     private Node<T> first;
     private Node<T> last;
     private int size;
@@ -89,6 +77,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return false;
     }
 
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
     private void linkLast(T value) {
         final Node<T> oldLast = last;
         final Node<T> newNode = new Node<>(oldLast, value, null);
@@ -155,13 +153,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkElementIndex(int index) {
         if (!isElementIndex(index)) {
-            throw new IndexOutOfBoundsException(indexOutOfBoundsMsg(index));
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
 
     private void checkPositionIndex(int index) {
         if (!isPositionIndex(index)) {
-            throw new IndexOutOfBoundsException(indexOutOfBoundsMsg(index));
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
 
@@ -173,17 +171,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return index >= 0 && index <= size;
     }
 
-    private String indexOutOfBoundsMsg(int index) {
-        return "Index: " + index + ", Size: " + size;
-    }
+    private static class Node<T> {
+        private T data;
+        private Node<T> prev;
+        private Node<T> next;
 
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
+        public Node(Node<T> prev, T data, Node<T> next) {
+            this.prev = prev;
+            this.data = data;
+            this.next = next;
+        }
     }
 }
