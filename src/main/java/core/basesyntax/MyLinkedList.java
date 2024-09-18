@@ -8,9 +8,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
 
     private static class Node<T> {
-        T value;
-        Node<T> next;
-        Node<T> prev;
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
 
         Node(Node<T> prev, T value, Node<T> next) {
             this.value = value;
@@ -120,7 +120,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return current;
     }
-
 
     private T unlink(Node<T> node) {
         T value = node.value;
