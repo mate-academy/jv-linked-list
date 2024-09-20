@@ -14,7 +14,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        validatePositionIndex(index);
+        validateIndex(index, true);
 
         if (index == size) {
             linkLast(value);
@@ -32,13 +32,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        validateElementIndex(index);
+        validateIndex(index, false);
         return node(index).data;
     }
 
     @Override
     public T set(T value, int index) {
-        validateElementIndex(index);
+        validateIndex(index, false);
         Node<T> targetNode = node(index);
         T oldValue = targetNode.data;
         targetNode.data = value;
@@ -47,7 +47,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        validateElementIndex(index);
+        validateIndex(index, false);
         return unlink(node(index));
     }
 
@@ -145,24 +145,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return currentNode;
     }
 
-    private void validateElementIndex(int index) {
-        if (!isElementIndex(index)) {
+    private void validateIndex(int index, boolean isPositionIndex) {
+        if (index < 0 || index > (isPositionIndex ? size : size - 1)) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
-    }
-
-    private void validatePositionIndex(int index) {
-        if (!isPositionIndex(index)) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-    }
-
-    private boolean isElementIndex(int index) {
-        return index >= 0 && index < size;
-    }
-
-    private boolean isPositionIndex(int index) {
-        return index >= 0 && index <= size;
     }
 
     private static class Node<T> {
