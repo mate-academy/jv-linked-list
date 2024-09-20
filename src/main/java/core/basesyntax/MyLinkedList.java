@@ -19,7 +19,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = newNode;
         }
 
-        size ++;
+        size++;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current.prev = newNode;
         }
 
-        size ++;
+        size++;
     }
 
     @Override
@@ -162,7 +162,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.next.prev = node.prev;
         }
 
-        size --;
+        size--;
 
         return node.element;
     }
