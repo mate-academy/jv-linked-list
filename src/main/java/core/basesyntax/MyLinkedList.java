@@ -23,24 +23,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index, true);
+        checkIndexForAdd(index);
         if (index == size) {
             add(value);
         } else {
             insertAtIndex(value, index);
         }
-    }
-
-    private void insertAtIndex(T value, int index) {
-        Node<T> current = getNode(index);
-        Node<T> newNode = new Node<>(current.prev, value, current);
-        if (current.prev == null) {
-            head = newNode;
-        } else {
-            current.prev.next = newNode;
-        }
-        current.prev = newNode;
-        size++;
     }
 
     @Override
@@ -52,13 +40,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, false);
+        checkIndex(index);
         return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index, false);
+        checkIndex(index);
         Node<T> node = getNode(index);
         T oldValue = node.value;
         node.value = value;
@@ -67,7 +55,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index, false);
+        checkIndex(index);
         Node<T> nodeRemove = getNode(index);
         return removeNode(nodeRemove);
     }
@@ -120,7 +108,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        checkIndex(index, false);
         Node<T> current;
         if (index < size / 2) {
             current = head;
@@ -136,9 +123,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private void checkIndex(int index, boolean isAdd) {
-        if (index < 0 || (isAdd ? index > size : index >= size)) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+    private void insertAtIndex(T value, int index) {
+        Node<T> current = getNode(index);
+        Node<T> newNode = new Node<>(current.prev, value, current);
+        if (current.prev == null) {
+            head = newNode;
+        } else {
+            current.prev.next = newNode;
+        }
+        current.prev = newNode;
+        size++;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", size " + size);
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", size " + size);
         }
     }
 
