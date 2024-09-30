@@ -14,6 +14,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = newNode;
         } else {
             tail.next = newNode;
+            newNode.prev = tail;
         }
         tail = newNode;
         size++;
@@ -22,23 +23,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        Node<T> newNode = new Node<>(null,value,null);
-        if (index == 0) {
-            if (head == null) {
-                head = newNode;
-                tail = newNode;
-            } else {
-                newNode.next = head;
-                head.prev = newNode;
-                head = newNode;
-            }
+        Node<T> newNode = new Node<>(null, value, null);
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
         } else if (index == size) {
-            add(value);
-        } else {
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
+        } else if (index == 0) {
+            newNode.next = head;
+            head.prev = newNode;
+            head = newNode;
+        } else if (index > 0 && index < size) {
             Node<T> current = findByIndex(index);
             current.prev.next = newNode;
-            newNode.prev = current.prev;
             newNode.next = current;
+            newNode.prev = current.prev;
             current.prev = newNode;
         }
         size++;
@@ -70,8 +71,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> currentNode = findByIndex(index);
-        currentNode.prev = currentNode.next;
-        currentNode.next.prev = currentNode.prev;
+        if (currentNode.prev != null && currentNode.next != null) {
+            currentNode.prev.next = currentNode.next;
+            currentNode.next.prev = currentNode.prev;
+        } else if (currentNode == head && currentNode.next != null) {
+            currentNode.next.prev = null;
+            head = currentNode.next;
+        } else if (currentNode == tail && currentNode.prev != null) {
+            currentNode.prev.next = null;
+            tail = currentNode.prev;
+        }
         size--;
         return currentNode.item;
     }
@@ -82,8 +91,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> nodeToRemove = findByIndex(i);
             if ((object == null && nodeToRemove.item == null)
                     || (object != null && object.equals(nodeToRemove.item))) {
-                nodeToRemove.prev = nodeToRemove.next;
-                nodeToRemove.next.prev = nodeToRemove.prev;
+                if (nodeToRemove.prev != null && nodeToRemove.next != null) {
+                    nodeToRemove.prev.next = nodeToRemove.next;
+                    nodeToRemove.next.prev = nodeToRemove.prev;
+                } else if (nodeToRemove == head && nodeToRemove.next != null) {
+                    nodeToRemove.next.prev = null;
+                    head = nodeToRemove.next;
+                } else if (nodeToRemove == tail && nodeToRemove.prev != null) {
+                    nodeToRemove.prev.next = null;
+                    tail = nodeToRemove.prev;
+                }
                 size--;
                 return true;
             }
@@ -103,27 +120,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " doesn't found");
+            throw new IndexOutOfBoundsException("Index " + index + " out of bounds");
         }
     }
 
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index " + index + " doesn't found");
+            throw new IndexOutOfBoundsException("Index " + index + " out of bounds");
         }
     }
 
     private Node<T> findByIndex(int index) {
         Node<T> currentByIndex;
-        currentByIndex = head;
-        if (index == 0) {
-            return currentByIndex;
-        } else {
-            for (int i = 1; i < size; i++) {
+        if (index < size / 2) {
+            currentByIndex = head;
+            for (int i = 0; i < index; i++) {
                 currentByIndex = currentByIndex.next;
-                if (i == index) {
-                    return currentByIndex;
-                }
+            }
+        } else {
+            currentByIndex = tail;
+            for (int i = size - 1; i > index; i--) {
+                currentByIndex = currentByIndex.prev;
             }
         }
         return currentByIndex;
