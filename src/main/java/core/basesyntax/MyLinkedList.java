@@ -73,7 +73,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         currentNode.prev = currentNode.next;
         currentNode.next.prev = currentNode.prev;
         size--;
-        return null;
+        return currentNode.item;
     }
 
     @Override
@@ -116,8 +116,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> findByIndex(int index) {
         Node<T> currentByIndex;
         currentByIndex = head;
-        for (int i = 1; i < size; i++) {
-            currentByIndex = currentByIndex.next;
+        if (index == 0) {
+            return currentByIndex;
+        } else {
+            for (int i = 1; i < size; i++) {
+                currentByIndex = currentByIndex.next;
+                if (i == index) {
+                    return currentByIndex;
+                }
+            }
         }
         return currentByIndex;
     }
