@@ -22,7 +22,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw  new IndexOutOfBoundsException("Index is out of bound");
+            throw new IndexOutOfBoundsException("Index is out of bound");
         }
         if (index == size) {
             add(value);
@@ -65,7 +65,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         if (index < 0 || index >= size) {
-            throw  new IndexOutOfBoundsException("Index is out of bound");
+            throw new IndexOutOfBoundsException("Index is out of bound");
         }
         Node<T> current = head;
         for (int i = 0; i < index; i++) {
@@ -77,7 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         if (index < 0 || index >= size) {
-            throw  new IndexOutOfBoundsException("Index is out of bound");
+            throw new IndexOutOfBoundsException("Index is out of bound");
         }
         Node<T> current = head;
         for (int i = 0; i < index; i++) {
@@ -91,11 +91,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw  new IndexOutOfBoundsException("Index is out of bound");
+            throw new IndexOutOfBoundsException("Index is out of bound");
         }
         Node<T> current = head;
         if (index == 0) {
-            T removeValue = head.value;
+            final T removeValue = head.value;
             head = head.next;
             if (head != null) {
                 head.prev = null;
@@ -108,14 +108,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < index; i++) {
             current = current.next;
         }
-        T removedValue = current.value;
+        final T removedValue = current.value;
         if (current.prev != null) {
             current.prev.next = current.next;
         }
         if (current.next != null) {
             current.next.prev = current.prev;
         }
-
         if (current == tail) {
             tail = current.prev;
         }
@@ -139,10 +138,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 }
                 size--;
                 return true;
-            } else if (current.value == null) {
-                break;
             }
-            if (current.value.equals(object)) {
+            if (current.value != null && current.value.equals(object)) {
                 if (current == head) {
                     remove(0);
                 } else {
@@ -175,9 +172,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     static class Node<T> {
-        T value;
-        Node<T> next;
-        Node<T> prev;
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
 
         public Node(Node<T> prev, T value, Node<T> next) {
             this.value = value;
