@@ -2,22 +2,9 @@ package core.basesyntax;
 
 import java.util.List;
 
-class Node<T> {
-    T data;
-    Node<T> prev;
-    Node<T> next;
-
-    Node(T data) {
-        this.data = data;
-        this.prev = null;
-        this.next = null;
-    }
-}
-
-
-class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node head;
-    private Node tail;
+public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private Node<T> head;
+    private Node<T> tail;
     private int size;
 
     public MyLinkedList() {
@@ -38,7 +25,7 @@ class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(value, null, null);
 
         if (isEmpty()) {
             head = newNode;
@@ -53,87 +40,86 @@ class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(
-                    "Index outside the list");
-        }
-        Node<T> newNode = new Node<>(value);
-
-        if (index == 0) {
-            if (isEmpty()) {
-                head = newNode;
-                tail = newNode;
-            } else {
-                newNode.next = head;
-                head.prev = newNode;
-                head = newNode;
-            }
-        } else if (index == size) {
-            add(value);
-            return;
+        checkIndexForAdd(index);
+        if (index == size) {
+            add(value);  // Додаємо в кінець
         } else {
-            Node<T> current = head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
+            Node<T> current = findNodeByIndex(index);
+            Node<T> newNode = new Node<>(value, current.prev, current);
+
+            if (current.prev == null) {
+                head = newNode;
+            } else {
+                current.prev.next = newNode;
             }
-            newNode.next = current;
-            newNode.prev = current.prev;
-            current.prev.next = newNode;
             current.prev = newNode;
+            size++;
         }
-        size++;
     }
 
     @Override
-    public void addAll(List<T> list) {
-
-    }
-
-    @Override
-    public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(
-                    "Index outside the list");
+    public boolean addAll(List<T> list) {
+        if (list == null || list.isEmpty()) {
+            return false;
         }
-
-        Node<T> toRemove;
-        if (index == 0) {
-            toRemove = head;
-            if (head == tail) {
-                head = null;
-                tail = null;
-            } else {
-                head = head.next;
-                head.prev = null;
-            }
-        } else if (index == size - 1) {
-            toRemove = tail;
-            tail = tail.prev;
-            tail.next = null;
-        } else {
-            toRemove = head;
-            for (int i = 0; i < index; i++) {
-                toRemove = toRemove.next;
-            }
-            toRemove.prev.next = toRemove.next;
-            toRemove.next.prev = toRemove.prev;
+        for (T element : list) {
+            add(element);
         }
-        size--;
-        return toRemove.data;
-    }
-
-    @Override
-    public boolean remove(T object) {
-        return false;
+        return true;
     }
 
     @Override
     public T get(int index) {
+        checkIndex(index);
+        return findNodeByIndex(index).data;
+    }
+
+    @Override
+    public T set(T value, int index) {
+        checkIndex(index);
+        Node<T> targetNode = findNodeByIndex(index);
+        T oldValue = targetNode.data;
+        targetNode.data = value;
+        return oldValue;
+    }
+
+
+    @Override
+    public T remove(int index) {
+        checkIndex(index);
+        Node<T> toRemove = findNodeByIndex(index);
+        return unlink(toRemove);
+    }
+
+    @Override
+    public boolean remove(T object) {
+        Node<T> current = head;
+        while (current != null) {
+            if ((object == null && current.data == null)
+                    || (object != null && object.equals(current.data))) {
+                unlink(current);
+                return true;
+            }
+            current = current.next;
+        }
+        return false;
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException(
+                    "Index outside the list: " + index);
+        }
+    }
+
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(
-                    "Index outside the list");
+                    "Index outside the list: " + index);
         }
+    }
 
+    private Node<T> findNodeByIndex(int index) {
         Node<T> current;
         if (index < size / 2) {
             current = head;
@@ -146,12 +132,37 @@ class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 current = current.prev;
             }
         }
-
-        return current.data;
+        return current;
     }
 
-    @Override
-    public T set(T value, int index) {
-        return null;
+    private T unlink(Node<T> node) {
+        T element = node.data;
+
+        if (node.prev == null) { // Видаляємо головний вузол
+            head = node.next;
+        } else {
+            node.prev.next = node.next;
+        }
+
+        if (node.next == null) { // Видаляємо останній вузол
+            tail = node.prev;
+        } else {
+            node.next.prev = node.prev;
+        }
+
+        size--;
+        return element;
+    }
+
+    private static class Node<T> {
+        private T data;
+        private Node<T> prev;
+        private Node<T> next;
+
+        Node(T data, Node<T> prev, Node<T> next) {
+            this.data = data;
+            this.prev = prev;
+            this.next = next;
+        }
     }
 }
