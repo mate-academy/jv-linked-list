@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size = 0;
+    Node node ;
     Node head;
     Node tail;
 
@@ -21,7 +22,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail.prev = head;
             size++;
         } else {
-
+            node = new Node(value);
+            node.next = null;
+            node.prev = tail;
+            tail = node;
             size++;
         }
     }
