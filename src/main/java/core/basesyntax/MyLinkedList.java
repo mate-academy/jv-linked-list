@@ -15,9 +15,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head.prev = null;
             head.next = null;
             size++;
-        } else {
+        } else if (size == 1){
             tail = new Node(value);
             tail.next = null;
+            tail.prev = head;
+            size++;
+        } else {
+
             size++;
         }
     }
