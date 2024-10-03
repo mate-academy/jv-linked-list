@@ -25,16 +25,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value, null, null);
-
+        Node<T> newNode = new Node<>(value, tail, null);
         if (isEmpty()) {
             head = newNode;
-            tail = newNode;
         } else {
             tail.next = newNode;
-            newNode.prev = tail;
-            tail = newNode;
         }
+        tail = newNode;
         size++;
     }
 
@@ -42,11 +39,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         checkIndexForAdd(index);
         if (index == size) {
-            add(value);  // Додаємо в кінець
+            add(value);
         } else {
             Node<T> current = findNodeByIndex(index);
             Node<T> newNode = new Node<>(value, current.prev, current);
-
             if (current.prev == null) {
                 head = newNode;
             } else {
@@ -59,9 +55,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean addAll(List<T> list) {
-        if (list == null || list.isEmpty()) {
-            return false;
-        }
+        if (list == null || list.isEmpty()) return false;
         for (T element : list) {
             add(element);
         }
@@ -82,7 +76,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         targetNode.data = value;
         return oldValue;
     }
-
 
     @Override
     public T remove(int index) {
@@ -105,18 +98,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return false;
     }
 
-    private void checkIndexForAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(
-                    "Index outside the list: " + index);
+    private T unlink(Node<T> node) {
+        T element = node.data;
+        if (node.prev == null) {
+            head = node.next;
+        } else {
+            node.prev.next = node.next;
         }
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(
-                    "Index outside the list: " + index);
+        if (node.next == null) {
+            tail = node.prev;
+        } else {
+            node.next.prev = node.prev;
         }
+        size--;
+        return element;
     }
 
     private Node<T> findNodeByIndex(int index) {
@@ -135,23 +130,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private T unlink(Node<T> node) {
-        T element = node.data;
-
-        if (node.prev == null) { // Видаляємо головний вузол
-            head = node.next;
-        } else {
-            node.prev.next = node.next;
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException(
+                    "Index: " + index + ", Size: " + size);
         }
+    }
 
-        if (node.next == null) { // Видаляємо останній вузол
-            tail = node.prev;
-        } else {
-            node.next.prev = node.prev;
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(
+                    "Index: " + index + ", Size: " + size);
         }
-
-        size--;
-        return element;
     }
 
     private static class Node<T> {
