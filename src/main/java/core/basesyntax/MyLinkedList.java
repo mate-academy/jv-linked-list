@@ -33,7 +33,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public void add(T value, int index) {
+    public void add(T value, int index) throws IndexOutOfBoundsException {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Invalid index");
+        }
+        node = new Node(value);
+        node.next ;
+        node.prev ;
 
     }
 
