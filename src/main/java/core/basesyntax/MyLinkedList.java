@@ -6,30 +6,22 @@ import java.util.NoSuchElementException;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size = 0;
     Node node ;
-    Node head;
-    Node tail;
+    Node head = null;
+    Node tail = null;
 
     @Override
     public void add(T value) {
-        if(size == 0) {
-            node = new Node(value);
-            node.prev = null;
-            node.next = null;
-            head = node;
-            size++;
-        } else if (size == 1){
-            node = new Node(value);
-            node.next = null;
-            node.prev = head;
-            node = tail;
+        Node node = new Node<>(null, value, null);
+        if (head == null) {
+            head = tail = node;
             size++;
         } else {
-            node = new Node(value);
-            node.next = null;
+            tail.next = node;
             node.prev = tail;
             tail = node;
             size++;
         }
+
     }
 
     @Override
@@ -37,9 +29,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Invalid index");
         }
-        node = new Node(value);
-        node.next ;
-        node.prev ;
+        Node node = new Node( value, index);
+        if(index == size) {
+            add(value);
+        }
+        if (index == 0) {
+            head.prev = node;
+            node.next = head;
+            head = node;
+        } else {
+
+        }
+
 
     }
 
@@ -92,8 +93,16 @@ class Node<T> {
     private T item;
     Node prev;
     Node next;
+    int index;
 
-    public Node(T item) {
+    public Node(Node prev, T item, Node next) {
+        this.prev = prev;
         this.item = item;
+        this.next = next;
+    }
+
+    public Node(T item, int index) {
+        this.item = item;
+        this.index = index;
     }
 }
