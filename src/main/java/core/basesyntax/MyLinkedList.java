@@ -50,12 +50,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current.prev= node;
             node.index = size;
             size++;
-
         }
     }
 
     @Override
     public void addAll(List<T> list) {
+        for (int i = 0; i < list.size(); i++) {
+            node = new Node<>(null, list.get(i), null);
+            tail.next = node;
+            node.prev = tail;
+            tail = node;
+            node.index = size;
+            size++;
+        }
 
     }
 
