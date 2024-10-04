@@ -1,6 +1,12 @@
 package core.basesyntax;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 public class Main {
+    private static final List<String> DEFAULT_LIST = new LinkedList<>(
+            Arrays.asList("First", "Second", "Third", "Fourth", "Fifth", "Sixth"));
     private static final String FIRST_ITEM = "First";
     private static final String SECOND_ITEM = "Second";
     private static final String THIRD_ITEM = "Third";
@@ -10,8 +16,17 @@ public class Main {
     private static MyLinkedListInterface<String> myLinkedList;
 
     public static void main(String[] args) {
-        myLinkedList.add(FIRST_ITEM, 0);
-        myLinkedList.add(SECOND_ITEM, 1);
-        myLinkedList.add(THIRD_ITEM, 2);
+        myLinkedList = new MyLinkedList<>();
+        myLinkedList.add(FIRST_ITEM);
+        myLinkedList.add(SECOND_ITEM);
+        myLinkedList.addAll(DEFAULT_LIST);
+        String actualFirst = myLinkedList.get(0);
+        String actualSecond = myLinkedList.get(1);
+        String actualIndexFive = myLinkedList.get(5);
+        int actualSize = myLinkedList.size();
+        System.out.println(actualFirst);
+        System.out.println(actualSecond);
+        System.out.println(actualIndexFive);
+        System.out.println(actualSize);
     }
 }

@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private Node node;
+    private Node head = null;
+    private Node tail = null;
     private int size = 0;
-    Node node ;
-    Node head = null;
-    Node tail = null;
 
     @Override
     public void add(T value) {
@@ -27,29 +27,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public void add(T value, int index) throws IndexOutOfBoundsException {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Invalid index");
-        }
+    public void add(T value, int index) {
+        check(index);
         node = new Node(value, index);
-        if(index == size) {
+        if (index == size) {
             add(value);
-        }
-        if (index == 0) {
-            head.prev = node;
-            node.next = head;
-            head = node;
-            node.index = size;
-            size++;
         } else {
             Node<T> current = head;
             for (int i = 0; i < index; i++) {
                 current = current.next;
             }
-            current.prev.next = node;
-            current.prev= node;
-            node.index = size;
-            size++;
+            if (current == head) {
+                current.prev = node;
+                node.next = current;
+                node.index = index;
+                size++;
+                Node<T> temp = current;
+                while (temp != null) {
+                    temp.index++;
+                    temp = temp.next;
+                }
+            } else {
+                current.prev.next = node;
+                current.prev = node;
+                node.index = size;
+                size++;
+                Node<T> temp = current.next;
+                while (temp != null) {
+                    temp.index++;
+                    temp = temp.next;
+                }
+            }
         }
     }
 
@@ -68,22 +76,62 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return null;
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        return current.item;
     }
 
     @Override
     public T set(T value, int index) {
-        return null;
+        node = new Node(value, index);
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        current = node;
+        T oldItem = current.item;
+        return oldItem;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        check(index);
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        current.prev.next = current.next;
+        current.next.prev = current.prev;
+        Node<T> temp = current.next;
+        while (temp != null) {
+            temp.index--;
+            temp = temp.next;
+        }
+        size--;
+        T oldItem = current.item;
+        return oldItem;
     }
 
     @Override
     public boolean remove(T object) throws NoSuchElementException {
-        throw new NoSuchElementException("Element " + object + " was not found");
+        int index = 0;
+        boolean found = false;
+        Node<T> current = head;
+        for (int i = 0; i < size; i++) {
+            current = current.next;
+            if (current.item == object || current.item != null && current.item.equals(object)) {
+                index = i;
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            throw new NoSuchElementException("Element " + object + " was not found");
+        }
+        remove(index);
+        return true;
     }
 
     @Override
@@ -99,27 +147,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return false;
     }
 
-    public void check(int index) {
-        if (index < 0 || index >= size) {
+    public void check(int index) throws IndexOutOfBoundsException {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Invalid index");
+        }
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node prev;
+        private Node next;
+        private int index;
+
+        public Node(Node prev, T item, Node next) {
+            this.prev = prev;
+            this.item = item;
+            this.next = next;
+        }
+
+        public Node(T item, int index) {
+            this.item = item;
+            this.index = index;
         }
     }
 }
 
-class Node<T> {
-    private T item;
-    Node prev;
-    Node next;
-    int index;
 
-    public Node(Node prev, T item, Node next) {
-        this.prev = prev;
-        this.item = item;
-        this.next = next;
-    }
-
-    public Node(T item, int index) {
-        this.item = item;
-        this.index = index;
-    }
-}
