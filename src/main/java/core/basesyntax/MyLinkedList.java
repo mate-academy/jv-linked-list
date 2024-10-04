@@ -14,11 +14,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node node = new Node<>(null, value, null);
         if (head == null) {
             head = tail = node;
+            node.index = size;
             size++;
         } else {
             tail.next = node;
             node.prev = tail;
             tail = node;
+            node.index = size;
             size++;
         }
 
@@ -29,7 +31,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Invalid index");
         }
-        Node node = new Node( value, index);
+        Node node = new Node(value, index);
         if(index == size) {
             add(value);
         }
@@ -37,7 +39,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head.prev = node;
             node.next = head;
             head = node;
+            node.index = size;
+            size++;
         } else {
+            Node newNode = new Node(value, index);
+            newNode.prev = node.index.prev;
+            newNode.next = node.index.
+            newNode.index = index;
+            size++;
 
         }
 
