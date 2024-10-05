@@ -19,6 +19,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             tail.next = node;
             node.prev = tail;
+            node.next = null;
             tail = node;
             node.index = size;
             size++;
@@ -41,22 +42,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 current.prev = node;
                 node.next = current;
                 node.index = index;
+                node.prev = null;
+                head = node;
                 size++;
-                Node<T> temp = current;
-                while (temp != null) {
-                    temp.index++;
-                    temp = temp.next;
-                }
             } else {
                 current.prev.next = node;
                 current.prev = node;
                 node.index = size;
+                node.prev = current.prev;
+                node.next = current;
                 size++;
-                Node<T> temp = current.next;
-                while (temp != null) {
-                    temp.index++;
-                    temp = temp.next;
-                }
+            }
+            Node<T> temp = current.next;
+            while (temp != null) {
+                temp.index++;
+                temp = temp.next;
             }
         }
     }
@@ -90,7 +90,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < index; i++) {
             current = current.next;
         }
-        current = node;
+        if (index == 0) {
+            current.next.prev = node;
+            node.prev = null;
+            head = node;
+        } else {
+            node.prev = current.prev;
+            node.next = current.next;
+            current.next.prev = node;
+            current.prev.next = node;
+            node.index = current.index;
+        }
         T oldItem = current.item;
         return oldItem;
     }
@@ -102,8 +112,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < index; i++) {
             current = current.next;
         }
-        current.prev.next = current.next;
-        current.next.prev = current.prev;
+        if (index == 0) {
+            current.next.prev = null;
+            head = current.next;
+        } else if (index == size - 1) {
+            current.prev.next = null;
+            current.prev = tail;
+        } else {
+            current.prev.next = current.next;
+            current.next.prev = current.prev;
+        }
         Node<T> temp = current.next;
         while (temp != null) {
             temp.index--;

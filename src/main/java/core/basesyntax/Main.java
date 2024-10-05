@@ -19,14 +19,10 @@ public class Main {
         myLinkedList = new MyLinkedList<>();
         myLinkedList.add(FIRST_ITEM);
         myLinkedList.add(SECOND_ITEM);
-        myLinkedList.addAll(DEFAULT_LIST);
+        myLinkedList.add(THIRD_ITEM);
+        String oldFirstItem = myLinkedList.set(NEW_ITEM, 0);
+        String oldSecondItem = myLinkedList.set(ANOTHER_NEW_ITEM, 1);
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
-        String actualIndexFive = myLinkedList.get(5);
-        int actualSize = myLinkedList.size();
-        System.out.println(actualFirst);
-        System.out.println(actualSecond);
-        System.out.println(actualIndexFive);
-        System.out.println(actualSize);
     }
 }
