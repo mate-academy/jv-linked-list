@@ -108,19 +108,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private static class Node<T> {
-
-        private T element;
-        private Node<T> next;
-        private Node<T> prev;
-
-        public Node(T element, Node<T> next, Node<T> prev) {
-            this.element = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
@@ -163,5 +150,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         T element = node.element;
         size--;
         return element;
+    }
+
+    private static class Node<T> {
+        private T element;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(T element, Node<T> next, Node<T> prev) {
+            this.element = element;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
