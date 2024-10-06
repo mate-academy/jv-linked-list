@@ -112,6 +112,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < index; i++) {
             current = current.next;
         }
+        current = current.next;
         if (index == 0) {
             current.next.prev = null;
             head = current.next;
