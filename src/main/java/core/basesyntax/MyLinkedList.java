@@ -76,6 +76,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
+        check(index);
         Node<T> current = head;
         for (int i = 0; i < index; i++) {
             current = current.next;
@@ -85,6 +86,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
+        check(index);
         node = new Node(value, index);
         Node<T> current = head;
         for (int i = 0; i < index; i++) {
@@ -93,6 +95,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == 0) {
             current.next.prev = node;
             node.prev = null;
+            node.next = current.next;
             head = node;
         } else {
             node.prev = current.prev;
@@ -112,7 +115,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < index; i++) {
             current = current.next;
         }
-        current = current.next;
         if (index == 0) {
             current.next.prev = null;
             head = current.next;
