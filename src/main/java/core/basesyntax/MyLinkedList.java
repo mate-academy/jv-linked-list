@@ -140,7 +140,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         int index = 0;
         boolean found = false;
         Node<T> current = head;
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size - 1; i++) {
             current = current.next;
             if (current.item == object || current.item != null && current.item.equals(object)) {
                 index = i;
@@ -148,7 +148,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 break;
             }
         }
-        if (!found) {
+        if (found) {
             throw new NoSuchElementException("Element " + object + " was not found");
         }
         remove(index);
