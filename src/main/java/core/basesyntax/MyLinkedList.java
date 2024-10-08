@@ -140,6 +140,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         int index = 0;
         boolean found = false;
         Node<T> current = head;
+        if (current.item == object || current.item != null && current.item.equals(object)) {
+            remove(index);
+            return true;
+        }
         for (int i = 0; i < size - 1; i++) {
             current = current.next;
             if (current.item == object || current.item != null && current.item.equals(object)) {
@@ -169,9 +173,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public void check(int index) throws IndexOutOfBoundsException {
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Invalid index");
         }
+    }
+
+    private Node<T> findNodeByIndex(int index) {
+        Node<T> node;
+        if (index < size / 2) {
+            node = head;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+        } else {
+            node = tail;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
+        }
+        return node;
     }
 
     private static class Node<T> {
