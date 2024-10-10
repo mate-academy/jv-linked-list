@@ -4,10 +4,7 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
-    private int modCount = 0;
     private Node<T> first;
-    private Node<T> head;
-    private Node<T> tail;
     private Node<T> last;
 
     public MyLinkedList() {
@@ -32,9 +29,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        if (list == null || list.size() == 0) {
+            return;
         }
+        linkAllLast(list);
     }
 
     @Override
@@ -122,7 +120,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             pred.next = newNode;
         }
         size++;
-        modCount++;
     }
 
     Node<T> node(int index) {
@@ -151,7 +148,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             l.next = newNode;
         }
         size++;
-        modCount++;
     }
 
     T unlink(Node<T> x) {
@@ -175,8 +171,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         x.value = null;
         size--;
-        modCount++;
         return element;
+    }
+
+    private void linkAllLast(List<T> list) {
+        Node<T> lastNode = last;
+        for (int i = 0; i < list.size(); i++) {
+            Node<T> newNode = new Node<>(lastNode, list.get(i), null);
+            if (lastNode == null) {
+                first = newNode;
+            } else {
+                lastNode.next = newNode;
+            }
+            lastNode = newNode;
+        }
+        last = lastNode;
+        size += list.size();
     }
 
     private static class Node<T> {
