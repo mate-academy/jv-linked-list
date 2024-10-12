@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
 
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     @Override
     public void add(T value) {
         if (size == 0) {
@@ -26,7 +14,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             last = first;
         } else {
             last.next = new Node<>(last, value, null);
-            last.next.prev = last;
             last = last.next;
         }
         size++;
@@ -48,17 +35,32 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void addToTheMiddle(T value, int index) {
-        int i = 0;
-        for (MyLinkedList.Node<T> x = first; x != null; x = x.next) {
-            if (i == index) {
-                Node<T> newNode = new Node<>(x.prev, value, x);
-                x.prev.next = newNode;
-                x.prev = newNode;
-                break;
+        if (index < size / 2) {
+            int i = 0;
+            for (MyLinkedList.Node<T> x = first; x != null; x = x.next) {
+                if (i == index) {
+                    createNodeAndItsLinks(value, x);
+                    break;
+                }
+                i++;
             }
-            i++;
+        } else {
+            int i = size - 1;
+            for (MyLinkedList.Node<T> x = last; x != null; x = x.prev) {
+                if (i == index) {
+                    createNodeAndItsLinks(value, x);
+                    break;
+                }
+                i--;
+            }
         }
         size++;
+    }
+
+    private void createNodeAndItsLinks(T value, Node<T> x) {
+        Node<T> newNode = new Node<>(x.prev, value, x);
+        x.prev.next = newNode;
+        x.prev = newNode;
     }
 
     private void addToTheEnd(T value) {
@@ -82,12 +84,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndexValidity(index);
-        int i = 0;
-        for (MyLinkedList.Node<T> x = first; x != null; x = x.next) {
-            if (i == index) {
-                return x.item;
+        if (index < size / 2) {
+            int i = 0;
+            for (MyLinkedList.Node<T> x = first; x != null; x = x.next) {
+                if (i == index) {
+                    return x.item;
+                }
+                i++;
             }
-            i++;
+        } else {
+            int i = size - 1;
+            for (MyLinkedList.Node<T> x = last; x != null; x = x.prev) {
+                if (i == index) {
+                    return x.item;
+                }
+                i--;
+            }
         }
         return null;
     }
@@ -101,14 +113,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndexValidity(index);
-        int i = 0;
-        for (MyLinkedList.Node<T> x = first; x != null; x = x.next) {
-            if (i == index) {
-                T oldValue = x.item;
-                x.item = value;
-                return oldValue;
+        if (index < size / 2) {
+            int i = 0;
+            for (MyLinkedList.Node<T> x = first; x != null; x = x.next) {
+                if (i == index) {
+                    T oldValue = x.item;
+                    x.item = value;
+                    return oldValue;
+                }
+                i++;
             }
-            i++;
+        } else {
+            int i = size - 1;
+            for (MyLinkedList.Node<T> x = last; x != null; x = x.prev) {
+                if (i == index) {
+                    T oldValue = x.item;
+                    x.item = value;
+                    return oldValue;
+                }
+                i--;
+            }
         }
         return null;
     }
@@ -178,5 +202,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
