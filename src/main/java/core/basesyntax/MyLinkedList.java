@@ -21,16 +21,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            checkIndexValidity(index);
-        }
+        checkIndexValidityToAdd(index);
+
         if (index == 0 && size > 0) {
             addToTheBeginning(value);
         }
         if (index == size) {
-            addToTheEnd(value);
+            add(value);
         } else if (index > 0) {
             addToTheMiddle(value, index);
+        }
+    }
+
+    private void checkIndexValidityToAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException();
         }
     }
 
@@ -61,10 +66,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(x.prev, value, x);
         x.prev.next = newNode;
         x.prev = newNode;
-    }
-
-    private void addToTheEnd(T value) {
-        add(value);
     }
 
     private void addToTheBeginning(T value) {
@@ -144,7 +145,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (MyLinkedList.Node<T> x = first; x != null; x = x.next) {
             if (i == index) {
                 T removedItem = x.item;
-                remove(x.item);
+                if (x.item == null) {
+                    unlink(x);
+                } else {
+                    unlink(x);
+                }
                 return removedItem;
             }
             i++;
@@ -172,7 +177,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return false;
     }
 
-    void unlink(Node<T> x) {
+    private void unlink(Node<T> x) {
         final MyLinkedList.Node<T> next = x.next;
         final MyLinkedList.Node<T> prev = x.prev;
 
