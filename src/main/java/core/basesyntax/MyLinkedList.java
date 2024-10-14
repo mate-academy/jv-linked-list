@@ -12,7 +12,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> node;
         node = new Node<>(null, value,null);
         if (head == null) {
-            head = node;
+            head = tail = node;
         } else {
             tail.next = node;
             node.prev = tail;
@@ -23,7 +23,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        throwIndexOutOfBoundsAdd(index);
+        checkIndexForAdd(index);
         if (index == size) {
             add(value);
             return;
@@ -49,7 +49,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        throwIndexOutOfBounds(index);
+        checkIndex(index);
         Node<T> current = findNodeByIndex(index);
         T oldValue = current.item;
         if (index == 0) {
@@ -62,7 +62,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        throwIndexOutOfBounds(index);
+        checkIndex(index);
         Node<T> current = findNodeByIndex(index);
         return unlike(current);
     }
@@ -107,26 +107,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.item = item;
             this.next = next;
         }
-
-        public Node(T item) {
-            this.item = item;
-        }
     }
 
-    private void throwIndexOutOfBoundsAdd(int index) throws IndexOutOfBoundsException {
+    private void checkIndexForAdd(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index out of bounds.");
         }
     }
 
-    private void throwIndexOutOfBounds(int index) throws IndexOutOfBoundsException {
+    private void checkIndex(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index out of bounds.");
         }
     }
 
     private Node<T> findNodeByIndex(int index) {
-        throwIndexOutOfBounds(index);
+        checkIndex(index);
         Node<T> node;
         if (index < size / 2) {
             node = head;
