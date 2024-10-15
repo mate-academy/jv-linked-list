@@ -122,6 +122,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node<T> findNodeByIndex(int index) {
         Node<T> node;
+        checkIndex(index);
         if (index < size / 2) {
             node = head;
             for (int i = 0; i < index; i++) {
