@@ -4,20 +4,19 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
-    private Node<T> head = null;
-    private Node<T> tail = null;
+    private Node<T> head;
+    private Node<T> tail;
 
     @Override
     public void add(T value) {
-        Node<T> node;
-        node = new Node<>(null, value,null);
+        Node<T> node = new Node<>(null, value, null);
         if (head == null) {
             head = tail = node;
         } else {
             tail.next = node;
             node.prev = tail;
+            tail = node;
         }
-        tail = node;
         size++;
     }
 
@@ -64,7 +63,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> current = findNodeByIndex(index);
-        return unlike(current);
+        return unlink(current);
     }
 
     @Override
@@ -73,12 +72,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (current != null) {
             if (object == null) {
                 if (current.item == null) {
-                    unlike(current);
+                    unlink(current);
                     return true;
                 }
             } else {
                 if (object.equals(current.item)) {
-                    unlike(current);
+                    unlink(current);
                     return true;
                 }
             }
@@ -122,7 +121,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNodeByIndex(int index) {
-        checkIndex(index);
         Node<T> node;
         if (index < size / 2) {
             node = head;
@@ -138,7 +136,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node;
     }
 
-    private T unlike(Node<T> node) {
+    private T unlink(Node<T> node) {
         final T oldValue = node.item;
         if (node == head) {
             head = node.next;
