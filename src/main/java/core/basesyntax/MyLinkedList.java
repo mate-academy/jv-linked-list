@@ -10,26 +10,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> nextNode;
     private int size;
 
-    public static class Node<T> {
-        private T item;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T item, Node<T> next) {
-            this.prev = prev;
-            this.next = next;
-            this.item = item;
-        }
-    }
-
     @Override
     public void add(T value) {
         if (size == 0) {
-            Node<T> newElement = new Node<T>(null, value, null);
+            Node<T> newElement = new Node<T>(value);
             head = newElement;
             tail = newElement;
         } else {
-            Node<T> newElement = new Node<T>(tail, value, null);
+            Node<T> newElement = new Node<T>(value);
+            newElement.prev = tail;
             Node<T> previousNode = tail;
             previousNode.next = newElement;
             tail = newElement;
@@ -72,9 +61,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         verifyIndex(index);
         iterateCurrentNode(index);
-        Node<T> returnItem = new Node<>(currentNode, currentNode.item, currentNode.next);
+        T returnItem = currentNode.item;
         currentNode.item = value;
-        return returnItem.item;
+        return returnItem;
     }
 
     @Override
@@ -95,7 +84,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0) {
             throw new NullPointerException("The list is empty");
         }
-        if (head.item == object || head.item != null && head.item.equals(object)) {
+        if (object == null ? head.item == null : object.equals(head.item)) {
             return removeFromTheHead();
         }
         findInTheMiddle(object);
@@ -134,7 +123,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void addNodeInTheMiddle(T value) {
         previousNode = currentNode.prev;
-        Node<T> newElement = new Node<>(previousNode, value, currentNode);
+        Node<T> newElement = new Node<>(value);
+        newElement.prev = previousNode;
+        newElement.next = currentNode;
         if (currentNode == head || currentNode != null && currentNode.equals(head)) {
             head = newElement;
         }
@@ -169,6 +160,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void unlink(Node<T> node) {
         node.prev = null;
         node.next = null;
+        if (tail.equals(node)) {
+            Node<T> newNode = tail;
+            newNode.next = null;
+            newNode.prev = null;
+        }
+        if (head.equals(node)) {
+            Node<T> newNode = head;
+            newNode.next = null;
+            newNode.prev = null;
+        }
     }
 
     private void findInTheMiddle(T object) {
@@ -189,5 +190,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         size--;
         return true;
+    }
+
+    public static class Node<T> {
+        private T item;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(T item) {
+            this.item = item;
+        }
     }
 }
