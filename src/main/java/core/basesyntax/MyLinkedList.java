@@ -3,34 +3,39 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int quantity = 0;
+    private int size;
     private Node<T> node;
+    private Node<T> head;
+    private Node<T> tail;
 
     @Override
     public void add(T value) {
         rewindNodeToHead();
-        if (quantity == 0) {
-            node = new Node(null, value, null, true, true);
+        if (size == 0) {
+            head = new Node<T>(null, value, null);
+            tail = new Node<T>(null, value, null);
+            node = head;
         } else {
             rewindToLastNode();
-            node.tail = false;
-            node.next = new Node<>(node, value, null, false, true);
+            node.next = new Node<T>(node, value, null);
+            tail = node;
+
         }
-        quantity += 1;
+        size += 1;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > quantity || index < 0) {
+        if (index > size || index < 0) {
             throw new IndexOutOfBoundsException("Incorrect index");
         }
         rewindNodeToHead();
-        if (index == quantity) {
+        if (index == size) {
             add(value);
         } else {
             rewindToSelectedNode(index);
             insertNodeInCurrentPosition(index, value);
-            quantity += 1;
+            size += 1;
         }
     }
 
@@ -43,12 +48,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index >= quantity || index < 0) {
-            throw new IndexOutOfBoundsException("Wrong index");
-        }
+        checkBoundsIndex(index, "Wrong index");
         Node<T> temp = node;
         rewindNodeToHead();
-        for (int i = 0; i < quantity; i++) {
+        for (int i = 0; i < size; i++) {
             if (i != index) {
                 node = node.next;
                 continue;
@@ -60,9 +63,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (index >= quantity || index < 0) {
-            throw new IndexOutOfBoundsException("Incorrect index");
-        }
+        checkBoundsIndex(index, "Incorrect index");
         rewindNodeToHead();
         rewindToSelectedNode(index);
         T res = node.element;
@@ -72,14 +73,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index >= quantity || index < 0) {
-            throw new IndexOutOfBoundsException("Incorrect index");
-        }
+        checkBoundsIndex(index, "Incorrect index");
         rewindNodeToHead();
         rewindToSelectedNode(index);
         T value = node.element;
         chooseConditionOfRemoving(index);
-        quantity -= 1;
+        size -= 1;
         return value;
     }
 
@@ -91,7 +90,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (node.element == object || node.element != null
                     && node.element.equals(object)) {
                 chooseConditionOfRemoving(index);
-                quantity -= 1;
+                size -= 1;
                 return true;
             }
             node = node.next;
@@ -102,12 +101,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public int size() {
-        return quantity;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return quantity == 0;
+        return size == 0;
     }
 
     private void rewindNodeToHead() {
@@ -119,12 +118,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void chooseConditionOfRemoving(int index) {
-        if (quantity == 1) {
+        if (size == 1) {
             node = null;
         } else if (index == 0) {
             node = node.next;
             node.prev = null;
-        } else if (index == quantity - 1) {
+        } else if (index == size - 1) {
             node = node.prev;
             node.next = null;
         } else {
@@ -147,30 +146,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void insertNodeInCurrentPosition(int index, T value) {
         if (index == 0) {
-            node.head = false;
-            node = new Node<>(null, value, node, true,false);
+            node = new Node<>(null, value, node);
             node.next.prev = node;
         } else {
-            node = new Node<>(node.prev, value, node, false, false);
+            node = new Node<>(node.prev, value, node);
             node.next.prev = node;
             node.prev.next = node;
         }
     }
 
-    class Node<T> {
+    private static class Node<T> {
         private Node<T> prev;
         private T element;
         private Node<T> next;
-        private boolean head;
-        private boolean tail;
 
-        public Node(Node prev, T element, Node next, boolean head, boolean tail) {
+        public Node(Node<T> prev, T element, Node<T> next) {
             this.prev = prev;
             this.element = element;
             this.next = next;
-            this.head = head;
-            this.tail = tail;
         }
     }
 
+    private void checkBoundsIndex(int index, String message) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException(message);
+        }
+    }
 }
