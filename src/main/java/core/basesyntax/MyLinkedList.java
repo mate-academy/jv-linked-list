@@ -41,18 +41,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    private void addFirst(T value) {
-        Node<T> nodeToAdd = new Node<>(null, value, null);
-        head = nodeToAdd;
-        tail = nodeToAdd;
-    }
-
-    private void addLast(T value) {
-        Node<T> nodeToAdd = new Node<>(tail, value, null);
-        tail.next = nodeToAdd;
-        tail = nodeToAdd;
-    }
-
     @Override
     public void addAll(List<T> list) {
         for (T value : list) {
@@ -97,19 +85,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return false;
     }
 
-    private void unlink(Node<T> node) {
-        if (node.prev != null) {
-            node.prev.next = node.next;
-        } else {
-            head = node.next;
-        }
-        if (node.next != null) {
-            node.next.prev = node.prev;
-        } else {
-            tail = node.prev;
-        }
-    }
-
     @Override
     public int size() {
         return size;
@@ -136,15 +111,41 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private void addFirst(T value) {
+        Node<T> nodeToAdd = new Node<>(null, value, null);
+        head = nodeToAdd;
+        tail = nodeToAdd;
+    }
+
+    private void addLast(T value) {
+        Node<T> nodeToAdd = new Node<>(tail, value, null);
+        tail.next = nodeToAdd;
+        tail = nodeToAdd;
+    }
+
+    private void unlink(Node<T> node) {
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        } else {
+            head = node.next;
+        }
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        } else {
+            tail = node.prev;
+        }
+    }
+
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index is out of bounds permissible values");
         }
     }
 
     private void checkAddIndex(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index is out of bounds permissible values"
+                    + "for adding method");
         }
     }
 
