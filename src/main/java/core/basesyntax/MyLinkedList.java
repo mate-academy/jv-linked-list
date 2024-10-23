@@ -8,6 +8,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
 
     public MyLinkedList() {
+        size = 0;
     }
 
     @Override
@@ -35,7 +36,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             } else {
                 head = newNode;
             }
-
             currentIndexNode.prev = newNode;
         }
         size++;
