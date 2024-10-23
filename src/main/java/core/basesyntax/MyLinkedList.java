@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -13,22 +12,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        public Node(T value) {
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
             this.value = value;
+            this.next = next;
         }
     }
 
     @Override
     public void add(T value) {
-        Node<T> node = new Node<>(value);
+        Node<T> node = new Node<>(tail, value, null);
         if (head == null) {
             head = node;
-            tail = node;
         } else {
-            node.prev = tail;
             tail.next = node;
-            tail = node;
         }
+        tail = node;
         size++;
     }
 
@@ -42,15 +41,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
         } else {
             Node<T> nodeByIndex = getNodeByIndex(index);
-            Node<T> newNode = new Node<>(value);
             Node<T> prev = nodeByIndex.prev;
+            Node<T> newNode = new Node<>(prev, value, nodeByIndex);
             if (prev != null) {
                 prev.next = newNode;
             } else {
                 head = newNode;
             }
-            newNode.prev = prev;
-            newNode.next = nodeByIndex;
             nodeByIndex.prev = newNode;
             size++;
         }
@@ -114,10 +111,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("index " + index
                     + " is out of bounds of array with size " + size);
         }
-        Node<T> node = head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
+        Node<T> node;
+        if (size / 2 > index) {
+            node = head;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+        } else {
+            node = tail;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
         }
+
         return node;
     }
 
