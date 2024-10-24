@@ -83,7 +83,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (T elements : list) {
             add(elements);
         }
-
     }
 
     @Override
