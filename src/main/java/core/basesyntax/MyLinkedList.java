@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -9,11 +8,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
 
     private static class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> prev;
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
-        Node(Node<T> prev, T element, Node<T> next) {
+        private Node(Node<T> prev, T element, Node<T> next) {
             this.item = element;
             this.next = next;
             this.prev = prev;
@@ -36,7 +35,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return x;
         }
     }
-
 
     private void addFirst(T value) {
         Node<T> f = first;
@@ -87,7 +85,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T unlink(Node<T> x) {
-        T element = x.item;
         Node<T> next = x.next;
         Node<T> prev = x.prev;
 
@@ -104,6 +101,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             next.prev = prev;
             x.next = null;
         }
+
+        T element = x.item;
 
         x.item = null;
         size--;
