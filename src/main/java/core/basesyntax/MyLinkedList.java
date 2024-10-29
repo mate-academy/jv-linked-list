@@ -17,10 +17,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = head;
         } else {
             tail = new Node<T>(tail, value, null);
-            rewindToSelectedNode(size -1);
+            rewindToSelectedNode(size - 1);
             node.next = tail;
         }
-        size += 1;
+        size++;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == 0) {
             res = head.element;
             head.element = value;
-        } else if (index == size -1) {
+        } else if (index == size - 1) {
             res = tail.element;
             tail.element = value;
             rewindToSelectedNode(index);
@@ -81,7 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkBounds(index);
         T value = removeByIndex(index);
-        size --;
+        size--;
         return value;
     }
 
