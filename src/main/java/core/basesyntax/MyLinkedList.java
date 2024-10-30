@@ -38,8 +38,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 first = newNode;
             } else {
                 previous.next = newNode;
-                previous = newNode;
             }
+            previous = newNode;
             last = previous;
         }
         size += elements.length;
