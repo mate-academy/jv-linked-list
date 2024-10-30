@@ -39,13 +39,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        Node<T> previous;
         if (index == 0) {
-            previous = new Node<>(null, value, head);
-            head.prev = previous;
-            head = previous;
+            head = new Node<>(null, value, head);
         } else {
-            previous = getNodeByIndex(index - 1);
+            Node<T> previous = getNodeByIndex(index - 1);
             Node<T> nodeToAdd = new Node<>(previous, value, previous.next);
             previous.next.prev = nodeToAdd;
             previous.next = nodeToAdd;
@@ -88,7 +85,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             removedValue = previous.next.value;
             unlink(previous.next);
         }
-        size--;
         return removedValue;
     }
 
@@ -151,5 +147,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             previous.next = node.next;
             node.next.prev = previous;
         }
+        size--;
     }
 }
