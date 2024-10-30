@@ -3,9 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private Node<T> firstNode;
+    private Node<T> lastNode;
     private int size;
-    Node<T> firstNode;
-    Node<T> lastNode;
 
     @Override
     public void add(T value) {
@@ -22,6 +22,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index > size || index < 0) {
+            throw new IndexOutOfBoundsException("Index out of bounds");
+        }
         if (index == size) {
             add(value);
             return;
@@ -44,6 +47,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current.next = newNode;
             if (nextNode != null) {
                 nextNode.prev = newNode;
+            } else {
+                lastNode = newNode;
             }
         }
         size++;
@@ -51,6 +56,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
+        if (list == null || list.isEmpty()) {
+            return;
+        }
+        for (T t : list) {
+            add(t);
+        }
     }
 
     @Override
@@ -82,11 +93,41 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        return null;
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Index out of bounds");
+        }
+        Node<T> current = firstNode;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        T deletedValue = current.item;
+        if (current.prev == null) {
+            firstNode = current.next;
+            if (firstNode != null) {
+                firstNode.prev = null;
+            }
+        } else if (current.next == null) {
+            lastNode = current.prev;
+            lastNode.next = null;
+        } else {
+            current.prev.next = current.next;
+            current.next.prev = current.prev;
+        }
+        size--;
+        return deletedValue;
     }
 
     @Override
     public boolean remove(T object) {
+        Node<T> current = firstNode;
+        for (int i = 0; i < size; i++) {
+            if ((object == null && current.item == null)
+                    || (object != null && object.equals(current.item))) {
+                remove(i);
+                return true;
+            }
+            current = current.next;
+        }
         return false;
     }
 
@@ -101,9 +142,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<E> {
-        E item;
-        Node<E> next;
-        Node<E> prev;
+        private E item;
+        private Node<E> next;
+        private Node<E> prev;
 
         public Node(Node<E> prev, E element, Node<E> next) {
             this.item = element;
