@@ -3,12 +3,9 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private int size = 0;
+    private int size;
     private Node<T> first;
     private Node<T> last;
-
-    public MyLinkedList() {
-    }
 
     @Override
     public void add(T value) {
@@ -19,7 +16,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         checkIndexToAdd(index);
         if (index == size) {
-            linkLastElement(value);
+            add(value);
         } else {
             linkBeforeElement(value, searchForNode(index));
         }
@@ -27,22 +24,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list.isEmpty()) {
-            return;
+        for (T element : list) {
+            add(element);
         }
-        Node<T> previous = last;
-        T[] elements = (T[]) list.toArray();
-        for (T element : elements) {
-            Node<T> newNode = new Node<>(previous, element, null);
-            if (previous == null) {
-                first = newNode;
-            } else {
-                previous.next = newNode;
-            }
-            previous = newNode;
-            last = previous;
-        }
-        size += elements.length;
     }
 
     @Override
@@ -160,12 +144,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return elementToRemove;
     }
 
-    private static class Node<E> {
-        private E item;
-        private Node<E> next;
-        private Node<E> prev;
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
-        public Node(Node<E> prev, E item, Node<E> next) {
+        public Node(Node<T> prev, T item, Node<T> next) {
             this.item = item;
             this.next = next;
             this.prev = prev;
