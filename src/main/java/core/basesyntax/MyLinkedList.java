@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public static class Node<T> {
-        private Node<T> next;
-        private Node<T> prev;
-        private T value;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.next = next;
-            this.prev = prev;
-            this.value = value;
-        }
-    }
-
     @Override
     public void add(T value) {
         if (size == 0) {
@@ -34,14 +22,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIfIndexOutOfBonds(index, size);
-        if ((index == 0 && head == null) || index == size) {
+        if (index == size) {
             add(value);
             return;
         }
         if (index == 0) {
             head = new Node<>(null, value, head);
         } else {
+            checkIfIndexOutOfBonds(index);
             Node<T> previous = getNodeByIndex(index - 1);
             Node<T> nodeToAdd = new Node<>(previous, value, previous.next);
             previous.next.prev = nodeToAdd;
@@ -59,14 +47,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIfIndexOutOfBonds(index, size - 1);
+        checkIfIndexOutOfBonds(index);
         Node<T> current = getNodeByIndex(index);
         return current.value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIfIndexOutOfBonds(index, size - 1);
+        checkIfIndexOutOfBonds(index);
         Node<T> current = getNodeByIndex(index);
         T valueBeforeSet = current.value;
         current.value = value;
@@ -75,7 +63,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkIfIndexOutOfBonds(index, size - 1);
+        checkIfIndexOutOfBonds(index);
         T removedValue;
         if (index == 0) {
             removedValue = head.value;
@@ -92,8 +80,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         for (int index = 0; index < size; index++) {
-            if ((current.value != null && current.value.equals(object))
-                    || current.value == object) {
+            if (current.value != null && current.value.equals(object) || current.value == object) {
                 remove(index);
                 return true;
             }
@@ -112,10 +99,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void checkIfIndexOutOfBonds(int index, int upperBound) {
-        if (index < 0 || (index > upperBound)) {
+    private void checkIfIndexOutOfBonds(int index) {
+        if (index < 0 || (index > size - 1)) {
             throw new IndexOutOfBoundsException(
-                    "Index " + index + " is out of bounds " + 0 + " " + "and " + upperBound);
+                    "Index " + index + " is out of bounds " + 0 + " " + "and " + (size));
         }
     }
 
@@ -148,5 +135,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.next.prev = previous;
         }
         size--;
+    }
+
+    private static class Node<T> {
+        private Node<T> next;
+        private Node<T> prev;
+        private T value;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.next = next;
+            this.prev = prev;
+            this.value = value;
+        }
     }
 }
