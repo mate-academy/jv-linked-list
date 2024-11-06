@@ -102,6 +102,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
         if (index == 0) {
             head = head.next;
+            if (head == null) {
+                tail = null;
+            }
             size--;
             return current.value;
         }
@@ -110,6 +113,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         Node<T> nodeToRemove = current.next;
         current.next = nodeToRemove.next;
+        if (current.next == null) {
+            tail = current;
+        }
         size--;
         return nodeToRemove.value;
     }
@@ -119,14 +125,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (head == null) {
             return false;
         }
-        if (head.value.equals(object)) {
+        if (head.value == null ? object == null : head.value.equals(object)) {
             head = head.next;
             size--;
             return true;
         }
         Node<T> current = head;
         while (current.next != null) {
-            if (current.next.value.equals(object)) {
+            if (current.next.value == null ? object == null : current.next.value.equals(object)) {
                 current.next = current.next.next;
                 size--;
                 return true;
