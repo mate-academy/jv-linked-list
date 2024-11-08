@@ -8,6 +8,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
     private int size;
+    //
 
     public class Node<T> {
         private T value;
