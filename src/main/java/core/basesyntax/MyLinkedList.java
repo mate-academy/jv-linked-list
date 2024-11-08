@@ -9,56 +9,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    public class Node<T> {
-        private T value;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(T value) {
-            this.value = value;
-        }
-    }
-
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(tail, value, null);
         if (tail == null) {
             head = newNode;
-            tail = newNode;
         } else {
             tail.next = newNode;
-            newNode.prev = tail;
-            tail = newNode;
         }
+        tail = newNode;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        validateIndex(index, size + 1);
-        Node<T> newNode = new Node<>(value);
-        if (index == 0) {
-            if (head == null) {
-                head = newNode;
-                tail = newNode;
-            } else {
-                newNode.next = head;
-                head.prev = newNode;
-                head = newNode;
-            }
-        } else if (index == size) {
+        validateIndexForAdd(index);
+        if (index == size) {
             add(value);
-            return;
         } else {
             Node<T> current = findCurrent(index);
-            newNode.next = current;
-            newNode.prev = current.prev;
-            if (current.prev != null) {
+            Node<T> newNode = new Node<>(current.prev, value, current);
+            if (current.prev == null) {
+                head = newNode;
+            } else {
                 current.prev.next = newNode;
             }
             current.prev = newNode;
+            size++;
         }
-        size++;
     }
 
     @Override
@@ -68,8 +46,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public Node<T> findCurrent(int index) {
-        validateIndex(index, size);
+    private Node<T> findCurrent(int index) {
+        validateIndex(index);
         Node<T> current = (index < size / 2) ? head : tail;
         if (index < size / 2) {
             for (int i = 0; i < index; i++) {
@@ -85,13 +63,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        validateIndex(index, size);
+        validateIndex(index);
         return findCurrent(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        validateIndex(index, size);
+        validateIndex(index);
         Node<T> current = findCurrent(index);
         T oldValue = current.value;
         current.value = value;
@@ -100,7 +78,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        validateIndex(index, size);
+        validateIndex(index);
         Node<T> currentNode = findCurrent(index);
         T removedValue = currentNode.value;
         unlink(currentNode);
@@ -153,9 +131,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    public void validateIndex(int index, int upperBound) {
-        if (index < 0 || index >= upperBound) {
-            throw new IndexOutOfBoundsException(MESSAGE_OUT_OF_BOUNDS + ": " + index);
+    private void validateIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("The index passed to "
+                    + "any of the methods is invalid: " + index);
+        }
+    }
+
+    private void validateIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("The index "
+                    + "passed to any of the methods is invalid: " + index);
+        }
+    }
+
+    private class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
         }
     }
 }
