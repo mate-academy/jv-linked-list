@@ -108,8 +108,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if ((object == null && current.getData() == null) ||
-                    (object != null && object.equals(current.getData()))) {
+            if ((object == null && current.getData() == null)
+                    || (object != null && object.equals(current.getData()))) {
                 unlink(current);
                 return true;
             }
