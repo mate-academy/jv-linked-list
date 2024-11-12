@@ -3,42 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.prev = prev;
-            this.next = next;
-        }
-
-        public T getItem() {
-            return item;
-        }
-
-        public void setItem(T item) {
-            this.item = item;
-        }
-
-        public Node<T> getNext() {
-            return next;
-        }
-
-        public void setNext(Node<T> next) {
-            this.next = next;
-        }
-
-        public Node<T> getPrev() {
-            return prev;
-        }
-
-        public void setPrev(Node<T> prev) {
-            this.prev = prev;
-        }
-    }
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -170,7 +134,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         size++;
     }
-    
+
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
@@ -180,6 +144,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.prev = prev;
+            this.next = next;
         }
     }
 }
