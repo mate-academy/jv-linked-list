@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -95,6 +96,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
+        if (list == null) {
+            throw new NullPointerException("Provided list cannot be null");
+        }
         for (T t : list) {
             add(t);
         }
@@ -125,9 +129,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
+        if (head == null) {
+            return false;
+        }
         Node<T> current = head;
         while (current != null) {
-            if (object == null ? current.value == null : object.equals(current.value)) {
+            if (Objects.equals(object, current.value)) {
                 unlink(current);
                 return true;
             }
