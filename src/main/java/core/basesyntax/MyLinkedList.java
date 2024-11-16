@@ -10,7 +10,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (head == null) {
-           head = tail = new Node<>(null, value, null);
+            head = tail = new Node<>(null, value, null);
         } else {
             Node<T> node = new Node<>(tail, value, null);
             tail.next = node;
@@ -73,11 +73,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> node = head;
         for (int i = 0; i < size; i++) {
-           if (object == node.value || object != null && object.equals(node.value)) {
-               unlink(node);
-               return true;
-           }
-           node = node.next;
+            if (object == node.value || object != null && object.equals(node.value)) {
+                unlink(node);
+                return true;
+            }
+            node = node.next;
         }
         return false;
     }
