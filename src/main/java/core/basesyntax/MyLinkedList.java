@@ -1,5 +1,3 @@
-
-
 package core.basesyntax;
 
 import java.util.List;
@@ -56,6 +54,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
+        if (list == null) {
+            throw new NullPointerException("List cannot be null");
+        }
         for (T item : list) {
             add(item);
         }
@@ -109,28 +110,49 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
         return current.data;
     }
-
     @Override
     public boolean remove(T object) {
-        Node<T> current = head;
-        while (current != null) {
-            if (current.data.equals(object)) {
-                if (current.prev != null) {
-                    current.prev.next = current.next;
-                } else {
-                    head = current.next;
+        if (object == null) {
+            Node<T> current = head;
+            while (current != null) {
+                if (current.data == null) {
+                    if (current.prev != null) {
+                        current.prev.next = current.next;
+                    } else {
+                        head = current.next;
+                    }
+                    if (current.next != null) {
+                        current.next.prev = current.prev;
+                    } else {
+                        tail = current.prev;
+                    }
+                    size--;
+                    return true;
                 }
-                if (current.next != null) {
-                    current.next.prev = current.prev;
-                } else {
-                    tail = current.prev;
-                }
-                size--;
-                return true;
+                current = current.next;
             }
-            current = current.next;
+            return false;
+        } else {
+            Node<T> current = head;
+            while (current != null) {
+                if (current.data.equals(object)) {
+                    if (current.prev != null) {
+                        current.prev.next = current.next;
+                    } else {
+                        head = current.next;
+                    }
+                    if (current.next != null) {
+                        current.next.prev = current.prev;
+                    } else {
+                        tail = current.prev;
+                    }
+                    size--;
+                    return true;
+                }
+                current = current.next;
+            }
+            return false;
         }
-        return false;
     }
 
     @Override
