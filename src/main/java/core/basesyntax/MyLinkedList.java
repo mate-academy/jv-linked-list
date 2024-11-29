@@ -26,7 +26,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = newNode;
         } else {
             tail.next = newNode;
-            newNode.prev = tail;
         }
         tail = newNode;
         size++;
@@ -34,9 +33,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index out of bound: " + index);
-        }
+        checkIndexForAdd(index);
         if (index == size) {
             add(value);
         } else if (index == 0) {
@@ -47,7 +44,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             Node<T> currentNode = getNodeByIndex(index);
             Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
-            currentNode.prev.next = newNode;
+            if (currentNode.prev != null) {
+                currentNode.prev.next = newNode;
+            }
             currentNode.prev = newNode;
             size++;
         }
@@ -76,17 +75,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> currentNode = getNodeByIndex(index);
-        if (currentNode.prev != null) {
-            currentNode.prev.next = currentNode.next;
-        } else {
-            head = currentNode.next;
-        }
-        if (currentNode.next != null) {
-            currentNode.next.prev = currentNode.prev;
-        } else {
-            tail = currentNode.prev;
-        }
-        size--;
+        unlink(currentNode);
         return currentNode.value;
     }
 
@@ -94,19 +83,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> currentNode = head;
         while (currentNode != null) {
-            if ((currentNode.value == null && object == null)
-                    || (currentNode.value != null && currentNode.value.equals(object))) {
-                if (currentNode.prev != null) {
-                    currentNode.prev.next = currentNode.next;
-                } else {
-                    head = currentNode.next;
-                }
-                if (currentNode.next != null) {
-                    currentNode.next.prev = currentNode.prev;
-                } else {
-                    tail = currentNode.prev;
-                }
-                size--;
+            if (object == null ? currentNode.value == null : object.equals(currentNode.value)) {
+                unlink(currentNode);
                 return true;
             }
             currentNode = currentNode.next;
@@ -125,21 +103,43 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNodeByIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of bound: " + index);
-        }
-        Node<T> currentNode;
+        checkIndex(index);
+        Node<T> currentNode = index < size / 2 ? head : tail;
         if (index < size / 2) {
-            currentNode = head;
             for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
             }
         } else {
-            currentNode = tail;
             for (int i = size - 1; i > index; i--) {
                 currentNode = currentNode.prev;
             }
         }
         return currentNode;
+    }
+
+    private void unlink(Node<T> currentNode) {
+        if (currentNode.prev != null) {
+            currentNode.prev.next = currentNode.next;
+        } else {
+            head = currentNode.next;
+        }
+        if (currentNode.next != null) {
+            currentNode.next.prev = currentNode.prev;
+        } else {
+            tail = currentNode.prev;
+        }
+        size--;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of bound: " + index);
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index out of bound: " + index);
+        }
     }
 }
