@@ -8,9 +8,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
 
     private static class Node<T> {
-        T value;
-        Node<T> next;
-        Node<T> prev;
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
 
         Node(T value, Node<T> prev, Node<T> next) {
             this.value = value;
@@ -108,12 +108,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
+        T value;
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index out of bounds: " + index);
         }
         Node<T> current = head;
         if (index == 0) {
-            T value = head.value;
+            value = head.value;
             head = head.next;
             if (head != null) {
                 head.prev = null;
@@ -124,7 +125,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return value;
         }
         if (index == size - 1) {
-            T value = tail.value;
+            value = tail.value;
             tail = tail.prev;
             if (tail != null) {
                 tail.next = null;
@@ -137,7 +138,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < index; i++) {
             current = current.next;
         }
-        T value = current.value;
+        value = current.value;
         current.prev.next = current.next;
         current.next.prev = current.prev;
         size--;
@@ -148,8 +149,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if ((object == null && current.value == null) ||
-                    (object != null && object.equals(current.value))) {
+            if ((object == null && current.value == null)
+                    || (object != null && object.equals(current.value))) {
                 if (current == head) {
                     head = head.next;
                     if (head != null) {
