@@ -22,7 +22,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(value, tail, null);
-        if (tail == null) { // Список порожній
+        if (tail == null) {
             head = newNode;
         } else {
             tail.next = newNode;
@@ -36,11 +36,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index out of bounds: " + index);
         }
-        if (index == size) { // Додаємо в кінець
+        if (index == size) {
             add(value);
             return;
         }
-        if (index == 0) { // Додаємо в початок
+        if (index == 0) {
             Node<T> newNode = new Node<>(value, null, head);
             if (head != null) {
                 head.prev = newNode;
@@ -51,10 +51,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size++;
             return;
         }
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) { // Знаходимо вузол за індексом
-            current = current.next;
+
+        Node<T> current;
+        if (index < size / 2) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
+
         Node<T> newNode = new Node<>(value, current.prev, current);
         if (current.prev != null) {
             current.prev.next = newNode;
@@ -76,7 +86,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index out of bounds: " + index);
         }
         Node<T> current = head;
-        for (int i = 0; i < index; i++) { // Проходимо до потрібного вузла
+        for (int i = 0; i < index; i++) {
             current = current.next;
         }
         return current.value;
@@ -88,11 +98,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index out of bounds: " + index);
         }
         Node<T> current = head;
-        for (int i = 0; i < index; i++) { // Проходимо до потрібного вузла
+        for (int i = 0; i < index; i++) {
             current = current.next;
         }
         T oldValue = current.value;
-        current.value = value; // Змінюємо значення вузла
+        current.value = value;
         return oldValue;
     }
 
@@ -102,7 +112,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index out of bounds: " + index);
         }
         Node<T> current = head;
-        if (index == 0) { // Видаляємо перший вузол
+        if (index == 0) {
             T value = head.value;
             head = head.next;
             if (head != null) {
@@ -113,7 +123,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size--;
             return value;
         }
-        if (index == size - 1) { // Видаляємо останній вузол
+        if (index == size - 1) {
             T value = tail.value;
             tail = tail.prev;
             if (tail != null) {
@@ -124,7 +134,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size--;
             return value;
         }
-        for (int i = 0; i < index; i++) { // Проходимо до потрібного вузла
+        for (int i = 0; i < index; i++) {
             current = current.next;
         }
         T value = current.value;
@@ -140,21 +150,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (current != null) {
             if ((object == null && current.value == null) ||
                     (object != null && object.equals(current.value))) {
-                if (current == head) { // Видаляємо голову
+                if (current == head) {
                     head = head.next;
                     if (head != null) {
                         head.prev = null;
                     } else {
                         tail = null;
                     }
-                } else if (current == tail) { // Видаляємо хвіст
+                } else if (current == tail) {
                     tail = tail.prev;
                     if (tail != null) {
                         tail.next = null;
                     } else {
                         head = null;
                     }
-                } else { // Видаляємо вузол у середині
+                } else {
                     current.prev.next = current.next;
                     current.next.prev = current.prev;
                 }
