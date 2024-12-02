@@ -39,7 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
         } else if (index == 0) {
             Node<T> newNode = new Node<>(null, value, first);
-            newNode.prev = newNode;
+            first.prev = newNode;
             first = newNode;
             size++;
         } else {
