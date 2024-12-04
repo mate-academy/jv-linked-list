@@ -41,6 +41,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == size){
             newNode.prev = tail;
             tail = newNode;
+            tail.next =newNode;
         } else {
             Node<T> current = gettNodeByIndex(index);
             newNode.next = current.next;
@@ -60,7 +61,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         Node<T> current = head;
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < list.size(); i++) {
             list.add(current.item);
             current = current.next;
         }
@@ -97,6 +98,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == size - 1){
             object = tail.item;
             tail = tail.prev;
+            tail.next = null;
         } else {
             Node<T> previous = gettNodeByIndex(index - 1);
             object = previous.item;
@@ -111,8 +113,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
         for (int i = 0; i < size; i++) {
             if (current.item == object && current.prev == null) {
-                current.next = head;
-                current.next.prev = null;
+                head = current.next;
+                head.prev = null;
+                size--;
+                return true;
+            } else if (current.item == object && current.next == null){
+                tail = current.prev;
+                tail.next = null;
+                size--;
                 return true;
             } else if (current.item == object){
                 current.prev.next = current.next;
