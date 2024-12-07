@@ -27,19 +27,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node new_node = new Node();
-        new_node.data = value;
+        Node newNode = new Node();
+        newNode.data = value;
         if (this.isEmpty()) {
-            new_node.left = null;
-            new_node.right = null;
-            head = new_node;
-            tail = new_node;
+            newNode.left = null;
+            newNode.right = null;
+            head = newNode;
+            tail = newNode;
             size++;
             return;
         }
-        tail.right = new_node;
-        new_node.left = tail;
-        tail = new_node;
+        tail.right = newNode;
+        newNode.left = tail;
+        tail = newNode;
         size++;
     }
 
@@ -48,38 +48,38 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if(size != index) {
             checkExceptionIndex(index);
         }
-        Node new_node = new Node();
-        new_node.data = value;
+        Node newNode = new Node();
+        newNode.data = value;
         size++;
         if(this.isEmpty() && index == 0) {
-            new_node.left = null;
-            new_node.right = null;
-            head = tail = new_node;
+            newNode.left = null;
+            newNode.right = null;
+            head = tail = newNode;
             return;
         }
         if(index == 0) {
-            new_node.right = head;
-            new_node.left = null;
+            newNode.right = head;
+            newNode.left = null;
             if(head != null) {
-                head.left = new_node;
+                head.left = newNode;
             }
-            head = new_node;
+            head = newNode;
             return;
         }
         if(index == size - 1) {
-            tail.right = new_node;
-            new_node.left = tail;
-            tail = new_node;
+            tail.right = newNode;
+            newNode.left = tail;
+            tail = newNode;
             return;
         }
-        Node temp_node = head;
+        Node tempNode = head;
         for (int i = 0; i < index; i++) {
-            temp_node = temp_node.right;
+            tempNode = tempNode.right;
         }
-        temp_node.left.right = new_node;
-        new_node.right = temp_node;
-        new_node.left = temp_node.left;
-        temp_node.left = new_node;
+        tempNode.left.right = newNode;
+        newNode.right = tempNode;
+        newNode.left = tempNode.left;
+        tempNode.left = newNode;
     }
 
     @Override
@@ -142,7 +142,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node temp = head;
         for (int i = 0; i < size; i++) {
             if ((temp.data != null && temp.data.equals(object))
-            || (temp.data == null && null == object)) {
+                || (temp.data == null && null == object)) {
                 this.remove(i);
                 return true;
             }
