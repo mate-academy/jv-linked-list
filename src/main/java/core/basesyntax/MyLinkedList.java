@@ -20,7 +20,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkExceptionIndex(int index) {
-        if(index < 0 || index > size - 1 || (this.isEmpty() && index > 0)) {
+        if (index < 0 || index > size - 1 || (this.isEmpty() && index > 0)) {
             throw new IndexOutOfBoundsException("Element not found in the list");
         }
     }
@@ -45,28 +45,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if(size != index) {
+        if (size != index) {
             checkExceptionIndex(index);
         }
         Node newNode = new Node();
         newNode.data = value;
         size++;
-        if(this.isEmpty() && index == 0) {
+        if (this.isEmpty() && index == 0) {
             newNode.left = null;
             newNode.right = null;
             head = tail = newNode;
             return;
         }
-        if(index == 0) {
+        if (index == 0) {
             newNode.right = head;
             newNode.left = null;
-            if(head != null) {
+            if (head != null) {
                 head.left = newNode;
             }
             head = newNode;
             return;
         }
-        if(index == size - 1) {
+        if (index == size - 1) {
             tail.right = newNode;
             newNode.left = tail;
             tail = newNode;
@@ -119,7 +119,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             temp = temp.right;
         }
         if (temp == head) {
-            if(this.size > 1) {
+            if (this.size > 1) {
                 head = temp.right;
                 temp.right = null;
                 head.left = null;
@@ -142,7 +142,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node temp = head;
         for (int i = 0; i < size; i++) {
             if ((temp.data != null && temp.data.equals(object))
-                || (temp.data == null && null == object)) {
+                    || (temp.data == null && null == object)) {
                 this.remove(i);
                 return true;
             }
