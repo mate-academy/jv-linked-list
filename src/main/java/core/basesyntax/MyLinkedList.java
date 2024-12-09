@@ -12,9 +12,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(tail, value, null);
         if (isEmpty()) {
             head = tail = newNode;
+        } else {
+            tail.next = newNode;
+            tail = newNode;
         }
-        tail.next = newNode;
-        tail = newNode;
         size++;
     }
 
@@ -62,15 +63,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> nodeToRemove = getNodeByIndex(index);
-        if (nodeToRemove.equals(head)) {
-            head = nodeToRemove.next;
-        } else if (nodeToRemove.equals(tail)) {
-            tail = nodeToRemove.prev;
-        } else {
-            nodeToRemove.next.prev = nodeToRemove.prev;
-            nodeToRemove.prev.next = nodeToRemove.next;
-        }
-        size--;
+        unlink(nodeToRemove);
         return nodeToRemove.item;
     }
 
@@ -127,6 +120,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return currentNode;
+    }
+
+    private void unlink(Node<T> nodeToRemove) {
+        if (nodeToRemove.equals(head)) {
+            head.prev = null;
+            head = nodeToRemove.next;
+        } else if (nodeToRemove.equals(tail)) {
+            tail.next = null;
+            tail = nodeToRemove.prev;
+        } else {
+            nodeToRemove.next.prev = nodeToRemove.prev;
+            nodeToRemove.prev.next = nodeToRemove.next;
+        }
+        size--;
     }
 
     private static class Node<T> {
