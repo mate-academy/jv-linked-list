@@ -3,63 +3,36 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node head;
-    private Node tail;
+    private Node<T> head;
+    private Node<T> tail;
     private int size;
-
-    private class Node {
-        private T data;
-        private Node left;
-        private Node right;
-    }
-
-    public MyLinkedList() {
-        head = null;
-        tail = null;
-        size = 0;
-    }
-
-    private void checkExceptionIndex(int index) {
-        if (index < 0 || index > size - 1 || (this.isEmpty() && index > 0)) {
-            throw new IndexOutOfBoundsException("Element not found in the list");
-        }
-    }
 
     @Override
     public void add(T value) {
-        Node newNode = new Node();
-        newNode.data = value;
-        if (this.isEmpty()) {
-            newNode.left = null;
-            newNode.right = null;
-            head = newNode;
+        Node<T> newNode = new Node<>(value);
+        if (head == null) {
+            head = tail = newNode;
+        } else  {
+            tail.right = newNode;
+            newNode.left = tail;
             tail = newNode;
-            size++;
-            return;
         }
-        tail.right = newNode;
-        newNode.left = tail;
-        tail = newNode;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
         if (size != index) {
-            checkExceptionIndex(index);
+            checkIndex(index);
         }
-        Node newNode = new Node();
-        newNode.data = value;
+        Node<T> newNode = new Node<>(value);
         size++;
         if (this.isEmpty() && index == 0) {
-            newNode.left = null;
-            newNode.right = null;
             head = tail = newNode;
             return;
         }
         if (index == 0) {
             newNode.right = head;
-            newNode.left = null;
             if (head != null) {
                 head.left = newNode;
             }
@@ -72,10 +45,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = newNode;
             return;
         }
-        Node tempNode = head;
-        for (int i = 0; i < index; i++) {
-            tempNode = tempNode.right;
-        }
+        Node<T> tempNode = findByIndex(index);
         tempNode.left.right = newNode;
         newNode.right = tempNode;
         newNode.left = tempNode.left;
@@ -84,28 +54,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            this.add(list.get(i));
+        for (T element : list) {
+            this.add(element);
         }
     }
 
     @Override
     public T get(int index) {
-        checkExceptionIndex(index);
-        Node temp = head;
-        for (int i = 0; i < index; i++) {
-            temp = temp.right;
-        }
+        checkIndex(index);
+        Node<T> temp = findByIndex(index);
         return temp.data;
     }
 
     @Override
     public T set(T value, int index) {
-        checkExceptionIndex(index);
-        Node temp = head;
-        for (int i = 0; i < index; i++) {
-            temp = temp.right;
-        }
+        checkIndex(index);
+        Node<T> temp = findByIndex(index);
         T old = temp.data;
         temp.data = value;
         return old;
@@ -113,11 +77,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        checkExceptionIndex(index);
-        Node temp = head;
-        for (int i = 0; i < index; i++) {
-            temp = temp.right;
-        }
+        checkIndex(index);
+        Node<T> temp = findByIndex(index);
         if (temp == head) {
             if (this.size > 1) {
                 head = temp.right;
@@ -139,7 +100,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node temp = head;
+        Node<T> temp = head;
         for (int i = 0; i < size; i++) {
             if ((temp.data != null && temp.data.equals(object))
                     || (temp.data == null && null == object)) {
@@ -159,5 +120,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return head == null;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index > size - 1 || (this.isEmpty() && index > 0)) {
+            throw new IndexOutOfBoundsException("Element not found in the list");
+        }
+    }
+
+    private Node<T> findByIndex(int index) {
+        Node<T> node = head;
+        for (int i = 0; i < index; i++) {
+            node = node.right;
+        }
+        return node;
+    }
+
+    private static class Node<T> {
+        private T data;
+        private Node<T> left;
+        private Node<T> right;
+
+        public Node(T data) {
+            this.data = data;
+            left = right = null;
+        }
     }
 }
