@@ -75,7 +75,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkElementIndex(index);
         Node<T> node = node(index);
-        T value = node.value;
 
         if (node.prev == null) {
             first = node.next;
@@ -90,7 +89,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
         size--;
-        return value;
+        return node.value;
     }
 
     @Override
