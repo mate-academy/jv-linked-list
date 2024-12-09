@@ -51,6 +51,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
+        if (list == null) {
+            throw new NullPointerException("The list to add cannot be null.");
+        }
         for (T value : list) {
             add(value);
         }
@@ -151,7 +154,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> node(int index) {
-        checkElementIndex(index);
         Node<T> current;
         if (index < (size >> 1)) {
             current = first;
