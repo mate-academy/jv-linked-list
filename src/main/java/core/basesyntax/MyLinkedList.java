@@ -38,7 +38,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index is not valid :" + index);
         }
-        if (head == null &&index == 0) {
+        if (head == null && index == 0) {
             head = newNode;
             tail = newNode;
         }
@@ -114,17 +114,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < index; i++) {
             current = current.next;
         }
-        T oldValue = current.value;
+        final T oldValue = current.value;
         if (current.prev != null) {
             current.prev.next = current.next;
         }
         if (current.next != null) {
             current.next.prev = current.prev;
         }
-        if (current == head) {  // Якщо видаляється перший елемент
+        if (current == head) { // Якщо видаляється перший елемент
             head = current.next;
         }
-        if (current == tail) {  // Якщо видаляється останній елемент
+        if (current == tail) { // Якщо видаляється останній елемент
             tail = current.prev;
         }
         size--;
@@ -142,10 +142,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 if (current.next != null) {
                     current.next.prev = current.prev;
                 }
-                if (current == head) {  // Якщо видаляється перший елемент
+                if (current == head) { // Якщо видаляється перший елемент
                     head = current.next;
                 }
-                if (current == tail) {  // Якщо видаляється останній елемент
+                if (current == tail) { // Якщо видаляється останній елемент
                     tail = current.prev;
                 }
                 size--;
@@ -155,6 +155,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return false;
     }
+
     @Override
     public int size() {
         return size;
