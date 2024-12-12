@@ -138,14 +138,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (object != null && object.equals(current.value)) {
                 if (current.prev != null) {
                     current.prev.next = current.next;
+                } else {
+                    // Якщо елемент, що видаляється, є першим, оновлюємо head
+                    head = current.next;
                 }
                 if (current.next != null) {
                     current.next.prev = current.prev;
-                }
-                if (current == head) { // Якщо видаляється перший елемент
-                    head = current.next;
-                }
-                if (current == tail) { // Якщо видаляється останній елемент
+                } else {
+                    // Якщо елемент, що видаляється, є останнім, оновлюємо tail
                     tail = current.prev;
                 }
                 size--;
