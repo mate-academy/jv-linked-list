@@ -97,10 +97,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index is not valid :" + index);
         }
         Node<T> current = head;
-        T oldValue =  current.value;
-          for (int i = 0;i < index;i++) {
-          current = current.next;
-          }
+        T oldValue = current.value;
+        for (int i = 0;i < index;i++) {
+            current = current.next;
+        }
         current.value = value;
         return oldValue;
     }
