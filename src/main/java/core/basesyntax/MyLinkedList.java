@@ -1,7 +1,5 @@
 package core.basesyntax;
 
-import org.w3c.dom.Node;
-
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -20,6 +18,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
         }
     }
+
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(tail,value,null);
@@ -99,9 +98,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         Node<T> current = head;
         T oldValue =  current.value;
-        for (int i = 0;i < index;i++) {
+          for (int i = 0;i < index;i++) {
           current = current.next;
-        }
+          }
         current.value = value;
         return oldValue;
     }
