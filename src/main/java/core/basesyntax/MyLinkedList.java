@@ -101,10 +101,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkElementIndex(index);
-        Node<T> newNode = new Node<>(null, value, null);
-        newNode.item = node(index).item;
+        var item = node(index).item;
         node(index).item = value;
-        return newNode.item;
+        return item;
     }
 
     private T unlink(Node<T> node) {
