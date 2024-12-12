@@ -38,11 +38,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index is not valid :" + index);
         }
-        if (head == null & index == 0) {
+        if (head == null && index == 0) {
             head = newNode;
             tail = newNode;
         }
-        if (index == 0 & head != null) {
+        if (index == 0 && head != null) {
             newNode.next = head;
             head.prev = newNode;
             head = newNode;
@@ -54,7 +54,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             tail = newNode;
         }
-        if (index > 0 & index < size) {
+        if (index > 0 && index < size) {
             Node<T> current = head;
             for (int i = 0;i < index;i++) {
                 current = current.next;
@@ -81,7 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index is not valid :" + index);
         }
         Node<T> current = head;
@@ -93,7 +93,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index is not valid :" + index);
         }
         Node<T> current = head;
@@ -107,7 +107,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index is not valid :" + index);
         }
         Node<T> current = head;
@@ -115,8 +115,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current = current.next;
         }
         T oldValue = current.value;
-        current.prev.next = current.next;
-        current.next.prev = current.prev;
+        if (current.prev != null) {
+            current.prev.next = current.next;
+        }
+        if (current.next != null) {
+            current.next.prev = current.prev;
+        }
         return oldValue;
     }
 
@@ -125,10 +129,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
         for (int i = 0;i < size;i++) {
             current = current.next;
-            if (object.equals(current.value)) {
+            if (object != null && object.equals(current.value)) {
                 current.value = null;
-                current.prev.next = current.next;
-                current.next.prev = current.prev;
+                if (current.prev != null) {
+                    current.prev.next = current.next;
+                }
+                if (current.next != null) {
+                    current.next.prev = current.prev;
+                }
                 return true;
             }
         }
