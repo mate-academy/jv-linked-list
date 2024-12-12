@@ -12,7 +12,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> prev;
         private T value;
 
-        public Node(Node<T> prev,T value, Node<T> next) {
+        public Node(Node<T> prev, T value, Node<T> next) {
             this.value = value;
             this.prev = prev;
             this.next = next;
@@ -21,7 +21,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(tail,value,null);
+        Node<T> newNode = new Node<>(tail, value, null);
         if (tail == null) {
             head = newNode;
         }
@@ -34,7 +34,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Node<T> newNode = new Node<>(null,value, null);
+        Node<T> newNode = new Node<>(null, value, null);
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index is not valid :" + index);
         }
@@ -56,7 +56,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         if (index > 0 && index < size) {
             Node<T> current = head;
-            for (int i = 0;i < index;i++) {
+            for (int i = 0; i < index; i++) {
                 current = current.next;
             }
             newNode.prev = current.prev;
@@ -74,7 +74,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (list == null || list.isEmpty()) {
             return;
         }
-        for (int i = 0; i < list.size();i++) {
+        for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
     }
@@ -85,7 +85,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index is not valid :" + index);
         }
         Node<T> current = head;
-        for (int i = 0; i < index;i++) {
+        for (int i = 0; i < index; i++) {
             current = current.next;
         }
         return current.value;
@@ -97,10 +97,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index is not valid :" + index);
         }
         Node<T> current = head;
-        T oldValue = current.value;
-        for (int i = 0;i < index;i++) {
+        for (int i = 0; i < index; i++) {
             current = current.next;
         }
+        T oldValue = current.value;
         current.value = value;
         return oldValue;
     }
