@@ -156,7 +156,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return false; // Повертаємо false, якщо елемент не знайдено
     }
 
-
     @Override
     public int size() {
         return size;
