@@ -153,7 +153,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             current = current.next;
         }
-        return true;
+        return false;
     }
 
     @Override
