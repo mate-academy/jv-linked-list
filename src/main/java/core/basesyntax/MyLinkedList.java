@@ -139,22 +139,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 if (current.prev != null) {
                     current.prev.next = current.next;
                 } else {
-                    // Якщо елемент, що видаляється, є першим, оновлюємо head
+                    // Якщо елемент є першим, оновлюємо head
                     head = current.next;
                 }
                 if (current.next != null) {
                     current.next.prev = current.prev;
                 } else {
-                    // Якщо елемент, що видаляється, є останнім, оновлюємо tail
+                    // Якщо елемент є останнім, оновлюємо tail
                     tail = current.prev;
                 }
                 size--;
-                return true;
+                return true; // Повертаємо true після успішного видалення
             }
             current = current.next;
         }
-        return false;
+        return false; // Повертаємо false, якщо елемент не знайдено
     }
+
 
     @Override
     public int size() {
