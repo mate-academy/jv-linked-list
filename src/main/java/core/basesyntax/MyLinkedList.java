@@ -134,26 +134,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> current = head;
-        while (current != null) {
-            if (object != null && object.equals(current.value)) {
-                if (current.prev != null) {
-                    current.prev.next = current.next;
-                } else {
-                    // Якщо елемент є першим, оновлюємо head
-                    head = current.next;
-                }
+        for (int i = 0;i < size;i++) {
+            if (object != null && current.value.equals(object)) {
                 if (current.next != null) {
-                    current.next.prev = current.prev;
-                } else {
-                    // Якщо елемент є останнім, оновлюємо tail
-                    tail = current.prev;
+                    current.prev.next = current.next;
                 }
-                size--;
-                return true; // Повертаємо true після успішного видалення
+                if (current.prev != null) {
+                    current.next.prev = current.prev;
+                }
+                return true;
             }
-            current = current.next;
         }
-        return false; // Повертаємо false, якщо елемент не знайдено
+        return false;
     }
 
     @Override
