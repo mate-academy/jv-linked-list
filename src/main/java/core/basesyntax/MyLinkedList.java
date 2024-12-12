@@ -38,7 +38,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index is not valid :" + index);
         }
-        if (head == null && index == 0) {
+        if (head == null &&index == 0) {
             head = newNode;
             tail = newNode;
         }
@@ -107,11 +107,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index is not valid :" + index);
         }
         Node<T> current = head;
-        for (int i = 0;i < index;i++) {
+        for (int i = 0; i < index; i++) {
             current = current.next;
         }
         T oldValue = current.value;
@@ -121,28 +121,40 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (current.next != null) {
             current.next.prev = current.prev;
         }
+        if (current == head) {  // Якщо видаляється перший елемент
+            head = current.next;
+        }
+        if (current == tail) {  // Якщо видаляється останній елемент
+            tail = current.prev;
+        }
+        size--;
         return oldValue;
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> current = head;
-        for (int i = 0;i < size;i++) {
-            current = current.next;
+        while (current != null) {
             if (object != null && object.equals(current.value)) {
-                current.value = null;
                 if (current.prev != null) {
                     current.prev.next = current.next;
                 }
                 if (current.next != null) {
                     current.next.prev = current.prev;
                 }
+                if (current == head) {  // Якщо видаляється перший елемент
+                    head = current.next;
+                }
+                if (current == tail) {  // Якщо видаляється останній елемент
+                    tail = current.prev;
+                }
+                size--;
                 return true;
             }
+            current = current.next;
         }
         return false;
     }
-
     @Override
     public int size() {
         return size;
