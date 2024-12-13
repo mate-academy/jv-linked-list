@@ -50,7 +50,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0) {
             head = elementToAdd;
             tail = elementToAdd;
-        } else if (size - 1 == index) {
+        } else if (index == size - 1) {
             Node<T> elPrevTail = tail.prev;
             elPrevTail.next = elementToAdd;
             elementToAdd.prev = elPrevTail;
@@ -139,6 +139,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             elPrevTail.next = elementToSet;
             elementToSet.prev = elPrevTail;
             tail = elementToSet;
+            tail.next = null;
         } else if (index == 0) {
             elementToReturn = head;
             Node<T> elNextHead = head.next;
@@ -204,9 +205,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> elPrevElementToRemove = elementToRemove.prev;
             Node<T> elNextElementToRemove = elementToRemove.next;
 
-            elPrevElementToRemove.next = null;
-            elNextElementToRemove.prev = null;
-
             elPrevElementToRemove.next = elNextElementToRemove;
             elNextElementToRemove.prev = elPrevElementToRemove;
         }
@@ -251,10 +249,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     Node<T> elPrevElement = element.prev;
                     Node<T> elNextElement = element.next;
 
-                    elPrevElement.next = null;
                     elPrevElement.next = elNextElement;
-
-                    elNextElement.prev = null;
                     elNextElement.prev = elPrevElement;
                 }
             }
