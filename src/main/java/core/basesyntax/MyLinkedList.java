@@ -19,6 +19,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    public Node<T> getNode(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index is not valid :" + index);
+        }
+        Node<T> current = head;
+        for (int i = 0;i < index;i++) {
+            current = current.next;
+        }
+        return current;
+    }
+    public Node<T> getNodeByValue(Object o) {
+        if (o == null) {
+            return null;
+        }
+        Node<T> current = head;
+        while (current != null) {
+            if (current.value.equals(o)) {
+                return current;
+            }
+            current = current.next;
+        }
+        return null;
+    }
+
+
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(tail, value, null);
@@ -121,10 +146,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (current.next != null) {
             current.next.prev = current.prev;
         }
-        if (current == head) { // Якщо видаляється перший елемент
+        if (current == head) {
             head = current.next;
         }
-        if (current == tail) { // Якщо видаляється останній елемент
+        if (current == tail) {
             tail = current.prev;
         }
         size--;
@@ -133,17 +158,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> current = head;
-        for (int i = 0;i < size;i++) {
-            if (object != null && current.value.equals(object)) {
-                if (current.prev != null) {
-                    current.prev.next = current.next;
-                }
-                if (current.next != null) {
-                    current.next.prev = current.prev;
-                }
-                return true;
-            }
+        if (object == null) {
+            return false;
+        }
+        Node<T> nodeToRemove = getNodeByValue(object);
+        if (nodeToRemove == null) {
+            return false;
+        }
+        if (nodeToRemove == head) {
+            head = nodeToRemove.next;
+            size--;
+            return true;
+        }
+        if (nodeToRemove == tail) {
+            tail = nodeToRemove.prev;
+            size--;
+            return true;
+        }
+        if (object != null && nodeToRemove.value.equals(object)) {
+            nodeToRemove.prev.next = nodeToRemove.next;
+            nodeToRemove.next.prev = nodeToRemove.prev;
+            size--;
+            return true;
         }
         return false;
     }
