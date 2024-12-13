@@ -7,18 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    static class Node<T> {
-        private T value;
-        private Node<T> prev;
-        private Node<T> next;
-
-        public Node(Node<T> prev, T value, Node<T> next) {
-            this.value = value;
-            this.prev = prev;
-            this.next = next;
-        }
-    }
-
     public void linkLast(T value) {
         Node<T> newNode = new Node<>(tail, value, null);
         if (head == null) {
@@ -80,7 +68,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void indexCheck(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException(
-                    "indexCheckException: Wrong index < 0 || index > size");
+                    "indexCheckException: index: " + index
+                    + " size: " + size);
         }
     }
 
@@ -198,11 +187,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        if (head == null) {
-            return true;
-        } else {
-            return false;
-        }
+        return head == null;
     }
 
     @Override
@@ -218,4 +203,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         sb.append("]");
         return sb.toString();
     }
+    static class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.value = value;
+            this.prev = prev;
+            this.next = next;
+        }
+    }
+
 }
