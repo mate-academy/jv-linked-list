@@ -124,46 +124,66 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is not valid :" + index);
+            throw new IndexOutOfBoundsException("Index is not valid: " + index);
         }
-        Node<T> current = getNodeByIndex(index);
-        final T oldValue = current.value;
-        if (current.prev != null) {
-            current.prev.next = current.next;
+
+        // Отримуємо елемент за індексом
+        Node<T> nodeToRemove = getNodeByIndex(index);
+        final T oldValue = nodeToRemove.value;
+
+        // Оновлюємо зв'язки
+        if (nodeToRemove.prev != null) {
+            nodeToRemove.prev.next = nodeToRemove.next;
+        } else {
+            // Якщо це перший елемент (head)
+            head = nodeToRemove.next;
         }
-        if (current.next != null) {
-            current.next.prev = current.prev;
+        if (nodeToRemove.next != null) {
+            nodeToRemove.next.prev = nodeToRemove.prev;
+        } else {
+            // Якщо це останній елемент (tail)
+            tail = nodeToRemove.prev;
         }
-        if (current == head) {
-            head = current.next;
-        }
-        if (current == tail) {
-            tail = current.prev;
-        }
-        size--;
-        return oldValue;
+        nodeToRemove.value = null;
+        nodeToRemove.next = null;
+        nodeToRemove.prev = null;
+
+        size--; // Зменшуємо розмір списку
+        return oldValue; // Повертаємо значення видаленого елемента
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> nodeToRemove = getNodeByValue(object);
-        if (nodeToRemove != null && nodeToRemove == head) {
-            head = nodeToRemove.next;
-            size--;
-            return true;
+
+        if (nodeToRemove == null) {
+            return false; // Якщо елемент не знайдено
         }
-        if (nodeToRemove == tail) {
-            tail = nodeToRemove.prev;
-            size--;
-            return true;
-        }
-        if (nodeToRemove != null && nodeToRemove.value.equals(object)) {
+
+        final T valueToRemove = nodeToRemove.value;
+
+        // Оновлюємо зв'язки для видалення
+        if (nodeToRemove.prev != null) {
             nodeToRemove.prev.next = nodeToRemove.next;
-            nodeToRemove.next.prev = nodeToRemove.prev;
-            size--;
-            return true;
+        } else {
+            // Якщо це перший елемент (head)
+            head = nodeToRemove.next;
         }
-        return true;
+
+        if (nodeToRemove.next != null) {
+            nodeToRemove.next.prev = nodeToRemove.prev;
+        } else {
+            // Якщо це останній елемент (tail)
+            tail = nodeToRemove.prev;
+        }
+
+        // Очищаємо зв'язки в самому видаленому елементі
+        nodeToRemove.value = null;
+        nodeToRemove.next = null;
+        nodeToRemove.prev = null;
+
+        size--; // Зменшуємо розмір списку
+        return true; // Повертаємо true, якщо елемент був знайдений і видалений
     }
 
     @Override
