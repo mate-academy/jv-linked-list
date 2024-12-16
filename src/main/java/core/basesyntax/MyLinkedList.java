@@ -163,7 +163,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size--;
             return true;
         }
-        return false;
+        return true;
     }
 
     @Override
