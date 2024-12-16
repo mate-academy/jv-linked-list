@@ -128,8 +128,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
         Node<T> current = getNodeByIndex(index);
-        T oldValue = current.value;
-
+        final T oldValue = current.value;
         // Відновлюємо зв'язки при видаленні елемента
         if (current.prev != null) {
             current.prev.next = current.next;
@@ -205,7 +204,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         return false; // Якщо елемент не знайдений
     }
-
 
     @Override
     public int size() {
