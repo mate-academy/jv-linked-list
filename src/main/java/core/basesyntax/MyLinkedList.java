@@ -4,9 +4,20 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private int size;
+    private Node<T> head;
+    private Node<T> tail;
 
     @Override
     public void add(T value) {
+        Node<T> t = tail;
+        Node<T> newNode = new Node<>(t, value, null);
+        if (t == null) {
+            head = newNode;
+        } else {
+            t.next = newNode;
+        }
+        tail = newNode;
+        size++;
     }
 
     @Override
