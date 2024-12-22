@@ -30,7 +30,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndex(index);
+        Node<T> currNode;
+        if (index < (size >> 1)) {
+            currNode = head;
+            for (int i = 0; i < index; i++) {
+                currNode = currNode.next;
+            }
+        } else {
+            currNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                currNode = currNode.prev;
+            }
+        }
+        return currNode.item;
     }
 
     @Override
