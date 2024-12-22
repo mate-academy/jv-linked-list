@@ -91,7 +91,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> nodeToDelete = head;
         for (int i = 0; i <= index; i++) {
             if (index == i) {
-                T element = nodeToDelete.item;
                 Node<T> next = nodeToDelete.next;
                 Node<T> prev = nodeToDelete.prev;
                 if (prev == null) {
@@ -106,6 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     next.prev = nodeToDelete.prev;
                     nodeToDelete.prev = null;
                 }
+                T element = nodeToDelete.item;
                 nodeToDelete.item = null;
                 size--;
                 return element;
@@ -141,9 +141,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<T> {
-        Node<T> prev;
-        T item;
-        Node<T> next;
+        private Node<T> prev;
+        private T item;
+        private Node<T> next;
 
         public Node(Node<T> prev, T item, Node<T> next) {
             this.prev = prev;
@@ -154,13 +154,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndexForAddedElement(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for list size " + size);
+            throw new IndexOutOfBoundsException("Index "
+                    + index + " is out of bounds for list size " + size);
         }
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for list size " + size);
+            throw new IndexOutOfBoundsException("Index "
+                    + index + " is out of bounds for list size " + size);
         }
     }
 }
