@@ -69,4 +69,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
         }
     }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for list size " + size);
+        }
+    }
 }
