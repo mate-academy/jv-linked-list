@@ -71,6 +71,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
+        checkIndex(index);
+        Node<T> currNode = head;
+        for (int i = 0; i <= index; i++) {
+            if (index == i) {
+                T oldItem = currNode.item;
+                currNode.item = value;
+                return oldItem;
+            }
+            currNode = currNode.next;
+        }
         return null;
     }
 
