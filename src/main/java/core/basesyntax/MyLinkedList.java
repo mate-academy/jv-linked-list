@@ -91,24 +91,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> nodeToDelete = head;
         for (int i = 0; i <= index; i++) {
             if (index == i) {
-                Node<T> next = nodeToDelete.next;
-                Node<T> prev = nodeToDelete.prev;
-                if (prev == null) {
-                    head = next;
-                } else {
-                    prev.next = nodeToDelete.next;
-                    nodeToDelete.next = null;
-                }
-                if (next == null) {
-                    tail = prev;
-                } else {
-                    next.prev = nodeToDelete.prev;
-                    nodeToDelete.prev = null;
-                }
-                T element = nodeToDelete.item;
-                nodeToDelete.item = null;
-                size--;
-                return element;
+                return unlink(nodeToDelete);
             }
             nodeToDelete = nodeToDelete.next;
         }
@@ -117,15 +100,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        int indexToRemove = 0;
         Node<T> currItem = head;
         while (currItem != null) {
             if (Objects.equals(currItem.item, object)) {
-                remove(indexToRemove);
+                unlink(currItem);
                 return true;
             }
             currItem = currItem.next;
-            indexToRemove++;
         }
         return false;
     }
@@ -164,5 +145,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index "
                     + index + " is out of bounds for list size " + size);
         }
+    }
+
+    private T unlink(Node<T> node) {
+        Node<T> prev = node.prev;
+        Node<T> next = node.next;
+        T item = node.item;
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
+            node.prev = null;
+        }
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.prev = prev;
+            node.next = null;
+        }
+        node.item = null;
+        size--;
+        return item;
     }
 }
