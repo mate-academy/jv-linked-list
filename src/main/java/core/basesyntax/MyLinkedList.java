@@ -27,12 +27,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else {
-            Node<T> succ = head;
-            int i = 0;
-            while (index != i) {
-                succ = succ.next;
-                i++;
-            }
+            Node<T> succ = getNodeByIndex(index);
             Node<T> pred = succ.prev;
             Node<T> newNode = new Node<>(pred, value, succ);
             succ.prev = newNode;
@@ -55,47 +50,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        Node<T> currNode;
-        if (index < (size >> 1)) {
-            currNode = head;
-            for (int i = 0; i < index; i++) {
-                currNode = currNode.next;
-            }
-        } else {
-            currNode = tail;
-            for (int i = size - 1; i > index; i--) {
-                currNode = currNode.prev;
-            }
-        }
-        return currNode.item;
+        Node<T> node = getNodeByIndex(index);
+        return node.item;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> currNode = head;
-        for (int i = 0; i <= index; i++) {
-            if (index == i) {
-                T oldItem = currNode.item;
-                currNode.item = value;
-                return oldItem;
-            }
-            currNode = currNode.next;
-        }
-        return null;
+        Node<T> currNode = getNodeByIndex(index);
+        T oldItem = currNode.item;
+        currNode.item = value;
+        return oldItem;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> nodeToDelete = head;
-        for (int i = 0; i <= index; i++) {
-            if (index == i) {
-                return unlink(nodeToDelete);
-            }
-            nodeToDelete = nodeToDelete.next;
-        }
-        return null;
+        Node<T> nodeToDelete = getNodeByIndex(index);
+        return unlink(nodeToDelete);
     }
 
     @Override
@@ -145,6 +117,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index "
                     + index + " is out of bounds for list size " + size);
         }
+    }
+
+    private Node<T> getNodeByIndex(int index) {
+        Node<T> currNode;
+        if (index < (size >> 1)) {
+            currNode = head;
+            for (int i = 0; i < index; i++) {
+                currNode = currNode.next;
+            }
+        } else {
+            currNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                currNode = currNode.prev;
+            }
+        }
+        return currNode;
     }
 
     private T unlink(Node<T> node) {
