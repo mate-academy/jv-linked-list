@@ -38,7 +38,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == size) {
             add(value);
         } else if (index == 0) {
-            Node<T> newNode = new Node<>(head, value, null);
+            Node<T> newNode = new Node<>(null, value, head);
             if (head != null) {
                 head.prev = newNode;
             }
@@ -79,7 +79,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void remove(Node<T> nodeToRemove) {
         if (nodeToRemove.prev != null) {
-            nodeToRemove.next.prev = nodeToRemove.next;
+            nodeToRemove.next.prev = nodeToRemove.prev;
         } else {
             head = nodeToRemove.next;
         }
