@@ -107,7 +107,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> findNodeByIndex(int index) {
         checkElementIndex(index);
         Node<T> currentNode;
-        if (index < (size << 1)) {
+        if (index < (size >> 1)) {
             currentNode = first;
             for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
