@@ -7,9 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size;
 
-    public MyLinkedList() {
-    }
-
     @Override
     public void add(T value) {
         Node<T> oldLast = last;
@@ -28,14 +25,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkPositionIndex(index);
         if (index == size) {
             add(value);
-        } else {
-            if (index == 0) {
-                insertToBeginning(value);
-            } else {
-                insertBeforeIndex(value, index);
-            }
-            size++;
+            return;
         }
+        if (index == 0) {
+            insertToBeginning(value);
+        } else {
+            insertBeforeIndex(value, index);
+        }
+        size++;
     }
 
     @Override
@@ -77,7 +74,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> currentNode = first;
         while (currentNode != null) {
-            if (equalsElement(currentNode.value, object)) {
+            if (equalsElement(object, currentNode.value)) {
                 unlink(currentNode);
                 size--;
                 return true;
@@ -146,23 +143,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkElementIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index:" + index);
+            throw new IndexOutOfBoundsException("Invalid index: " + index + ". Size: "
+                    + size);
         }
     }
 
-    private boolean equalsElement(T value, Object object) {
-        if (object == value) {
-            return true;
-        }
-        if (object == null || value == null) {
-            return false;
-        }
-        if (object.getClass() == value.getClass()) {
-            T current = (T) object;
-            return current == value || (current != null
-                    && current.equals(value));
-        }
-        return false;
+    private boolean equalsElement(Object object, T value) {
+        return object == value || (object != null && object.equals(value));
     }
 
     private void unlink(Node<T> node) {
@@ -181,7 +168,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public static class Node<T> {
+    private static class Node<T> {
         private T value;
         private Node<T> prev;
         private Node<T> next;
