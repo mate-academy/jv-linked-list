@@ -9,9 +9,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
 
     class Node<T> {
-        T data;
-        public Node<T> prev = null;
-        public Node<T> next = null;
+        private T data;
+        private Node<T> prev = null;
+        private Node<T> next = null;
 
         public Node(Node<T> prev, T data, Node<T> next) {
             this.prev = prev;
@@ -31,13 +31,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     public void add(T value, int index) {
         indexValidationForAdd(index);
-        if(index == 0) {
+        if (index == 0) {
             addFirst(value);
-        }
-        else if(index == size){
+        } else if (index == size) {
             addLast(value);
-        }
-        else {
+        } else {
             addToMiddle(value, index);
         }
     }
@@ -81,14 +79,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         indexValidationForFind(index);
         Node<T> newNode = head;
+        T removedData = null;
         for (int i = 0; i <= index; i++) {
             if (i == index) {
                 removeByNode(newNode);
+                removedData = newNode.data;
             } else {
                 newNode = newNode.next;
             }
         }
-        return newNode.data;
+        return removedData;
     }
 
     @Override
