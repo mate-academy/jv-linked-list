@@ -8,20 +8,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    class Node<T> {
+    public static class Node<T> {
         private T data;
-        private Node<T> prev = null;
-        private Node<T> next = null;
+        private Node<T> prev;
+        private Node<T> next;
 
         public Node(Node<T> prev, T data, Node<T> next) {
             this.prev = prev;
             this.data = data;
             this.next = next;
         }
-    }
-
-    public MyLinkedList() {
-
     }
 
     @Override
@@ -50,86 +46,73 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         indexValidationForFind(index);
-        Node<T> newNode = head;
-        for (int i = 0; i <= index; i++) {
-            if (i == index) {
-                return newNode.data;
-            }
-            newNode = newNode.next;
-        }
-        throw new IndexOutOfBoundsException();
+        return findNodeByIndex(index).data;
     }
 
     @Override
     public T set(T value, int index) {
         indexValidationForFind(index);
-        Node<T> pointer = head;
-        T oldValue = pointer.data;
-        for (int i = 0; i <= index; i++) {
-            if (i == index) {
-                oldValue = pointer.data;
-                pointer.data = value;
-            }
-            pointer = pointer.next;
-        }
+        Node<T> found = findNodeByIndex(index);
+        T oldValue = found.data;
+        found.data = value;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
         indexValidationForFind(index);
-        Node<T> newNode = head;
-        T removedData = null;
-        for (int i = 0; i <= index; i++) {
-            if (i == index) {
-                removedData = newNode.data;
-                removeByNode(newNode);
-            } else {
-                newNode = newNode.next;
-            }
-        }
-        return removedData;
+        Node<T> found = findNodeByIndex(index);
+        removeByNode(found);
+        return found.data;
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> newNode = head;
-        if (head == tail) {
-            removeHead();
-            return true;
-        }
         for (int i = 0; i < size; i++) {
             if (newNode.data == null ? newNode.data == object
                     : newNode.data.equals(object)) {
-                removeByNode(newNode);
+                if (head == tail) {
+                    removeHead();
+                } else {
+                    removeByNode(newNode);
+                }
                 return true;
-            } else {
-                newNode = newNode.next;
             }
+            newNode = newNode.next;
         }
         return false;
     }
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return this.size == 0;
+        return size == 0;
     }
 
     private void indexValidationForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("New node can't be added for"
+                    + " this position: " + index);
         }
     }
 
     private void indexValidationForFind(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index at position: " + index + " wasn't found");
         }
+    }
+
+    private Node<T> findNodeByIndex(int index) {
+        Node<T> pointer = head;
+        for (int i = 0; i < index; i++) {
+            pointer = pointer.next;
+        }
+        return pointer;
     }
 
     private void addFirst(T value) {
