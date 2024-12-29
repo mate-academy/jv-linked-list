@@ -82,8 +82,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         T removedData = null;
         for (int i = 0; i <= index; i++) {
             if (i == index) {
-                removeByNode(newNode);
                 removedData = newNode.data;
+                removeByNode(newNode);
             } else {
                 newNode = newNode.next;
             }
@@ -166,6 +166,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 newNode.next = pointer;
                 newNode.prev = pointer.prev;
                 pointer.prev.next = newNode;
+                pointer.prev = newNode;
                 size++;
             }
             if (pointer.next != null) {
@@ -175,8 +176,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void removeHead() {
-        head = null;
-        tail = null;
+        if (size == 1) {
+            head = null;
+            tail = null;
+        }
         size--;
     }
 
