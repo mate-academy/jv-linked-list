@@ -4,9 +4,9 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> prev;
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
         Node(Node<T> prev, T item, Node<T> next) {
             this.item = item;
@@ -130,8 +130,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> current = getNodeAt(index);
-        T removedValue = current.item;
 
+        T removedValue = current.item;
         if (current.prev != null) {
             current.prev.next = current.next;
         } else {
@@ -158,7 +158,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
         while (current != null) {
             if ((current.item == null && object == null)
-                    || (current.item != null && current.item.equals(object)))  {
+                    || (current.item != null && current.item.equals(object))) {
                 unlink(current);
                 return true;
             }
