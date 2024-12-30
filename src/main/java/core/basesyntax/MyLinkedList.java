@@ -131,7 +131,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Node<T> current = getNodeAt(index);
 
+
         T removedValue = current.item;
+
         if (current.prev != null) {
             current.prev.next = current.next;
         } else {
@@ -146,9 +148,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         current.item = null;
         size--;
-
-        // Додати логування для перевірки стану списку
-        System.out.println("List after removal: " + toString());
 
         return removedValue;
     }
