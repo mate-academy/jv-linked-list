@@ -131,9 +131,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkIndex(index);
         Node<T> current = getNodeAt(index);
 
-
-        T removedValue = current.item;
-
         if (current.prev != null) {
             current.prev.next = current.next;
         } else {
@@ -145,6 +142,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             tail = current.prev;
         }
+
+        T removedValue = current.item;
 
         current.item = null;
         size--;
