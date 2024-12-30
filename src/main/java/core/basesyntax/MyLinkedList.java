@@ -109,23 +109,34 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         validateIndex(index);// Перевірка валідності індексу
 
+        // Якщо потрібно видалити перший елемент
         if (index == 0) {
-            // Якщо видаляємо перший елемент
-            T removedValue = head.value; // Зберігаємо значення вузла
-            head = head.next; // Змінюємо посилання на наступний вузол
-            size--; // Зменшуємо розмір списку
-            return removedValue; // Повертаємо видалене значення
+            final T value = head.value;
+            head = head.next; // Зміщаємо вказівник на перший елемент на наступний
+            if (head == null) { // Якщо список став порожнім після видалення
+                tail = null; // Оновлюємо також вказівник на кінець
+            } else {
+                head.prev = null; // Оновлюємо prev вказівник для нового першого елемента
+            }
+            size--;
+            return value;
         }
 
         Node<T> current = head;
-        for (int i = 0; i < index - 1; i++) {
-            current = current.next; // Переходимо до вузла перед тим, який потрібно видалити
+        for (int i = 0; i < index; i++) {
+            current = current.next;
         }
 
-        T removedValue = current.next.value; // Зберігаємо значення вузла, який видаляємо
-        current.next = current.next.next; // Пропускаємо вузол, який потрібно видалити
-        size--; // Зменшуємо розмір списку
-        return removedValue; // Повертаємо видалене значення
+        // Якщо потрібно видалити останній елемент
+        if (current.next == null) {
+            tail = current.prev; // Оновлюємо вказівник на кінець
+        } else {
+            current.next.prev = current.prev; // Оновлюємо prev вказівник наступного елемента
+        }
+
+        current.prev.next = current.next; // Оновлюємо next вказівник попереднього елемента
+        size--;
+        return current.value; // Повертаємо видалене значення
     }
 
     @Override
