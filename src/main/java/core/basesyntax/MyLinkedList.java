@@ -4,6 +4,16 @@ import java.util.List;
 import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    public class MyNode<T> {
+        private T value;
+        private MyNode<T> prev;
+        private MyNode<T> next;
+
+        MyNode(T x) {
+            value = x;
+        }
+    }
+
     private MyNode head;
     private MyNode tail;
     private int size;
@@ -21,8 +31,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = myNode;
             tail = myNode;
         } else {
-            tail.setNext(myNode);
-            myNode.setPrev(tail);
+            tail.next = myNode;
+            myNode.prev = tail;
             tail = myNode;
         }
         size++;
@@ -40,20 +50,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
             add(value);
         } else if (index == 0) {
-            myNode.setNext(head);
-            head.setPrev(myNode);
+            myNode.next = head;
+            head.prev = myNode;
             head = myNode;
             size++;
         } else {
 
             MyNode current = head;
             for (int i = 0; i < index; i++) {
-                current = current.getNext();
+                current = current.next;
             }
-            myNode.setNext(current);
-            myNode.setPrev(current.getPrev());
-            current.getPrev().setNext(myNode);
-            current.setPrev(myNode);
+            myNode.next = current;
+            myNode.prev = current.prev;
+            current.prev.next = myNode;
+            current.prev = myNode;
             size++;
         }
 
@@ -75,9 +85,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         MyNode current = head;
         for (int i = 0; i < index; i++) {
-            current = current.getNext();
+            current = current.next;
         }
-        return (T) current.getValue();
+        return (T) current.value;
     }
 
     @Override
@@ -88,10 +98,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         MyNode current = head;
         for (int i = 0; i < index; i++) {
-            current = current.getNext();
+            current = current.next;
         }
-        T oldValue = (T) current.getValue();
-        current.setValue(value);
+        T oldValue = (T) current.value;
+        current.value = value;
         return oldValue;
     }
 
@@ -104,21 +114,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         MyNode current = head;
 
         for (int i = 0; i < index; i++) {
-            current = current.getNext();
+            current = current.next;
         }
 
-        if (current.getPrev() == null) {
-            head = current.getNext();
+        if (current.prev == null) {
+            head = current.next;
         } else {
-            current.getPrev().setNext(current.getNext());
+            current.prev.next = current.next;
         }
 
-        if (current.getNext() != null) {
-            current.getNext().setPrev(current.getPrev());
+        if (current.next != null) {
+            current.next.prev = current.prev;
         }
 
         size--;
-        return (T) current.getValue();
+        return (T) current.value;
 
     }
 
@@ -128,24 +138,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         MyNode current = head;
         while (current != null) {
 
-            if (Objects.equals(current.getValue(), object)) {
+            if (Objects.equals(current.value, object)) {
 
-                if (current.getPrev() == null) {
-                    head = current.getNext();
+                if (current.prev == null) {
+                    head = current.next;
                 } else {
-                    current.getPrev().setNext(current.getNext());
+                    current.prev.next = current.next;
                 }
 
-                if (current.getNext() == null) {
-                    tail = current.getPrev();
+                if (current.next == null) {
+                    tail = current.prev;
                 } else {
-                    current.getNext().setPrev(current.getPrev());
+                    current.next.prev = current.prev;
                 }
 
                 size--;
                 return true;
             }
-            current = current.getNext();
+            current = current.next;
         }
 
         return false;
