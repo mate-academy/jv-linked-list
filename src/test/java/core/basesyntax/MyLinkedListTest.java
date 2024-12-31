@@ -381,6 +381,7 @@ public class MyLinkedListTest {
 
         boolean isNullRemove = cats.remove(null);
         Assert.assertTrue("Test failed! Result after removing should be true", isNullRemove);
+
         Assert.assertEquals("Expected size is incorrect. Expected: 3, but was: " + cats.size(), 3, cats.size());
         Assert.assertEquals("Unexpected element found in list on 0 position. Expected: " + FIRST_CAT +", but was: " + cats.get(0),
                 FIRST_CAT, cats.get(0));
