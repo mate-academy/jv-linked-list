@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -16,8 +17,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (size == 0) {
             head = item;
         } else {
-            item.setPrev(tail);
-            tail.setNext(item);
+            item.prev = tail;
+            tail.next = item;
         }
         tail = item;
         this.size++;
@@ -32,24 +33,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         Node<T> item = new Node<>(value);
         if (index == 0) {
-            head.setPrev(item);
-            item.setNext(head);
+            head.prev = item;
+            item.next = head;
             head = item;
             size++;
             return;
         }
         if (index == size) {
-            item.setPrev(tail);
-            tail.setNext(item);
+            item.prev = tail;
+            tail.next = item;
             tail = item;
             size++;
             return;
         }
         Node<T> currentItem = getNodeByIndex(index);
-        currentItem.getPrev().setNext(item);
-        item.setPrev(currentItem.getPrev());
-        item.setNext(currentItem);
-        currentItem.setPrev(item);
+        currentItem.prev.next = item;
+        item.prev = currentItem.prev;
+        item.next = currentItem;
+        currentItem.prev = item;
         size++;
     }
 
@@ -64,21 +65,21 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T get(int index) {
         checkIndex(index, "index");
         if (index == 0) {
-            return head.getData();
+            return head.data;
         }
         if (index == size - 1) {
-            return tail.getData();
+            return tail.data;
         }
         Node<T> currentItem = getNodeByIndex(index);
-        return currentItem.getData();
+        return currentItem.data;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index, "index");
         Node<T> currentItem = getNodeByIndex(index);
-        T oldData = currentItem.getData();
-        currentItem.setData(value);
+        T oldData = currentItem.data;
+        currentItem.data = value;
         return oldData;
     }
 
@@ -86,10 +87,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index, "index");
         if (index == 0) {
-            T oldData = head.getData();
-            if (size > 1 && head.getNext() != null) {
-                head = head.getNext();
-                head.getNext().setPrev(null);
+            T oldData = head.data;
+            if (size > 1 && head.next != null) {
+                head = head.next;
+                head.next.prev = null;
             } else {
                 head = null;
                 tail = null;
@@ -98,10 +99,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return oldData;
         }
         if (index == size - 1) {
-            T oldData = tail.getData();
-            if (tail.getPrev() != null) {
-                tail = tail.getPrev();
-                tail.getPrev().setNext(null);
+            T oldData = tail.data;
+            if (tail.prev != null) {
+                tail = tail.prev;
+                tail.prev.next = null;
             } else {
                 tail = null;
                 head = null;
@@ -112,7 +113,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> currentItem = getNodeByIndex(index);
         unlink(currentItem);
         size--;
-        return currentItem.getData();
+        return currentItem.data;
     }
 
     @Override
@@ -122,20 +123,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         Node<T> currentItem = head;
         while (currentItem != null) {
-            if ((currentItem.getData() == null) ? (currentItem.getData() == null && object == null)
-                    : currentItem.getData().equals(object)) {
+            if (Objects.equals(currentItem.data, object)) {
                 if (currentItem == head) {
-                    head = head.getNext();
+                    head = head.next;
                     if (head != null) {
-                        head.setPrev(null);
+                        head.prev = null;
                     }
                     size--;
                     return true;
                 }
                 if (currentItem == tail) {
-                    if (tail.getPrev() != null) {
-                        tail = tail.getPrev();
-                        tail.getPrev().setNext(null);
+                    if (tail.prev != null) {
+                        tail = tail.prev;
+                        tail.prev.next = null;
                     } else {
                         tail = null;
                         head = null;
@@ -147,7 +147,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 size--;
                 return true;
             }
-            currentItem = currentItem.getNext();
+            currentItem = currentItem.next;
         }
         return false;
     }
@@ -177,21 +177,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             default:
                 System.out.println("There's no such context: " + context);
         }
-
-
     }
 
     private Node<T> getNodeByIndex(int index) {
         Node<T> currentItem = head;
         for (int i = 1; i <= index; i++) {
-            currentItem = currentItem.getNext();
+            currentItem = currentItem.next;
         }
         return currentItem;
     }
 
     private void unlink(Node<T> currentItem) {
-        currentItem.getPrev().setNext(currentItem.getNext());
-        currentItem.getNext().setPrev(currentItem.getPrev());
+        currentItem.prev.next = currentItem.next;
+        currentItem.next.prev = currentItem.prev;
     }
 
     static class Node<T> {
@@ -211,28 +209,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.prev = prev;
             this.data = data;
             this.next = next;
-        }
-
-        public void setPrev(Node<T> prev) {
-            this.prev = prev;
-        }
-
-        public void setData(T data) {
-            this.data = data;
-        }
-
-        public void setNext(Node<T> next) {
-            this.next = next;
-        }
-
-        public Node<T> getPrev() {
-            return prev;
-        }
-
-        public T getData() { return data; }
-
-        public Node<T> getNext() {
-            return next;
         }
     }
 }
