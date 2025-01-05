@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+
     public class MyNode<T> {
         private T value;
         private  MyNode<T> prev;
@@ -21,6 +22,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         tail = null;
         size = 0;
     }
+
     @Override
     public void add(T value) {
         MyNode myNode = new MyNode(value);
@@ -99,23 +101,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index out of bounds");
         }
-
         MyNode current = head;
-
         for (int i = 0; i < index; i++) {
             current = current.next;
         }
-
         if (current.prev == null) {
             head = current.next;
         } else {
             current.prev.next = current.next;
         }
-
         if (current.next != null) {
             current.next.prev = current.prev;
         }
-
         size--;
         return (T) current.value;
     }
