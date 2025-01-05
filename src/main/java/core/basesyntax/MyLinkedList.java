@@ -117,7 +117,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = current.prev;
         } else {
             current.next.prev = current.prev;
-            tail = current.prev;
+            tail = current.next;
         }
 
         current.prev.next = current.next;
@@ -146,7 +146,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (current.next.value == null ? object == null
                     : current.next.value.equals(object)) {
                 current.next = current.next.next;
-                tail = current;
+                tail = current.next;
                 size--;
                 return true;
             }
@@ -200,8 +200,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private T value;
 
         Node(T value) {
-            this.prev = prev;
-            this.next = next;
             this.value = value;
         }
     }
