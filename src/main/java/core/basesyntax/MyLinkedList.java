@@ -88,7 +88,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             i += (index < size / 2) ? 1 : -1;
         }
 
-        throw new NoSuchElementException("Element not found at index " + index);
+        throw new IllegalStateException("Unexpected error in get method");
     }
 
     @Override
@@ -111,7 +111,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             i += (index < size / 2) ? 1 : -1;
         }
 
-        throw new IndexOutOfBoundsException("Exp in set");
+        throw new IndexOutOfBoundsException("Index " + index + " is out of bounds");
     }
 
     @Override
