@@ -28,7 +28,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Node<T> target = getNadeByIndex(index);
+        Node<T> target = getNodeByIndex(index);
 
         if (this.size == 0) {
             Node<T> addedNode = new Node<>(null, null);
@@ -70,7 +70,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Node<T> target = getNadeByIndex(index);
+        Node<T> target = getNodeByIndex(index);
         if (target == null) {
             throw new IndexOutOfBoundsException("Can't get object");
         }
@@ -79,7 +79,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        Node<T> target = getNadeByIndex(index);
+        Node<T> target = getNodeByIndex(index);
         if (target == null) {
             throw new IndexOutOfBoundsException("Can't set object");
         }
@@ -90,7 +90,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node<T> target = getNadeByIndex(index);
+        Node<T> target = getNodeByIndex(index);
         if (size == 1) {
             Node<T> addedNode = new Node<>(null, null);
             head = addedNode;
@@ -158,7 +158,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private Node<T> getNadeByIndex(int index) {
+    private Node<T> getNodeByIndex(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Can't set element");
         }
