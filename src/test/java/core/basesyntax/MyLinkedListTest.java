@@ -229,13 +229,13 @@ public class MyLinkedListTest {
 
     @Test
     public void testRemoveByIndex() {
-        myLinkedList.add(FIRST_ITEM);
+        myLinkedList.add(FIRST_ITEM);//1
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);
         myLinkedList.add(NULL_ITEM);
-        myLinkedList.add(SECOND_ITEM);
-        myLinkedList.add(THIRD_ITEM);
-        myLinkedList.add(NULL_ITEM);
+        myLinkedList.add(SECOND_ITEM);//2
+        myLinkedList.add(THIRD_ITEM);//3
+        myLinkedList.add(NULL_ITEM);//4
         String actualRemovedFirst = myLinkedList.remove(0);
         String actualRemovedSecond = myLinkedList.remove(3);
         String actualRemovedThird = myLinkedList.remove(3);
@@ -339,11 +339,11 @@ public class MyLinkedListTest {
     public void removeObjectValueByItemPositive() {
         MyLinkedListInterface<Cat> cats = new MyLinkedList<>();
         cats.add(FIRST_CAT);
-        cats.add(SECOND_CAT);
-        cats.add(THIRD_CAT);
-        cats.add(THIRD_CAT);
+        cats.add(SECOND_CAT);//
+        cats.add(THIRD_CAT);//
+        cats.add(THIRD_CAT);//
         cats.add(null);
-        cats.add(FOURTH_CAT);
+        cats.add(FOURTH_CAT);//
         cats.add(null);
         Assert.assertEquals("Expected size is incorrect", 7, cats.size());
 
