@@ -71,9 +71,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (list.isEmpty()) {
             return;
         }
-        if (tail == null) {
-            head = tail = new Node<>(null, list.get(0), null);
-        }
         for (int i = 0; i < list.size(); i++) {
             Node<T> newNode = new Node<>(tail, list.get(i), null);
             tail.next = newNode;
@@ -100,7 +97,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index > size()) {
+        if (index < 0 || index >= size()) {
             throw new java.lang.IndexOutOfBoundsException("Index is less than 0 or more than size");
         }
         if (value == null) {
