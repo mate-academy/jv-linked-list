@@ -56,6 +56,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 head = newNode;
             } else {
                 nodeFromIndex.prev.next = newNode;
+                nodeFromIndex.prev = newNode;
             }
             size++;
         }
@@ -101,14 +102,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         size--;
         T value = nodeFromIndex.value;
-        nodeFromIndex = null;
+        nodeFromIndex.prev = null;
+        nodeFromIndex.next = null;
         return value;
     }
 
     @Override
     public boolean remove(T object) {
         for (int i = 0; i < size; i++) {
-            if ((object == null && get(i) == object) || (object != null && object.equals(get(i)))) {
+            if ((object != null && object.equals(get(i))) || object == get(i)) {
                 remove(i);
                 return true;
             }
