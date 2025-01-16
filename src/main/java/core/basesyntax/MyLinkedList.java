@@ -57,9 +57,35 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T value : list) {
-            add(value);
+        if (list == null || list.isEmpty()) {
+            return;
         }
+
+        Node<T> firstNewNode = null;
+        Node<T> lastNewNode = null;
+
+        for (T value : list) {
+            Node<T> newNode = new Node<>(value);
+
+            if (firstNewNode == null) {
+                firstNewNode = newNode;
+            } else {
+                lastNewNode.next = newNode;
+                newNode.prev = lastNewNode;
+            }
+
+            lastNewNode = newNode;
+        }
+
+        if (head == null) {
+            head = firstNewNode;
+        } else {
+            tail.next = firstNewNode;
+            firstNewNode.prev = tail;
+        }
+
+        tail = lastNewNode;
+        size += list.size();
     }
 
     @Override
