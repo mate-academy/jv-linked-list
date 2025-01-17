@@ -12,12 +12,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public static class Node<T> {
-        T data;
-        Node<T> next;
+        private T data;
+        private Node<T> next;
 
         public Node(T data) {
             this.data = data;
             this.next = null;
+        }
+
+        public T getData() {
+            return data;
+        }
+
+        public Node<T> getSize() {
+            return next;
         }
     }
 
