@@ -110,7 +110,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndex(int index, boolean isAddOperation) {
-        if (index < 0 || index >= size || (index == size && !isAddOperation)) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index out of bounds: " + index);
         }
     }
