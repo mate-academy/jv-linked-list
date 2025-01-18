@@ -13,10 +13,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = new Node<>(null, value, null);
             last = first;
             size++;
-        } else if (size == 1) {
-            last = new Node<>(first, value, null);
-            first.next = last;
-            size++;
         } else {
             Node<T> node = last;
             last = new Node<>(node, value, null);
@@ -27,15 +23,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
+        checkIndex(index);
         if (first == null) {
-            checkIndex(index);
             first = new Node<>(null, value, null);
             last = first;
             size++;
         } else if (index == size) {
             add(value);
         } else {
-            Node<T> currentNode = getCurrentNode(index);
+            Node<T> currentNode = findNodeByIndex(index);
             Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
             if (currentNode.prev != null) {
                 currentNode.prev.next = newNode;
@@ -57,12 +53,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return getCurrentNode(index).item;
+        return findNodeByIndex(index).item;
     }
 
     @Override
     public T set(T value, int index) {
-        Node<T> currentNode = getCurrentNode(index);
+        Node<T> currentNode = findNodeByIndex(index);
         T oldValue = currentNode.item;
         currentNode.item = value;
         return oldValue;
@@ -70,7 +66,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
-        Node<T> nodeToRemove = getCurrentNode(index);
+        Node<T> nodeToRemove = findNodeByIndex(index);
         return unlink(nodeToRemove);
     }
 
@@ -139,7 +135,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private Node<T> getCurrentNode(int index) {
+    private Node<T> findNodeByIndex(int index) {
         rangeCheck(index);
         Node<T> currentNode;
         if (index < size / 2) {
