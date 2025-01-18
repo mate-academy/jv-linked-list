@@ -105,20 +105,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 ) {
+        if (index < 0) {
             throw new IndexOutOfBoundsException("Index out of bounds: " + index);
         }
 
         Node<T> current = head;
         for (int i = 0; i < index; i++) {
             if (current == null) {
-                throw new IndexOutOfBoundsException("List is in an inconsistent state: current is null at index " + i);
+                throw new IndexOutOfBoundsException(
+                        "List is in an inconsistent state: current is null at index " + i);
             }
             current = current.next;
         }
 
         if (current == null) {
-            throw new IndexOutOfBoundsException("List is in an inconsistent state: current is null when trying to access data");
+            throw new IndexOutOfBoundsException(
+                    "List is in an inconsistent state: current is null when trying to access data");
         }
 
         return current.data;
