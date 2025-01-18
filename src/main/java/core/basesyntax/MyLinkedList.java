@@ -83,24 +83,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null || list.size() == 0) {
+        if (list == null || list.isEmpty()) {
             throw new IllegalArgumentException("List cannot be null or empty");
         }
 
-        Node<T> lastNode = null;
-        for (int i = 0; i < list.size(); i++) {
-            Node<T> newNode = new Node<>(list.get(i));
-            if (head == null) {
-                head = newNode;
-            } else {
-                if (lastNode != null) {
-                    lastNode.next = newNode;
-                    newNode.previous = lastNode;
-                }
+        if (head == null) {
+            for (T value : list) {
+                add(value);
             }
-            lastNode = newNode;
-            size++;
+        } else {
+            Node<T> lastNode = head;
+            while (lastNode.next != null) {
+                lastNode = lastNode.next;
+            }
+
+            for (T value : list) {
+                Node<T> newNode = new Node<>(value);
+                lastNode.next = newNode;
+                newNode.previous = lastNode;
+                lastNode = newNode;
+            }
         }
+        size += list.size();
     }
 
     @Override
