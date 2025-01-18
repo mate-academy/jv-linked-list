@@ -14,18 +14,32 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public static class Node<T> {
         private T data;
         private Node<T> next;
+        private Node<T> previous;
 
         public Node(T data) {
             this.data = data;
             this.next = null;
+            this.previous = null;
         }
 
         public T getData() {
             return data;
         }
 
-        public Node<T> getSize() {
+        public Node<T> getNext() {
             return next;
+        }
+
+        public Node<T> getPrevious() {
+            return previous;
+        }
+
+        public void setPrevious(Node<T> previous) {
+            this.previous = previous;
+        }
+
+        public void setNext(Node<T> next) {
+            this.next = next;
         }
     }
 
@@ -40,6 +54,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 current = current.next;
             }
             current.next = newNode;
+            newNode.previous = current;
         }
         size++;
     }
@@ -72,21 +87,40 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IllegalArgumentException("List cannot be null or empty");
         }
 
+        Node<T> lastNode = null;
         for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+            Node<T> newNode = new Node<>(list.get(i));
+            if (head == null) {
+                head = newNode;
+            } else {
+                if (lastNode != null) {
+                    lastNode.next = newNode;
+                    newNode.previous = lastNode;
+                }
+            }
+            lastNode = newNode;
+            size++;
         }
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index out of bounds");
+        if (index < 0 ) {
+            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
         }
 
         Node<T> current = head;
         for (int i = 0; i < index; i++) {
+            if (current == null) {
+                throw new IndexOutOfBoundsException("List is in an inconsistent state: current is null at index " + i);
+            }
             current = current.next;
         }
+
+        if (current == null) {
+            throw new IndexOutOfBoundsException("List is in an inconsistent state: current is null when trying to access data");
+        }
+
         return current.data;
     }
 
@@ -116,6 +150,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index == 0) {
             removedNode = head;
             head = head.next;
+            if (head != null) {
+                head.previous = null;
+            }
         } else {
             Node<T> current = head;
             for (int i = 0; i < index - 1; i++) {
@@ -123,6 +160,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             removedNode = current.next;
             current.next = current.next.next;
+            if (current.next != null) {
+                current.next.previous = current;
+            }
         }
         size--;
         return removedNode.data;
@@ -136,28 +176,41 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         if (object == null && head.data == null) {
             head = head.next;
+            if (head != null) {
+                head.previous = null;
+            }
             size--;
             return true;
         } else if (head.data != null && head.data.equals(object)) {
             head = head.next;
+            if (head != null) {
+                head.previous = null;
+            }
             size--;
             return true;
         }
 
         Node<T> current = head;
-        Node<T> previous = null;
-
         while (current != null) {
             if (object == null && current.data == null) {
-                previous.next = current.next;
+                if (current.next != null) {
+                    current.next.previous = current.previous;
+                }
+                if (current.previous != null) {
+                    current.previous.next = current.next;
+                }
                 size--;
                 return true;
             } else if (current.data != null && current.data.equals(object)) {
-                previous.next = current.next;
+                if (current.next != null) {
+                    current.next.previous = current.previous;
+                }
+                if (current.previous != null) {
+                    current.previous.next = current.next;
+                }
                 size--;
                 return true;
             }
-            previous = current;
             current = current.next;
         }
         return false;
