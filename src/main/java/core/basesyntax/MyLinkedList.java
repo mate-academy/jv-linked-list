@@ -13,10 +13,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         final Node<T> last1 = last;
         final Node<T> newNode = new Node<>(last1, value, null);
         last = newNode;
-        if (last1 == null)
+        if (last1 == null) {
             first = newNode;
-        else
+        } else {
             last1.next = newNode;
+        }
         size++;
     }
 
@@ -24,10 +25,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         checkPositionIndex(index);
 
-        if (index == size)
+        if (index == size) {
             linkLast(value);
-        else
+        } else {
             linkBefore(value, node(index));
+        }
     }
 
     @Override
@@ -87,13 +89,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private static class Node<E> {
-        E item;
-        Node<E> next;
-        Node<E> prev;
+        private E item;
+        private Node<E> next;
+        private Node<E> prev;
 
         Node(Node<E> prev, E element, Node<E> next) {
             this.item = element;
             this.next = next;
+            this.prev = prev;
+        }
+
+        public E getItem() {
+            return item;
+        }
+
+        public void setItem(E item) {
+            this.item = item;
+        }
+
+        public Node<E> getNext() {
+            return next;
+        }
+
+        public void setNext(Node<E> next) {
+            this.next = next;
+        }
+
+        public Node<E> getPrev() {
+            return prev;
+        }
+
+        public void setPrev(Node<E> prev) {
             this.prev = prev;
         }
     }
@@ -138,10 +164,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         final Node<T> l = last;
         final Node<T> newNode = new Node<>(l, e, null);
         last = newNode;
-        if (l == null)
+        if (l == null) {
             first = newNode;
-        else
+        } else {
             l.next = newNode;
+        }
         size++;
     }
 
@@ -150,10 +177,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         final Node<T> pred = succ.prev;
         final Node<T> newNode = new Node<>(pred, e, succ);
         succ.prev = newNode;
-        if (pred == null)
+        if (pred == null) {
             first = newNode;
-        else
+        } else {
             pred.next = newNode;
+        }
         size++;
     }
 
@@ -162,8 +190,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         Object[] a = c.toArray();
         int numNew = a.length;
-        if (numNew == 0)
+        if (numNew == 0) {
             return;
+        }
 
         Node<T> pred, succ;
         if (index == size) {
@@ -177,10 +206,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (Object o : a) {
             @SuppressWarnings("unchecked") T e = (T) o;
             Node<T> newNode = new Node<>(pred, e, null);
-            if (pred == null)
+            if (pred == null) {
                 first = newNode;
-            else
+            } else {
                 pred.next = newNode;
+            }
             pred = newNode;
         }
 
