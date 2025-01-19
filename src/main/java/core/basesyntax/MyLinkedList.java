@@ -169,8 +169,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         Object[] a = c.toArray();
         final int numNew = a.length;
-        if (numNew == 0)
+        if (numNew == 0) {
             return;
+        }
         Node<T> pred;
         Node<T> succ;
         if (index == size) {
