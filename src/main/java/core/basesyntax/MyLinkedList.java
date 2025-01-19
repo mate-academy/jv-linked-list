@@ -33,7 +33,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        addAll(size, list);
+        addList(size, list);
     }
 
     @Override
@@ -164,15 +164,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    public void addAll(int index, List<? extends T> c) {
+    public void addList(int index, List<? extends T> c) {
         checkPositionIndex(index);
-        if (c.isEmpty()) {
-            return;
-        }
 
         Object[] a = c.toArray();
-        int numNew = a.length;
-
+        final int numNew = a.length;
+        if (numNew == 0)
+            return;
         Node<T> pred;
         Node<T> succ;
         if (index == size) {
