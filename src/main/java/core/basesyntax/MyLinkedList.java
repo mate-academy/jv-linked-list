@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Collection;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
@@ -100,18 +99,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    Node<T> node(int index) {
+    private Node<T> node(int index) {
+        Node<T> x;
         if (index < (size >> 1)) {
-            Node<T> x = first;
-            for (int i = 0; i < index; i++)
+            x = first;
+            for (int i = 0; i < index; i++) {
                 x = x.next;
-            return x;
+            }
         } else {
-            Node<T> x = last;
-            for (int i = size - 1; i > index; i--)
+            x = last;
+            for (int i = size - 1; i > index; i--) {
                 x = x.prev;
-            return x;
+            }
         }
+        return x;
     }
 
     private boolean isElementIndex(int index) {
@@ -127,13 +128,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkElementIndex(int index) {
-        if (!isElementIndex(index))
+        if (!isElementIndex(index)) {
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+        }
     }
 
     private void checkPositionIndex(int index) {
-        if (!isPositionIndex(index))
+        if (!isPositionIndex(index)) {
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+        }
     }
 
     void linkLast(T e) {
@@ -161,16 +164,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size++;
     }
 
-    public void addAll(int index, Collection<? extends T> c) {
+    public void addAll(int index, List<? extends T> c) {
         checkPositionIndex(index);
-
-        Object[] a = c.toArray();
-        int numNew = a.length;
-        if (numNew == 0) {
+        if (c.isEmpty()) {
             return;
         }
 
-        Node<T> pred, succ;
+        Object[] a = c.toArray();
+        int numNew = a.length;
+
+        Node<T> pred;
+        Node<T> succ;
         if (index == size) {
             succ = null;
             pred = last;
