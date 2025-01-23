@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -167,9 +166,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private class Node<E> {
-        E value;
-        Node<E> next;
-        Node<E> prev;
+        private E value;
+        private Node<E> next;
+        private Node<E> prev;
 
         public Node(E value, Node<E> next, Node<E> prev) {
             this.value = value;
