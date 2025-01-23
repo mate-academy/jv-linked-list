@@ -3,24 +3,13 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static class Node<T> {
-        protected T value;
-        protected Node<T> next;
-        protected Node<T> prev;
-
-        protected Node(T value) {
-            this.value = value;
-        }
-    }
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
-
+        Node<T> newNode = new Node<>(head, value, null);
         if (head == null) {
             head = tail = newNode;
         } else {
@@ -28,25 +17,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail.next = newNode;
             tail = newNode;
         }
-
         size++;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-
         if (index == size) {
             add(value);
         } else if (index == 0) {
-            Node<T> newNode = new Node<>(value);
+            Node<T> newNode = new Node<>(null, value, head);
             newNode.next = head;
             head.prev = newNode;
             head = newNode;
             size++;
         } else {
             Node<T> current = getNode(index);
-            Node<T> newNode = new Node<>(value);
+            Node<T> newNode = new Node<>(current.prev, value, current);
             newNode.next = current;
             newNode.prev = current.prev;
             current.prev.next = newNode;
@@ -65,7 +52,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> lastNewNode = null;
 
         for (T value : list) {
-            Node<T> newNode = new Node<>(value);
+            Node<T> newNode = new Node<>(lastNewNode, value, null);
 
             if (firstNewNode == null) {
                 firstNewNode = newNode;
@@ -119,8 +106,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
 
         while (current != null) {
-            if ((object == null && current.value == null)
-                    || (object != null && object.equals((current.value)))) {
+            if (object == current.value
+                    || object != null && object.equals(current.value)) {
                 unlink(current);
 
                 return true;
@@ -186,6 +173,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index out of bounds: " + index);
+        }
+    }
+
+    private static class Node<T> {
+        protected T value;
+        protected Node<T> next;
+        protected Node<T> prev;
+
+        protected Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
         }
     }
 }
