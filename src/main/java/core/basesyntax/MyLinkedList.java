@@ -55,7 +55,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (!list.isEmpty()) {
+        if (list == null || list.isEmpty()) {
+            throw new RuntimeException("the list is empty");
+        } else {
             for (T value : list) {
                 add(value);
             }
