@@ -95,7 +95,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    public boolean checkIndex(int index){
+    public boolean checkIndex(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index " + index + " is out of bounds!");
         }
@@ -119,7 +119,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    public Node<T> unlink(Node<T> node){
+    public Node<T> unlink(Node<T> node) {
         if (node == head) {
             head = node.next;
         }
