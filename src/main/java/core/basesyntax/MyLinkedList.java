@@ -69,9 +69,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        if (value == null) {
-            throw new NullPointerException("Value is null");
-        }
         Node<T> target = getNode(index);
         T oldValue = target.element;
         target.element = value;
@@ -81,7 +78,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        return delete(getNode(index));
+        return unlink(getNode(index));
     }
 
     @Override
@@ -89,7 +86,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (Node<T> current = first; current != null; current = current.next) {
             if ((object == null && current.element == null)
                     || (object != null && object.equals(current.element))) {
-                delete(current);
+                unlink(current);
                 return true;
             }
         }
@@ -122,7 +119,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    private T delete(Node<T> target) {
+    private T unlink(Node<T> target) {
         T element = target.element;
 
         Node<T> prevNode = target.prev;
