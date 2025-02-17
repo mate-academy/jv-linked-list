@@ -35,7 +35,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-
+        if (index == 0 && size > 0) {
+            head = new Node<>(null, value,head);
+            size++;
+            return;
+        }
         if (index == size) {
             add(value);
             return;
@@ -56,8 +60,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T value : list) {
-            add(value);
+        if (list instanceof MyLinkedList) {
+            MyLinkedList<T> myLinkedList = (MyLinkedList<T>) list;
+            if (myLinkedList.isEmpty()) {
+                return;
+            }
+            tail.next = myLinkedList.head;
+            myLinkedList.head.prev = tail;
+            tail = myLinkedList.tail;
+            size += myLinkedList.size();
+        } else {
+            for (T value : list) {
+                add(value);
+            }
         }
     }
 
@@ -148,9 +163,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             nextNode.prev = prevNode;
         }
+        T item = node.item;
+        node.prev = null;
+        node.next = null;
+        node.item = null;
         size--;
-        T value = node.item;
-        return value;
+        return item;
     }
 }
 
