@@ -39,7 +39,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size++;
             return;
         }
-        throw new IndexOutOfBoundsException();
+        throw new IndexOutOfBoundsException("The index " + index + " is out of range.");
     }
 
     @Override
@@ -100,7 +100,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndexInSize(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException(
+                    "The index " + index + " not included in the list.");
         }
     }
 
@@ -113,7 +114,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
             currentNode = currentNode.next;
         }
-        throw new RuntimeException("The index " + index + " not found in MyLinkedList.");
+        throw new IndexOutOfBoundsException("The index " + index + " not found in MyLinkedList.");
     }
 
     private void unlink(Node<T> node) {
