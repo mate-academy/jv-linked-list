@@ -15,12 +15,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     static class Node<T> {
         private T element;
-        private Node<T> previos;
+        private Node<T> prev;
         private Node<T> next;
 
         public Node(T element) {
             this.element = element;
-            this.previos = null;
+            this.prev = null;
             this.next = null;
         }
     }
@@ -32,7 +32,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = newNode;
             tail = newNode;
         } else {
-            newNode.previos = tail;
+            newNode.prev = tail;
             tail.next = newNode;
             tail = newNode;
         }
@@ -52,7 +52,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 tail = newNode;
             } else {
                 newNode.next = head;
-                head.previos = newNode;
+                head.prev = newNode;
                 head = newNode;
             }
             size++;
@@ -67,9 +67,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current = current.next;
         }
         newNode.next = current;
-        newNode.previos = current.previos;
-        current.previos.next = newNode;
-        current.previos = newNode;
+        newNode.prev = current.prev;
+        current.prev.next = newNode;
+        current.prev = newNode;
         size++;
     }
 
@@ -81,7 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 head = newNode;
                 tail = newNode;
             } else {
-                newNode.previos = tail;
+                newNode.prev = tail;
                 tail.next = newNode;
                 tail = newNode;
             }
@@ -125,18 +125,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < index; i++) {
             current = current.next;
         }
-        if (current.previos != null) {
-            current.previos.next = current.next;
+        if (current.prev != null) {
+            current.prev.next = current.next;
         } else {
             head = current.next;
         }
         if (current.next != null) {
-            current.next.previos = current.previos;
+            current.next.prev = current.prev;
         } else {
-            tail = current.previos;
+            tail = current.prev;
         }
         current.next = null;
-        current.previos = null;
+        current.prev = null;
         T oldElement = current.element;
         size--;
         return oldElement;
@@ -148,18 +148,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (current != null) {
             if (object == null && current.element == null
                     || object != null && object.equals(current.element)) {
-                if (current.previos != null) {
-                    current.previos.next = current.next;
+                if (current.prev != null) {
+                    current.prev.next = current.next;
                 } else {
                     head = current.next;
                 }
                 if (current.next != null) {
-                    current.next.previos = current.previos;
+                    current.next.prev = current.prev;
                 } else {
-                    tail = current.previos;
+                    tail = current.prev;
                 }
                 current.next = null;
-                current.previos = null;
+                current.prev = null;
                 size--;
                 return true;
             }
