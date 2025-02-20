@@ -39,22 +39,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(value);
         Node<T> current = getNode(index);
 
-        if (current == null) {
-            throw new IndexOutOfBoundsException("Index out of bounds");
-        }
+        if (current != null) {
+            Node<T> prevNode = current.getPrev();
+            if (prevNode != null) {
+                prevNode.setNext(newNode);
+            }
+            newNode.setPrev(prevNode);
+            newNode.setNext(current);
+            current.setPrev(newNode);
 
-        Node<T> prevNode = current.getPrev();
-        if (prevNode != null) {
-            prevNode.setNext(newNode);
+            if (index == 0) {
+                head = newNode;
+            }
         }
-        newNode.setPrev(prevNode);
-        newNode.setNext(current);
-        current.setPrev(newNode);
-
-        if (index == 0) {
-            head = newNode;
-        }
-
         size++;
     }
 
