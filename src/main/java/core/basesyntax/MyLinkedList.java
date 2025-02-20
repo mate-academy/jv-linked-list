@@ -137,7 +137,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index " + index + " is out of bounds.");
         }
     }
-
     private void unlink(Node<T> node) {
         if (node.getPrev() != null) {
             node.getPrev().setNext(node.getNext());
