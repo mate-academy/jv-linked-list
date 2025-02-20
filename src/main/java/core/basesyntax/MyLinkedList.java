@@ -29,7 +29,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index, false);
+        checkIndexForAdd(index);
         if (index == size) {
             add(value);
             return;
@@ -134,6 +134,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index, boolean mustExist) {
         if (index < 0 || index >= size || (mustExist && getNode(index) == null)) {
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds.");
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index " + index + " is out of bounds.");
         }
     }
