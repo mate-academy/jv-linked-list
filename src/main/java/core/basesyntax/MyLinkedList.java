@@ -47,12 +47,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size++;
             return;
         }
-        if(index == size) {
+
             finish.setNext(current);
             current.setPrevious(finish);
             finish = current;
             size++;
-        }
+
     }
 
     @Override
@@ -123,6 +123,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 return false;
             }
             current = current.getNext();
+
         }
         if(current == start) {
             start = start.getNext();
