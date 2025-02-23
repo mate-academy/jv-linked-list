@@ -42,13 +42,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(tail, value, null);
-            if (tail == null) {
-                head = newNode;
-            } else {
-                tail.next = newNode;
-            }
-            tail = newNode;
-            size++;
+        if (tail == null) {
+            head = newNode;
+        } else {
+            tail.next = newNode;
+        }
+        tail = newNode;
+        size++;
     }
 
     @Override
@@ -174,3 +174,4 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 }
+
