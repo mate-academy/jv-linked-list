@@ -1,18 +1,25 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static class Node<T> {
-        T value;
-        Node<T> next;
-        Node<T> prev;
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
 
         Node(T value, Node<T> prev, Node<T> next) {
             this.value = value;
             this.prev = prev;
             this.next = next;
+        }
+
+        public T getValue() {
+            return value;
+        }
+
+        public void setValue(T value) {
+            this.value = value;
         }
     }
 
@@ -61,14 +68,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        return getNode(index).value;
+        return getNode(index).getValue();
     }
 
     @Override
     public T set(T value, int index) {
         Node<T> node = getNode(index);
-        T oldValue = node.value;
-        node.value = value;
+        T oldValue = node.getValue();
+        node.setValue(value);
         return oldValue;
     }
 
@@ -82,8 +89,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if ((object == null && current.value == null) ||
-                    (object != null && object.equals(current.value))) {
+            if ((object == null && current.getValue() == null)
+                    || (object != null && object.equals(current.getValue()))) {
                 unlink(current);
                 return true;
             }
@@ -120,9 +127,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T unlink(Node<T> node) {
-        T value = node.value;
         Node<T> nextNode = node.next;
         Node<T> prevNode = node.prev;
+        T value = node.getValue();
 
         if (prevNode == null) {
             head = nextNode;
