@@ -19,20 +19,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else if (index == 0) {
             Node<T> newNode = new Node<>(null, value, first);
             if (first != null) {
-                first.setPrev(newNode);
+                first.prev = newNode;
             }
             first = newNode;
             size++;
         } else {
             checkIndexBounds(index);
             Node<T> currentNode = node(index);
-            Node<T> newNode = new Node<>(currentNode.getPrev(), value, currentNode);
-            if (currentNode.getPrev() != null) {
-                currentNode.getPrev().setNext(newNode);
+            Node<T> newNode = new Node<>(currentNode.prev, value, currentNode);
+            if (currentNode.prev != null) {
+                currentNode.prev.next = newNode;
             }
-            currentNode.setPrev(newNode);
+            currentNode.prev = newNode;
 
-            if (newNode.getNext() == null) {
+            if (newNode.next == null) {
                 last = newNode;
             }
             size++;
@@ -49,15 +49,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndexBounds(index);
-        return node(index).getItem();
+        return node(index).item;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndexBounds(index);
         Node<T> newNode = node(index);
-        T oldValue = newNode.getItem();
-        newNode.setItem(value);
+        T oldValue = newNode.item;
+        newNode.item = value;
         return oldValue;
     }
 
@@ -65,7 +65,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndexBounds(index);
         Node<T> node = node(index);
-        T element = node.getItem();
+        T element = node.item;
         unlink(node);
         return element;
     }
@@ -74,12 +74,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> newNode = first;
         for (int i = 0; i < size; i++) {
-            if ((newNode.getItem() != null && newNode.getItem().equals(object))
-                    || (newNode.getItem() == null && object == null)) {
+            if ((newNode.item != null && newNode.item.equals(object))
+                    || (newNode.item == null && object == null)) {
                 unlink(newNode);
                 return true;
             }
-            newNode = newNode.getNext();
+            newNode = newNode.next;
         }
         return false;
     }
@@ -96,8 +96,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndexBounds(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index: "
-                    + index + ", Size: " + size + ". Out of bound.");
+            throw new IndexOutOfBoundsException("Index: " + index
+                    + ", Size: " + size + ". Out of bound.");
         }
     }
 
@@ -108,7 +108,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (l == null) {
             first = newNode;
         } else {
-            l.setNext(newNode);
+            l.next = newNode;
         }
         size++;
     }
@@ -123,31 +123,43 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index > size / 2) {
             Node<T> newNode = last;
             for (int i = size - 1; i > index; i--) {
-                newNode = newNode.getPrev();
+                newNode = newNode.prev;
             }
             return newNode;
         }
         Node<T> newNode = first;
         for (int i = 0; i < index; i++) {
-            newNode = newNode.getNext();
+            newNode = newNode.next;
         }
         return newNode;
     }
 
     private void unlink(Node<T> node) {
-        Node<T> prev = node.getPrev();
-        Node<T> next = node.getNext();
+        Node<T> prev = node.prev;
+        Node<T> next = node.next;
         if (prev == null) {
             first = next;
         } else {
-            prev.setNext(next);
+            prev.next = next;
         }
         if (next == null) {
             last = prev;
         } else {
-            next.setPrev(prev);
+            next.prev = prev;
         }
-        node.setItem(null);
+        node.item = null;
         size--;
+    }
+
+    static class Node<E> {
+        private E item;
+        private Node<E> next;
+        private Node<E> prev;
+
+        Node(Node<E> prev, E element, Node<E> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
