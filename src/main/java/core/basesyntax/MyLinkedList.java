@@ -65,18 +65,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndex(index);
         Node<T> nodeToRemove = getNodeByIndex(index);
-        if (nodeToRemove.getPrev() != null) {
-            nodeToRemove.getPrev().setNext(nodeToRemove.getNext());
-        } else {
-            first = nodeToRemove.getNext();
-        }
-        if (nodeToRemove.getNext() != null) {
-            nodeToRemove.getNext().setPrev(nodeToRemove.getPrev());
-        } else {
-            last = nodeToRemove.getPrev();
-        }
-        size--;
-        return nodeToRemove.getValue();
+        T removedValue = nodeToRemove.getValue();
+        removeNode(nodeToRemove);
+        return removedValue;
     }
 
     @Override
@@ -124,7 +115,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return prev;
         }
 
-        public Node<T> setPrev(Node<T> prev) {
+        public void setPrev(Node<T> prev) {
             this.prev = prev;
         }
 
@@ -132,24 +123,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return next;
         }
 
-        public Node<T> setNext(Node<T> next) {
+        public void setNext(Node<T> next) {
             this.next = next;
         }
     }
 
-    private T removeNode(Node<T> node) {
-        if (node.prev == null) {
-            first = node.getNext();
+    private void removeNode(Node<T> nodeToRemove) {
+        if (nodeToRemove.getPrev() != null) {
+            nodeToRemove.getPrev().setNext(nodeToRemove.getNext());
         } else {
-            node.prev.next = node.next;
+            first = nodeToRemove.getNext();
         }
-        if (node.next == null) {
-            last = node.getPrev();
+
+        if (nodeToRemove.getNext() != null) {
+            nodeToRemove.getNext().setPrev(nodeToRemove.getPrev());
         } else {
-            node.next.prev = node.prev;
+            last = nodeToRemove.getPrev();
         }
+
         size--;
-        return node.value;
     }
 
     private Node<T> getNodeByIndex(int index) {
