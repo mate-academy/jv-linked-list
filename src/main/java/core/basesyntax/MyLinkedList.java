@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    Node<T> head;
-    Node<T> tail;
-    List<Node<T>> nodeList;
-    int size;
+    private Node<T> head;
+    private Node<T> tail;
+    private List<Node<T>> nodeList;
+    private int size;
 
     private static class Node<E> {
-        E item;
-        Node<E> next;
-        Node<E> prev;
+        private E item;
+        private Node<E> next;
+        private Node<E> prev;
 
         Node(Node<E> prev, E element, Node<E> next) {
             this.item = element;
@@ -92,8 +92,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedItem = nodeList.get(index).item;
         Node.unlink(nodeList.get(index));
+        T removedItem = nodeList.get(index).item;
         nodeList.remove(index);
         size--;
         return removedItem;
