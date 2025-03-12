@@ -19,8 +19,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
         public static void unlink(Node node) {
-            node.prev.next = node.next;
-            node.next.prev = node.prev;
+            if (node.prev != null) {
+                node.prev.next = node.next;
+            }
+            if (node.next != null) {
+                node.next.prev = node.prev;
+            }
+            node.prev = null;
+            node.next = null;
         }
     }
 
@@ -115,6 +121,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException();
         }
     }
+
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException();
