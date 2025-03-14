@@ -7,29 +7,40 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size = 0;
 
-    public void checkIndex(int index, boolean isAdd) {
+    private class Node<T> {
+        T value;
+        Node<T> prev;
+        Node<T> next;
+
+        Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
+    }
+
+    private void checkIndex(int index, boolean isAdd) {
         if (index < 0 || index > size || (!isAdd && index == size)) {
             throw new IndexOutOfBoundsException("Invalid index " + index);
         }
     }
 
-    public Node<T> getNode(int index) {
+    private Node<T> getNode(int index) {
         checkIndex(index, false);
 
-        Node<T> current;
-        if (index == 0) {
-            return first;
+        if (index < (size / 2)) {
+            Node<T> current = first;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+            return current;
+        } else {
+            Node<T> current = last;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
+            return current;
         }
-        if (index == size - 1) {
-            return last;
-        }
-        current = first;
-        int i = 0;
-        while (i < index) {
-            current = current.getNext();
-            i++;
-        }
-        return current;
     }
 
     @Override
@@ -37,9 +48,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (isEmpty()) {
             first = last = new Node<>(null, value, null);
         } else {
-            Node<T> newNode = new Node<>(last, value, null);
-            last.setNext(newNode);
-            last = newNode;
+            last.next = new Node<>(last, value, null);
+            last = last.next;
         }
         size++;
     }
@@ -53,14 +63,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
         Node<T> nextNode = getNode(index);
-        Node<T> prevNode = nextNode.getPrev();
+        Node<T> prevNode = nextNode.prev;
         Node<T> newNode = new Node<>(prevNode, value, nextNode);
+
         if (prevNode != null) {
-            prevNode.setNext(newNode);
+            prevNode.next = newNode;
         } else {
             first = newNode;
         }
-        nextNode.setPrev(newNode);
+        nextNode.prev = newNode;
         size++;
     }
 
@@ -73,65 +84,54 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, false);
-        return getNode(index).getValue();
+        return getNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkIndex(index, false);
         Node<T> node = getNode(index);
-        T oldValue = node.getValue();
-        node.setValue(value);
+        T oldValue = node.value;
+        node.value = value;
         return oldValue;
     }
 
     private void unlink(Node<T> node) {
-        Node<T> prevNode = node.getPrev();
-        Node<T> nextNode = node.getNext();
+        Node<T> prevNode = node.prev;
+        Node<T> nextNode = node.next;
 
-        if (prevNode == null) { // Удаляем первый элемент
+        if (prevNode == null) {
             first = nextNode;
         } else {
-            prevNode.setNext(nextNode);
-            node.setPrev(null); // Удаляем ссылку
+            prevNode.next = nextNode;
         }
 
-        if (nextNode == null) { // Удаляем последний элемент
+        if (nextNode == null) {
             last = prevNode;
         } else {
-            nextNode.setPrev(prevNode);
-            node.setNext(null); // Удаляем ссылку
+            nextNode.prev = prevNode;
         }
 
-        size--; // Уменьшаем размер списка
+        // Очищаем ссылки у удаляемого узла
+        node.prev = null;
+        node.next = null;
+        size--;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index, false);
         Node<T> nodeToRemove = getNode(index);
-        T removedValue = nodeToRemove.getValue();
-
+        T removedValue = nodeToRemove.value;
         unlink(nodeToRemove);
         return removedValue;
     }
 
     @Override
     public boolean remove(T object) {
-        if (object == null) {
-            for (Node<T> current = first; current != null; current = current.getNext()) {
-                if (current.getValue() == null) {
-                    unlink(current);
-                    return true;
-                }
-            }
-        } else {
-            for (Node<T> current = first; current != null; current = current.getNext()) {
-                if (object.equals(current.getValue())) {
-                    unlink(current);
-                    return true;
-                }
+        for (Node<T> current = first; current != null; current = current.next) {
+            if ((object == null && current.value == null) ||
+                    (object != null && object.equals(current.value))) {
+                unlink(current);
+                return true;
             }
         }
         return false;
@@ -144,6 +144,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return size() == 0;
+        return size == 0;
     }
 }
