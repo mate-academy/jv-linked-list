@@ -18,9 +18,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public MyLinkedList() {
-        this.head = head;
-        this.tail = tail;
-        this.size = size;
+        this.head = null;
+        this.tail = null;
+        this.size = 0;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> current = getNodeAt(index);
             newNode.prev = current.prev;
             newNode.next = current;
-            current.prev.next = current;
+            current.prev.next = newNode;
             current.prev = current;
         }
     }
@@ -100,7 +100,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     nodeToRemove.prev.next = nodeToRemove.next;
                     nodeToRemove.next.prev = nodeToRemove.prev;
                 }
-                size++;
+                size--;
                 return nodeToRemove.value;
             }
         }
