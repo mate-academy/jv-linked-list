@@ -16,6 +16,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         this.size = size;
     }
 
+    public Node<T> getHead() {
+        return head;
+    }
+
+    public void setHead(Node<T> head) {
+        this.head = head;
+    }
+
+    public Node<T> getTail() {
+        return tail;
+    }
+
+    public void setTail(Node<T> tail) {
+        this.tail = tail;
+    }
+
     @Override
     public void add(T value) {
         if (head == null) {
@@ -121,31 +137,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
 
         while (current != null) {
-            if ((object == null && current.value == null) || (object != null && object.equals(current.value))) {
+            if ((object == null && current.value == null)
+                    || (object != null && object.equals(current.value))) {
                 unlink(current);
                 return true;
             }
             current = current.next;
         }
-        return false; // Element not found
+        return false;
     }
 
     private void unlink(Node<T> node) {
         if (node.prev != null) {
             node.prev.next = node.next;
         } else {
-            head = node.next; // Update head if removing the first node
+            head = node.next;
         }
 
         if (node.next != null) {
             node.next.prev = node.prev;
         } else {
-            tail = node.prev; // Update tail if removing the last node
+            tail = node.prev;
         }
 
         size--;
     }
-
 
     @Override
     public int size() {
