@@ -16,22 +16,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         this.size = size;
     }
 
-    public Node<T> getHead() {
-        return head;
-    }
-
-    public void setHead(Node<T> head) {
-        this.head = head;
-    }
-
-    public Node<T> getTail() {
-        return tail;
-    }
-
-    public void setTail(Node<T> tail) {
-        this.tail = tail;
-    }
-
     @Override
     public void add(T value) {
         if (head == null) {
@@ -174,9 +158,33 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     static class Node<T> {
-        T value;
-        Node<T> next;
-        Node<T> prev;
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public T getValue() {
+            return value;
+        }
+
+        public void setValue(T value) {
+            this.value = value;
+        }
+
+        public Node<T> getNext() {
+            return next;
+        }
+
+        public void setNext(Node<T> next) {
+            this.next = next;
+        }
+
+        public Node<T> getPrev() {
+            return prev;
+        }
+
+        public void setPrev(Node<T> prev) {
+            this.prev = prev;
+        }
 
         public Node(Node<T> prev, T value, Node<T> next) {
             this.value = value;
