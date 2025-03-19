@@ -16,22 +16,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         this.size = size;
     }
 
-    public Node<T> getHead() {
-        return head;
-    }
-
-    public void setHead(Node<T> head) {
-        this.head = head;
-    }
-
-    public Node<T> getTail() {
-        return tail;
-    }
-
-    public void setTail(Node<T> tail) {
-        this.tail = tail;
-    }
-
     @Override
     public void add(T value) {
         if (head == null) {
@@ -128,20 +112,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         Node<T> nodeToRemove = getNodeAt(index);
         T removedValue = nodeToRemove.value;
-
-        if (nodeToRemove.prev != null) {
-            nodeToRemove.prev.next = nodeToRemove.next;
-        } else {
-            head = nodeToRemove.next; // Removing head
-        }
-
-        if (nodeToRemove.next != null) {
-            nodeToRemove.next.prev = nodeToRemove.prev;
-        } else {
-            tail = nodeToRemove.prev; // Removing tail
-        }
-
-        size--;
+        unlink(nodeToRemove);
         return removedValue;
     }
 
@@ -151,25 +122,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         while (current != null) {
             if ((object == null && current.value == null) || (object != null && object.equals(current.value))) {
-                if (current.prev != null) {
-                    current.prev.next = current.next;
-                } else {
-                    head = current.next; // Removing head
-                }
-
-                if (current.next != null) {
-                    current.next.prev = current.prev;
-                } else {
-                    tail = current.prev; // Removing tail
-                }
-
-                size--;
+                unlink(current);
                 return true;
             }
             current = current.next;
         }
         return false; // Element not found
     }
+
+    private void unlink(Node<T> node) {
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        } else {
+            head = node.next; // Update head if removing the first node
+        }
+
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        } else {
+            tail = node.prev; // Update tail if removing the last node
+        }
+
+        size--;
+    }
+
 
     @Override
     public int size() {
