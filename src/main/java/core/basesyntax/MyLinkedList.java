@@ -136,15 +136,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = nextNode;
         } else {
             previousNode.next = nextNode;
-            node.prev = null;
         }
         if (nextNode == null) {
             last = previousNode;
         } else {
             nextNode.prev = previousNode;
-            node.next = null;
         }
         node.item = null;
+        node.prev = null;
+        node.next = null;
         size--;
         return element;
     }
