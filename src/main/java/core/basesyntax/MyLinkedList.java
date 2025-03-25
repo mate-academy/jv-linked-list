@@ -3,22 +3,14 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static final int HALF_INDEX_DIVIDER = 2;
+    private static final int MIDDLE_DIVIDER = 2;
     private int size;
     private Node<T> first;
     private Node<T> last;
 
     @Override
     public void add(T value) {
-        final Node<T> lastNodeBeforeAdd = last;
-        final Node<T> newNode = new Node<>(lastNodeBeforeAdd, value, null);
-        last = newNode;
-        if (lastNodeBeforeAdd == null) {
-            first = newNode;
-        } else {
-            lastNodeBeforeAdd.next = newNode;
-        }
-        size++;
+        linkLast(value);
     }
 
     @Override
@@ -48,14 +40,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         for (T element : list) {
-            Node<T> newNode = new Node<>(last, element, null);
-            if (last == null) {
-                first = newNode;
-            } else {
-                last.next = newNode;
-            }
-            last = newNode;
-            size++;
+            linkLast(element);
         }
     }
 
@@ -108,10 +93,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
+    private void linkLast(T element) {
+        Node<T> newNode = new Node<>(last, element, null);
+        if (last == null) {
+            first = newNode;
+        } else {
+            last.next = newNode;
+            newNode.prev = last;
+        }
+        last = newNode;
+        size++;
+    }
+
     private Node<T> findNodeByIndex(int index) {
         checkIndex(index);
         Node<T> currentNode;
-        if (index < size / HALF_INDEX_DIVIDER) {
+        if (index < size / MIDDLE_DIVIDER) {
             currentNode = first;
             for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
@@ -126,7 +123,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void checkIndex(int index) {
-        if (index >= size || index < 0) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Invalid index " + index);
         }
     }
@@ -148,8 +145,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.next = null;
         }
         node.item = null;
-        node.next = null;
-        node.prev = null;
         size--;
         return element;
     }
