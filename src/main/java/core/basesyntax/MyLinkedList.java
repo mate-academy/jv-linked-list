@@ -69,7 +69,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
 
         while (current != null) {
-            if ((current.data == null && object == null) || (object != null && object.equals(current.data))) {
+            if ((current.data == null && object == null)
+                    || (object != null && object.equals(current.data))) {
                 unlink(current);
                 return true;
             }
