@@ -77,18 +77,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> nodeToRemove = getNode(index);
-        if (nodeToRemove.prev != null) {
-            nodeToRemove.prev.next = nodeToRemove.next;
-        } else {
-            head = nodeToRemove.next;
-        }
-        if (nodeToRemove.next != null) {
-            nodeToRemove.next.prev = nodeToRemove.prev;
-        } else {
-            tail = nodeToRemove.prev;
-        }
-        size--;
-        return nodeToRemove.data;
+        T removedData = nodeToRemove.data;
+        unlink(nodeToRemove);
+        return removedData;
     }
 
     @Override
@@ -97,22 +88,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (current != null) {
             if ((object == null && current.data == null)
                     || (object != null && object.equals(current.data))) {
-                if (current.prev != null) {
-                    current.prev.next = current.next;
-                } else {
-                    head = current.next;
-                }
-                if (current.next != null) {
-                    current.next.prev = current.prev;
-                } else {
-                    tail = current.prev;
-                }
-                size--;
+                unlink(current);
                 return true;
             }
             current = current.next;
         }
         return false;
+    }
+
+    private void unlink(Node<T> node) {
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        } else {
+            head = node.next;
+        }
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        } else {
+            tail = node.prev;
+        }
+        size--;
     }
 
     @Override
