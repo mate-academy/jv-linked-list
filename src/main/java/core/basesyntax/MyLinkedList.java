@@ -3,13 +3,15 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private class Node<T> {
+    private static class Node<T> {
         private T data;
         private Node<T> next;
         private Node<T> prev;
 
         Node(T data) {
             this.data = data;
+            this.next = null;
+            this.prev = null;
         }
     }
 
@@ -93,28 +95,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if ((current.data == null && object == null)
-                    || (current.data != null && current.data.equals(object))) {
-                removeNode(current);
+            if ((object == null && current.data == null)
+                    || (object != null && object.equals(current.data))) {
+                if (current.prev != null) {
+                    current.prev.next = current.next;
+                } else {
+                    head = current.next;
+                }
+                if (current.next != null) {
+                    current.next.prev = current.prev;
+                } else {
+                    tail = current.prev;
+                }
+                size--;
                 return true;
             }
             current = current.next;
         }
         return false;
-    }
-
-    private void removeNode(Node<T> node) {
-        if (node.prev != null) {
-            node.prev.next = node.next;
-        } else {
-            head = node.next;
-        }
-        if (node.next != null) {
-            node.next.prev = node.prev;
-        } else {
-            tail = node.prev;
-        }
-        size--;
     }
 
     @Override
