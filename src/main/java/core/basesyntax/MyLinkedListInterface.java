@@ -1,23 +1,12 @@
 package core.basesyntax;
 
-import java.util.List;
-
 public interface MyLinkedListInterface<T> {
-    void add(T value);
+    void add(T value, int i); // додає елемент у кінець списку
 
-    void add(T value, int index);
+    void remove (int index); // видаляє елемент за індексом
 
-    void addAll(List<T> list);
+    T get(int index); // повертає елемент за індексом
 
-    T get(int index);
+    int size(); // повертає розмір списку
 
-    T set(T value, int index);
-
-    T remove(int index);
-
-    boolean remove(T object);
-
-    int size();
-
-    boolean isEmpty();
 }
