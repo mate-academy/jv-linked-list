@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private Node<T> first;
     private Node<T> last;
     private int size;
@@ -23,24 +22,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexForAdding(index);
         if (index == size) {
             add(value);
-        } else if (index == 0) {
-            Node<T> addedNode = new Node<>(value);
+            return;
+        }
+        checkIndex(index);
+        Node<T> addedNode = new Node<>(value);
+        if (index == 0) {
             addedNode.next = first;
             first.prev = addedNode;
             first = addedNode;
-            size++;
         } else {
             Node<T> searchedNode = findNodeByIndex(index);
-            Node<T> addedNode = new Node<>(value);
             addedNode.next = searchedNode;
             addedNode.prev = searchedNode.prev;
             searchedNode.prev.next = addedNode;
             searchedNode.prev = addedNode;
-            size++;
         }
+        size++;
     }
 
     @Override
@@ -77,15 +76,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> node = first;
-        while (node != null && !((node.value == object) || (node.value != null
-                && node.value.equals(object)))) {
+        while (node != null) {
+            if (node.value == object || (node.value != null && node.value.equals(object))) {
+                unlinkNode(node);
+                return true;
+            }
             node = node.next;
         }
-        if (node == null) {
-            return false;
-        }
-        unlinkNode(node);
-        return true;
+        return false;
     }
 
     @Override
@@ -100,13 +98,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is out of bound");
-        }
-    }
-
-    private void checkIndexForAdding(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index is out of bound");
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bound: " + size);
         }
     }
 
@@ -142,8 +134,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 last = node.prev;
             }
         }
-        node.prev = null;
-        node.next = null;
         size--;
     }
 
@@ -155,6 +145,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         public Node(T value) {
             this.value = value;
         }
-
     }
 }
