@@ -9,12 +9,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(value, tail, null);
         if (head == null) {
             head = tail = newNode;
         } else {
             tail.next = newNode;
-            newNode.prev = tail;
             tail = newNode;
         }
         size++;
@@ -26,15 +25,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Invalid index: " + index
                     + ". Valid range: 0 to " + size);
         }
-
         if (index == size) {
             add(value);
             return;
         }
-
         if (index == 0) {
-            Node<T> newNode = new Node<>(value);
-            newNode.next = head;
+            Node<T> newNode = new Node<>(value, null, head);
             if (head != null) {
                 head.prev = newNode;
             }
@@ -47,9 +43,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
         Node<T> current = getNode(index);
-        Node<T> newNode = new Node<>(value);
-        newNode.next = current;
-        newNode.prev = current.prev;
+        Node<T> newNode = new Node<>(value, current.prev, current);
         if (current.prev != null) {
             current.prev.next = newNode;
         } else {
@@ -91,27 +85,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
         while (current != null) {
             if (current.value == object
-                    || (current.value != null && current.value.equals(object))) {
+                    || current.value != null && current.value.equals(object)) {
                 removeNode(current);
                 return true;
             }
             current = current.next;
         }
         return false;
-    }
-
-    private void removeNode(Node<T> node) {
-        if (node.prev != null) {
-            node.prev.next = node.next;
-        } else {
-            head = node.next;
-        }
-        if (node.next != null) {
-            node.next.prev = node.prev;
-        } else {
-            tail = node.prev;
-        }
-        size--;
     }
 
     @Override
@@ -148,15 +128,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private void removeNode(Node<T> node) {
+
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        } else {
+            head = node.next;
+        }
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        } else {
+            tail = node.prev;
+        }
+        size--;
+    }
+
     private static class Node<T> {
         private T value;
         private Node<T> prev;
         private Node<T> next;
 
-        Node(T value) {
+        Node(T value, Node<T> prev, Node<T> next) {
             this.value = value;
-            this.prev = null;
-            this.next = null;
+            this.prev = prev;
+            this.next = next;
         }
     }
 }
