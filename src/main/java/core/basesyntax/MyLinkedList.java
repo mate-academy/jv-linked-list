@@ -3,16 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static class Node<T> {
-        private T value;
-        private Node<T> prev;
-        private Node<T> next;
-
-        Node(T value) {
-            this.value = value;
-        }
-    }
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
@@ -33,12 +23,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Invalid index");
+            throw new IndexOutOfBoundsException("Invalid index: " + index
+                    + ". Valid range: 0 to " + size);
         }
+
         if (index == size) {
             add(value);
             return;
         }
+
+        if (index == 0) {
+            Node<T> newNode = new Node<>(value);
+            newNode.next = head;
+            if (head != null) {
+                head.prev = newNode;
+            }
+            head = newNode;
+            if (tail == null) {
+                tail = newNode;
+            }
+            size++;
+            return;
+        }
+
         Node<T> current = getNode(index);
         Node<T> newNode = new Node<>(value);
         newNode.next = current;
@@ -83,7 +90,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if ((current.value == null && object == null)
+            if (current.value == object
                     || (current.value != null && current.value.equals(object))) {
                 removeNode(current);
                 return true;
@@ -118,9 +125,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index");
-        }
+        checkElementIndex(index);
         Node<T> current;
         if (index < size / 2) {
             current = head;
@@ -134,5 +139,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             }
         }
         return current;
+    }
+
+    private void checkElementIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index " + index
+                    + " is out of bounds. Valid range: 0 to " + (size - 1));
+        }
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        Node(T value) {
+            this.value = value;
+            this.prev = null;
+            this.next = null;
+        }
     }
 }
