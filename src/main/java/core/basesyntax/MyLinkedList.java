@@ -51,14 +51,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return findNode(index).getValue();
+        return findNode(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
         Node<T> node = findNode(index);
-        T oldValue = node.getValue();
+        T oldValue = node.value;
         node.value = value;
         return oldValue;
     }
@@ -73,11 +73,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if (object == null ? current.getValue() == null : object.equals(current.getValue())) {
+            if (object == null ? current.value == null : object.equals(current.value)) {
                 unlink(current);
                 return true;
             }
-            current = current.getNext();
+            current = current.next;
         }
         return false;
     }
@@ -97,20 +97,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < (size / 2)) {
             current = head;
             for (int i = 0; i < index; i++) {
-                current = current.getNext();
+                current = current.next;
             }
         } else {
             current = tail;
             for (int i = size - 1; i > index; i--) {
-                current = current.getPrev();
+                current = current.prev;
             }
         }
         return current;
     }
 
     private T unlink(Node<T> node) {
-        Node<T> prevNode = node.getPrev();
-        Node<T> nextNode = node.getNext();
+        Node<T> prevNode = node.prev;
+        Node<T> nextNode = node.next;
 
         if (prevNode != null) {
             prevNode.next = nextNode;
@@ -125,7 +125,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
         size--;
-        return node.getValue();
+        return node.value;
     }
 
     private void checkIndex(int index) {
@@ -143,18 +143,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.prev = prev;
             this.value = value;
             this.next = next;
-        }
-
-        public T getValue() {
-            return value;
-        }
-
-        public Node<T> getPrev() {
-            return prev;
-        }
-
-        public Node<T> getNext() {
-            return next;
         }
     }
 }
