@@ -198,8 +198,8 @@ public class MyLinkedListTest {
         myLinkedList.add(0, FIRST_ITEM);
         myLinkedList.add(0, SECOND_ITEM);
         myLinkedList.add(0, THIRD_ITEM);
-        String oldFirstItem = myLinkedList.set(NEW_ITEM, 0);
-        String oldSecondItem = myLinkedList.set(ANOTHER_NEW_ITEM, 1);
+        String oldFirstItem = myLinkedList.set(0, NEW_ITEM);
+        String oldSecondItem = myLinkedList.set(1, ANOTHER_NEW_ITEM);
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
         Assert.assertEquals(FIRST_ITEM, oldFirstItem);
@@ -210,12 +210,12 @@ public class MyLinkedListTest {
                 + ANOTHER_NEW_ITEM, ANOTHER_NEW_ITEM, actualSecond);
         Assert.assertEquals("Expected size is incorrect", 3, myLinkedList.size());
         exception.expect(IndexOutOfBoundsException.class);
-        myLinkedList.set(NEW_ITEM, 3);
+        myLinkedList.set(3, NEW_ITEM);
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
     public void testSetByNegativeIndex() {
-        myLinkedList.set(NEW_ITEM, -1);
+        myLinkedList.set(-1, NEW_ITEM);
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
@@ -224,7 +224,7 @@ public class MyLinkedListTest {
         myLinkedList.add(0, SECOND_ITEM);
         myLinkedList.add(0, THIRD_ITEM);
         Assert.assertEquals(3, myLinkedList.size());
-        myLinkedList.set(FIRST_ITEM, 3);
+        myLinkedList.set(3, FIRST_ITEM);
     }
 
     @Test
@@ -453,7 +453,7 @@ public class MyLinkedListTest {
         myLinkedList.add(0, SECOND_ITEM);
         myLinkedList.add(0, THIRD_ITEM);
         Assert.assertEquals("Expected size is incorrect", 3, myLinkedList.size());
-        myLinkedList.set(NEW_ITEM, 1);
+        myLinkedList.set(1, NEW_ITEM);
         Assert.assertEquals("Expected size is incorrect", 3, myLinkedList.size());
     }
 

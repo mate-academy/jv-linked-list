@@ -7,7 +7,11 @@ public interface MyLinkedListInterface<T> {
 
     void remove (int index); // видаляє елемент за індексом
 
-    T get(int index); // повертає елемент за індексом
+    T get(int index);// повертає елемент за індексом
+
+    boolean remove(T object);
+
+    T set(int index, T value);
 
     int size(); // повертає розмір списку
 
