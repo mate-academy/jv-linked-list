@@ -66,8 +66,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> nodeToRemove = getNodeByIndex(index);
-        removeNode(nodeToRemove);
-        return nodeToRemove.element;
+        return unlink(nodeToRemove);
     }
 
     @Override
@@ -76,7 +75,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (current != null) {
             if ((current.element == null && object == null)
                     || (object != null && object.equals(current.element))) {
-                removeNode(current);
+                unlink(current);
                 return true;
             }
             current = current.next;
@@ -92,22 +91,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void removeNode(Node<T> node) {
-        if (node.prev != null) {
-            node.prev.next = node.next;
-        } else {
-            first = node.next;
-        }
-
-        if (node.next != null) {
-            node.next.prev = node.prev;
-        } else {
-            last = node.prev;
-        }
-
-        size--;
     }
 
     private Node<T> getNodeByIndex(int index) {
@@ -128,7 +111,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
-    public void auditIndex(int index) {
+    private T unlink(Node<T> node) {
+
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        } else {
+            first = node.next;
+        }
+
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        } else {
+            last = node.prev;
+        }
+        node.prev = null;
+        node.next = null;
+
+        size--;
+
+        return node.element;
+    }
+
+    private void auditIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index:" + index + ", Size: " + size);
         }
