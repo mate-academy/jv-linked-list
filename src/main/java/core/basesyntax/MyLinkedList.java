@@ -43,7 +43,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node newNode = new Node(value);
         Node current = getNode(index);
 
-        if (current.prev == null) { // inserting at head
+        if (current.prev == null) {
             newNode.next = current;
             current.prev = newNode;
             head = newNode;
