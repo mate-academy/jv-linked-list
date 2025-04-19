@@ -1,4 +1,3 @@
-
 package core.basesyntax;
 
 import java.util.List;
@@ -70,13 +69,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> newNode = new Node<>(null, value, null);
         if (index == 0) {
             newNode.next = head;
-            if (head != null) {
+            if (head == null) {
+                tail = newNode;
+            } else {
                 head.prev = newNode;
             }
             head = newNode;
-            if (tail == null) {
-                tail = head;
-            }
         } else {
             Node<T> current = getNode(index);
             newNode.prev = current.prev;
