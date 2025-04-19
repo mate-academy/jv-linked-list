@@ -50,10 +50,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             for (int i = 0; i < index; i++) {
                 temp = temp.getNext();
             }
-            node.setNext(temp.getPrev().getNext());
+            node.setNext(temp);
             node.setPrev(temp.getPrev());
+            temp.getPrev().setNext(node);
             temp.setPrev(node);
-            node.getPrev().setNext(node);
         }
         size++;
     }
