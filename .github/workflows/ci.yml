@@ -15,9 +15,12 @@ jobs:
           distribution: 'adopt'
           cache: maven
 
-      # Add a fallback for Maven cache
-      - name: Restore Maven Dependencies Without Cache
-        if: failure()
+      # Clean Maven cache to prevent conflicts
+      - name: Clean Maven Cache
+        run: mvn dependency:purge-local-repository
+
+      # Restore Maven dependencies
+      - name: Restore Maven Dependencies
         run: mvn dependency:resolve
 
       - name: Build with Maven
