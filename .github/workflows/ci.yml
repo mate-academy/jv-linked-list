@@ -33,6 +33,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # Запуск Maven-завдань
+
       - name: Build with Maven
         run: mvn clean install
