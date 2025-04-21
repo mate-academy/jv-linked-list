@@ -1,18 +1,63 @@
 name: Java CI
 
-on: [push, pull_request]
+on: [push, pull_request_target]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      # Клонування репозиторію
+      - uses: actions/checkout@v3 # Оновлено до v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+
+      # Налаштування JDK 17
       - name: Set up JDK 17
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4 # Оновлено до v4
         with:
           java-version: '17'
           distribution: 'adopt'
           cache: maven
+
+      # Виведення версії Java для перевірки
+      - name: Check Java Version
+        run: java -version
+
+      # Очищення локального кешу Maven перед збіркою
+      - name: Clean Maven Cache
+        run: mvn dependency:purge-local-repository -Dmanual=true -Dmdep.purgeRemoteRepositories=false
+
+      # Збірка та перевірка проекту за допомогою Maven
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots verify
+
+      # Автоматичне схвалення PR у разі успіху
+      - name: Auto Approve on Success
+        uses: actions/github-script@v6 # Рекомендована версія
+        if: ${{ github.event.pull_request && success() }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.pulls.createReview({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              event: 'APPROVE',
+              body: 'Автоматично схвалено після успішної збірки.'
+            })
+
+      # Автоматичне створення коментаря про відхилення PR у разі невдачі
+      - name: Auto Reject on Failure
+        uses: actions/github-script@v6 # Рекомендована версія
+        if: ${{ github.event.pull_request && failure() }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: 'Автоматично відхилено через помилку збірки.'
+            })
