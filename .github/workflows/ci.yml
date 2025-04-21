@@ -1,6 +1,6 @@
 name: Java CI
 
-on: [push, pull_request]
+on: [push, pull_request_target]
 
 jobs:
   build:
@@ -9,6 +9,9 @@ jobs:
     steps:
       # Клонування репозиторію
       - uses: actions/checkout@v2
+        with:
+          ref: ${{github.event.pull_request.head.ref}}
+          repository: ${{github.event.pull_request.head.repo.full_name}}
 
       # Налаштування JDK
       - name: Set up JDK 17
@@ -22,3 +25,13 @@ jobs:
       # Збірка та перевірка проекту за допомогою Maven
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots verify
+
+      - uses: mate-academy/auto-approve-action@v2
+        if: ${{ github.event.pull_request && success() }}
+        with:
+          github-token: ${{ github.token }}
+
+      - uses: mate-academy/auto-reject-action@v2
+        if: ${{ github.event.pull_request && failure() }}
+        with:
+          github-token: ${{ github.token }}
