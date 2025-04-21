@@ -13,24 +13,30 @@ jobs:
           ref: ${{github.event.pull_request.head.ref}}
           repository: ${{github.event.pull_request.head.repo.full_name}}
 
-      # Налаштування JDK
+      # Налаштування JDK 17
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
           java-version: '17'
           distribution: 'adopt'
           cache: maven
-          cache-dependency-path: '**/pom.xml' # Кешування залежностей Maven
+          cache-dependency-path: '**/pom.xml-java17' # Використовуємо інший ключ кешування
+
+      # Очищення локального кешу Maven (обережно, може збільшити час збірки)
+      - name: Clean Maven Cache
+        run: mvn dependency:purge-local-repository -Dmanual=true -Dmdep.purgeRemoteRepositories=false
 
       # Збірка та перевірка проекту за допомогою Maven
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots verify
 
+      # Автоматичне схвалення PR у разі успіху
       - uses: mate-academy/auto-approve-action@v2
         if: ${{ github.event.pull_request && success() }}
         with:
           github-token: ${{ github.token }}
 
+      # Автоматичне відхилення PR у разі невдачі
       - uses: mate-academy/auto-reject-action@v2
         if: ${{ github.event.pull_request && failure() }}
         with:
