@@ -173,33 +173,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         indexChecker(index);
         final Node<T> temp = findByIndex(index);
-        T oldValue = temp.value;
         if (temp.prev == null) {
             return unlinkFirst();
         } else if (temp.next == null) {
             return unlinkLast();
         } else {
-            unlink(temp);
+            return unlink(temp);
         }
-        return oldValue;
     }
 
-    @Override
     public boolean remove(T object) {
         Node<T> node = find(object);
         if (node == null) {
             return false;
         }
 
-        if (node.next == null) {
-            unlinkLast();
-        } else if (node.prev == null) {
-            unlinkFirst();
-        } else {
-            unlink(node);
-        }
+        unlink(node);
         return true;
     }
+
 
     @Override
     public int size() {
