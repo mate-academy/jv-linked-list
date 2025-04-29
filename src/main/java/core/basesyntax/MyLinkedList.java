@@ -4,104 +4,105 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node<T> head;
-    private Node<T> tail;
-    private int size;
-
-    private static class Node<T> {
-        private T value;
-        private Node<T> prev;
-        private Node<T> next;
-
-        Node(T value, Node<T> prev, Node<T> next) {
-            this.value = value;
-            this.prev = prev;
-            this.next = next;
-        }
-    }
+    private Node<T> head; // посилання на перший вузол
+    private Node<T> tail; // посилання на останній вузол
+    private int size; // розмір списку
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value, tail, null);
+        Node<T> newNode = new Node<>(value);
         if (tail == null) {
-            head = newNode;
+            head = tail = newNode;
         } else {
-            tail.next = newNode;
+            tail.setNext(newNode);
+            newNode.setPrev(tail);
+            tail = newNode;
         }
-        tail = newNode;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        validateIndex(index, true);
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
+        }
+
+        Node<T> newNode = new Node<>(value);
 
         if (index == size) {
-            add(value);
-            return;
-        }
-
-        Node<T> nextNode = findNodeByIndex(index);
-        Node<T> newNode = new Node<>(value, nextNode.prev, nextNode);
-
-        if (nextNode.prev != null) {
-            nextNode.prev.next = newNode;
-        } else {
+            // додаємо в кінець списку
+            if (tail == null) {
+                head = tail = newNode;
+            } else {
+                tail.setNext(newNode);
+                newNode.setPrev(tail);
+                tail = newNode;
+            }
+        } else if (index == 0) {
+            // додаємо на початок списку
+            newNode.setNext(head);
+            if (head != null) {
+                head.setPrev(newNode);
+            }
             head = newNode;
+            if (tail == null) {
+                tail = newNode;
+            }
+        } else {
+            // вставка в середину
+            Node<T> current = findNodeByIndex(index);
+            Node<T> previous = current.getPrev();
+            newNode.setNext(current);
+            newNode.setPrev(previous);
+            if (previous != null) {
+                previous.setNext(newNode);
+            }
+            current.setPrev(newNode);
         }
-
-        nextNode.prev = newNode;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null || list.isEmpty()) {
-            return;
-        }
-        for (T item : list) {
-            add(item);
+        for (T value : list) {
+            add(value);
         }
     }
 
     @Override
     public T get(int index) {
-        validateIndex(index, false);
-        return findNodeByIndex(index).value;
+        checkIndex(index);
+        return findNodeByIndex(index).getValue();
     }
 
     @Override
     public T set(T value, int index) {
-        validateIndex(index, false);
+        checkIndex(index);
         Node<T> current = findNodeByIndex(index);
-        T oldValue = current.value;
-        current.value = value;
+        T oldValue = current.getValue();
+        current.setValue(value);
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        validateIndex(index, false);
-        Node<T> nodeToRemove = findNodeByIndex(index);
-        T oldValue = nodeToRemove.value;
-        unlink(nodeToRemove);
+        checkIndex(index);
+        Node<T> current = findNodeByIndex(index);
+        unlink(current);
         size--;
-        return oldValue;
+        return current.getValue();
     }
 
     @Override
     public boolean remove(T object) {
-        if (head == null) {
-            return false;
-        }
         Node<T> current = head;
         while (current != null) {
-            if ((object == null && current.value == null) || (object != null && object.equals(current.value))) {
+            if (current.getValue() == null ? object == null : current.getValue().equals(object)) {
                 unlink(current);
                 size--;
                 return true;
             }
-            current = current.next;
+            current = current.getNext();
         }
         return false;
     }
@@ -116,55 +117,78 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private T unlink(Node<T> node) {
-        if (node.prev != null) {
-            node.prev.next = node.next;
-        } else {
-            head = node.next;
-        }
-        if (node.next != null) {
-            node.next.prev = node.prev;
-        } else {
-            tail = node.prev;
-        }
-        T removedValue = node.value;
-        node.value = null;
-        node.prev = null;
-        node.next = null;
-        return removedValue;
-    }
-
-    private Node<T> findNodeByIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index out of bounds");
         }
-        Node<T> current;
-        if (index < size / 2) {
-            current = head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
-        } else {
-            current = tail;
-            for (int i = size - 1; i > index; i--) {
-                current = current.prev;
-            }
-        }
-        return current;
     }
 
-    private void validateIndex(int index, boolean isAddOperation) {
-        if (isAddOperation) {
-            if (index < 0 || index > size) {
-                throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for size " + size);
+    private Node<T> findNodeByIndex(int index) {
+        if (index < size / 2) {
+            Node<T> current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.getNext();
             }
+            return current;
         } else {
-            if (index < 0 || index >= size) {
-                throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for size " + size);
+            Node<T> current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.getPrev();
             }
-            if (size == 0) {
-                throw new NoSuchElementException("Cannot perform operation on an empty list.");
-            }
+            return current;
+        }
+    }
+
+    private void unlink(Node<T> node) {
+        if (node.getPrev() != null) {
+            node.getPrev().setNext(node.getNext());
+        } else {
+            head = node.getNext();
+        }
+
+        if (node.getNext() != null) {
+            node.getNext().setPrev(node.getPrev());
+        } else {
+            tail = node.getPrev();
+        }
+
+        // Очищуємо посилання і значення для уникнення утримання об'єктів
+        node.setNext(null);
+        node.setPrev(null);
+        node.setValue(null);
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(T value) {
+            this.value = value;
+        }
+
+        public T getValue() {
+            return value;
+        }
+
+        public void setValue(T value) {
+            this.value = value;
+        }
+
+        public Node<T> getNext() {
+            return next;
+        }
+
+        public void setNext(Node<T> next) {
+            this.next = next;
+        }
+
+        public Node<T> getPrev() {
+            return prev;
+        }
+
+        public void setPrev(Node<T> prev) {
+            this.prev = prev;
         }
     }
 }
