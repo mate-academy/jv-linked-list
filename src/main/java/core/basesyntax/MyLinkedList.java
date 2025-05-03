@@ -117,28 +117,52 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        Node<T> current = head;
-        while (current != null) {
-            if (current.value != null && current.value.equals(object)) {
-                if (current.prev != null) {
-                    current.prev.next = current.next;
-                } else {
-                    head = current.next;
-                }
+        if (object == null) {
+            Node<T> current = head;
+            while (current != null) {
+                if (current.value == null) {
+                    if (current.prev != null) {
+                        current.prev.next = current.next;
+                    } else {
+                        head = current.next;
+                    }
 
-                if (current.next != null) {
-                    current.next.prev = current.prev;
-                } else {
-                    tail = current.prev;
-                }
+                    if (current.next != null) {
+                        current.next.prev = current.prev;
+                    } else {
+                        tail = current.prev;
+                    }
 
-                size--;
-                return true;
+                    size--;
+                    return true;
+                }
+                current = current.next;
             }
-            current = current.next;
+        } else {
+            Node<T> current = head;
+            while (current != null) {
+                if (object.equals(current.value)) {
+                    if (current.prev != null) {
+                        current.prev.next = current.next;
+                    } else {
+                        head = current.next;
+                    }
+
+                    if (current.next != null) {
+                        current.next.prev = current.prev;
+                    } else {
+                        tail = current.prev;
+                    }
+
+                    size--;
+                    return true;
+                }
+                current = current.next;
+            }
         }
         return false;
     }
+
 
     @Override
     public int size() {
