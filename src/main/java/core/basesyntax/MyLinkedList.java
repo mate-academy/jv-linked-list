@@ -5,9 +5,9 @@ import java.util.List;
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private static class Node<T> {
-        T value;
-        Node<T> next;
-        Node<T> prev;
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
 
         Node(T value) {
             this.value = value;
