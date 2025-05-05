@@ -24,6 +24,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size = 0;
     }
 
+     @Override
+    public void add(T element) {
+    }
+
+    @Override
+    public void addAll(List<T> elements) {
+        for (T element : elements) {
+            add(element); 
+        }
+    }
+
     @Override
     public void add(T item) {
         Node<T> newNode = new Node<>(item);
