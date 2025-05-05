@@ -53,7 +53,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
         if (index == size) {
-            add(item);  
+            add(item); 
             return;
         }
 
@@ -114,7 +114,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
         while (current != null) {
             if (current.data.equals(item)) {
-                remove(current); 
+                remove(current);  
                 return true;
             }
             current = current.next;
