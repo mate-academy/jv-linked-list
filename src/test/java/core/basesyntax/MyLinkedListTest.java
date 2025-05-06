@@ -65,6 +65,9 @@ public class MyLinkedListTest {
         }
         Assert.assertEquals("Expected size is incorrect", 1000, linkedList.size());
         for (int i = 0; i < 1000; i++) {
+            if (i == 499) {
+                System.out.println("Hi");
+            }
             Assert.assertEquals("Test failed! Can't add multiple values correctly",
                     "String" + i, linkedList.get(i));
         }
