@@ -114,7 +114,7 @@ public class MyLinkedListTest {
         myLinkedList.add(FIRST_ITEM);
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);
-        myLinkedList.add(FIRST_ITEM, 2);
+         myLinkedList.add(FIRST_ITEM, 2);
         myLinkedList.add(THIRD_ITEM, 1);
 
         String actualFirst = myLinkedList.get(0);
