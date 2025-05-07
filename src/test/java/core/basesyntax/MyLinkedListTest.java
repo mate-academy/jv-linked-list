@@ -306,6 +306,7 @@ public class MyLinkedListTest {
         String actualSecondExist = myLinkedList.get(0);
         String actualNullExist = myLinkedList.get(1);
         String actualNextSecondExist = myLinkedList.get(2);
+
         String actualThirdExist = myLinkedList.get(3);
 
         Assert.assertEquals("Test failed! After removing list should consist value  "
