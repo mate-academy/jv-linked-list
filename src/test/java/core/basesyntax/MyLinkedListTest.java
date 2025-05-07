@@ -111,7 +111,7 @@ public class MyLinkedListTest {
 
     @Test
     public void testAddByIndexAtTheMiddle() {
-        myLinkedList.add(FIRST_ITEM);
+        myLinkedList.add(FIRST_ITEM); // (1,3,2,1,3)
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);
         myLinkedList.add(FIRST_ITEM, 2);
