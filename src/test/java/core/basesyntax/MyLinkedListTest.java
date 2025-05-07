@@ -413,7 +413,7 @@ public class MyLinkedListTest {
         int actualSizeAfterAddFirst = myLinkedList.size();
         Assert.assertEquals(1, actualSizeAfterAddFirst);
 
-        boolean firstRemove = myLinkedList.remove(FIRST_ITEM);
+         boolean firstRemove = myLinkedList.remove(FIRST_ITEM);
         int actualSizeAfterRemoveFirst = myLinkedList.size();
         Assert.assertTrue(firstRemove);
         Assert.assertEquals(0, actualSizeAfterRemoveFirst);
