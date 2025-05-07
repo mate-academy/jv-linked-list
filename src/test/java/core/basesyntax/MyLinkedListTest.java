@@ -115,6 +115,7 @@ public class MyLinkedListTest {
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);
         myLinkedList.add(FIRST_ITEM, 2);
+
         myLinkedList.add(THIRD_ITEM, 1);
 
         String actualFirst = myLinkedList.get(0);
@@ -223,7 +224,8 @@ public class MyLinkedListTest {
         myLinkedList.add(FIRST_ITEM);
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);
-        Assert.assertEquals(3, myLinkedList.size());
+        Assert.assertEquals(3,
+                myLinkedList.size());
         myLinkedList.set(FIRST_ITEM, 3);
     }
 
