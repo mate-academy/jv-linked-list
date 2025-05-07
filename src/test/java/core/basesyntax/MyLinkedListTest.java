@@ -78,7 +78,7 @@ public class MyLinkedListTest {
 
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
-        String actualThird = myLinkedList.get(2);
+         String actualThird = myLinkedList.get(2);
 
         Assert.assertEquals(FIRST_ITEM, actualFirst);
         Assert.assertEquals(SECOND_ITEM, actualSecond);
