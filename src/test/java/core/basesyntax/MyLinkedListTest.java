@@ -408,7 +408,7 @@ public class MyLinkedListTest {
     }
 
     @Test
-    public void addAndRemoveToListTest(){
+    public void addAndRemoveToListTest() {
         myLinkedList.add(FIRST_ITEM);
         int actualSizeAfterAddFirst = myLinkedList.size();
         Assert.assertEquals(1, actualSizeAfterAddFirst);
