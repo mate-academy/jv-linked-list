@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MyLinkedListTest {
+public class  MyLinkedListTest {
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
@@ -362,7 +362,7 @@ public class MyLinkedListTest {
         boolean isThirdCatRemove = cats.remove(THE_SAME_THIRD_CAT);
         Assert.assertTrue("Test failed! Result after removing should be true", isThirdCatRemove);
         Assert.assertEquals("Expected size is incorrect. Expected: 5, but was: " + cats.size(), 5, cats.size());
-        Assert.assertEquals("Unexpected element found in list on 0 position. Expected: " + FIRST_CAT +", but was: " + cats.get(0),
+         Assert.assertEquals("Unexpected element found in list on 0 position. Expected: " + FIRST_CAT +", but was: " + cats.get(0),
                 FIRST_CAT, cats.get(0));
         Assert.assertEquals("Unexpected element found in list on 1 position. Expected: " + THIRD_CAT +", but was: " + cats.get(1),
                 THIRD_CAT, cats.get(1));
