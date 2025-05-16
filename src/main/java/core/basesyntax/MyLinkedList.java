@@ -46,7 +46,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             size++;
         } else {
             Node<T> currentNode = first;
-            for (int i = 1; i <= index; i++) {
+            for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
             }
             Node<T> element = new Node<>(currentNode.prev,value,currentNode);
@@ -71,7 +71,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Wrong index!");
         }
         Node<T> currentNode = first;
-        for (int i = 1; i <= index; i++) {
+        for (int i = 0; i < index; i++) {
             currentNode = currentNode.next;
         }
         return currentNode.item;
@@ -83,7 +83,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Wrong index!");
         }
         Node<T> currentNode = first;
-        for (int i = 1; i <= index; i++) {
+        for (int i = 0; i < index; i++) {
             currentNode = currentNode.next;
         }
         T oldItem = currentNode.item;
@@ -121,7 +121,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return value;
         } else {
             Node<T> currentNode = first;
-            for (int i = 1; i <= index; i++) {
+            for (int i = 0; i < index; i++) {
                 currentNode = currentNode.next;
             }
             size--;
