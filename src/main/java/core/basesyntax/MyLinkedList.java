@@ -11,13 +11,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(null, value, null);
-        if (head == null && tail == null) {
-            head = newNode;
-            tail = newNode;
-        }
         if (tail != null) {
             tail.next = newNode;
             newNode.prev = tail;
+            tail = newNode;
+        }
+        if (head == null && tail == null) {
+            head = newNode;
             tail = newNode;
         }
         size++;
@@ -25,7 +25,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        if (size < index || index < 0) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("public void add(T value, int index) {");
         }
         if (size == index) {
