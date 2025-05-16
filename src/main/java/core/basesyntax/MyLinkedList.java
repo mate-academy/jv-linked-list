@@ -11,13 +11,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(null, value, null);
-        if (tail != null) {
-            tail.next = newNode;
-            newNode.prev = tail;
-            tail = newNode;
-        }
         if (head == null && tail == null) {
             head = newNode;
+            tail = newNode;
+        } else {
+            tail.next = newNode;
+            newNode.prev = tail;
             tail = newNode;
         }
         size++;
@@ -26,26 +25,30 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("public void add(T value, int index) {");
+            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
         }
-        if (size == index) {
+        if (index == size) {
             add(value);
         } else if (index == 0) {
             Node<T> newNode = new Node<>(null, value, head);
-            head.prev = newNode;
-            head = newNode;
+            if (head == null) {
+                head = newNode;
+                tail = newNode;
+            } else {
+                head.prev = newNode;
+                head = newNode;
+            }
             size++;
         } else {
-            Node<T> result = head;
+            Node<T> current = head;
             for (int i = 0; i < index; i++) {
-                result = result.next;
+                current = current.next;
             }
-            Node<T> newNode = new Node<>(result.prev, value, result);
-            result.prev.next = newNode;
-            result.prev = newNode;
+            Node<T> newNode = new Node<>(current.prev, value, current);
+            current.prev.next = newNode;
+            current.prev = newNode;
             size++;
         }
-
     }
 
     @Override
