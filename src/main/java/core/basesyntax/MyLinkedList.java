@@ -94,10 +94,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         while (current != null) {
             if (current.value == null && object == null
 <<<<<<< HEAD
+<<<<<<< HEAD
                     || current.value != null && current.value.equals(object)) { // ✅ Видалені зайві дужки
 =======
                     || current.value != null && current.value.equals(object)) {
 >>>>>>> c5129dd (Remove redundant brackets and duplicate unlink method)
+=======
+                    || current.value != null && current.value.equals(object)) {
+>>>>>>> 1bbb22b (Remove redundant brackets and duplicate unlink method)
                 unlink(current);
                 return true;
             }
@@ -149,7 +153,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             tail = node.prev;
         }
-        size--; // ✅ Коректне оновлення розміру списку
-        return node.value;
+        size--;
     }
 }
