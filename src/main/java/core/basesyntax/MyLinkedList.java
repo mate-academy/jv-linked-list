@@ -39,15 +39,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
             return;
         }
-        Node<T> nextNode = findNodeByIndex(index);
-        Node<T> newNode = new Node<>(value, nextNode.prev, nextNode);
-        if (nextNode.prev != null) {
-            nextNode.prev.next = newNode;
-        } else {
-            head = newNode;
-        }
-        nextNode.prev = newNode;
-        size++;
     }
 
     @Override
@@ -139,5 +130,31 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         size--;
         return node.value;
+    }
+    private T unlink(Node<T> node) {
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        } else {
+            head = node.next;
+        }
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        } else {
+            tail = node.prev;
+        }
+        size--;
+        return node.value;
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        Node(T value, Node<T> prev, Node<T> next) {
+            this.value = value;
+            this.prev = prev;
+            this.next = next;
+        }
     }
 }
