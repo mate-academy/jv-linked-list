@@ -92,16 +92,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if (current.value == null && object == null
-<<<<<<< HEAD
-<<<<<<< HEAD
-                    || current.value != null && current.value.equals(object)) { // ✅ Видалені зайві дужки
-=======
-                    || current.value != null && current.value.equals(object)) {
->>>>>>> c5129dd (Remove redundant brackets and duplicate unlink method)
-=======
-                    || current.value != null && current.value.equals(object)) {
->>>>>>> 1bbb22b (Remove redundant brackets and duplicate unlink method)
+            if ((current.value == null && object == null)
+                    || (current.value != null && current.value.equals(object))) {
                 unlink(current);
                 return true;
             }
@@ -154,5 +146,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = node.prev;
         }
         size--;
+        return node.value; // <-- Add this line
     }
 }
