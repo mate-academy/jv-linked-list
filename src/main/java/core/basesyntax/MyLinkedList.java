@@ -113,7 +113,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private void validateIndex(int index, boolean isAddOperation) {
-        if (index < 0 || (!isAddOperation && index >= size) || (isAddOperation && index > size)) {
+        boolean isInvalidIndex = index < 0 || index > size || (!isAddOperation && index == size);
+
+        if (isInvalidIndex) {
             throw new IndexOutOfBoundsException("Invalid index: " + index);
         }
     }
@@ -146,6 +148,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = node.prev;
         }
         size--;
-        return node.value; // <-- Add this line
+
+        return node.value;
     }
 }
