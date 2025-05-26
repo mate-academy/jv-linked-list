@@ -35,10 +35,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         validateIndex(index, true);
+
         if (index == size) {
-            add(value);
+            Node<T> newNode = new Node<>(value, tail, null);
+            if (tail != null) {
+                tail.next = newNode;
+            }
+            tail = newNode;
+            if (head == null) {
+                head = newNode;
+            }
+            size++;
             return;
         }
+
+        Node<T> nextNode = findNodeByIndex(index);
+        Node<T> newNode = new Node<>(value, nextNode.prev, nextNode);
+        if (nextNode.prev != null) {
+            nextNode.prev.next = newNode;
+        } else {
+            head = newNode;
+        }
+        nextNode.prev = newNode;
+        size++;
     }
 
     @Override
@@ -74,7 +93,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
         while (current != null) {
             if (current.value == null && object == null
+<<<<<<< HEAD
                     || current.value != null && current.value.equals(object)) { // ✅ Видалені зайві дужки
+=======
+                    || current.value != null && current.value.equals(object)) {
+>>>>>>> c5129dd (Remove redundant brackets and duplicate unlink method)
                 unlink(current);
                 return true;
             }
@@ -121,40 +144,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             head = node.next;
         }
-
         if (node.next != null) {
             node.next.prev = node.prev;
         } else {
             tail = node.prev;
         }
-
-        size--;
+        size--; // ✅ Коректне оновлення розміру списку
         return node.value;
-    }
-    private T unlink(Node<T> node) {
-        if (node.prev != null) {
-            node.prev.next = node.next;
-        } else {
-            head = node.next;
-        }
-        if (node.next != null) {
-            node.next.prev = node.prev;
-        } else {
-            tail = node.prev;
-        }
-        size--;
-        return node.value;
-    }
-
-    private static class Node<T> {
-        private T value;
-        private Node<T> prev;
-        private Node<T> next;
-
-        Node(T value, Node<T> prev, Node<T> next) {
-            this.value = value;
-            this.prev = prev;
-            this.next = next;
-        }
     }
 }
