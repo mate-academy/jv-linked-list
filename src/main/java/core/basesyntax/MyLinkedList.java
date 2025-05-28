@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -61,7 +60,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         currentNode.value = value;
         return oldValue;
     }
-
 
     @Override
     public T remove(int index) {
