@@ -39,24 +39,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (head == null) {
             head = newNode;
         }
-
-        // Create a new node with the given value,
-        // linking its 'prev' to the current tail and its 'next' to null
-        // (as it will be the new tail).
-        Node<T> newNode = new Node<>(value, tail, null);
-
-        // If the list is not empty, link the current tail's 'next' to the new node.
-        if (tail != null) {
-            tail.next = newNode;
-        }
-
-        // Update the tail to be the new node.
-        tail = newNode;
-
-        // If the list was empty before this add, the new node is also the head.
-        if (head == null) {
-            head = newNode;
-        }
         size++; // Increment the size of the list.
     }
 
