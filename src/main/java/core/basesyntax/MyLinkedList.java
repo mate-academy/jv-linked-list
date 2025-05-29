@@ -49,16 +49,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
 
-        Node<T> nextNode = findNodeByIndex(index);
-        Node<T> newNode = new Node<>(value, nextNode.prev, nextNode);
-        if (nextNode.prev != null) {
-            nextNode.prev.next = newNode;
-        } else {
-            head = newNode;
-        }
-        nextNode.prev = newNode;
-        size++;
-    }
 
     @Override
     public void addAll(List<T> list) {
@@ -151,4 +141,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         return node.value;
     }
+
+    Node<T> nextNode = findNodeByIndex(index);
+    Node<T> newNode = new Node<>(value, nextNode.prev, nextNode);
+        if (nextNode.prev != null) {
+        nextNode.prev.next = newNode;
+    } else {
+        head = newNode;
+    }
+    nextNode.prev = newNode;
+    size++;
+}
 }
