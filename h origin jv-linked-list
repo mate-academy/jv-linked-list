@@ -1,0 +1,72 @@
+* [33m7f40958[m[33m ([m[1;32mjv-linked-list[m[33m)[m Збереження останніх змін перед pull
+[31m|[m * [33m8d2e2e7[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mjv-linked-list-solution[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/jv-linked-list-solution[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m Збереження останніх змін перед pull
+[31m|[m[31m/[m  
+* [33mf96dd86[m Refactored MyLinkedList implementation
+* [33m33ce7ee[m Refactored MyLinkedList implementation
+* [33m38bab35[m Updated MyLinkedList.java after resolving merge conflicts
+* [33m183ef75[m Fixed unnecessary brackets in remove() method as per review comments
+* [33m7bcce06[m Simplified validateIndex() condition as per review comments
+* [33md6b2a09[m Simplified validateIndex() condition as per review comments
+* [33mfee9cd9[m Moved Node<T> to the end of MyLinkedList.java as per review comments
+* [33m31198f9[m Moved Node<T> to the end of MyLinkedList.java as per review comments
+* [33m35296a9[m Moved Node class to end and cleaned up remove condition
+* [33mb9a0467[m Moved Node class to end and cleaned up remove condition
+* [33mcceb6a1[m Remove redundant brackets and duplicate unlink method
+* [33mae629eb[m Remove redundant brackets and duplicate unlink method
+* [33md4725db[m Remove redundant brackets and duplicate unlink method
+* [33mb90f902[m Remove redundant brackets and duplicate unlink method
+* [33m2b9278b[m Remove redundant brackets and duplicate unlink method
+* [33m64a2ace[m Move Node class to the end of file as requested in PR review
+* [33mb73fca4[m Update ci.yml
+* [33m6d2b185[m Update ci.yml
+[32m|[m * [33m5b553c8[m[33m ([m[1;31morigin/jv-linked-list[m[33m)[m Update ci.yml
+[32m|[m[32m/[m  
+*   [33m68c9c1e[m Merge pull request #1640 from sarakhmen/update-github-actions-versions
+[34m|[m[35m\[m  
+[34m|[m * [33mfb15df8[m Update GitHub Actions versions
+[34m|[m[34m/[m  
+* [33mbcbbf75[m improve checklist.md
+* [33mb090785[m remove encoding config from checkstyle plugin
+* [33m947ab65[m update checklist.md (#1209)
+* [33m544ef95[m Update ci.yml to java 17
+* [33m0f44070[m Create checklist.md
+*   [33m09dbfce[m Merge pull request #681 from Rommelua/test-refactoring
+[36m|[m[1;31m\[m  
+[36m|[m * [33m5191cd0[m Added equals Cats for remove test.
+[36m|[m * [33mac7130b[m Messages fixed
+[36m|[m * [33m33e338d[m Test cases for remove added
+[36m|[m[36m/[m  
+* [33mb2f9dfc[m Update CI config
+* [33m7329f09[m Migrate from Travis to Github Actions
+* [33m3b69354[m Update .travis.yml
+* [33m57b0688[m fixed some tests and return type for `add` operations (#273)
+* [33md7cb8fb[m fixed test case error message (#214)
+* [33m27a9927[m changed variable name in the `MyLinkedListInterface` (#166)
+* [33m6b5b140[m updated task description and added the link to the common mistakes (#165)
+* [33ma7bddb9[m added `index equals size` test cases for get(), set() and remove() (#155)
+* [33md631e40[m refactored tests (#111)
+* [33m271bb0b[m Update pom.xml
+* [33mc373fe0[m rewrite linked list task and tests (#60)
+* [33mfd10497[m removed dot
+* [33m825d61c[m Update README.md
+* [33m0395fad[m renamed artifactId
+*   [33mab7b87e[m Merge pull request #33 from mate-academy/dev
+[1;32m|[m[1;33m\[m  
+[1;32m|[m * [33mb0803fc[m added test for 1000 elements
+[1;32m|[m * [33m6403841[m added test messages
+[1;32m|[m * [33m1178c5a[m added test for equals
+[1;32m|[m[1;32m/[m  
+* [33md08cb6a[m added test cases for null objects (#32)
+* [33m5c13c56[m removed one method from test
+*   [33mf052db7[m Merge pull request #1 from DemPaul/myLinkedListTest
+[1;34m|[m[1;35m\[m  
+[1;34m|[m * [33m1917947[m small fixes
+[1;34m|[m * [33me168779[m small fixes
+[1;34m|[m * [33mb5aac7d[m Update README.md
+[1;34m|[m * [33mdcbc714[m small fixes
+[1;34m|[m * [33m4e255dd[m fixes: all tests updated; deleted the implementation class
+[1;34m|[m * [33m5a71de2[m fixes: all tests updated; deleted the implementation class
+[1;34m|[m * [33m0a6ae23[m small fixes
+[1;34m|[m * [33mb7ad2cc[m Added Test for Linked List realization from given interface
+[1;34m|[m[1;34m/[m  
+* [33m6ce9c6f[m Initial commit
