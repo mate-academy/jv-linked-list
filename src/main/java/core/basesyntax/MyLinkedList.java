@@ -102,10 +102,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return size == 0;
         }
 
-        private void validateIndex ( int index, boolean isAddOperation){
-            boolean isInvalidIndex = index < 0 || index > size || (!isAddOperation && index == size);
-
-            if (isInvalidIndex) {
+        private void validateIndex(int index, boolean isAddOperation) {
+            if (index < 0 || index >= size && !isAddOperation || index > size) {
                 throw new IndexOutOfBoundsException("Invalid index: " + index);
             }
         }
