@@ -1,12 +1,11 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private Node<T> head; // посилання на перший вузол
-    private Node<T> tail; // посилання на останній вузол
-    private int size; // розмір списку
+    private Node<T> head;
+    private Node<T> tail;
+    private int size;
 
     @Override
     public void add(T value) {
@@ -24,13 +23,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
+            throw new IndexOutOfBoundsException("Index out of bounds: "
+                    + index);
         }
 
         Node<T> newNode = new Node<>(value);
 
         if (index == size) {
-            // додаємо в кінець списку
             if (tail == null) {
                 head = tail = newNode;
             } else {
@@ -39,7 +38,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 tail = newNode;
             }
         } else if (index == 0) {
-            // додаємо на початок списку
             newNode.setNext(head);
             if (head != null) {
                 head.setPrev(newNode);
@@ -49,7 +47,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 tail = newNode;
             }
         } else {
-            // вставка в середину
             Node<T> current = findNodeByIndex(index);
             Node<T> previous = current.getPrev();
             newNode.setNext(current);
@@ -97,7 +94,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if (current.getValue() == null ? object == null : current.getValue().equals(object)) {
+            if (current.getValue() == null ? object == null : current.getValue()
+                    .equals(object)) {
                 unlink(current);
                 size--;
                 return true;
@@ -152,7 +150,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = node.getPrev();
         }
 
-        // Очищуємо посилання і значення для уникнення утримання об'єктів
         node.setNext(null);
         node.setPrev(null);
         node.setValue(null);
@@ -160,35 +157,41 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private static class Node<T> {
         private T value;
-        private Node<T> next;
         private Node<T> prev;
+        private Node<T> next;
+
+        public Node(T value, Node<T> prev, Node<T> next) {
+            this.value = value;
+            this.prev = prev;
+            this.next = next;
+        }
 
         public Node(T value) {
-            this.value = value;
-        }
-
-        public T getValue() {
-            return value;
-        }
-
-        public void setValue(T value) {
-            this.value = value;
-        }
-
-        public Node<T> getNext() {
-            return next;
+            this(value, null, null);
         }
 
         public void setNext(Node<T> next) {
             this.next = next;
         }
 
-        public Node<T> getPrev() {
-            return prev;
+        public Node<T> getNext() {
+            return next;
         }
 
         public void setPrev(Node<T> prev) {
             this.prev = prev;
+        }
+
+        public Node<T> getPrev() {
+            return prev;
+        }
+
+        public void setValue(T value) {
+            this.value = value;
+        }
+
+        public T getValue() {
+            return value;
         }
     }
 }
