@@ -172,7 +172,7 @@ public class MyLinkedListTest {
                 FIRST_ITEM, actualFirst);
         Assert.assertEquals("Test failed! Second element should be " + SECOND_ITEM,
                 SECOND_ITEM, actualSecond);
-        Assert.assertEquals("Test failed! Second element should be " + THIRD_ITEM,
+        Assert.assertEquals("Test failed! Third element should be " + THIRD_ITEM,
                 THIRD_ITEM, actualThird);
         Assert.assertEquals("Expected size is incorrect", 3, myLinkedList.size());
         exception.expect(IndexOutOfBoundsException.class);
