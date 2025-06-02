@@ -37,7 +37,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value, int index) {
         // Check for index out of bounds
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("index: " +  index + " is incorrect!");
+            throw new IndexOutOfBoundsException("index: " + index + " is incorrect!");
         }
         // Create a new node with the given value
         Node<T> newNode = new Node<>(value);
@@ -89,8 +89,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         // Check for index out of bounds
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("index: " +  index + " is incorrect!");
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("index: " + index + " is incorrect!");
         }
         // Create a current node
         Node<T> current = head;
@@ -105,7 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         // Check for index out of bounds
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + " is incorrect!");
         }
         // Iterate for the nodes by index
@@ -123,7 +123,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         // Check for index out of bounds
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + " is incorrect!");
         }
         // Remove head
