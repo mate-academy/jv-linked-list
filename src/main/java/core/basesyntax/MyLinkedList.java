@@ -167,7 +167,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         // Iterate over nodes
         Node<T> current = head;
         while (current != null) {
-            if  (Objects.equals(current.getValue(), object)) {
+            if (Objects.equals(current.getValue(), object)) {
                 // Remove head
                 if (current == head) {
                     head = head.getNext();
