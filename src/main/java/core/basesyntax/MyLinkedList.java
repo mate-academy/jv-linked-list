@@ -98,12 +98,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             if (object == null) {
                 if (current.value == null) {
                     unlinkAndGetData(current);
-                    return true;
+                    return true; // break the loop after removing
                 }
             } else {
                 if (object.equals(current.value)) {
                     unlinkAndGetData(current);
-                    return true;
+                    return true;  // break the loop after removing
                 }
             }
             current = current.next;
