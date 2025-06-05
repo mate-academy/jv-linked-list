@@ -128,26 +128,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         // Remove head
         if (index == 0) {
+            size--;
             T oldValue = head.getValue();
             head = head.getNext();
-            if (head != null) {
-                head.setPrev(null);
-            } else {
-                tail = null;
-            }
-            size--;
+            head.setPrev(null);
             return oldValue;
         }
         // Remove tail
         if (index == size - 1) {
+            size--;
             T oldValue = tail.getValue();
             tail = tail.getPrev();
-            if (tail != null) {
-                tail.setNext(null);
-            } else {
-                head = null;
-            }
-            size--;
+            tail.setNext(null);
             return oldValue;
         }
         // Remove from the middle
@@ -155,11 +147,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < index; i++) {
             current = current.getNext();
         }
-        T oldValue = current.getValue();
+
         current.getPrev().setNext(current.getNext());
         current.getNext().setPrev(current.getPrev());
         size--;
-        return oldValue;
+        return current.getValue();
     }
 
     @Override
