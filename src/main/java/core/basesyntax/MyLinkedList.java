@@ -103,7 +103,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             } else {
                 if (object.equals(current.value)) {
                     unlinkAndGetData(current);
-                    return true;  // break the loop after removing
+                    return true; // break the loop after removing
                 }
             }
             current = current.next;
