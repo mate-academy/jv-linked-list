@@ -81,7 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        removeIndexCheck(index);
+        getIndexCheck(index);
         Node<T> currentNode = head;
         int tempIndex = 0;
 
