@@ -72,9 +72,9 @@ public class MyLinkedListTest {
 
     @Test
     public void testAddByIndexToTheTop() {
-        myLinkedList.add(FIRST_ITEM, 0);
-        myLinkedList.add(SECOND_ITEM, 1);
-        myLinkedList.add(THIRD_ITEM, 2);
+        myLinkedList.add(0, FIRST_ITEM);
+        myLinkedList.add(1, SECOND_ITEM);
+        myLinkedList.add(2, THIRD_ITEM);
 
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
@@ -85,15 +85,15 @@ public class MyLinkedListTest {
         Assert.assertEquals(THIRD_ITEM, actualThird);
 
         exception.expect(IndexOutOfBoundsException.class);
-        myLinkedList.add(THIRD_ITEM, 4);
+        myLinkedList.add(4, THIRD_ITEM);
     }
 
     @Test
     public void testAddByIndexToTheBottom() {
-        myLinkedList.add(FIRST_ITEM, 0);
-        myLinkedList.add(SECOND_ITEM, 1);
-        myLinkedList.add(THIRD_ITEM, 0);
-        myLinkedList.add(SECOND_ITEM, 0);
+        myLinkedList.add(0, FIRST_ITEM);
+        myLinkedList.add(1, SECOND_ITEM);
+        myLinkedList.add(0, THIRD_ITEM);
+        myLinkedList.add(0, SECOND_ITEM);
 
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
@@ -106,7 +106,7 @@ public class MyLinkedListTest {
         Assert.assertEquals(SECOND_ITEM, actualFourth);
 
         exception.expect(IndexOutOfBoundsException.class);
-        myLinkedList.add(THIRD_ITEM, 5);
+        myLinkedList.add(5, THIRD_ITEM);
     }
 
     @Test
@@ -114,8 +114,8 @@ public class MyLinkedListTest {
         myLinkedList.add(FIRST_ITEM);
         myLinkedList.add(SECOND_ITEM);
         myLinkedList.add(THIRD_ITEM);
-        myLinkedList.add(FIRST_ITEM, 2);
-        myLinkedList.add(THIRD_ITEM, 1);
+        myLinkedList.add(2, FIRST_ITEM);
+        myLinkedList.add(1, THIRD_ITEM);
 
         String actualFirst = myLinkedList.get(0);
         String actualSecond = myLinkedList.get(1);
@@ -130,12 +130,12 @@ public class MyLinkedListTest {
         Assert.assertEquals(THIRD_ITEM, actualFifth);
         Assert.assertEquals(5, myLinkedList.size());
         exception.expect(IndexOutOfBoundsException.class);
-        myLinkedList.add(THIRD_ITEM, 7);
+        myLinkedList.add(7, THIRD_ITEM);
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
     public void testAddByNegativeIndex() {
-        myLinkedList.add(FIRST_ITEM, -1);
+        myLinkedList.add(-1, FIRST_ITEM);
     }
 
     @Test
