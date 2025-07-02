@@ -40,23 +40,24 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         Node newNode = new Node(value);
 
-        if (index == size) {
-            add(value);
-            return;
-        }
-
-        Node current = getNode(index);
-
-        newNode.next = current;
-        newNode.prev = current.prev;
-
-        if (current.prev != null) {
-            current.prev.next = newNode;
-        } else {
+        if (size == 0) {
+            head = tail = newNode;
+        } else if (index == 0) {
+            newNode.next = head;
+            head.prev = newNode;
             head = newNode;
+        } else if (index == size) {
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
+        } else {
+            Node current = getNode(index);
+            newNode.next = current;
+            newNode.prev = current.prev;
+            current.prev.next = newNode;
+            current.prev = newNode;
         }
 
-        current.prev = newNode;
         size++;
     }
 
@@ -138,6 +139,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private Node getNode(int index) {
         if (index < 0 || index >= size) {
+            System.out.println("Index: " + index + ", Size: " + size);
             throw new IndexOutOfBoundsException("Index is not valid " + index);
         }
 
