@@ -18,54 +18,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index: " + index);
-        }
-    }
-
-    private void checkIndexForAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Invalid index for add: " + index);
-        }
-    }
-
-    private Node<T> getNodeByIndex(int index) {
-        checkIndex(index);
-        Node<T> current;
-        if (index < size / 2) {
-            current = head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
-        } else {
-            current = tail;
-            for (int i = size - 1; i > index; i--) {
-                current = current.prev;
-            }
-        }
-        return current;
-    }
-
-    private void unlink(Node<T> node) {
-        Node<T> prevNode = node.prev;
-        Node<T> nextNode = node.next;
-
-        if (prevNode != null) {
-            prevNode.next = nextNode;
-        } else {
-            head = nextNode;
-        }
-
-        if (nextNode != null) {
-            nextNode.prev = prevNode;
-        } else {
-            tail = prevNode;
-        }
-
-        size--;
-    }
-
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(value);
@@ -152,5 +104,53 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Invalid index: " + index);
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Invalid index for add: " + index);
+        }
+    }
+
+    private Node<T> getNodeByIndex(int index) {
+        checkIndex(index);
+        Node<T> current;
+        if (index < size / 2) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
+        }
+        return current;
+    }
+
+    private void unlink(Node<T> node) {
+        Node<T> prevNode = node.prev;
+        Node<T> nextNode = node.next;
+
+        if (prevNode != null) {
+            prevNode.next = nextNode;
+        } else {
+            head = nextNode;
+        }
+
+        if (nextNode != null) {
+            nextNode.prev = prevNode;
+        } else {
+            tail = prevNode;
+        }
+
+        size--;
     }
 }
