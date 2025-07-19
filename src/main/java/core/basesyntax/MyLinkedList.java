@@ -1,31 +1,19 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private T value;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(T value) {
-            this.value = value;
-        }
-    }
-
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(value, tail, null);
         if (head == null) {
             head = tail = newNode;
         } else {
             tail.next = newNode;
-            newNode.prev = tail;
             tail = newNode;
         }
         size++;
@@ -34,24 +22,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        Node<T> newNode = new Node<>(value);
         if (index == size) {
             add(value);
             return;
         }
         Node<T> current = getNodeByIndex(index);
         Node<T> prevNode = current.prev;
+        Node<T> newNode = new Node<>(value, prevNode, current);
 
-        newNode.next = current;
-        newNode.prev = prevNode;
-        current.prev = newNode;
-
-        if (prevNode != null) {
-            prevNode.next = newNode;
-        } else {
+        if (prevNode == null) {
             head = newNode;
+        } else {
+            prevNode.next = newNode;
         }
-
+        current.prev = newNode;
         size++;
     }
 
@@ -87,7 +71,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if (Objects.equals(current.value, object)) {
+            if ((object == null && current.value == null)
+                    || (object != null && object.equals(current.value))) {
                 unlink(current);
                 return true;
             }
@@ -150,7 +135,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             tail = prevNode;
         }
-
         size--;
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(T value, Node<T> prev, Node<T> next) {
+            this.value = value;
+            this.prev = prev;
+            this.next = next;
+        }
     }
 }
