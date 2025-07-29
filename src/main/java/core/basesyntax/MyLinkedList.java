@@ -90,11 +90,52 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T remove(int index) {
+        if (index < 0 || index > linkedListSize) {
+            throw new IndexOutOfBoundsException("Index of bounds! {T remove}");
+        }
+        Node<T> currentNode = head;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
+        }
+        if (currentNode.prev != null) {
+            currentNode.prev.next = currentNode.next;
+            linkedListSize--;
+        } else {
+            head = currentNode.next;
+        }
+        if (currentNode.next != null) {
+            currentNode.next.prev = currentNode.prev;
+            linkedListSize--;
+        } else {
+            tail = currentNode.prev;
+        }
         return null;
     }
 
     @Override
     public boolean remove(T object) {
+        Node<T> currentNode = head;
+        while (currentNode != null) {
+            if ((object == null && currentNode.value == null)
+                    || (object != null && object.equals(currentNode.value))) {
+                if (currentNode.prev != null) {
+                    currentNode.prev.next = currentNode.next;
+                } else {
+                    head = currentNode.next;
+                }
+                if (currentNode.next != null) {
+                    currentNode.next.prev = currentNode.prev;
+                } else {
+                    tail = currentNode.prev;
+                }
+                currentNode.prev = null;
+                currentNode.next = null;
+                currentNode.value = null;
+                linkedListSize--;
+                return true;
+            }
+            currentNode = currentNode.next;
+        }
         return false;
     }
 
