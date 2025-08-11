@@ -6,52 +6,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
     private int size;
-    private int modCount;
-
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
-    private boolean isElementIndex(int index) {
-        return index >= 0 && index < size;
-    }
-
-    private boolean isPositionIndex(int index) {
-        return index >= 0 && index <= size;
-    }
-
-    private void checkElementIndex(int index) {
-        if (!isElementIndex(index)) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-    }
-
-    private void checkPositionIndex(int index) {
-        if (!isPositionIndex(index)) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-    }
-
-    private void linkFirst(T e) {
-        final MyLinkedList.Node<T> f = first;
-        final MyLinkedList.Node<T> newNode = new MyLinkedList.Node<>(null, e, f);
-        first = newNode;
-        if (f == null) {
-            last = newNode;
-        } else {
-            f.prev = newNode;
-        }
-        size++;
-        modCount++;
-    }
 
     void linkLast(T e) {
         final MyLinkedList.Node<T> l = last;
@@ -63,7 +17,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             l.next = newNode;
         }
         size++;
-        modCount++;
     }
 
     void linkBefore(T e, MyLinkedList.Node<T> succ) {
@@ -76,44 +29,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             pred.next = newNode;
         }
         size++;
-        modCount++;
-    }
-
-    private T unlinkFirst(MyLinkedList.Node<T> f) {
-        final T element = f.item;
-        final MyLinkedList.Node<T> next = f.next;
-        f.item = null;
-        f.next = null; // help GC
-        first = next;
-        if (next == null) {
-            last = null;
-        } else {
-            next.prev = null;
-        }
-        size--;
-        modCount++;
-        return element;
-    }
-
-    private T unlinkLast(MyLinkedList.Node<T> l) {
-        // assert l == last && l != null;
-        final T element = l.item;
-        final MyLinkedList.Node<T> prev = l.prev;
-        l.item = null;
-        l.prev = null; // help GC
-        last = prev;
-        if (prev == null) {
-            first = null;
-        } else {
-            prev.next = null;
-        }
-        size--;
-        modCount++;
-        return element;
     }
 
     T unlink(MyLinkedList.Node<T> x) {
-        // assert x != null;
         final T element = x.item;
         final MyLinkedList.Node<T> next = x.next;
         final MyLinkedList.Node<T> prev = x.prev;
@@ -134,7 +52,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         x.item = null;
         size--;
-        modCount++;
         return element;
     }
 
@@ -193,7 +110,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         last = pred;
         size += numNew;
-        modCount++;
     }
 
     @Override
@@ -245,5 +161,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private boolean isElementIndex(int index) {
+        return index >= 0 && index < size;
+    }
+
+    private boolean isPositionIndex(int index) {
+        return index >= 0 && index <= size;
+    }
+
+    private void checkElementIndex(int index) {
+        if (!isElementIndex(index)) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+    private void checkPositionIndex(int index) {
+        if (!isPositionIndex(index)) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+    private static class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
