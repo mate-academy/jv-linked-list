@@ -19,16 +19,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        checkTheIndex(index);
-        int count = 0;
-        Node<T> current = head;
-        while (count == index && count != size()) {
-            current = current.next;
-            count++;
+        checkIndex(index);
+        if (index == size) {
+            createNewNode(tail, null, value);
+        } else {
+            Node<T> current = findNodeByIndex(index);
+            createNewNode(current.prev, current, value);
         }
-        Node<T> newNode = createNewNode(current.prev, current, value);
-        current.prev.next = newNode;
-        current.prev = newNode;
         size++;
     }
 
@@ -37,71 +34,33 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (T element : list) {
             add(element);
         }
-        size += list.size();
     }
 
     @Override
     public T get(int index) {
-        checkTheIndex(index);
-        Node<T> currentNode = head;
-        int count = 0;
-        while (count < index) {
-            currentNode = currentNode.next;
-            count++;
-        }
-        return currentNode.value;
+        checkIndex(index);
+        return findNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
-        checkTheIndex(index);
-        Node<T> currentNode = head;
-        int count = 0;
-        while (count < size()) {
-            if (count == index) {
-                T oldValue = currentNode.value;
-                currentNode.value = value;
-                return oldValue;
-            }
-            currentNode = currentNode.next;
-            count++;
-        }
-        return null;
+        checkIndex(index);
+        T oldValue = findNodeByIndex(index).value;
+        findNodeByIndex(index).value = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        checkTheIndex(index);
-        Node<T> currentNode = head;
-        int count = 0;
-        while (count < size()) {
-            if (count == index) {
-                T oldValue = currentNode.value;
-                unlink(currentNode);
-                return oldValue;
-            }
-            currentNode = currentNode.next;
-            count++;
-        }
-        return null;
+        checkIndex(index);
+        T oldValue = findNodeByIndex(index).value;
+        unlink(findNodeByIndex(index));
+        return oldValue;
     }
 
     @Override
     public boolean remove(T object) {
-        Node<T> currentNode = head;
-        int count = 0;
-        while (count < size()) {
-            if (object == null && currentNode.value == null) {
-                unlink(currentNode);
-                return true;
-            }
-            if (object != null && currentNode.value != null && object.equals(currentNode.value)) {
-                unlink(currentNode);
-                return true;
-            }
-            currentNode = currentNode.next;
-            count++;
-        }
+        unlink(findNodeByObject(object));
         return false;
     }
 
@@ -126,21 +85,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (node.next == null) {
             tail = node.prev;
         }
-
+        node.prev = null;
+        node.next = null;
+        node.value = null;
         size--;
     }
 
-    private void checkTheIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
 
     private Node<T> createNewNode(Node<T> prev, Node<T> next, T value) {
-        Node<T> newNode = new Node<>();
-        newNode.next = next;
-        newNode.prev = prev;
-        newNode.value = value;
+        Node<T> newNode = new Node<>(prev, next, value);
         if (prev != null) {
             prev.next = newNode;
         } else {
@@ -156,9 +114,49 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return newNode;
     }
 
+    private Node<T> findNodeByIndex(int index) {
+        int count = 0;
+        Node<T> currentNode;
+        if (index < size / 2) {
+            currentNode = head;
+            while (count < index) {
+                currentNode = currentNode.next;
+                count++;
+            }
+        } else {
+            currentNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                currentNode = currentNode.prev;
+            }
+            return currentNode;
+        }
+        return currentNode;
+    }
+
+    private Node<T> findNodeByObject(Object object) {
+        Node<T> currentNode = head;
+        int count = 0;
+        while (count < size()) {
+            if (object == null && currentNode.value == null) {
+                break;
+            }
+            if (object != null && currentNode.value != null && object.equals(currentNode.value)) {
+                break;
+            }
+            currentNode = currentNode.next;
+            count++;
+        }
+        return currentNode;
+    }
+
     private class Node<T> {
-        Node prev;
-        Node next;
-        T value;
+        private Node<T> prev;
+        private Node<T> next;
+        private T value;
+        public Node(Node<T> prev, Node<T> next, T value) {
+            this.prev = prev;
+            this.next = next;
+            this.value = value;
+        }
     }
 }
