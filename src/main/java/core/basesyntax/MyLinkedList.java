@@ -3,21 +3,42 @@ package core.basesyntax;
 import java.util.List;
 import java.util.Objects;
 
-
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
     private int size;
 
     private static class Node<T> {
-        Node<T> prev;
-        Node<T> next;
-        T value;
+        private Node<T> prev;
+        private Node<T> next;
+        private T value;
 
         Node(T value) {
             this.value = value;
-            this.prev = null;
-            this.next = null;
+        }
+
+        public Node<T> getPrev() {
+            return prev;
+        }
+
+        public void setPrev(Node<T> prev) {
+            this.prev = prev;
+        }
+
+        public Node<T> getNext() {
+            return next;
+        }
+
+        public void setNext(Node<T> next) {
+            this.next = next;
+        }
+
+        public T getValue() {
+            return value;
+        }
+
+        public void setValue(T value) {
+            this.value = value;
         }
     }
 
@@ -25,48 +46,44 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void add(T value) {
         Node<T> newNode = new Node<>(value);
         if (head == null) {
-            head = newNode;
-
-        } else {
-            tail.next = newNode;
-            newNode.prev = tail;
-        }
-        tail = newNode;
-    }
-
-    @Override
-    public void add(T value, int index) {
-        Node<T> newNode = new Node<>(value);
-        Node<T> current = head;
-
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index" + index + ", Size:" + size);
-        }
-        if (size == 0) {
             head = tail = newNode;
-            size++;
-            return;
-        }
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
-        if (index == 0) {
-            newNode.next = head;
-            head.prev = newNode;
-            head = newNode;
-        } else if (index == size) {
-            tail.next = newNode;
-            newNode.prev = tail;
-            tail = newNode;
         } else {
-            newNode.next = current;
-            newNode.prev = current.prev;
-            current.prev.next = newNode;
-            current.prev = newNode;
+            tail.setNext(newNode);
+            newNode.setPrev(tail);
+            tail = newNode;
         }
         size++;
     }
 
+    @Override
+    public void add(T value, int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index " + index + ", Size: " + size);
+        }
+        Node<T> newNode = new Node<>(value);
+
+        if (size == 0) {
+            head = tail = newNode;
+        } else if (index == 0) {
+            newNode.setNext(head);
+            head.setPrev(newNode);
+            head = newNode;
+        } else if (index == size) {
+            tail.setNext(newNode);
+            newNode.setPrev(tail);
+            tail = newNode;
+        } else {
+            Node<T> current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.getNext();
+            }
+            newNode.setNext(current);
+            newNode.setPrev(current.getPrev());
+            current.getPrev().setNext(newNode);
+            current.setPrev(newNode);
+        }
+        size++;
+    }
 
     @Override
     public void addAll(List<T> list) {
@@ -80,89 +97,81 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-        Node<T> current = head;
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("List cannot be empty");
+            throw new IndexOutOfBoundsException("Index " + index + ", Size: " + size);
         }
+        Node<T> current = head;
         for (int i = 0; i < index; i++) {
-            current = current.next;
+            current = current.getNext();
         }
-        return current.value;
+        return current.getValue();
     }
 
     @Override
     public T set(T value, int index) {
-        Node<T> current = head;
-
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("List cannot be empty");
+            throw new IndexOutOfBoundsException("Index " + index + ", Size: " + size);
         }
+        Node<T> current = head;
         for (int i = 0; i < index; i++) {
-            current = current.next;
+            current = current.getNext();
         }
-        T oldValue = current.value;
-        current.value = value;
+        T oldValue = current.getValue();
+        current.setValue(value);
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        Node<T> current = head;
-
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("List cannot be empty;");
+            throw new IndexOutOfBoundsException("Index " + index + ", Size: " + size);
         }
+        Node<T> current = head;
         for (int i = 0; i < index; i++) {
-            current = current.next;
+            current = current.getNext();
         }
 
-        if (current.prev != null) {
-            current.prev.next = current.next;
+        if (current.getPrev() != null) {
+            current.getPrev().setNext(current.getNext());
         } else {
-            head = current.next;
+            head = current.getNext();
         }
 
-        if (current.next != null) {
-            current.next.prev = current.prev;
+        if (current.getNext() != null) {
+            current.getNext().setPrev(current.getPrev());
         } else {
-            tail = current.prev;
+            tail = current.getPrev();
         }
 
         size--;
-        return current.value;
+        return current.getValue();
     }
 
     @Override
     public boolean remove(T object) {
-
         Node<T> current = head;
-
         while (current != null) {
-            // sprawdzenie wartości
-            if (Objects.equals(object, current.value)) {
+            if (Objects.equals(object, current.getValue())) {
 
-                if (current.prev == null) {
-                    head = current.next;
-                    if (head != null) {
-                        head.prev = null;
-                    }
-                } else if (current.next == null) {
-                    tail = current.prev;
+                if (current.getPrev() != null) {
+                    current.getPrev().setNext(current.getNext());
                 } else {
-                    current.prev.next = current.next;
-                    current.next.prev = current.prev;
+                    head = current.getNext();
+                }
+
+                if (current.getNext() != null) {
+                    current.getNext().setPrev(current.getPrev());
+                } else {
+                    tail = current.getPrev();
                 }
 
                 size--;
                 return true;
             }
-
-            current = current.next; // przesuwamy się dopiero po aktualizacji wskaźników
+            current = current.getNext();
         }
-
         return false;
     }
-
 
     @Override
     public int size() {
