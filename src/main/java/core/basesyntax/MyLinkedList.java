@@ -7,7 +7,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
     private int size;
-
+    
     @Override
     public void add(T value) {
         Node<T> newNode;
@@ -78,6 +78,61 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIfIndexExists(index);
+        return unlink(index);
+    }
+
+    @Override
+    public boolean remove(T object) {
+        for (int i = 0; i < size; i++) {
+            if (object == null) {
+                if (get(i) == null) {
+                    unlink(i);
+                    return true;
+                }
+            } else if (get(i) != null && get(i).equals(object)) {
+                unlink(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size() == 0;
+    }
+
+    private Node<T> getNodeByIndex(int index) {
+        checkIfIndexExists(index);
+        boolean inFirstHalf = index < size / 2;
+        Node<T> currentNode;
+        if (inFirstHalf) {
+            currentNode = head;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+        } else {
+            currentNode = tail;
+            for (int i = 0; i < size - index - 1; i++) {
+                currentNode = currentNode.prev;
+            }
+        }
+
+        return currentNode;
+    }
+
+    private void checkIfIndexExists(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(NO_INDEX_MESSAGE + index);
+        }
+    }
+
+    private T unlink(int index) {
         Node<T> nextNode;
         Node<T> prevNode;
         Node<T> currentNode = getNodeByIndex(index);
@@ -98,48 +153,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             prevNode.next = nextNode;
             nextNode.prev = prevNode;
         }
+        currentNode.next = null;
+        currentNode.prev = null;
         size--;
         return currentNode.value;
-    }
-
-    @Override
-    public boolean remove(T object) {
-        for (int i = 0; i < size; i++) {
-            if (object == null && get(i) == null) {
-                remove(i);
-                return true;
-            }
-            if (get(i) != null && get(i).equals(object)) {
-                remove(i);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size() == 0;
-    }
-
-    private Node<T> getNodeByIndex(int index) {
-        checkIfIndexExists(index);
-        Node<T> currentNode = head;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
-        return currentNode;
-    }
-
-    private void checkIfIndexExists(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(NO_INDEX_MESSAGE + index);
-        }
     }
 
     private static class Node<T> {
