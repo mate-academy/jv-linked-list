@@ -71,7 +71,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         validateIndex(index);
         Node<T> node = findNodeByIndex(index);
         removeNode(node);
-        return node.value;
+        T value = node.value;
+        unlink(node);
+        return value;
     }
 
     @Override
@@ -81,6 +83,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             for (int i = 0; i < this.size; i++) {
                 if (node.value == object || node.value != null && node.value.equals(object)) {
                     removeNode(node);
+                    unlink(node);
                     return true;
                 }
                 node = node.next;
@@ -141,7 +144,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         this.size--;
     }
 
-    static class Node<T> {
+    private void unlink(Node<T> node) {
+        node.prev = null;
+        node.next = null;
+        node.value = null;
+    }
+
+    private class Node<T> {
         private T value;
         private Node<T> prev;
         private Node<T> next;
