@@ -6,7 +6,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> firstNode;
     private Node<T> lastNode;
     private int size;
-
     @Override
     public void add(T value) {
         linkLast(value);
