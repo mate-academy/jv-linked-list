@@ -107,6 +107,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> predecessor = lastNode;
         Node<T> newNode = new Node<>(predecessor, value, null);
         lastNode = newNode;
+
         if (predecessor == null) {
             firstNode = newNode;
         } else {
