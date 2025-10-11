@@ -145,13 +145,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         T nodeValue = node.value;
         node.value = null;
         return nodeValue;
-    }
+    } 
 
     private static class Node<T> {
         private T value;
         private Node<T> next;
         private Node<T> prev;
-
         public Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
             this.value = value;
