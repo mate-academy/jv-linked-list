@@ -4,12 +4,37 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private static class Node<T> {
-        T item;
-        Node<T> prev;
-        Node<T> next;
+        private T item;
+        private Node<T> prev;
+        private Node<T> next;
+
         Node(T item, Node<T> prev, Node<T> next) {
             this.item = item;
             this.prev = prev;
+            this.next = next;
+        }
+
+        private T getItem() {
+            return item;
+        }
+
+        private void setItem(T item) {
+            this.item = item;
+        }
+
+        private Node<T> getPrev() {
+            return prev;
+        }
+
+        private void setPrev(Node<T> prev) {
+            this.prev = prev;
+        }
+
+        private Node<T> getNext() {
+            return next;
+        }
+
+        private void setNext(Node<T> next) {
             this.next = next;
         }
     }
@@ -52,7 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T get(int index) {
         checkElementIndex(index);
 
-        return node(index).item;
+        return node(index).getItem();
     }
 
     @Override
@@ -60,8 +85,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         checkElementIndex(index);
 
         Node<T> x = node(index);
-        T old = x.item;
-        x.item = value;
+        T old = x.getItem();
+        x.setItem(value);
 
         return old;
     }
@@ -75,8 +100,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        for (Node<T> x = head; x != null; x = x.next) {
-            if (object == null ? x.item == null : object.equals(x.item)) {
+        for (Node<T> x = head; x != null; x = x.getNext()) {
+            if (object == null ? x.getItem() == null : object.equals(x.getItem())) {
                 unlink(x);
                 return true;
             }
@@ -103,7 +128,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (f == null) {
             tail = newNode;
         } else {
-            f.prev = newNode;
+            f.setPrev(newNode);
         }
 
         size++;
@@ -117,45 +142,45 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (l == null) {
             head = newNode;
         } else {
-            l.next = newNode;
+            l.setNext(newNode);
         }
 
         size++;
     }
 
     private void linkBefore(T e, Node<T> succ) {
-        Node<T> pred = succ.prev;
+        Node<T> pred = succ.getPrev();
         Node<T> newNode = new Node<>(e, pred, succ);
-        succ.prev = newNode;
+        succ.setPrev(newNode);
         if (pred == null) {
             head = newNode;
         } else {
-            pred.next = newNode;
+            pred.setNext(newNode);
         }
 
         size++;
     }
 
     private T unlink(Node<T> x) {
-        T element = x.item;
-        Node<T> next = x.next;
-        Node<T> prev = x.prev;
+        Node<T> next = x.getNext();
+        Node<T> prev = x.getPrev();
 
         if (prev == null) {
             head = next;
         } else {
-            prev.next = next;
-            x.prev = null;
+            prev.setNext(next);
+            x.setPrev(null);
         }
 
         if (next == null) {
             tail = prev;
         } else {
-            next.prev = prev;
-            x.next = null;
+            next.setPrev(prev);
+            x.setNext(null);
         }
 
-        x.item = null; // help GC
+        T element = x.getItem();
+        x.setItem(null); // help GC
         size--;
 
         return element;
@@ -166,7 +191,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> x = head;
 
             for (int i = 0; i < index; i++) {
-                x = x.next;
+                x = x.getNext();
             }
 
             return x;
@@ -174,7 +199,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             Node<T> x = tail;
 
             for (int i = size - 1; i > index; i--) {
-                x = x.prev;
+                x = x.getPrev();
             }
 
             return x;
