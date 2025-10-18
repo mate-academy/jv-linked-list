@@ -3,45 +3,167 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private int size = 0;
+    private Node<T> head;
+    private Node<T> tail;
+
     @Override
     public void add(T value) {
+        Node<T> newNode = new Node<>(tail, value, null);
+        if (size == 0) {
+            head = tail = newNode;
+        } else {
+            Node<T> oldTail = tail;
+            oldTail.next = newNode;
+            newNode.prev = oldTail;
+            tail = newNode;
+        }
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
+        checkIndexForAdd(index);
+        if (size == 0) {
+            Node<T> newNode = new Node<>(null, value, null);
+            head = tail = newNode;
+        } else if (index == size) {
+            Node<T> oldTail = tail;
+            Node<T> newNode = new Node<>(oldTail, value, null);
+            oldTail.next = newNode;
+            tail = newNode;
+        } else if (index == 0) {
+            Node<T> oldHead = head;
+            Node<T> newNode = new Node<>(null, value, oldHead);
+            oldHead.prev = newNode;
+            head = newNode;
+        } else {
+            Node<T> succ = findNodeByIndex(index);
+            Node<T> pred = succ.prev;
+            Node<T> newNode = new Node<>(pred, value, succ);
+            pred.next = newNode;
+            succ.prev = newNode;
+        }
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
+        if (!list.isEmpty()) {
+            for (T t : list) {
+                add(t);
+            }
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndex(index);
+        Node<T> succ = findNodeByIndex(index);
+        return succ.element;
     }
 
     @Override
     public T set(T value, int index) {
-        return null;
+        checkIndex(index);
+        Node<T> succ = findNodeByIndex(index);
+        T oldValue = succ.element;
+        succ.element = value;
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIndex(index);
+        Node<T> succ = findNodeByIndex(index);
+        return unlink(succ);
     }
 
     @Override
     public boolean remove(T object) {
+        Node<T> current = head;
+        while (current != null) {
+            if ((object == null && current.element == null)
+                    || (object != null && object.equals(current.element))) {
+                unlink(current);
+                return true;
+            }
+            current = current.next;
+        }
         return false;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private Node<T> findNodeByIndex(int index) {
+        if (index <= size / 2) {
+            Node<T> succ = head;
+            for (int i = 0; i < index; i++) {
+                succ = succ.next;
+            }
+            return succ;
+        } else {
+            Node<T> succ = tail;
+            for (int i = size - 1; i > index; i--) {
+                succ = succ.prev;
+            }
+            return succ;
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index out of bounds for add: " + index);
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
+        }
+    }
+
+    private T unlink(Node<T> node) {
+        final T oldValue = node.element;
+        Node<T> next = node.next;
+        Node<T> prev = node.prev;
+        node.next = null;
+        node.prev = null;
+
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
+        }
+
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.prev = prev;
+            node.next = null;
+        }
+
+        size--;
+        return oldValue;
+    }
+
+    private class Node<E> {
+        private E element;
+        private Node<E> prev;
+        private Node<E> next;
+
+        public Node(Node<E> prev, E element, Node<E> next) {
+            this.element = element;
+            this.prev = prev;
+            this.next = next;
+        }
     }
 }
