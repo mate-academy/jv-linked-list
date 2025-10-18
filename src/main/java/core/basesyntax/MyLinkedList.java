@@ -9,7 +9,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> newNode = new Node<>(null, value, null);
+        Node<T> newNode = new Node<>(tail, value, null);
         if (size == 0) {
             head = tail = newNode;
         } else {
@@ -23,26 +23,25 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value, int index) {
-        Node<T> newNode = new Node<>(null, value, null);
         checkIndexForAdd(index);
         if (size == 0) {
+            Node<T> newNode = new Node<>(null, value, null);
             head = tail = newNode;
         } else if (index == size) {
             Node<T> oldTail = tail;
+            Node<T> newNode = new Node<>(oldTail, value, null);
             oldTail.next = newNode;
-            newNode.prev = oldTail;
             tail = newNode;
         } else if (index == 0) {
-            newNode.prev = null;
-            head.prev = newNode;
-            newNode.next = head;
+            Node<T> oldHead = head;
+            Node<T> newNode = new Node<>(null, value, oldHead);
+            oldHead.prev = newNode;
             head = newNode;
         } else {
             Node<T> succ = findNodeByIndex(index);
             Node<T> pred = succ.prev;
+            Node<T> newNode = new Node<>(pred, value, succ);
             pred.next = newNode;
-            newNode.prev = pred;
-            newNode.next = succ;
             succ.prev = newNode;
         }
         size++;
@@ -51,8 +50,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         if (!list.isEmpty()) {
-            for (int i = 0; i < list.size(); i++) {
-                add(list.get(i));
+            for (T t : list) {
+                add(t);
             }
         }
     }
@@ -67,8 +66,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> succ;
-        succ = findNodeByIndex(index);
+        Node<T> succ = findNodeByIndex(index);
         T oldValue = succ.element;
         succ.element = value;
         return oldValue;
@@ -144,7 +142,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = next;
         } else {
             prev.next = next;
-            node.prev = null;
         }
 
         if (next == null) {
@@ -158,7 +155,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return oldValue;
     }
 
-    private static class Node<E> {
+    private class Node<E> {
         private E element;
         private Node<E> prev;
         private Node<E> next;
