@@ -69,19 +69,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkBoundries(index, arrSize - 1);
         Node<T> oldNode = findNode(index);
-        if (arrSize == 1) {
-            head = null;
-            tail = null;
-        } else if (index == 0) {
-            head = head.next;
-            head.prev = null;
-        } else if (index == arrSize - 1) {
-            tail = tail.prev;
-            tail.next = null;
-        } else {
-            unlike(oldNode);
-        }
-        arrSize -= 1;
+        unlike(oldNode, index);
         return oldNode.item;
     }
 
@@ -90,7 +78,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> oldNode = head;
         for (int i = 0; i < arrSize; i++) {
             if (oldNode.item != null && oldNode.item.equals(object) || oldNode.item == object) {
-                remove(i);
+                unlike(oldNode, i);
                 return true;
             }
             oldNode = oldNode.next;
@@ -108,15 +96,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return arrSize == 0;
     }
 
-    public void checkBoundries(int index, int bound) throws IndexOutOfBoundsException {
+    private void checkBoundries(int index, int bound) throws IndexOutOfBoundsException {
         if (index < 0 || index > bound) {
             throw new IndexOutOfBoundsException("Index is out of boundries");
         }
     }
 
-    private void unlike(Node<T> node) {
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
+    private void unlike(Node<T> node, int index) {
+        if (arrSize == 1) {
+            head = null;
+            tail = null;
+        } else if (index == 0) {
+            head = head.next;
+            head.prev = null;
+        } else if (index == arrSize - 1) {
+            tail = tail.prev;
+            tail.next = null;
+        } else {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        }
+        arrSize -= 1;
     }
 
     private Node findNode(int index) {
