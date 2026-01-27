@@ -48,8 +48,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T t : list) {
-            add(t);
+        for (T element : list) {
+            add(element);
         }
     }
 
@@ -130,13 +130,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> findNode(int index) {
         if (index < (size >> 1)) {
             Node<T> current = head;
-            for (int i = 0; i < index; i++) {
+            for (int counter = 0; counter < index; counter++) {
                 current = current.next;
             }
             return current;
         } else {
             Node<T> current = tail;
-            for (int i = size - 1; i > index; i--) {
+            for (int counter = size - 1; counter > index; counter--) {
                 current = current.previous;
             }
             return current;
