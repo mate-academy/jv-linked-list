@@ -87,7 +87,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         for (int i = 0; i < index; i++) {
             currentNode = currentNode.next;
         }
-        T oldValue = currentNode.value;
+        final T oldValue = currentNode.value;
         currentNode.value = value;
         return oldValue;
     }
@@ -100,7 +100,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
         if (index == 0) {
-            T oldValue = head.value;
+            final T oldValue = head.value;
             head = head.next;
             if (head != null) {
                 head.prev = null;
@@ -109,7 +109,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return oldValue;
 
         } else if (index == elementCount - 1) {
-            T oldValue = tail.value;
+            final T oldValue = tail.value;
             tail = tail.prev;
             if (tail != null) {
                 tail.next = null;
@@ -122,7 +122,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             for (int i = 0; i < index; i++) {
                 nodeToDelete = nodeToDelete.next;
             }
-            T oldValue = nodeToDelete.value;
+            final T oldValue = nodeToDelete.value;
 
             Node prevNode = nodeToDelete.prev;
             Node nextNode = nodeToDelete.next;
@@ -184,11 +184,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     public class Node {
-        T value;
-        Node next;
-        Node prev;
+        private T value;
+        private Node next;
+        private Node prev;
 
-        public Node(T value) {
+        Node(T value) {
             this.value = value;
         }
 
