@@ -4,9 +4,9 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
-    Node head;
-    Node tail;
-    int elementCount = 0;
+    private Node head;
+    private Node tail;
+    private int elementCount = 0;
 
     @Override
     public void add(T value) {
@@ -32,7 +32,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             add(value);
 
         } else if (index == 0) {
-           Node newNode = new Node(value);
+            Node newNode = new Node(value);
             Node oldHead = head;
 
             newNode.next = oldHead;
@@ -44,11 +44,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             Node newNode = new Node(value);
             Node prevNode = head;
-            for (int i = 0; i < index -1 ; i++) {
+            for (int i = 0; i < index - 1; i++) {
                 prevNode = prevNode.next;
 
             }
-            Node nextNode =  prevNode.next;
+            Node nextNode = prevNode.next;
             prevNode.next = newNode;
             newNode.prev = prevNode;
             newNode.next = nextNode;
@@ -99,44 +99,41 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException();
         }
 
-       if (index == 0) {
-          T oldValue = head.value;
-          head = head.next;
-          if(head != null){
-              head.prev = null;
-          }
-          elementCount--;
-          return oldValue;
+        if (index == 0) {
+            T oldValue = head.value;
+            head = head.next;
+            if (head != null) {
+                head.prev = null;
+            }
+            elementCount--;
+            return oldValue;
 
-       }
-       else if (index == elementCount - 1) {
-             T oldValue = tail.value;
-             tail = tail.prev;
-             if(tail != null){
-                 tail.next = null;
-             }
-             elementCount--;
-             return oldValue;
+        } else if (index == elementCount - 1) {
+            T oldValue = tail.value;
+            tail = tail.prev;
+            if (tail != null) {
+                tail.next = null;
+            }
+            elementCount--;
+            return oldValue;
 
-       }
+        } else {
+            Node nodeToDelete = head;
+            for (int i = 0; i < index; i++) {
+                nodeToDelete = nodeToDelete.next;
+            }
+            T oldValue = nodeToDelete.value;
 
-       else {
-           Node nodeToDelete = head;
-           for (int i = 0; i < index; i++) {
-               nodeToDelete = nodeToDelete.next;
-           }
-           T oldValue = nodeToDelete.value;
+            Node prevNode = nodeToDelete.prev;
+            Node nextNode = nodeToDelete.next;
 
-           Node prevNode = nodeToDelete.prev;
-           Node nextNode = nodeToDelete.next;
+            prevNode.next = nextNode;
+            nextNode.prev = prevNode;
 
-           prevNode.next = nextNode;
-           nextNode.prev = prevNode;
+            elementCount--;
+            return oldValue;
 
-           elementCount--;
-           return oldValue;
-
-       }
+        }
     }
 
     @Override
@@ -144,8 +141,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node current = head;
 
         while (current != null) {
-            if ((object == null && current.value == null) ||
-                    (object != null && object.equals(current.value))) {
+            if ((object == null && current.value == null)
+                    || (object != null && object.equals(current.value))) {
                 if (current == head) {
                     head = head.next;
                     if (head != null) {
@@ -183,10 +180,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-       if(elementCount==0){
-           return true;
-       }
-       return false;
+        return elementCount == 0;
     }
 
     public class Node {
