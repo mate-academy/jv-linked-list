@@ -1,8 +1,8 @@
 # jv-linked-list
 
-Given `MyLinkedList` class implementing `MyLinkedListInterface`, implement all the required methods.
+Дано клас `MyLinkedList` що реалізує `MyLinkedListInterface`, імплементуй всі необхідні методи.
 
-Make your LinkedList work as `java.util.LinkedList` (create `Node` objects to store data that have links to the left and to the right neighbor `Node`).
-Your implementation should have two pointers to the first and the last `Node`.
+Зроби свій LinkedList таким, щоб він працював як `java.util.LinkedList`   (створюй об'єкти `Node` для зберігання даних, які мають посилання на лівого та правого сусідніх `Node`)
+Твоя реалізація повинна мати два вказівники на перший та останній `Node`.
 
 #### [Try to avoid these common mistakes while solving task](./checklist.md)
