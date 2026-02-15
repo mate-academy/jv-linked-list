@@ -59,9 +59,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public T remove(int index) {
         checkIndexToGet(index);
         Node<T> currentNode = getNode(index);
+        T removeValue = currentNode.value;
         unlink(currentNode);
         size--;
-        return currentNode.value;
+        return removeValue;
     }
 
     @Override
@@ -108,6 +109,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             lastNode = currentNode.prev;
         }
+        currentNode.prev = null;
+        currentNode.next = null;
+        currentNode.value = null;
     }
 
     private void addNode(T value, int index) {
