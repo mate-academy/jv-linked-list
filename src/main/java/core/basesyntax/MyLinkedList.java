@@ -81,7 +81,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 size--;
                 return true;
             }
-        } return false;
+        }
+        return false;
     }
 
     @Override
@@ -97,7 +98,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void unlink(Node<T> current) {
         if (current.prev != null) {
             current.prev.next = current.next;
-        } else  {
+        } else {
             first = current.next;
         }
         if (current.next != null) {
@@ -134,9 +135,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> prev;
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
         Node(Node<T> prev, T element, Node<T> next) {
             this.next = next;
             this.prev = prev;
