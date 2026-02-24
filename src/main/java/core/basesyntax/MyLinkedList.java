@@ -60,27 +60,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return getNode(index).item;
     }
 
-    private Node<T> getNode(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("index: " + index + " doesn't exist");
-        }
-
-        Node<T> current;
-
-        if (index < size / 2) {
-            current = head;
-            for (int i = 0; index > i; i++) {
-                current = current.next;
-            }
-        } else {
-            current = tail;
-            for (int i = size - 1; index < i; i--) {
-                current = current.prev;
-            }
-        }
-        return current;
-    }
-
     @Override
     public T set(T value, int index) {
         Node<T> node = getNode(index);
@@ -116,25 +95,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
     public boolean isEmpty() {
         return size == 0;
     }
 
-    private static class Node<E> {
-        private Node<E> next;
-        private Node<E> prev;
-        private E item;
-
-        public Node(Node<E> prev, E item, Node<E> next) {
-            this.prev = prev;
-            this.item = item;
-            this.next = next;
-        }
+    @Override
+    public int size() {
+        return size;
     }
 
     private void unlink(Node<T> node) {
@@ -151,6 +118,42 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             next.prev = previous;
         }
+        node.next = null;
+        node.prev = null;
+        node.item = null;
         size--;
+    }
+
+    private Node<T> getNode(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("index: " + index + " doesn't exist");
+        }
+
+        Node<T> current;
+
+        if (index < size / 2) {
+            current = head;
+            for (int i = 0; index > i; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; index < i; i--) {
+                current = current.prev;
+            }
+        }
+        return current;
+    }
+
+    private static class Node<E> {
+        private Node<E> next;
+        private Node<E> prev;
+        private E item;
+
+        public Node(Node<E> prev, E item, Node<E> next) {
+            this.prev = prev;
+            this.item = item;
+            this.next = next;
+        }
     }
 }
