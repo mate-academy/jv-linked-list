@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private int size = 0;
     private Node<T> head = null;
     private Node<T> tail = null;
@@ -82,14 +81,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     + "of entered values of list!");
         }
 
-        Node<T> current;
-
-        if (index < size / 2) {
-            current = findNodeFromHead(index);
-            return current.value;
-        }
-
-        current = findNodeFromTail(index);
+        Node<T> current = findNode(index);
         return current.value;
     }
 
@@ -100,16 +92,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     + "of entered values of list!");
         }
 
-        Node<T> current;
-
-        if (index < size / 2) {
-            current = findNodeFromHead(index);
-            T oldValue = current.value;
-            current.value = value;
-            return oldValue;
-        }
-
-        current = findNodeFromTail(index);
+        Node<T> current = findNode(index);
         T oldValue = current.value;
         current.value = value;
         return oldValue;
@@ -122,17 +105,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     + "of entered values of list!");
         }
 
-        Node<T> current;
-        if (index < size / 2) {
-            current = findNodeFromHead(index);
-            T removed = current.value;
-            unlink(current);
-            return removed;
-        }
-
-        current = findNodeFromTail(index);
+        Node<T> current = findNode(index);
         T removed = current.value;
         unlink(current);
+
         return removed;
     }
 
@@ -218,6 +194,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current = current.next;
         }
         return current;
+    }
+
+    private Node<T> findNode(int index) {
+        if (index < size / 2) {
+            return findNodeFromHead(index);
+        }
+        return findNodeFromTail(index);
     }
 
     private static class Node<T> {
