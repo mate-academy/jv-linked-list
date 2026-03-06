@@ -3,45 +3,154 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
+    private int size = 0;
+    private Node<T> first = null;
+    private Node<T> last = null;
+
     @Override
     public void add(T value) {
+        Node<T> currentLast = this.last;
+        Node<T> newNode = new Node<>(currentLast, null, value);
+        if (size == 0) {
+            this.first = newNode;
+        } else {
+            currentLast.next = newNode;
+        }
+        this.last = newNode;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
+        checkIndexForAdd(index);
+        if (index == size) {
+            add(value);
+        } else if (index == 0) {
+            Node<T> newNode = new Node<>(null, this.first, value);
+            this.first.previous = newNode;
+            this.first = newNode;
+            size++;
+        } else {
+            Node<T> oldNode = getNode(index);
+            Node<T> oldNodePrev = oldNode.previous;
+            Node<T> newNode = new Node<>(oldNodePrev, oldNode, value);
+            oldNode.previous = newNode;
+            oldNodePrev.next = newNode;
+            size++;
+        }
     }
 
     @Override
     public void addAll(List<T> list) {
+        for (T element : list) {
+            add(element);
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        Node<T> currentNode = getNode(index);
+        return currentNode != null ? currentNode.value : null;
+    }
+
+    private Node<T> getNode(int index) {
+        checkIndexForGet(index);
+        Node<T> currentNode = first;
+        for (int i = 0; i < size; i++) {
+            if (i == index) break;
+            currentNode = currentNode.next;
+        }
+        return currentNode;
+    }
+
+    private void checkIndexForGet(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(
+                    String.format("Index should be between %d and %d, but was: %d", 0, size - 1, index)
+            );
+        }
+    }
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException(
+                    String.format("Index should be between %d and %d, but was: %d", 0, size, index)
+            );
+        }
     }
 
     @Override
     public T set(T value, int index) {
-        return null;
+        Node<T> currentNode = getNode(index);
+        T oldValue = currentNode.value;
+        currentNode.value = value;
+
+        return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        Node<T> elementToRemove = getNode(index);
+        Node<T> prev = elementToRemove.previous;
+        Node<T> next = elementToRemove.next;
+        if (prev != null) {
+            prev.next = next;
+        } else {
+            this.first = next;
+        }
+        if (next != null) {
+            next.previous = prev;
+        } else {
+            this.last = prev;
+        }
+        size--;
+
+        return elementToRemove.value;
     }
 
     @Override
     public boolean remove(T object) {
+        Node<T> currentNode = first;
+        for (int i = 0; i < size; i++) {
+            if ((currentNode.value == null && object == null) || (object != null && object.equals(currentNode.value))) {
+                Node<T> prev = currentNode.previous;
+                Node<T> next = currentNode.next;
+                if (prev != null) {
+                    prev.next = next;
+                } else {
+                    this.first = next;
+                }
+                if (next != null) {
+                    next.previous = prev;
+                } else {
+                    this.last = prev;
+                }
+                size--;
+                return true;
+            }
+            currentNode = currentNode.next;
+        }
         return false;
     }
 
     @Override
     public int size() {
-        return 0;
+        return this.size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private static class Node<T> {
+        private Node<T> previous;
+        private Node<T> next;
+        private T value;
+
+        private Node(Node<T> previous, Node<T> next, T value) {
+            this.previous = previous;
+            this.next = next;
+            this.value = value;
+        }
     }
 }
