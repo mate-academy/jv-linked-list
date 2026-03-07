@@ -83,10 +83,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void checkIndexForGet(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException(
-                    String.format("Index should be between %d and %d, but was: %d", 0, size - 1, index)
+                    String.format("Index should be between %d and %d, but was: %d",
+                            0, size - 1, index)
             );
         }
     }
+
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException(
@@ -116,7 +118,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> currentNode = first;
         while (currentNode != null) {
-            if ((currentNode.value == null && object == null) || (object != null && object.equals(currentNode.value))) {
+            if ((currentNode.value == null && object == null)
+                    || (object != null && object.equals(currentNode.value))) {
                 unlink(currentNode);
                 return true;
             }
