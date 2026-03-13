@@ -4,9 +4,9 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private class Node {
-        T value;
-        Node prev;
-        Node next;
+        private T value;
+        private Node prev;
+        private Node next;
 
         Node(T value) {
             this.value = value;
@@ -16,6 +16,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node head;
     private Node tail;
     private int size;
+
+    public void addFirst(T value) {
+        Node node = new Node(value);
+        Node current = head;
+        node.prev = null;
+        node.next = current;
+        current.prev = node;
+        head = node;
+        size++;
+    }
 
     @Override
     public void add(T value) {
@@ -31,16 +41,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail.next = node;
             tail = node;
         }
-        size++;
-    }
-
-    public void addFirst(T value) {
-        Node node = new Node(value);
-        Node current = head;
-        node.prev = null;
-        node.next = current;
-        current.prev = node;
-        head = node;
         size++;
     }
 
@@ -99,7 +99,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node current = getNodeByIndex(index);
-        T oldValue = current.value;
         Node currentPrev = current.prev;
         Node currentNext = current.next;
         if (currentNext != null && currentPrev != null) {
@@ -113,6 +112,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = currentPrev;
         }
         size--;
+        T oldValue = current.value;
         return oldValue;
     }
 
