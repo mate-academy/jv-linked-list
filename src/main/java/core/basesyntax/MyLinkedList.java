@@ -17,16 +17,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node tail;
     private int size;
 
-    public void addFirst(T value) {
-        Node node = new Node(value);
-        Node current = head;
-        node.prev = null;
-        node.next = current;
-        current.prev = node;
-        head = node;
-        size++;
-    }
-
     @Override
     public void add(T value) {
         if (head == null) {
@@ -42,17 +32,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             tail = node;
         }
         size++;
-    }
-
-    public Node getNodeByIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("IndexOutOfBoundsException");
-        }
-        Node current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
-        return current;
     }
 
     @Override
@@ -73,6 +52,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         node.next = current;
         current.prev = node;
         size++;
+    }
+
+    public void addFirst(T value) {
+        Node node = new Node(value);
+        Node current = head;
+        node.prev = null;
+        node.next = current;
+        current.prev = node;
+        head = node;
+        size++;
+    }
+
+    public Node getNodeByIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("IndexOutOfBoundsException");
+        }
+        Node current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        return current;
     }
 
     @Override
