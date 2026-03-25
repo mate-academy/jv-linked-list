@@ -7,60 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail;
     private int size;
 
-    private static class Node<T> {
-        private T value;
-        private Node<T> previous;
-        private Node<T> next;
-
-        public Node(T value, Node<T> previous, Node<T> next) {
-            this.value = value;
-            this.next = next;
-            this.previous = previous;
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index: " + index);
-        }
-    }
-
-    private Node<T> findByIndex(int index) {
-        if (index < size / 2) {
-            Node<T> currentNode = head;
-            for (int i = 0; i < index; i++) {
-                currentNode = currentNode.next;
-            }
-            return currentNode;
-        }
-        Node<T> currentNode = tail;
-        for (int i = size - 1; i > index; i--) {
-            currentNode = currentNode.previous;
-        }
-        return currentNode;
-    }
-
-    private T unlink(Node<T> node) {
-        Node<T> next = node.next;
-        Node<T> prev = node.previous;
-
-        if (prev == null) {
-            head = next;
-        } else {
-            prev.next = next;
-        }
-
-        if (next == null) {
-            tail = prev;
-        } else {
-            next.previous = prev;
-        }
-
-        size--;
-        T oldValue = node.value;
-        return oldValue;
-    }
-
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(value, tail, null);
@@ -149,5 +95,59 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return (size == 0);
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Invalid index: " + index);
+        }
+    }
+
+    private Node<T> findByIndex(int index) {
+        if (index < size / 2) {
+            Node<T> currentNode = head;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+            return currentNode;
+        }
+        Node<T> currentNode = tail;
+        for (int i = size - 1; i > index; i--) {
+            currentNode = currentNode.previous;
+        }
+        return currentNode;
+    }
+
+    private T unlink(Node<T> node) {
+        Node<T> next = node.next;
+        Node<T> prev = node.previous;
+
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
+        }
+
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.previous = prev;
+        }
+
+        size--;
+        T oldValue = node.value;
+        return oldValue;
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> previous;
+        private Node<T> next;
+
+        public Node(T value, Node<T> previous, Node<T> next) {
+            this.value = value;
+            this.next = next;
+            this.previous = previous;
+        }
     }
 }
