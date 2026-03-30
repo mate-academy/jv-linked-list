@@ -20,7 +20,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = newNode;
         } else {
             last.next = newNode;
-            newNode.prev = last;
         }
         last = newNode;
         size++;
@@ -46,7 +45,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             first = newNode;
         } else {
             prev.next = newNode;
-            newNode.prev = prev;
         }
         size++;
     }
