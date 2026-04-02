@@ -1,41 +1,11 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
     private int size;
-
-    private static class Node<T> {
-        private T value;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
-    private Node<T> node(int index) {
-        checkIndexOutOfBoundsException(index);
-        if (index < (size / 2)) {
-            Node<T> current = first;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
-            return current;
-        } else {
-            Node<T> current = last;
-            for (int i = size - 1; i > index; i--) {
-                current = current.prev;
-            }
-            return current;
-        }
-    }
 
     @Override
     public void add(T value) {
@@ -106,7 +76,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         Node<T> current = first;
         while (current != null) {
-            if (Objects.equals(current.value, object)) {
+            if (current.value == null
+                    ? object == null
+                    : current.value.equals(object)) {
                 unlink(current);
                 return true;
             }
@@ -114,6 +86,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             current = current.next;
         }
         return false;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
     }
 
     private void checkIndexOutOfBoundsException(int index) {
@@ -136,19 +118,39 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             next.prev = prev;
         }
-
+        node.next = null;
+        node.prev = null;
         size--;
         return node.value;
     }
 
-    @Override
-    public int size() {
-        return size;
+    private static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
     }
 
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
+    private Node<T> node(int index) {
+        checkIndexOutOfBoundsException(index);
+        if (index < (size / 2)) {
+            Node<T> current = first;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+            return current;
+        } else {
+            Node<T> current = last;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
+            return current;
+        }
     }
 }
 
