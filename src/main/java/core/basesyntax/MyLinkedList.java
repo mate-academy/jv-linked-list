@@ -59,10 +59,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T set(T value, int index) {
-        checkIndexOutOfBoundsException(index);
-        Node<T> n = node(index);
-        T oldValue = n.value;
-        n.value = value;
+        Node<T> targetNode = node(index);
+        T oldValue = targetNode.value;
+        targetNode.value = value;
         return oldValue;
     }
 
@@ -124,18 +123,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return node.value;
     }
 
-    private static class Node<T> {
-        private T value;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
     private Node<T> node(int index) {
         checkIndexOutOfBoundsException(index);
         if (index < (size / 2)) {
@@ -152,5 +139,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return current;
         }
     }
-}
 
+    private static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
+    }
+}
