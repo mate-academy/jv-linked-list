@@ -13,9 +13,13 @@ public interface MyLinkedListInterface<T> {
 
     T set(T value, int index);
 
+    void add(int index, T element);
+
     T remove(int index);
 
     boolean remove(T object);
+
+    T set(int index, T element);
 
     int size();
 
