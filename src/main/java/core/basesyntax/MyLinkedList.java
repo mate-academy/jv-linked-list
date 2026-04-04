@@ -3,15 +3,14 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-
     private Node<T> head;
     private Node<T> tail;
     private int size;
 
     private static class Node<T> {
-        T data;
-        Node<T> prev;
-        Node<T> next;
+        private T data;
+        private Node<T> prev;
+        private Node<T> next;
 
         Node(Node<T> prev, T data, Node<T> next) {
             this.prev = prev;
@@ -106,7 +105,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private T unlink(Node<T> x) {
-        T element = x.data;
+        final T element = x.data;
         Node<T> prev = x.prev;
         Node<T> next = x.next;
 
