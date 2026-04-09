@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head = null;
@@ -78,7 +79,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0) {
             throw new IndexOutOfBoundsException();
         }
-        return head.getNode(index).value;
+        return getNode(index).value;
     }
 
     @Override
@@ -86,7 +87,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0) {
             throw new IndexOutOfBoundsException();
         }
-        Node<T> current = head.getNode(index);
+        Node<T> current = getNode(index);
         T oldValue = current.value;
         current.value = value;
         return oldValue;
@@ -97,101 +98,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0) {
             throw new IndexOutOfBoundsException();
         }
-        Node<T> current = head.getNode(index);
-
-        Node<T> next = current.next;
-        Node<T> prev = current.prev;
-
-        if (next != null) {
-            next.prev = prev;
-        } else {
-            tail = prev;
-        }
-
-        if (prev != null) {
-            prev.next = next;
-        } else {
-            head = next;
-        }
-
-        size--;
-        return current.value;
+        Node<T> current = getNode(index);
+        T value = current.value;
+        unlink(current);
+        return value;
     }
 
     @Override
     public boolean remove(T object) {
         Node<T> current = head;
-        if (current == null) {
-            return false;
-        }
-        if (object == null) {
-            if (current.value == null) {
-                var next = current.next;
-                var prev = current.prev;
-                if (next != null) {
-                    next.prev = prev;
-                } else {
-                    tail = prev;
-                }
 
-                if (prev != null) {
-                    prev.next = next;
-                } else {
-                    head = next;
-                }
-
-                current.next = null;
-                current.prev = null;
-                size--;
+        while (current != null) {
+            if (Objects.equals(object, current.value)) {
+                unlink(current);
                 return true;
             }
-            while (current != null) {
-                if (current.value == null) {
-                    var next = current.next;
-                    var prev = current.prev;
-                    if (next != null) {
-                        next.prev = prev;
-                    } else {
-                        tail = prev;
-                    }
-
-                    if (prev != null) {
-                        prev.next = next;
-                    } else {
-                        head = next;
-                    }
-
-                    current.next = null;
-                    current.prev = null;
-                    size--;
-                    return true;
-                }
-                current = current.next;
-            }
-        } else {
-            while (current != null) {
-                if (object.equals(current.value)) {
-                    var next = current.next;
-                    var prev = current.prev;
-                    if (next != null) {
-                        next.prev = prev;
-                    } else {
-                        tail = prev;
-                    }
-
-                    if (prev != null) {
-                        prev.next = next;
-                    } else {
-                        head = next;
-                    }
-
-                    current.next = null;
-                    current.prev = null;
-                    size--;
-                    return true;
-                }
-                current = current.next;
-            }
+            current = current.next;
         }
         return false;
     }
@@ -216,16 +138,37 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.prev = prev;
             this.value = value;
         }
+    }
 
-        Node<T> getNode(int index) {
-            if (index < 0 || index >= size) {
-                throw new IndexOutOfBoundsException();
-            }
-            Node<T> current = (Node<T>) head;
-            for (int i = 0; i < index; i++) {
-                current = current.next;
-            }
-            return current;
+    private Node<T> getNode(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
         }
+        Node<T> current = (Node<T>) head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        return current;
+    }
+
+    private void unlink(Node<T> current) {
+        Node<T> next = current.next;
+        Node<T> prev = current.prev;
+
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
+            current.prev = null;
+        }
+
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.prev = prev;
+            current.next = null;
+        }
+
+        size--;
     }
 }
