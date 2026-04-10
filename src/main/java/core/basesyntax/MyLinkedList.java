@@ -3,15 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private static class Node<T> {
-        T value;
-        Node<T> prev;
-        Node<T> next;
-
-        Node(T value) {
-            this.value = value;
-        }
-    }
 
     private Node<T> head;
     private Node<T> tail;
@@ -19,14 +10,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        linkLast(new Node<>(value));
+        linkLast(new Node<>(null, value, null));
         size++;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        Node<T> newNode = new Node<>(value);
+        Node<T> newNode = new Node<>(null, value, null);
         if (index == 0) {
             if (head == null) {
                 head = tail = newNode;
@@ -51,8 +42,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void addAll(List<T> list) {
         for (T value : list) {
-            linkLast(new Node<>(value));
-            size++;
+            add(value);
         }
     }
 
@@ -101,11 +91,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        if (index < size / 2) {
+            Node<T> current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+            return current;
+        } else {
+            Node<T> current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
+            return current;
         }
-        return current;
     }
 
     private T unlink(Node<T> current) {
@@ -147,6 +145,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             newNode.prev = tail;
             tail.next = newNode;
             tail = newNode;
+        }
+    }
+
+    private static class Node<T> {
+        private T value;
+        private Node<T> prev;
+        private Node<T> next;
+
+        Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
         }
     }
 }
