@@ -9,9 +9,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     // Internal Node class
     private static class Node<T> {
-        T item;
-        Node<T> next;
-        Node<T> prev;
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
 
         Node(Node<T> prev, T element, Node<T> next) {
             this.item = element;
@@ -100,10 +100,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         final Node<T> l = last;
         final Node<T> newNode = new Node<>(l, e, null);
         last = newNode;
-        if (l == null)
+        if (l == null) {
             first = newNode;
-        else
+        } else {
             l.next = newNode;
+        }
         size++;
     }
 
@@ -111,10 +112,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         final Node<T> pred = succ.prev;
         final Node<T> newNode = new Node<>(pred, e, succ);
         succ.prev = newNode;
-        if (pred == null)
+        if (pred == null) {
             first = newNode;
-        else
+        } else {
             pred.next = newNode;
+        }
         size++;
     }
 
@@ -146,22 +148,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         // Optimization: search from the end if index is in the second half
         if (index < (size >> 1)) {
             Node<T> x = first;
-            for (int i = 0; i < index; i++) x = x.next;
+            for (int i = 0; i < index; i++) {
+                x = x.next;
+            }
             return x;
         } else {
             Node<T> x = last;
-            for (int i = size - 1; i > index; i--) x = x.prev;
+            for (int i = size - 1; i > index; i--) {
+                x = x.prev;
+            }
             return x;
         }
     }
 
     private void checkElementIndex(int index) {
-        if (index < 0 || index >= size)
+        if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
     }
 
     private void checkPositionIndex(int index) {
-        if (index < 0 || index > size)
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
     }
 }
