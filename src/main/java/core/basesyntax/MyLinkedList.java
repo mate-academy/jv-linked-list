@@ -8,9 +8,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> tail = null;
 
     private static class Node<E> {
-        E item;
-        Node<E> next;
-        Node<E> prev;
+        private E item;
+        private Node<E> next;
+        private Node<E> prev;
 
         Node(Node<E> prev, E element, Node<E> next) {
             this.item = element;
@@ -22,7 +22,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         Node<T> newNode = new Node<>(null, value,null);
-        if (head == null && tail == null){
+        if (head == null && tail == null) {
             head = newNode;
             tail = newNode;
         } else {
@@ -80,7 +80,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public void addAll(List<T> list) {
         for (T value : list) {
             Node<T> newNode = new Node<>(null, value,null);
-            if (head == null && tail == null){
+            if (head == null && tail == null) {
                 head = newNode;
                 tail = newNode;
             } else {
@@ -102,7 +102,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         int count = 0;
         Node<T> current = head;
-        while(current != null) {
+        while (current != null) {
             if (count == index) {
                 return current.item;
             }
@@ -120,7 +120,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
         int count = 0;
         T a = null;
-        while(current != null) {
+        while (current != null) {
             if (count == index) {
                 a = current.item;
                 current.item = value;
@@ -143,7 +143,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
         int count = 0;
         T result = null;
-        while(current != null) {
+        while (current != null) {
             if (count == index) {
                 result = current.item;
                 Node<T> a = current.prev;
@@ -158,7 +158,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     head = b;
                     break;
                 }
-                if (b == null){
+                if (b == null) {
                     a.next = null;
                     tail = a;
                     break;
@@ -213,7 +213,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (head == null) {
             return 0;
         }
-        while(a != null) {
+        while (a != null) {
             count++;
             a = a.next;
         }
