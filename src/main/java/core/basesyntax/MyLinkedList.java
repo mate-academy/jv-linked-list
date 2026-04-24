@@ -26,9 +26,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = newNode;
             tail = newNode;
         } else {
-            Node<T> a = tail;
-            a.next = newNode;
-            newNode.prev = a;
+            Node<T> previousNode = tail;
+            previousNode.next = newNode;
+            newNode.prev = previousNode;
             tail = newNode;
         }
     }
@@ -52,9 +52,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     head.prev = newNode;
                     head = newNode;
                 } else {
-                    Node<T> a = current.prev;
-                    a.next = newNode;
-                    newNode.prev = a;
+                    Node<T> previousNode = current.prev;
+                    previousNode.next = newNode;
+                    newNode.prev = previousNode;
                     current.prev = newNode;
                     newNode.next = current;
                 }
@@ -84,9 +84,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 head = newNode;
                 tail = newNode;
             } else {
-                Node<T> a = tail;
-                a.next = newNode;
-                newNode.prev = a;
+                Node<T> previousNode = tail;
+                previousNode.next = newNode;
+                newNode.prev = previousNode;
                 tail = newNode;
             }
         }
@@ -119,10 +119,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
         Node<T> current = head;
         int count = 0;
-        T a = null;
+        T currentIndex = null;
         while (current != null) {
             if (count == index) {
-                a = current.item;
+                currentIndex = current.item;
                 current.item = value;
                 break;
             }
@@ -132,7 +132,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (current == null) {
             throw new IndexOutOfBoundsException();
         }
-        return a;
+        return currentIndex;
     }
 
     @Override
@@ -222,10 +222,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        if (head == null && tail == null) {
-            return true;
-        } else {
-            return false;
-        }
+        return head == null;
     }
 }
