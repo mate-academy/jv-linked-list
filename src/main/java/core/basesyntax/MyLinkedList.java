@@ -189,8 +189,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private boolean equals(T first, T second) {
-        if (first == null && second == null) return true;
-        if (first == null || second == null) return false;
+        if (first == null && second == null) {
+            return true;
+        }
+        if (first == null || second == null) {
+            return false;
+        }
         return first.equals(second);
     }
 
@@ -209,6 +213,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.next = next;
             this.prev = prev;
         }
+
         Node(E element) {
             this.item = element;
         }
