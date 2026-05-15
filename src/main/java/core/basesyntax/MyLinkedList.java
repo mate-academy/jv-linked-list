@@ -80,18 +80,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         Node<T> toDelete = getNodeByIndex(index);
 
-        if (toDelete.prev != null) {
-            toDelete.prev.next = toDelete.next;
-        } else {
-            head = toDelete.next;
-        }
-
-        if (toDelete.next != null) {
-            toDelete.next.prev = toDelete.prev;
-        } else {
-            tail = toDelete.prev;
-        }
-
+        unlink(toDelete);
         size--;
 
         return toDelete.value;
@@ -100,21 +89,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         Node<T> toDelete = getNode(object);
+
         if (toDelete == null) {
             return false;
         }
 
-        if (toDelete.prev != null) {
-            toDelete.prev.next = toDelete.next;
-        } else {
-            head = toDelete.next;
-        }
-
-        if (toDelete.next != null) {
-            toDelete.next.prev = toDelete.prev;
-        } else {
-            tail = toDelete.prev;
-        }
+        unlink(toDelete);
         size--;
 
         return true;
@@ -144,6 +124,20 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return current;
     }
 
+    private void unlink(Node<T> toDelete) {
+        if (toDelete.prev != null) {
+            toDelete.prev.next = toDelete.next;
+        } else {
+            head = toDelete.next;
+        }
+
+        if (toDelete.next != null) {
+            toDelete.next.prev = toDelete.prev;
+        } else {
+            tail = toDelete.prev;
+        }
+    }
+
     private Node<T> getNode(T value) {
         if (size == 0) {
             return null;
@@ -152,8 +146,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> current = head;
 
         while (current != null
-                && value != current.value
-                && (value == null || !value.equals(current.value))) {
+                && (value == null ? current.value != null : !value.equals(current.value))) {
             current = current.next;
         }
 
