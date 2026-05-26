@@ -14,13 +14,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node next;
         private Node prev;
 
-        public Node(T value) {
+        public Node(Node prev, T value, Node next) {
+            this.prev = prev;
             this.value = value;
+            this.next = next;
         }
     }
 
-    private Node valyByIndex(int index) {
-        if (head == null || index < 0 || index > size) {
+    private Node findNodeByIndex(int index) {
+        if (head == null || index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
 
@@ -42,15 +44,14 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public void add(T value) {
         if (head == null) {
-            Node newNode = new Node(value);
+            Node newNode = new Node(null, value, null);
             head = newNode;
             tail = newNode;
             size++;
             return;
         }
 
-        tail.next = new Node(value);
-        tail.next.prev = tail;
+        tail.next = new Node(tail, value, null);
         tail = tail.next;
         size++;
     }
@@ -67,27 +68,23 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
         if (index == size) {
-            tail.next = new Node(value);
-            tail.next.prev = tail;
+            tail.next = new Node(tail, value, null);//????
             tail = tail.next;
             size++;
             return;
         }
 
         if (index == 0) {
-            head.prev = new Node(value);
-            head.prev.next = head;
+            head.prev = new Node(null, value, head);
             head = head.prev;
             size++;
             return;
         }
 
-        Node current = valyByIndex(index);
+        Node current = findNodeByIndex(index);
 
-        Node newValue = new Node(value);
-        newValue.prev = current.prev;
+        Node newValue = new Node(current.prev, value, current);
         current.prev.next = newValue;
-        newValue.next = current;
         current.prev = newValue;
         size++;
     }
@@ -98,7 +95,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
         if (head == null) {
-            head = new Node(list.get(0));
+            head = new Node(null, list.get(0), null);
             tail = head;
             size++;
             for (int i = 1; i < list.size(); i++) {
@@ -135,7 +132,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
 
-        Node current = valyByIndex(index);
+        Node current = findNodeByIndex(index);
 
         T oldValue = current.value;
         current.value = value;
@@ -149,7 +146,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0) {
             throw new IndexOutOfBoundsException();
         }
-        Node curent = valyByIndex(index);
+        Node curent = findNodeByIndex(index);
         if (curent == null) {
             throw new IndexOutOfBoundsException();
         }
@@ -186,8 +183,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         Node current = head;
         while (current != null) {
-            if (object == current.value || current.value != null
-                    && current.value.equals(object)) {
+            if (object == current.value || (current.value != null
+                    && current.value.equals(object))) {
                 break;
             }
             current = current.next;
