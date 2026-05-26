@@ -8,39 +8,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node tail;
     private int size;
 
-    private class Node {
-
-        private T value;
-        private Node next;
-        private Node prev;
-
-        public Node(Node prev, T value, Node next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
-        }
-    }
-
-    private Node findNodeByIndex(int index) {
-        if (head == null || index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-
-        Node curent;
-        if (index > size / 2) {
-            curent = head;
-            for (int i = 0; i < index; i++) {
-                curent = curent.next;
-            }
-        } else {
-            curent = tail;
-            for (int i = size - 1; i > index; i--) {
-                curent = curent.prev;
-            }
-        }
-        return curent;
-    }
-
     @Override
     public void add(T value) {
         if (head == null) {
@@ -110,20 +77,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public T get(int index) {
-
-        if (this.isEmpty() || index < 0) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        Node value = head;
-        for (int i = 0; i < index; i++) {
-            value = value.next;
-            if (value == null) {
-                throw new IndexOutOfBoundsException();
-            }
-        }
-
-        return value.value;
+        return findNodeByIndex(index).value;
     }
 
     @Override
@@ -146,8 +100,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0) {
             throw new IndexOutOfBoundsException();
         }
-        Node curent = findNodeByIndex(index);
-        if (curent == null) {
+        Node current = findNodeByIndex(index);
+        if (current == null) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -155,27 +109,27 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             head = null;
             tail = null;
             size--;
-            return curent.value;
+            return current.value;
         }
 
         if (index == 0) {
             head = head.next;
             head.prev = null;
             size--;
-            return curent.value;
+            return current.value;
         }
 
         if (index == size - 1) {
             tail = tail.prev;
             tail.next = null;
             size--;
-            return curent.value;
+            return current.value;
         }
 
-        curent.prev.next = curent.next;
-        curent.next.prev = curent.prev;
+        current.prev.next = current.next;
+        current.next.prev = current.prev;
         size--;
-        return curent.value;
+        return current.value;
     }
 
     @Override
@@ -229,5 +183,38 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return (head == null);
+    }
+
+    private Node findNodeByIndex(int index) {
+        if (head == null || index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+
+        Node current;
+        if (index > size / 2) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
+        }
+        return current;
+    }
+
+    private class Node {
+
+        private T value;
+        private Node next;
+        private Node prev;
+
+        public Node(Node prev, T value, Node next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
     }
 }
