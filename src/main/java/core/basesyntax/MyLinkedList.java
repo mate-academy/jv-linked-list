@@ -86,7 +86,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return false;
         }
         unlink(current);
-        size --;
+        size--;
         return true;
     }
 
