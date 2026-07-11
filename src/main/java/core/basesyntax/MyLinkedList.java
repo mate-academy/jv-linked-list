@@ -184,7 +184,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return null;
     }
 
-    private void unlink (Node<T> current) {
+    private void unlink(Node<T> current) {
         if (current.getPrev() != null) {
             current.getPrev().setNext(current.getNext());
         } else {
@@ -228,8 +228,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         private Node(Node<T> prev, T value, Node<T> next) {
             this.prev = prev;
-            this.next = next;
             this.value = value;
+            this.next = next;
         }
     }
 }
