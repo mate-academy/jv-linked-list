@@ -7,19 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> last;
     private int size;
 
-    // Внутрішній клас Node для зберігання даних та зв'язків
-    private static class Node<T> {
-        private T item;
-        private Node<T> next;
-        private Node<T> prev;
-
-        Node(Node<T> prev, T element, Node<T> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     @Override
     public void add(T value) {
         Node<T> l = last;
@@ -104,7 +91,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     // --- Допоміжні приватні методи ---
 
-    // Отримання вузла за індексом (шукає з початку або з кінця для оптимізації)
     private Node<T> getNode(int index) {
         if (index < (size >> 1)) {
             Node<T> x = first;
@@ -121,7 +107,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
-    // Видалення вузла зі списку та перевизначення зв'язків
     private T unlink(Node<T> x) {
         final T element = x.item;
         final Node<T> next = x.next;
@@ -146,17 +131,28 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return element;
     }
 
-    // Перевірка індексу для отримання/видалення елемента
     private void checkElementIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
 
-    // Перевірка індексу для додавання елемента (дозволено index == size)
     private void checkPositionIndex(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+    // --- [CHECKLIST ITEM #6] Внутрішній клас Node перенесено на сам наостанок ---
+    private class Node<T> {
+        private T item;
+        private Node<T> next;
+        private Node<T> prev;
+
+        Node(Node<T> prev, T element, Node<T> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
         }
     }
 }
