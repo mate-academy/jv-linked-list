@@ -202,6 +202,12 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         private Node<T> next;
         private Node<T> prev;
 
+        private Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.value = value;
+            this.next = next;
+        }
+
         public T getValue() {
             return value;
         }
@@ -224,12 +230,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         public void setPrev(Node<T> prev) {
             this.prev = prev;
-        }
-
-        private Node(Node<T> prev, T value, Node<T> next) {
-            this.prev = prev;
-            this.value = value;
-            this.next = next;
         }
     }
 }
