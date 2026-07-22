@@ -7,19 +7,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node last;
     private int size;
 
-    private class Node {
-        private T value;
-        private Node next;
-        private Node prev;
-
-        Node(T value) {
-            this.value = value;
-        }
-    }
-
     @Override
     public void add(T value) {
-        Node newNode = new Node(value);
+        Node newNode = new Node(last, value, null);
         if (first == null) {
             first = newNode;
             last = newNode;
@@ -36,7 +26,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("There is no such index: " + index);
         }
-        Node newNode = new Node(value);
+        Node newNode = new Node(last, value, null);
         if (index == 0) {
             newNode.next = first;
             if (first != null) {
@@ -124,6 +114,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private class Node {
+        private T value;
+        private Node next;
+        private Node prev;
+
+        Node(Node prev, T value, Node next) {
+            this.value = value;
+            this.prev = prev;
+            this.next = next;
+
+        }
     }
 
     private T unlink(Node node) {
