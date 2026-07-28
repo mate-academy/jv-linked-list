@@ -7,6 +7,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node first;
     private Node last;
 
+    //there are no redundant lines because otherwise mvn clean package won't pass
+
     private Node getFirst() {
         return first;
     }
