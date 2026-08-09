@@ -126,7 +126,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         }
 
-        Node<T> oldItem;
+        T oldItem;
         Node<T> tempNode = head;
 
         for (int i = 0; i < index; i++) {
@@ -135,11 +135,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         }
 
-        oldItem = tempNode;
+        oldItem = tempNode.item;
 
         tempNode.item = value;
 
-        return oldItem.item;
+        return oldItem;
     }
 
     @Override
