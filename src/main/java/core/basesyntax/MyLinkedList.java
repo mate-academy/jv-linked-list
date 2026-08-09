@@ -4,9 +4,9 @@ import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
-    Node<T> head;
-    Node<T> tail;
-    int size = 0;
+    private Node<T> head;
+    private Node<T> tail;
+    private int size = 0;
 
     @Override
     public void add(T value) {
@@ -197,7 +197,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         for (int i = 0; i < size; i++) {
 
-            boolean isEquals = (object == null) ? (tempNode.item == null) : object.equals(tempNode.item);
+            boolean isEquals = (object == null) ? (tempNode.item == null)
+                    : object.equals(tempNode.item);
 
             if (isEquals) {
                 remove(i);
@@ -223,9 +224,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     private static class Node<E> {
 
-        E item;
-        Node<E> prevNode;
-        Node<E> nextNode;
+        private E item;
+        private Node<E> prevNode;
+        private Node<E> nextNode;
 
         Node(Node<E> prevNode, E element, Node<E> nextNode) {
 
