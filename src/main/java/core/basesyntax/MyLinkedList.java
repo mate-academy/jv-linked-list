@@ -43,6 +43,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
                 add(value);
 
+                return;
+
             } else {
 
                 Node<T> node = new Node(null, value, head);
@@ -53,8 +55,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
                 size++;
 
-                return;
             }
+
+            return;
+
         }
 
         if (index == size) {
