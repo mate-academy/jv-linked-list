@@ -233,6 +233,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> getNode(int index) {
+
         Node<T> tempNode;
 
         if (index < size / 2) {
@@ -244,9 +245,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                 tempNode = tempNode.nextNode;
 
             }
-        }
-
-        else {
+        } else {
 
             tempNode = tail;
 
