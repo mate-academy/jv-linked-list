@@ -110,19 +110,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         }
 
-        Node<T> tempNode = head;
-
-        for (int i = 0; i < index; i++) {
-
-            tempNode = tempNode.nextNode;
-
-        }
-
-        return tempNode.item;
+        return getNode(index).item;
     }
 
     @Override
     public T set(T value, int index) {
+
+        T oldValue;
 
         if (index < 0 || index >= size) {
 
@@ -130,20 +124,11 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         }
 
-        T oldItem;
-        Node<T> tempNode = head;
+        oldValue = getNode(index).item;
 
-        for (int i = 0; i < index; i++) {
+        getNode(index).item = value;
 
-            tempNode = tempNode.nextNode;
-
-        }
-
-        oldItem = tempNode.item;
-
-        tempNode.item = value;
-
-        return oldItem;
+        return oldValue;
     }
 
     @Override
@@ -163,6 +148,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
+
         Node<T> tempNode = head;
 
         for (int i = 0; i < size; i++) {
@@ -171,7 +157,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
                     : object.equals(tempNode.item);
 
             if (isEquals) {
-                remove(i);
+                unlinkNode(tempNode);
                 return true;
             }
 
