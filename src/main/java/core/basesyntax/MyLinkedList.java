@@ -149,49 +149,15 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
 
-        Node<T> tempNode = head;
-
         if (index < 0 || index >= size) {
 
             throw new IndexOutOfBoundsException();
 
         }
 
-        for (int i = 0; i < index; i++) {
+        Node<T> nodeToRemove = getNode(index);
 
-            tempNode = tempNode.nextNode;
-
-        }
-
-        if (size == 1) {
-
-            head = null;
-            tail = null;
-
-        } else if (index == 0) {
-
-            head = tempNode.nextNode;
-            head.prevNode = null;
-
-        } else if (index == size - 1) {
-
-            tail = tempNode.prevNode;
-            tail.nextNode = null;
-
-        } else {
-
-            Node<T> leftNode = tempNode.prevNode;
-
-            Node<T> rightNode = tempNode.nextNode;
-
-            leftNode.nextNode = rightNode;
-            rightNode.prevNode = leftNode;
-
-        }
-
-        size--;
-
-        return tempNode.item;
+        return unlinkNode(nodeToRemove);
 
     }
 
@@ -241,4 +207,62 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
 
     }
+
+    private T unlinkNode(Node<T> node) {
+
+        T removedItem = node.item;
+
+        if (size == 1) {
+
+            head = null;
+            tail = null;
+
+        } else if (node == tail) {
+
+            tail = tail.prevNode;
+            tail.nextNode = null;
+
+        } else if (node == head) {
+
+            head = head.nextNode;
+
+            head.prevNode = null;
+
+        } else {
+
+            Node<T> leftNode = node.prevNode;
+
+            Node<T> rightNode = node.nextNode;
+
+            leftNode.nextNode = rightNode;
+
+            rightNode.prevNode = leftNode;
+
+        }
+
+        size--;
+
+        return removedItem;
+
+    }
+
+    private Node<T> getNode(int index) {
+        Node<T> tempNode;
+
+        if (index < size / 2) {
+            tempNode = head;
+            for (int i = 0; i < index; i++) {
+                tempNode = tempNode.nextNode;
+            }
+        }
+
+        else {
+            tempNode = tail;
+            for (int i = size - 1; i > index; i--) {
+                tempNode = tempNode.prevNode;
+            }
+        }
+        return tempNode;
+    }
+
 }
