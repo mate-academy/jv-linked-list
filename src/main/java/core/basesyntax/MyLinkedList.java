@@ -250,18 +250,26 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         Node<T> tempNode;
 
         if (index < size / 2) {
+
             tempNode = head;
+
             for (int i = 0; i < index; i++) {
+
                 tempNode = tempNode.nextNode;
+
             }
         }
 
         else {
+
             tempNode = tail;
+
             for (int i = size - 1; i > index; i--) {
+
                 tempNode = tempNode.prevNode;
             }
         }
+
         return tempNode;
     }
 
