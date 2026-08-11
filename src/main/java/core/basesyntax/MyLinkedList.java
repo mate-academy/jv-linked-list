@@ -97,7 +97,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public Node<T> getNodeByIndex(int index) {
         checkIndex(index);
         Node<T> current;
-        // Пошук з початку або з кінця для оптимізації O(N/2)
         if (index < (size >> 1)) {
             current = head;
             for (int i = 0; i < index; i++) {
