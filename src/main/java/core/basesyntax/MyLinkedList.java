@@ -1,11 +1,146 @@
 package core.basesyntax;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
     private Node<T> tail;
     private int size;
+
+    @Override
+    public void add(T value) {
+        Node<T> newNode = new Node<>(tail, value, null);
+        if (tail == null) {
+            head = newNode;
+        } else {
+            tail.next = newNode;
+        }
+        tail = newNode;
+        size++;
+    }
+
+    @Override
+    public void add(T value, int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index is not valid: " + index);
+        }
+        if (index == size) {
+            add(value);
+            return;
+        }
+
+        Node<T> current = getNodeByIndex(index);
+        Node<T> prevNode = current.prev;
+        Node<T> newNode = new Node<>(prevNode, value, current);
+
+        current.prev = newNode;
+        if (prevNode == null) {
+            head = newNode;
+        } else {
+            prevNode.next = newNode;
+        }
+        size++;
+    }
+
+    @Override
+    public void addAll(List<T> list) {
+        if (list == null || list.isEmpty()) {
+            return;
+        }
+        for (T element : list) {
+            add(element);
+        }
+    }
+
+    @Override
+    public T get(int index) {
+        return getNodeByIndex(index).value;
+    }
+
+    @Override
+    public T set(T value, int index) {
+        Node<T> searchNode = getNodeByIndex(index);
+        T oldValue = searchNode.value;
+        searchNode.value = value;
+        return oldValue;
+    }
+
+    @Override
+    public T remove(int index) {
+        return unlink(getNodeByIndex(index));
+    }
+
+    @Override
+    public boolean remove(T value) {
+        Node<T> current = head;
+        while (current != null) {
+            if (Objects.equals(current.value, value)) {
+                unlink(current);
+                return true;
+            }
+            current = current.next;
+        }
+        return false;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public Node<T> getNodeByIndex(int index) {
+        checkIndex(index);
+        Node<T> current;
+        // Пошук з початку або з кінця для оптимізації O(N/2)
+        if (index < (size >> 1)) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
+        }
+        return current;
+    }
+
+    private T unlink(Node<T> node) {
+        final T oldValue = node.value;
+        Node<T> prev = node.prev;
+        Node<T> next = node.next;
+
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.next = next;
+            node.prev = null;
+        }
+
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.prev = prev;
+            node.next = null;
+        }
+
+        node.value = null;
+        size--;
+        return oldValue;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index is not valid: " + index);
+        }
+    }
 
     private static class Node<T> {
         private Node<T> next;
@@ -17,197 +152,5 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             this.prev = prev;
             this.next = next;
         }
-    }
-
-    public Node<T> getNodeByIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is not valid :" + index);
-        }
-        Node<T> current = head;
-        for (int i = 0;i < index;i++) {
-            current = current.next;
-        }
-        return current;
-    }
-
-    public Node<T> getNodeByValue(Object o) {
-        if (o == null) {
-            return null;
-        }
-        Node<T> current = head;
-        while (current != null) {
-            if (current.value != null && current.value.equals(o)) {
-                return current;
-            }
-            current = current.next;
-        }
-        return null;
-    }
-
-    @Override
-    public void add(T value) {
-        Node<T> newNode = new Node<>(tail, value, null);
-        if (tail == null) {
-            head = newNode;
-        }
-        if (tail != null) {
-            tail.next = newNode;
-        }
-        tail = newNode;
-        size++;
-    }
-
-    @Override
-    public void add(T value, int index) {
-        Node<T> newNode = new Node<>(null, value, null);
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index is not valid :" + index);
-        }
-        if (head == null && index == 0) {
-            head = newNode;
-            tail = newNode;
-        }
-        if (index == 0 && head != null) {
-            newNode.next = head;
-            head.prev = newNode;
-            head = newNode;
-        }
-        if (index == size) {
-            newNode.prev = tail;
-            if (tail != null) {
-                tail.next = newNode;
-            }
-            tail = newNode;
-        }
-        if (index > 0 && index < size) {
-            Node<T> current = getNodeByIndex(index);
-            newNode.prev = current.prev;
-            newNode.next = current;
-            if (current.prev != null) {
-                current.prev.next = newNode;
-            }
-            current.prev = newNode;
-        }
-        size++;
-    }
-
-    @Override
-    public void addAll(List<T> list) {
-        if (list == null || list.isEmpty()) {
-            return;
-        }
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
-        }
-    }
-
-    @Override
-    public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is not valid :" + index);
-        }
-        Node<T> searchNode = getNodeByIndex(index);
-        return searchNode.value;
-    }
-
-    @Override
-    public T set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is not valid :" + index);
-        }
-        Node<T> searchNode = getNodeByIndex(index);
-        T oldValue = searchNode.value;
-        searchNode.value = value;
-        return oldValue;
-    }
-
-    @Override
-    public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index is not valid: " + index);
-        }
-
-        Node<T> current = getNodeByIndex(index);
-        final T oldValue = current.value;
-        // Відновлюємо зв'язки при видаленні елемента
-        if (current.prev != null) {
-            current.prev.next = current.next;
-        } else {
-            // Якщо видаляється перший елемент (head)
-            head = current.next;
-        }
-
-        if (current.next != null) {
-            current.next.prev = current.prev;
-        } else {
-            tail = current.prev;
-        }
-
-        current.value = null;
-        current.next = null;
-        current.prev = null;
-
-        size--;
-        return oldValue;
-    }
-
-    @Override
-    public boolean remove(T value) {
-        if (value == null) {
-            Node<T> current = head;
-            while (current != null) {
-                if (current.value == null) {
-                    if (current.prev != null) {
-                        current.prev.next = current.next;
-                    } else {
-                        head = current.next;
-                    }
-
-                    if (current.next != null) {
-                        current.next.prev = current.prev;
-                    } else {
-                        tail = current.prev;
-                    }
-
-                    size--;
-                    return true;
-                }
-                current = current.next;
-            }
-        } else {
-            Node<T> current = head;
-            while (current != null) {
-                if (value.equals(current.value)) {
-                    if (current.prev != null) {
-                        current.prev.next = current.next;
-                    } else {
-                        // Якщо видаляється перший елемент (head)
-                        head = current.next;
-                    }
-
-                    if (current.next != null) {
-                        current.next.prev = current.prev;
-                    } else {
-                        // Якщо видаляється останній елемент (tail)
-                        tail = current.prev;
-                    }
-
-                    size--;
-                    return true;
-                }
-                current = current.next;
-            }
-        }
-        return false; // Якщо елемент не знайдений
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
     }
 }
