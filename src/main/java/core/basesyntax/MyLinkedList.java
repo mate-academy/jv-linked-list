@@ -3,16 +3,6 @@ package core.basesyntax;
 import java.util.List;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
-    private class Node {
-        private T data;
-        private Node prev;
-        private Node next;
-
-        Node(T data) {
-            this.data = data;
-        }
-    }
-
     private Node head;
     private Node tail;
     private int size;
@@ -23,7 +13,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size = 0;
     }
 
-    public Node getNode(int index) {
+    private class Node {
+        private T data;
+        private Node prev;
+        private Node next;
+
+        Node(T data) {
+            this.data = data;
+        }
+    }
+
+    private Node getNode(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
