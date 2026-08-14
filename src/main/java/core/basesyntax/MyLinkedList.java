@@ -133,7 +133,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             node.next.prev = null;
             first = node.next;
         } else {
-            node.prev.next = node.next; //якщо видаляється остання нода, но для передостанньої, некст записуємо як null
+            node.prev.next = node.next;
         }
         if (node.next == null) {
             last = node.prev;
