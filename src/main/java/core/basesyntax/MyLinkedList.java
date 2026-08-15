@@ -101,6 +101,10 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
+        if (size == 0) {
+            return false;
+        }
+
         Node<T> currentNode = first;
 
         for (int i = 0; i < size(); i++) {
