@@ -19,12 +19,29 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         }
     }
 
+    private void unlink(Node<T> node) {
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        } else {
+            head = node.next;
+        }
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        } else {
+            tail = node.prev;
+        }
+        node.value = null;
+        node.next = null;
+        node.prev = null;
+        size--;
+    }
+
     public Node<T> getNodeByIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index is not valid :" + index);
         }
         Node<T> current = head;
-        for (int i = 0;i < index;i++) {
+        for (int i = 0; i < index; i++) {
             current = current.next;
         }
         return current;
@@ -52,20 +69,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (head == null && index == 0) {
             head = newNode;
             tail = newNode;
-        }
-        if (index == 0) {
+        } else if (index == 0) {
             newNode.next = head;
             head.prev = newNode;
             head = newNode;
-        }
-        if (index == size) {
+        } else if (index == size) {
             newNode.prev = tail;
             if (tail != null) {
                 tail.next = newNode;
             }
             tail = newNode;
-        }
-        if (index > 0 && index < size) {
+        } else {
             Node<T> current = getNodeByIndex(index);
             newNode.prev = current.prev;
             newNode.next = current;
@@ -92,8 +106,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index is not valid :" + index);
         }
-        Node<T> searchNode = getNodeByIndex(index);
-        return searchNode.value;
+        return getNodeByIndex(index).value;
     }
 
     @Override
@@ -112,74 +125,22 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index is not valid: " + index);
         }
-
         Node<T> current = getNodeByIndex(index);
         final T oldValue = current.value;
-
-        if (current.prev != null) {
-            current.prev.next = current.next;
-        } else {
-            head = current.next;
-        }
-
-        if (current.next != null) {
-            current.next.prev = current.prev;
-        } else {
-            tail = current.prev;
-        }
-
-        current.value = null;
-        current.next = null;
-        current.prev = null;
-
-        size--;
+        unlink(current);
         return oldValue;
     }
 
     @Override
     public boolean remove(T value) {
-        if (value == null) {
-            Node<T> current = head;
-            while (current != null) {
-                if (current.value == null) {
-                    if (current.prev != null) {
-                        current.prev.next = current.next;
-                    } else {
-                        head = current.next;
-                    }
-
-                    if (current.next != null) {
-                        current.next.prev = current.prev;
-                    } else {
-                        tail = current.prev;
-                    }
-
-                    size--;
-                    return true;
-                }
-                current = current.next;
+        Node<T> current = head;
+        while (current != null) {
+            if (current.value == value
+                    || current.value != null && current.value.equals(value)) {
+                unlink(current);
+                return true;
             }
-        } else {
-            Node<T> current = head;
-            while (current != null) {
-                if (value.equals(current.value)) {
-                    if (current.prev != null) {
-                        current.prev.next = current.next;
-                    } else {
-                        head = current.next;
-                    }
-
-                    if (current.next != null) {
-                        current.next.prev = current.prev;
-                    } else {
-                        tail = current.prev;
-                    }
-
-                    size--;
-                    return true;
-                }
-                current = current.next;
-            }
+            current = current.next;
         }
         return false;
     }
