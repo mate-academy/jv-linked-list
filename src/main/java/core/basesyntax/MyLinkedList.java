@@ -106,9 +106,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public boolean remove(T object) {
-        for (Node<T> currentItem = head;
-             currentItem != null;
-             currentItem = currentItem.getNext()) {
+        for (Node<T> currentItem = head; currentItem != null; currentItem = currentItem.getNext()) {
             if (Objects.equals(currentItem.getItem(), object)) {
                 unlink(currentItem);
                 return true;
