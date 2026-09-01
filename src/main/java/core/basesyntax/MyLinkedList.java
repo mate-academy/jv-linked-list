@@ -116,9 +116,18 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     }
 
     private Node<T> findNode(final int index) {
-        Node<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        int middleIndex = size / 2;
+        Node<T> current;
+        if (middleIndex > index) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.previous;
+            }
         }
         return current;
     }
@@ -126,11 +135,17 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private void unlink(final Node<T> nodeToRemove) {
         if (nodeToRemove == head) {
             head = nodeToRemove.next;
+            if (head != null) {
+                head.previous = null;
+            }
         } else {
             nodeToRemove.previous.next = nodeToRemove.next;
         }
         if (nodeToRemove == tail) {
             tail = nodeToRemove.previous;
+            if (tail != null) {
+                tail.next = null;
+            }
         } else {
             nodeToRemove.next.previous = nodeToRemove.previous;
         }
