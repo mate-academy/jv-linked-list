@@ -113,12 +113,19 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             throw new IndexOutOfBoundsException("Can't find element by index " + index);
         }
 
-        Node<T> item = head;
-        int currentIndex = 0;
+        boolean isIndexInFirstPart = index < size / 2;
+
+        Node<T> item = isIndexInFirstPart ? head : tail;
+        int currentIndex = isIndexInFirstPart ? 0 : size - 1;
 
         while (currentIndex != index) {
-            item = item.next;
-            currentIndex++;
+            if (isIndexInFirstPart) {
+                item = item.next;
+                currentIndex++;
+            } else {
+                item = item.prev;
+                currentIndex--;
+            }
         }
 
         return item;
@@ -139,6 +146,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         } else {
             head = oldItemNext;
         }
+
+        node.prev = null;
+        node.next = null;
 
         size--;
     }
