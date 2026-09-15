@@ -15,7 +15,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void add(T value) {
-        Node<T> item = new Node<>(value);
+        Node<T> item = new Node<>(null, value, null);
 
         if (head == null) {
             head = item;
@@ -37,7 +37,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         Node<T> oldItem = findItemByIndex(index);
         Node<T> oldItemPrev = oldItem.prev;
-        Node<T> newItem = new Node<>(value);
+        Node<T> newItem = new Node<>(null, value, oldItem);
 
         if (index == 0) {
             head = newItem;
@@ -45,8 +45,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             newItem.prev = oldItemPrev;
             oldItemPrev.next = newItem;
         }
-
-        newItem.next = oldItem;
         oldItem.prev = newItem;
 
         size++;
@@ -79,22 +77,9 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         Node<T> oldItem = findItemByIndex(index);
-        Node<T> oldItemPrev = oldItem.prev;
-        Node<T> oldItemNext = oldItem.next;
 
-        if (oldItemNext != null) {
-            oldItemNext.prev = oldItemPrev;
-        } else {
-            tail = oldItemPrev;
-        }
+        unlink(oldItem);
 
-        if (oldItemPrev != null) {
-            oldItemPrev.next = oldItemNext;
-        } else {
-            head = oldItemNext;
-        }
-
-        size--;
         return oldItem.value;
     }
 
@@ -104,7 +89,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
         for (int i = 0; i < size; i++) {
             if (item.value == object || (object != null && object.equals(item.value))) {
-                remove(i);
+                unlink(item);
                 return true;
             }
             item = item.next;
@@ -139,14 +124,33 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return item;
     }
 
+    private void unlink(Node<T> node) {
+        Node<T> oldItemPrev = node.prev;
+        Node<T> oldItemNext = node.next;
+
+        if (oldItemNext != null) {
+            oldItemNext.prev = oldItemPrev;
+        } else {
+            tail = oldItemPrev;
+        }
+
+        if (oldItemPrev != null) {
+            oldItemPrev.next = oldItemNext;
+        } else {
+            head = oldItemNext;
+        }
+
+        size--;
+    }
+
     private static class Node<T> {
         private Node<T> prev;
         private Node<T> next;
         private T value;
 
-        public Node(T value) {
-            this.prev = null;
-            this.next = null;
+        public Node(Node<T> prev, T value, Node<T> next) {
+            this.prev = prev;
+            this.next = next;
             this.value = value;
         }
     }
