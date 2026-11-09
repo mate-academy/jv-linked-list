@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> head;
@@ -53,7 +52,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
             return;
         }
 
-        Node<T> current = getNodeByIndex(index);
+        Node<T> current = findNodeByIndex(index);
         Node<T> newNode = new Node<>(current.prev, value, current);
         current.prev.next = newNode;
         current.prev = newNode;
@@ -70,13 +69,13 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return getNodeByIndex(index).value;
+        return findNodeByIndex(index).value;
     }
 
     @Override
     public T set(T value, int index) {
         checkIndex(index);
-        Node<T> node = getNodeByIndex(index);
+        Node<T> node = findNodeByIndex(index);
         T oldValue = node.value;
         node.value = value;
         return oldValue;
@@ -85,7 +84,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Node<T> nodeToRemove = getNodeByIndex(index);
+        Node<T> nodeToRemove = findNodeByIndex(index);
         unlink(nodeToRemove);
         return nodeToRemove.value;
     }
@@ -94,7 +93,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean remove(T object) {
         Node<T> current = head;
         while (current != null) {
-            if (Objects.equals(current.value, object)) {
+            if ((current.value == null && object == null)
+                    || (current.value != null && current.value.equals(object))) {
                 unlink(current);
                 return true;
             }
@@ -112,8 +112,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     public boolean isEmpty() {
         return size == 0;
     }
-
-    // ========== Приватні допоміжні методи ==========
 
     private void unlink(Node<T> node) {
         Node<T> prev = node.prev;
@@ -136,7 +134,7 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         size--;
     }
 
-    private Node<T> getNodeByIndex(int index) {
+    private Node<T> findNodeByIndex(int index) {
         Node<T> current;
         if (index < (size / 2)) {
             current = head;
